@@ -1,122 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useMemo, useState } from "react";
+import recipes from "./data/sampleRecipes.json";
+import RecipeSelector from "./components/RecipeSelector";
+import GatherList from "./components/GatherList";
+import Timeline from "./components/Timeline";
+import { buildGatherList } from "./lib/gatherList";
+import { buildTimeline } from "./lib/scheduler";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [generated, setGenerated] = useState(null);
+
+  function toggleRecipe(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+    setGenerated(null);
+  }
+
+  const selectedRecipes = useMemo(
+    () => recipes.filter((r) => selectedIds.has(r.id)),
+    [selectedIds]
+  );
+
+  function handleGenerate() {
+    if (selectedRecipes.length === 0) return;
+    const gatherList = buildGatherList(selectedRecipes);
+    const timeline = buildTimeline(selectedRecipes);
+    setGenerated({ gatherList, timeline });
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+    <div className="app">
+      <header className="app__header">
+        <h1>Kitchen Prep</h1>
+        <p>Select today's recipes, then generate the gather list and prep timeline.</p>
+      </header>
+
+      <section className="app__section">
+        <h2>1. Select recipes</h2>
+        <RecipeSelector recipes={recipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          className="generate-button"
+          onClick={handleGenerate}
+          disabled={selectedRecipes.length === 0}
         >
-          Count is {count}
+          Generate ({selectedRecipes.length} selected)
         </button>
       </section>
 
-      <div className="ticks"></div>
+      {generated && (
+        <>
+          <section className="app__section">
+            <h2>2. Gather list</h2>
+            <GatherList items={generated.gatherList} />
+          </section>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          <section className="app__section">
+            <h2>3. Prep timeline</h2>
+            <Timeline
+              chefTimeline={generated.timeline.chefTimeline}
+              passiveLanes={generated.timeline.passiveLanes}
+              totalOptimizedMinutes={generated.timeline.totalOptimizedMinutes}
+              totalSequentialMinutes={generated.timeline.totalSequentialMinutes}
+            />
+          </section>
+        </>
+      )}
+    </div>
+  );
 }
-
-export default App

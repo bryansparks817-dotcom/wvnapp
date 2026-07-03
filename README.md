@@ -1,16 +1,22 @@
-# React + Vite
+# Kitchen Prep — Phase 1
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A tool for a chef to select the recipes they're prepping today and get back a
+consolidated gather list and an optimized prep timeline. See
+[`PHASE_1_BRIEF.md`](./PHASE_1_BRIEF.md) for the full spec.
 
-Currently, two official plugins are available:
+## Run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```
+npm install
+npm run dev
+```
 
-## React Compiler
+## How it works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- Recipe data lives in `src/data/sampleRecipes.json` (no backend yet).
+- `src/lib/gatherList.js` groups and sums ingredients across selected recipes.
+- `src/lib/scheduler.js` simulates a single resource (the chef) working through
+  active steps one at a time while passive steps (braising, proofing, etc.)
+  run in the background. It always advances whichever ready recipe has the
+  most total remaining time left, then compares the result against a naive
+  recipe-by-recipe sequential total.

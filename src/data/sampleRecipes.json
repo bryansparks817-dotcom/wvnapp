@@ -1,0 +1,113 @@
+[
+  {
+    "id": "ribs",
+    "name": "Braised short ribs",
+    "ingredients": [
+      { "name": "Beef short ribs", "qty": 8, "unit": "lb" },
+      { "name": "Red wine", "qty": 2, "unit": "cup" },
+      { "name": "Beef stock", "qty": 4, "unit": "cup" },
+      { "name": "Carrots", "qty": 3, "unit": "ea" },
+      { "name": "Onion", "qty": 2, "unit": "ea" }
+    ],
+    "steps": [
+      { "name": "Sear ribs", "type": "active", "duration_minutes": 15 },
+      { "name": "Braise", "type": "passive", "duration_minutes": 180 }
+    ]
+  },
+  {
+    "id": "potatoes",
+    "name": "Mashed potatoes",
+    "ingredients": [
+      { "name": "Yukon gold potatoes", "qty": 5, "unit": "lb" },
+      { "name": "Butter", "qty": 1, "unit": "cup" },
+      { "name": "Heavy cream", "qty": 1, "unit": "cup" },
+      { "name": "Salt", "qty": 2, "unit": "tsp" }
+    ],
+    "steps": [
+      { "name": "Peel and cut", "type": "active", "duration_minutes": 10 },
+      { "name": "Boil", "type": "passive", "duration_minutes": 20 },
+      { "name": "Mash", "type": "active", "duration_minutes": 5 }
+    ]
+  },
+  {
+    "id": "carrots",
+    "name": "Roasted carrots",
+    "ingredients": [
+      { "name": "Carrots", "qty": 4, "unit": "lb" },
+      { "name": "Olive oil", "qty": 0.25, "unit": "cup" },
+      { "name": "Honey", "qty": 2, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "name": "Trim and toss", "type": "active", "duration_minutes": 8 },
+      { "name": "Roast", "type": "passive", "duration_minutes": 25 }
+    ]
+  },
+  {
+    "id": "ganache",
+    "name": "Chocolate ganache",
+    "ingredients": [
+      { "name": "Dark chocolate", "qty": 2, "unit": "lb" },
+      { "name": "Heavy cream", "qty": 2, "unit": "cup" }
+    ],
+    "steps": [
+      { "name": "Chop and heat cream", "type": "active", "duration_minutes": 10 },
+      { "name": "Cool and set", "type": "passive", "duration_minutes": 60 }
+    ]
+  },
+  {
+    "id": "rolls",
+    "name": "Dinner rolls",
+    "ingredients": [
+      { "name": "Bread flour", "qty": 4, "unit": "lb" },
+      { "name": "Yeast", "qty": 2, "unit": "tbsp" },
+      { "name": "Milk", "qty": 2, "unit": "cup" },
+      { "name": "Butter", "qty": 0.5, "unit": "cup" }
+    ],
+    "steps": [
+      { "name": "Mix and knead", "type": "active", "duration_minutes": 15 },
+      { "name": "Proof", "type": "passive", "duration_minutes": 90 },
+      { "name": "Shape", "type": "active", "duration_minutes": 10 },
+      { "name": "Bake", "type": "passive", "duration_minutes": 20 }
+    ]
+  },
+  {
+    "id": "salmon",
+    "name": "Pan-seared salmon",
+    "ingredients": [
+      { "name": "Salmon fillets", "qty": 8, "unit": "ea" },
+      { "name": "Lemon", "qty": 2, "unit": "ea" },
+      { "name": "Butter", "qty": 0.25, "unit": "cup" }
+    ],
+    "steps": [
+      { "name": "Portion and season", "type": "active", "duration_minutes": 5 },
+      { "name": "Sear", "type": "active", "duration_minutes": 10 }
+    ]
+  },
+  {
+    "id": "salad",
+    "name": "Caesar salad",
+    "ingredients": [
+      { "name": "Romaine", "qty": 3, "unit": "ea" },
+      { "name": "Parmesan", "qty": 0.5, "unit": "lb" },
+      { "name": "Caesar dressing", "qty": 2, "unit": "cup" },
+      { "name": "Croutons", "qty": 2, "unit": "cup" }
+    ],
+    "steps": [
+      { "name": "Wash, chop, toss", "type": "active", "duration_minutes": 15 }
+    ]
+  },
+  {
+    "id": "brulee",
+    "name": "Creme brulee",
+    "ingredients": [
+      { "name": "Heavy cream", "qty": 4, "unit": "cup" },
+      { "name": "Egg yolks", "qty": 12, "unit": "ea" },
+      { "name": "Sugar", "qty": 1, "unit": "cup" }
+    ],
+    "steps": [
+      { "name": "Mix custard", "type": "active", "duration_minutes": 15 },
+      { "name": "Bake and chill", "type": "passive", "duration_minutes": 150 },
+      { "name": "Torch sugar", "type": "active", "duration_minutes": 3 }
+    ]
+  }
+]
