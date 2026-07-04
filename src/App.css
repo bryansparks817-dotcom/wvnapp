@@ -160,62 +160,123 @@
   color: var(--accent);
 }
 
-.timeline-axis {
-  position: relative;
-  height: 20px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid var(--border);
+.schedule-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
 }
 
-.timeline-axis__tick {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
+.schedule-start input {
+  font: inherit;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.schedule-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.schedule-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.schedule-row:last-child {
+  border-bottom: none;
+}
+
+.schedule-row__time {
+  flex: 0 0 170px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.schedule-row__badge {
+  flex: 0 0 auto;
   font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.schedule-row__badge--active {
+  background: var(--accent);
+}
+
+.schedule-row__badge--passive {
+  background: #8c7a4b;
+}
+
+.schedule-row__info {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.schedule-row__name {
+  font-weight: 500;
+}
+
+.schedule-row__recipe {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.schedule-row__duration {
+  flex: 0 0 auto;
+  font-size: 13px;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.timeline-row {
-  display: flex;
-  align-items: stretch;
-  min-height: 44px;
+.schedule-row__actions {
+  flex: 0 0 auto;
 }
 
-.timeline-row__label {
-  flex: 0 0 100px;
+.schedule-row__done-button {
   font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.schedule-row__done-mark {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  padding-right: 8px;
 }
 
-.timeline-row__track {
-  position: relative;
-  flex: 1;
-  background: color-mix(in srgb, var(--border) 35%, transparent);
-  border-radius: 4px;
-  margin: 2px 0;
+.schedule-row--done {
+  opacity: 0.55;
 }
 
-.timeline-block {
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  padding: 0 6px;
-  overflow: hidden;
-  white-space: nowrap;
-  min-width: 2px;
-}
-
-.timeline-block__label {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.schedule-row--done .schedule-row__name,
+.schedule-row--done .schedule-row__recipe,
+.schedule-row--done .schedule-row__time {
+  text-decoration: line-through;
 }

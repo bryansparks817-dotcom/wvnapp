@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import recipes from "./data/sampleRecipes.json";
 import RecipeSelector from "./components/RecipeSelector";
 import GatherList from "./components/GatherList";
-import Timeline from "./components/Timeline";
+import TimelineList from "./components/TimelineList";
 import { buildGatherList } from "./lib/gatherList";
 import { buildTimeline } from "./lib/scheduler";
 import "./App.css";
@@ -61,7 +61,7 @@ export default function App() {
 
           <section className="app__section">
             <h2>3. Prep timeline</h2>
-            <Timeline
+            <TimelineList
               chefTimeline={generated.timeline.chefTimeline}
               passiveLanes={generated.timeline.passiveLanes}
               totalOptimizedMinutes={generated.timeline.totalOptimizedMinutes}
