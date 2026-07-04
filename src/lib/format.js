@@ -6,6 +6,6 @@ export function formatMinutes(totalMinutes) {
   return `${hours}h ${minutes}m`;
 }
 
-export function formatQty(qty) {
-  return Number.isInteger(qty) ? String(qty) : qty.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+export function formatGrams(grams) {
+  return `${Math.round(grams).toLocaleString()} g`;
 }
