@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { buildScheduleRows } from "../lib/scheduleRows";
+import { recomputeRows } from "../lib/rescheduler";
 import { formatMinutes, formatClockTime } from "../lib/format";
 
 function formatDiff(diffMinutes) {
@@ -12,7 +13,18 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
   const [startTime, setStartTime] = useState("09:00");
   const [completed, setCompleted] = useState({});
 
-  const rows = buildScheduleRows({ chefTimeline, passiveLanes });
+  const baseRows = useMemo(
+    () => buildScheduleRows({ chefTimeline, passiveLanes }),
+    [chefTimeline, passiveLanes]
+  );
+
+  const rows = useMemo(() => {
+    const adjusted = recomputeRows(baseRows, completed);
+    return baseRows
+      .map((row) => ({ ...row, adjStart: adjusted.get(row.key).start, adjEnd: adjusted.get(row.key).end }))
+      .sort((a, b) => a.adjStart - b.adjStart || a.adjEnd - b.adjEnd);
+  }, [baseRows, completed]);
+
   const savedMinutes = totalSequentialMinutes - totalOptimizedMinutes;
 
   function handleDone(row) {
@@ -56,7 +68,7 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
           return (
             <li key={row.key} className={`schedule-row ${isDone ? "schedule-row--done" : ""}`}>
               <span className="schedule-row__time">
-                {formatClockTime(startTime, row.start)} – {formatClockTime(startTime, row.end)}
+                {formatClockTime(startTime, row.adjStart)} – {formatClockTime(startTime, row.adjEnd)}
               </span>
 
               <span className={`schedule-row__badge schedule-row__badge--${row.type}`}>{row.type}</span>
