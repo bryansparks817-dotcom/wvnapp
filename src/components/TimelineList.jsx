@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { buildScheduleRows } from "../lib/scheduleRows";
 import { recomputeRows } from "../lib/rescheduler";
-import { formatMinutes, formatClockTime } from "../lib/format";
+import { anchorTimeline } from "../lib/scheduler";
+import { formatMinutes, formatTimeOfDay, parseTimeToMinutes } from "../lib/format";
 
 function formatDiff(diffMinutes) {
   if (diffMinutes === 0) return "on time";
@@ -9,15 +10,21 @@ function formatDiff(diffMinutes) {
   return `${sign}${Math.abs(diffMinutes)} min`;
 }
 
-export default function TimelineList({ chefTimeline, passiveLanes, totalOptimizedMinutes, totalSequentialMinutes }) {
-  const [startTime, setStartTime] = useState("09:00");
+export default function TimelineList({ timeline }) {
+  const [direction, setDirection] = useState("forward");
+  const [anchorTime, setAnchorTime] = useState("09:00");
   const [completed, setCompleted] = useState({});
   const [editingKey, setEditingKey] = useState(null);
   const [draftValue, setDraftValue] = useState("");
 
+  const anchored = useMemo(
+    () => anchorTimeline(timeline, { direction, anchorMinutes: parseTimeToMinutes(anchorTime) }),
+    [timeline, direction, anchorTime]
+  );
+
   const baseRows = useMemo(
-    () => buildScheduleRows({ chefTimeline, passiveLanes }),
-    [chefTimeline, passiveLanes]
+    () => buildScheduleRows({ chefTimeline: anchored.chefTimeline, passiveLanes: anchored.passiveLanes }),
+    [anchored]
   );
 
   const rows = useMemo(() => {
@@ -27,6 +34,7 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
       .sort((a, b) => a.adjStart - b.adjStart || a.adjEnd - b.adjEnd);
   }, [baseRows, completed]);
 
+  const { totalOptimizedMinutes, totalSequentialMinutes } = timeline;
   const savedMinutes = totalSequentialMinutes - totalOptimizedMinutes;
 
   function startEditing(row) {
@@ -64,10 +72,30 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
         </div>
       </div>
 
-      <label className="schedule-start">
-        Start time
-        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-      </label>
+      <div className="schedule-start">
+        <span className="recipe-form__toggle">
+          <button
+            type="button"
+            className={`recipe-form__toggle-option ${direction === "forward" ? "recipe-form__toggle-option--active" : ""}`}
+            onClick={() => setDirection("forward")}
+          >
+            Start at
+          </button>
+          <button
+            type="button"
+            className={`recipe-form__toggle-option ${direction === "backward" ? "recipe-form__toggle-option--active" : ""}`}
+            onClick={() => setDirection("backward")}
+          >
+            Finish by
+          </button>
+        </span>
+        <input type="time" value={anchorTime} onChange={(e) => setAnchorTime(e.target.value)} />
+        {direction === "backward" && (
+          <span className="recipe-form__hint">
+            start by {formatTimeOfDay(anchored.anchorMinutes)}
+          </span>
+        )}
+      </div>
 
       <ul className="schedule-list">
         {rows.map((row) => {
@@ -80,7 +108,7 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
           return (
             <li key={row.key} className={`schedule-row ${isDone ? "schedule-row--done" : ""}`}>
               <span className="schedule-row__time">
-                {formatClockTime(startTime, row.adjStart)} – {formatClockTime(startTime, row.adjEnd)}
+                {formatTimeOfDay(row.adjStart)} – {formatTimeOfDay(row.adjEnd)}
               </span>
 
               <span className={`schedule-row__badge schedule-row__badge--${row.type}`}>{row.type}</span>

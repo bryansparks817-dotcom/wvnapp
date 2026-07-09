@@ -146,12 +146,7 @@ export default function App() {
 
           <section className="app__section">
             <h2>3. Prep timeline</h2>
-            <TimelineList
-              chefTimeline={generated.timeline.chefTimeline}
-              passiveLanes={generated.timeline.passiveLanes}
-              totalOptimizedMinutes={generated.timeline.totalOptimizedMinutes}
-              totalSequentialMinutes={generated.timeline.totalSequentialMinutes}
-            />
+            <TimelineList timeline={generated.timeline} />
           </section>
         </>
       )}

@@ -143,6 +143,26 @@ export function buildTimeline(tracks) {
   };
 }
 
+// Anchors a 0-based timeline (from buildTimeline) to real clock time, either
+// forward from a start time or backward from a target finish time. The
+// schedule itself — task order, durations, total length — never changes;
+// this only shifts where relative-minute 0 falls in wall-clock terms. For
+// "backward", the last task is made to land exactly on anchorMinutes by
+// starting the whole thing totalOptimizedMinutes earlier.
+export function anchorTimeline(timeline, { direction = "forward", anchorMinutes = 0 } = {}) {
+  const offset = direction === "backward" ? anchorMinutes - timeline.totalOptimizedMinutes : anchorMinutes;
+
+  const shift = (rows) => rows.map((row) => ({ ...row, start: row.start + offset, end: row.end + offset }));
+
+  return {
+    ...timeline,
+    chefTimeline: shift(timeline.chefTimeline),
+    passiveLanes: { ...timeline.passiveLanes, lanes: shift(timeline.passiveLanes.lanes) },
+    direction,
+    anchorMinutes: offset,
+  };
+}
+
 // Greedy interval-graph lane assignment so overlapping passive blocks render on separate rows.
 function assignLanes(intervals) {
   const sorted = [...intervals].sort((a, b) => a.start - b.start);

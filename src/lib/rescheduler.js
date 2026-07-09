@@ -5,7 +5,15 @@
 // position finished, using actual duration where logged) and its recipe is
 // ready — either immediately, or once every recipe it depends on (e.g. a
 // sub-recipe component) has actually finished.
+//
+// Works regardless of whether the schedule was anchored forward from a
+// start time or backward from a finish time (see scheduler.js's
+// anchorTimeline): rows already carry real anchored minutes, and this just
+// keeps cascading forward from wherever the earliest row began — logging
+// actual completions is inherently a forward-in-time process either way.
 export function recomputeRows(rows, actualMinutesByKey) {
+  const scheduleStart = rows.length > 0 ? Math.min(...rows.map((row) => row.start)) : 0;
+
   const byRecipe = new Map();
   for (const row of rows) {
     if (!byRecipe.has(row.recipeId)) byRecipe.set(row.recipeId, []);
@@ -56,7 +64,9 @@ export function recomputeRows(rows, actualMinutesByKey) {
 
   function activate(s) {
     const readyTime =
-      s.dependsOn.length === 0 ? 0 : Math.max(...s.dependsOn.map((depId) => state.get(depId).finishTime));
+      s.dependsOn.length === 0
+        ? scheduleStart
+        : Math.max(...s.dependsOn.map((depId) => state.get(depId).finishTime));
     s.clock = readyTime;
     cascadePassive(s);
   }
@@ -72,7 +82,7 @@ export function recomputeRows(rows, actualMinutesByKey) {
 
   const chefQueue = rows.filter((row) => row.type === "active").sort((a, b) => a.start - b.start);
 
-  let chefTime = 0;
+  let chefTime = scheduleStart;
   for (const row of chefQueue) {
     const s = state.get(row.recipeId);
     // s.clock is guaranteed set by here: the original schedule only ever
