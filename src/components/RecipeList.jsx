@@ -1,12 +1,15 @@
+import { useState } from "react";
+
 function pluralize(count, word) {
   return `${count} ${word}${count === 1 ? "" : "s"}`;
 }
 
-export default function RecipeList({ recipes, onDelete, onBack }) {
-  function handleDelete(recipe) {
-    if (window.confirm(`Delete "${recipe.name}"? This can't be undone.`)) {
-      onDelete(recipe.id);
-    }
+export default function RecipeList({ recipes, onDelete, onAdd, onEdit, onBack }) {
+  const [confirmingId, setConfirmingId] = useState(null);
+
+  function handleConfirmDelete(id) {
+    onDelete(id);
+    setConfirmingId(null);
   }
 
   return (
@@ -17,6 +20,10 @@ export default function RecipeList({ recipes, onDelete, onBack }) {
           ← Back
         </button>
       </div>
+
+      <button type="button" className="generate-button recipe-manager__add-button" onClick={onAdd}>
+        + Add recipe
+      </button>
 
       <ul className="recipe-manager-list">
         {recipes.map((recipe) => (
@@ -29,9 +36,34 @@ export default function RecipeList({ recipes, onDelete, onBack }) {
               </span>
             </span>
             <span className="recipe-manager-row__actions">
-              <button type="button" className="schedule-row__cancel-button" onClick={() => handleDelete(recipe)}>
-                Delete
-              </button>
+              {confirmingId === recipe.id ? (
+                <>
+                  <span className="recipe-manager-row__confirm-text">Delete?</span>
+                  <button
+                    type="button"
+                    className="schedule-row__save-button"
+                    onClick={() => handleConfirmDelete(recipe.id)}
+                  >
+                    Confirm
+                  </button>
+                  <button type="button" className="schedule-row__cancel-button" onClick={() => setConfirmingId(null)}>
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button type="button" className="link-button" onClick={() => onEdit(recipe.id)}>
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="schedule-row__cancel-button"
+                    onClick={() => setConfirmingId(recipe.id)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </span>
           </li>
         ))}

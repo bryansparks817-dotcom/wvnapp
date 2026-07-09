@@ -3,14 +3,18 @@ import RecipeSelector from "./components/RecipeSelector";
 import GatherList from "./components/GatherList";
 import TimelineList from "./components/TimelineList";
 import RecipeList from "./components/RecipeList";
+import RecipeForm from "./components/RecipeForm";
 import { useRecipes } from "./hooks/useRecipes";
+import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
 import { buildTimeline } from "./lib/scheduler";
 import "./App.css";
 
 export default function App() {
-  const { recipes, deleteRecipe } = useRecipes();
+  const { recipes, addRecipe, updateRecipe, deleteRecipe } = useRecipes();
+  const { ingredients, findIngredient, upsertIngredient } = useIngredients();
   const [screen, setScreen] = useState("home");
+  const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [generated, setGenerated] = useState(null);
 
@@ -35,6 +39,26 @@ export default function App() {
     setGenerated(null);
   }
 
+  function openAddForm() {
+    setEditingRecipeId(null);
+    setScreen("form");
+  }
+
+  function openEditForm(id) {
+    setEditingRecipeId(id);
+    setScreen("form");
+  }
+
+  function handleSaveRecipe(recipe) {
+    if (editingRecipeId) {
+      updateRecipe(editingRecipeId, recipe);
+    } else {
+      addRecipe(recipe);
+    }
+    setGenerated(null);
+    setScreen("manage");
+  }
+
   const selectedRecipes = useMemo(
     () => recipes.filter((r) => selectedIds.has(r.id)),
     [recipes, selectedIds]
@@ -42,9 +66,28 @@ export default function App() {
 
   function handleGenerate() {
     if (selectedRecipes.length === 0) return;
-    const gatherList = buildGatherList(selectedRecipes);
+    const gatherList = buildGatherList(selectedRecipes, ingredients);
     const timeline = buildTimeline(selectedRecipes);
     setGenerated({ gatherList, timeline });
+  }
+
+  if (screen === "form") {
+    const initialRecipe = editingRecipeId ? recipes.find((r) => r.id === editingRecipeId) : null;
+    return (
+      <div className="app">
+        <header className="app__header">
+          <h1>Kitchen Prep</h1>
+        </header>
+        <RecipeForm
+          initialRecipe={initialRecipe}
+          ingredients={ingredients}
+          findIngredient={findIngredient}
+          upsertIngredient={upsertIngredient}
+          onSave={handleSaveRecipe}
+          onCancel={() => setScreen("manage")}
+        />
+      </div>
+    );
   }
 
   if (screen === "manage") {
@@ -53,7 +96,13 @@ export default function App() {
         <header className="app__header">
           <h1>Kitchen Prep</h1>
         </header>
-        <RecipeList recipes={recipes} onDelete={handleDeleteRecipe} onBack={() => setScreen("home")} />
+        <RecipeList
+          recipes={recipes}
+          onDelete={handleDeleteRecipe}
+          onAdd={openAddForm}
+          onEdit={openEditForm}
+          onBack={() => setScreen("home")}
+        />
       </div>
     );
   }
