@@ -22,6 +22,79 @@
   margin: 0 0 16px;
 }
 
+.link-button {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Recipe manager */
+
+.recipe-manager__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.recipe-manager__header h2 {
+  margin: 0;
+}
+
+.recipe-manager-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.recipe-manager-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.recipe-manager-row:last-child {
+  border-bottom: none;
+}
+
+.recipe-manager-row--empty {
+  color: var(--text-muted);
+  justify-content: center;
+}
+
+.recipe-manager-row__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recipe-manager-row__name {
+  font-weight: 600;
+}
+
+.recipe-manager-row__meta {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.recipe-manager-row__actions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+}
+
 /* Recipe selector */
 
 .recipe-grid {
