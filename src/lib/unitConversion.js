@@ -1,31 +1,13 @@
+import ingredients from "../data/ingredients.json";
+
 const GRAMS_PER_LB = 453.592;
 const CUPS_PER_UNIT = { cup: 1, tbsp: 1 / 16, tsp: 1 / 48 };
 
-// Grams per cup, by ingredient — volume-to-weight depends on the ingredient's density.
-const GRAMS_PER_CUP = {
-  "red wine": 236,
-  "beef stock": 240,
-  butter: 227,
-  "heavy cream": 238,
-  "olive oil": 216,
-  honey: 340,
-  milk: 244,
-  "caesar dressing": 230,
-  croutons: 30,
-  sugar: 200,
-  salt: 288,
-  yeast: 144,
-};
-
-// Average weight (g) of a single "each" unit.
-const GRAMS_PER_EACH = {
-  carrots: 61,
-  onion: 110,
-  "salmon fillets": 170,
-  lemon: 100,
-  romaine: 500,
-  "egg yolks": 18,
-};
+// Per-ingredient conversion data (density as grams/cup, average weight as
+// grams/each) lives in src/data/ingredients.json, keyed by name — that's the
+// single source of truth a chef can later edit, and edits apply everywhere
+// that ingredient is used.
+const ingredientsByName = new Map(ingredients.map((entry) => [entry.name.toLowerCase(), entry]));
 
 // Converts an ingredient quantity to grams. Weight units (lb) convert directly;
 // volume units (cup/tbsp/tsp) and "ea" require an ingredient-specific lookup
@@ -39,7 +21,7 @@ export function convertToGrams(name, qty, unit) {
   }
 
   if (normalizedUnit === "ea") {
-    const gramsEach = GRAMS_PER_EACH[key];
+    const gramsEach = ingredientsByName.get(key)?.gramsPerEach;
     if (gramsEach == null) {
       throw new Error(`No average weight defined for "${name}" (ea)`);
     }
@@ -47,7 +29,7 @@ export function convertToGrams(name, qty, unit) {
   }
 
   if (normalizedUnit in CUPS_PER_UNIT) {
-    const gramsPerCup = GRAMS_PER_CUP[key];
+    const gramsPerCup = ingredientsByName.get(key)?.gramsPerCup;
     if (gramsPerCup == null) {
       throw new Error(`No density defined for "${name}" (${unit})`);
     }

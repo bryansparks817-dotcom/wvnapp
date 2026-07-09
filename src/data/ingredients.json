@@ -1,0 +1,20 @@
+[
+  { "name": "Red wine", "gramsPerCup": 236 },
+  { "name": "Beef stock", "gramsPerCup": 240 },
+  { "name": "Butter", "gramsPerCup": 227 },
+  { "name": "Heavy cream", "gramsPerCup": 238 },
+  { "name": "Olive oil", "gramsPerCup": 216 },
+  { "name": "Honey", "gramsPerCup": 340 },
+  { "name": "Milk", "gramsPerCup": 244 },
+  { "name": "Caesar dressing", "gramsPerCup": 230 },
+  { "name": "Croutons", "gramsPerCup": 30 },
+  { "name": "Sugar", "gramsPerCup": 200 },
+  { "name": "Salt", "gramsPerCup": 288 },
+  { "name": "Yeast", "gramsPerCup": 144 },
+  { "name": "Carrots", "gramsPerEach": 61 },
+  { "name": "Onion", "gramsPerEach": 110 },
+  { "name": "Salmon fillets", "gramsPerEach": 170 },
+  { "name": "Lemon", "gramsPerEach": 100 },
+  { "name": "Romaine", "gramsPerEach": 500 },
+  { "name": "Egg yolks", "gramsPerEach": 18 }
+]
