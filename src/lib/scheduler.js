@@ -1,12 +1,21 @@
-// Single-resource ("the chef") scheduling of active/passive steps across recipes.
-export function buildTimeline(recipes) {
-  const states = recipes.map((r) => ({
-    id: r.id,
-    name: r.name,
-    steps: r.steps,
-    stepIndex: 0,
-    clock: 0,
-  }));
+// Single-resource ("the chef") scheduling of active/passive steps across
+// tracks. A track is normally ready to start at time 0, but a track that
+// depends on others (e.g. a recipe waiting on a sub-recipe component) only
+// becomes ready once every track it depends on has fully finished.
+export function buildTimeline(tracks) {
+  const states = new Map();
+  for (const t of tracks) {
+    states.set(t.id, {
+      id: t.id,
+      name: t.name,
+      steps: t.steps,
+      dependsOn: t.dependsOn,
+      stepIndex: 0,
+      clock: null, // null until ready to start
+      finished: false,
+      finishTime: null,
+    });
+  }
 
   const chefTimeline = [];
   const passiveTimeline = [];
@@ -17,6 +26,14 @@ export function buildTimeline(recipes) {
       total += state.steps[i].duration_minutes;
     }
     return total;
+  }
+
+  function markFinishedIfDone(state) {
+    if (state.stepIndex >= state.steps.length) {
+      state.finished = true;
+      state.finishTime = state.clock;
+      activateReadyStates();
+    }
   }
 
   function cascadePassive(state) {
@@ -33,23 +50,42 @@ export function buildTimeline(recipes) {
         stepName: step.name,
         start,
         end,
+        dependsOn: state.dependsOn,
       });
       state.clock = end;
       state.stepIndex += 1;
     }
+    markFinishedIfDone(state);
   }
 
-  for (const state of states) {
+  function activateState(state) {
+    const readyTime =
+      state.dependsOn.length === 0
+        ? 0
+        : Math.max(...state.dependsOn.map((depId) => states.get(depId).finishTime));
+    state.clock = readyTime;
     cascadePassive(state);
   }
 
+  function activateReadyStates() {
+    for (const state of states.values()) {
+      if (state.clock !== null) continue;
+      const ready = state.dependsOn.every((depId) => states.get(depId).finished);
+      if (ready) activateState(state);
+    }
+  }
+
+  activateReadyStates();
+
   let chefTime = 0;
-  const pendingStates = () => states.filter((s) => s.stepIndex < s.steps.length);
+  const pendingActiveStates = () =>
+    Array.from(states.values()).filter((s) => s.clock !== null && s.stepIndex < s.steps.length);
 
-  while (pendingStates().length > 0) {
-    const pending = pendingStates();
+  while (Array.from(states.values()).some((s) => !s.finished)) {
+    const pending = pendingActiveStates();
+    if (pending.length === 0) break; // nothing schedulable — a malformed dependency graph
+
     let candidates = pending.filter((s) => s.clock <= chefTime);
-
     if (candidates.length === 0) {
       chefTime = Math.min(...pending.map((s) => s.clock));
       candidates = pending.filter((s) => s.clock <= chefTime);
@@ -74,6 +110,7 @@ export function buildTimeline(recipes) {
       stepName: step.name,
       start,
       end,
+      dependsOn: chosen.dependsOn,
     });
 
     chefTime = end;
@@ -83,15 +120,16 @@ export function buildTimeline(recipes) {
     cascadePassive(chosen);
   }
 
+  const allStates = Array.from(states.values());
   const totalOptimizedMinutes = Math.max(
     0,
     chefTime,
-    ...states.map((s) => s.clock),
+    ...allStates.map((s) => s.clock ?? 0),
     ...passiveTimeline.map((p) => p.end)
   );
 
-  const totalSequentialMinutes = recipes.reduce(
-    (sum, r) => sum + r.steps.reduce((s, step) => s + step.duration_minutes, 0),
+  const totalSequentialMinutes = tracks.reduce(
+    (sum, t) => sum + t.steps.reduce((s, step) => s + step.duration_minutes, 0),
     0
   );
 

@@ -10,7 +10,10 @@ export default function RecipeSelector({ recipes, selectedIds, onToggle }) {
         return (
           <label key={recipe.id} className={`recipe-card ${checked ? "recipe-card--selected" : ""}`}>
             <span className="recipe-card__header">
-              <span className="recipe-card__name">{recipe.name}</span>
+              <span className="recipe-card__name">
+                {recipe.name}
+                {recipe.isSubRecipe && <span className="sub-recipe-badge">Sub-recipe</span>}
+              </span>
               <input
                 type="checkbox"
                 checked={checked}

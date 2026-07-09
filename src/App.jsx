@@ -7,6 +7,7 @@ import RecipeForm from "./components/RecipeForm";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
+import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
 import "./App.css";
 
@@ -59,6 +60,8 @@ export default function App() {
     setScreen("manage");
   }
 
+  const recipesById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+
   const selectedRecipes = useMemo(
     () => recipes.filter((r) => selectedIds.has(r.id)),
     [recipes, selectedIds]
@@ -66,8 +69,9 @@ export default function App() {
 
   function handleGenerate() {
     if (selectedRecipes.length === 0) return;
-    const gatherList = buildGatherList(selectedRecipes, ingredients);
-    const timeline = buildTimeline(selectedRecipes);
+    const gatherList = buildGatherList(selectedRecipes, ingredients, recipesById);
+    const tracks = buildTracks(selectedRecipes, recipesById);
+    const timeline = buildTimeline(tracks);
     setGenerated({ gatherList, timeline });
   }
 
@@ -80,6 +84,8 @@ export default function App() {
         </header>
         <RecipeForm
           initialRecipe={initialRecipe}
+          recipes={recipes}
+          recipesById={recipesById}
           ingredients={ingredients}
           findIngredient={findIngredient}
           upsertIngredient={upsertIngredient}

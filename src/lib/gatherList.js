@@ -1,14 +1,18 @@
 import { buildIngredientIndex, convertToGrams } from "./unitConversion.js";
+import { flattenIngredients } from "./recipeComposition.js";
 
-// Combines ingredients across a set of recipes: convert every quantity to grams
-// (weight units directly, volume units and "ea" via ingredient-specific lookups
-// from the ingredients registry), then group by name and sum.
-export function buildGatherList(recipes, ingredients) {
+// Combines ingredients across a set of recipes: recursively flatten any
+// sub-recipe components into raw ingredients (scaled by batch count), convert
+// every quantity to grams (weight units directly, volume units and "ea" via
+// ingredient-specific lookups from the ingredients registry), then group by
+// name and sum.
+export function buildGatherList(recipes, ingredients, recipesById) {
   const ingredientIndex = buildIngredientIndex(ingredients);
   const totals = new Map();
 
   for (const recipe of recipes) {
-    for (const { name, qty, unit } of recipe.ingredients) {
+    const flatIngredients = flattenIngredients(recipe, recipesById);
+    for (const { name, qty, unit } of flatIngredients) {
       const grams = convertToGrams(name, qty, unit, ingredientIndex);
       const key = name.toLowerCase();
       const existing = totals.get(key);

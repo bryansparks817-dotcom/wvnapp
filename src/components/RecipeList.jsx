@@ -29,7 +29,10 @@ export default function RecipeList({ recipes, onDelete, onAdd, onEdit, onBack })
         {recipes.map((recipe) => (
           <li key={recipe.id} className="recipe-manager-row">
             <span className="recipe-manager-row__info">
-              <span className="recipe-manager-row__name">{recipe.name}</span>
+              <span className="recipe-manager-row__name">
+                {recipe.name}
+                {recipe.isSubRecipe && <span className="sub-recipe-badge">Sub-recipe</span>}
+              </span>
               <span className="recipe-manager-row__meta">
                 {pluralize(recipe.ingredients.length, "ingredient")} ·{" "}
                 {pluralize(recipe.steps.length, "step")}
