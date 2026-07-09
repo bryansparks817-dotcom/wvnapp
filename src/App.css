@@ -271,6 +271,44 @@
   color: var(--text-muted);
 }
 
+.schedule-row__edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-row__edit-input {
+  width: 56px;
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.schedule-row__save-button {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.schedule-row__cancel-button {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
 .schedule-row--done {
   opacity: 0.55;
 }

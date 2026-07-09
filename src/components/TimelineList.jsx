@@ -12,6 +12,8 @@ function formatDiff(diffMinutes) {
 export default function TimelineList({ chefTimeline, passiveLanes, totalOptimizedMinutes, totalSequentialMinutes }) {
   const [startTime, setStartTime] = useState("09:00");
   const [completed, setCompleted] = useState({});
+  const [editingKey, setEditingKey] = useState(null);
+  const [draftValue, setDraftValue] = useState("");
 
   const baseRows = useMemo(
     () => buildScheduleRows({ chefTimeline, passiveLanes }),
@@ -27,13 +29,22 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
 
   const savedMinutes = totalSequentialMinutes - totalOptimizedMinutes;
 
-  function handleDone(row) {
-    const planned = row.end - row.start;
-    const input = window.prompt(`Actual minutes for "${row.stepName}"?`, String(planned));
-    if (input === null) return;
-    const actualMinutes = Number(input);
+  function startEditing(row) {
+    setEditingKey(row.key);
+    setDraftValue(String(row.end - row.start));
+  }
+
+  function cancelEditing() {
+    setEditingKey(null);
+    setDraftValue("");
+  }
+
+  function confirmDone(row) {
+    const actualMinutes = Number(draftValue);
     if (!Number.isFinite(actualMinutes) || actualMinutes < 0) return;
     setCompleted((prev) => ({ ...prev, [row.key]: actualMinutes }));
+    setEditingKey(null);
+    setDraftValue("");
   }
 
   return (
@@ -63,6 +74,7 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
           const planned = row.end - row.start;
           const actualMinutes = completed[row.key];
           const isDone = actualMinutes !== undefined;
+          const isEditing = editingKey === row.key;
           const diff = isDone ? actualMinutes - planned : null;
 
           return (
@@ -84,6 +96,8 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
                     {formatMinutes(planned)} planned · {formatMinutes(actualMinutes)} actual (
                     {formatDiff(diff)})
                   </>
+                ) : isEditing ? (
+                  "actual minutes:"
                 ) : (
                   `${formatMinutes(planned)}`
                 )}
@@ -92,8 +106,29 @@ export default function TimelineList({ chefTimeline, passiveLanes, totalOptimize
               <span className="schedule-row__actions">
                 {isDone ? (
                   <span className="schedule-row__done-mark">Done</span>
+                ) : isEditing ? (
+                  <span className="schedule-row__edit">
+                    <input
+                      type="number"
+                      min="0"
+                      className="schedule-row__edit-input"
+                      value={draftValue}
+                      autoFocus
+                      onChange={(e) => setDraftValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") confirmDone(row);
+                        if (e.key === "Escape") cancelEditing();
+                      }}
+                    />
+                    <button type="button" className="schedule-row__save-button" onClick={() => confirmDone(row)}>
+                      Save
+                    </button>
+                    <button type="button" className="schedule-row__cancel-button" onClick={cancelEditing}>
+                      Cancel
+                    </button>
+                  </span>
                 ) : (
-                  <button type="button" className="schedule-row__done-button" onClick={() => handleDone(row)}>
+                  <button type="button" className="schedule-row__done-button" onClick={() => startEditing(row)}>
                     Done
                   </button>
                 )}
