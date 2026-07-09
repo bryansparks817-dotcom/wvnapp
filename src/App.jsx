@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RecipeSelector from "./components/RecipeSelector";
 import GatherList from "./components/GatherList";
 import TimelineList from "./components/TimelineList";
@@ -9,6 +9,7 @@ import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
 import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
+import { loadSelectedRecipeIds, saveSelectedRecipeIds } from "./lib/storage";
 import "./App.css";
 
 export default function App() {
@@ -16,8 +17,12 @@ export default function App() {
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
   const [screen, setScreen] = useState("home");
   const [editingRecipeId, setEditingRecipeId] = useState(null);
-  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [selectedIds, setSelectedIds] = useState(() => new Set(loadSelectedRecipeIds()));
   const [generated, setGenerated] = useState(null);
+
+  useEffect(() => {
+    saveSelectedRecipeIds(Array.from(selectedIds));
+  }, [selectedIds]);
 
   function toggleRecipe(id) {
     setSelectedIds((prev) => {
@@ -67,13 +72,24 @@ export default function App() {
     [recipes, selectedIds]
   );
 
-  function handleGenerate() {
-    if (selectedRecipes.length === 0) return;
-    const gatherList = buildGatherList(selectedRecipes, ingredients, recipesById);
-    const tracks = buildTracks(selectedRecipes, recipesById);
+  function generate(recipesToSchedule) {
+    if (recipesToSchedule.length === 0) return;
+    const gatherList = buildGatherList(recipesToSchedule, ingredients, recipesById);
+    const tracks = buildTracks(recipesToSchedule, recipesById);
     const timeline = buildTimeline(tracks);
     setGenerated({ gatherList, timeline });
   }
+
+  // Restore the day's plan once on load, so a refresh mid-shift doesn't lose
+  // the previously selected recipes (and, via TimelineList's own persisted
+  // done-log, the tasks already marked done).
+  const didRestoreOnLoad = useRef(false);
+  useEffect(() => {
+    if (didRestoreOnLoad.current) return;
+    didRestoreOnLoad.current = true;
+    if (selectedRecipes.length > 0) generate(selectedRecipes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (screen === "form") {
     const initialRecipe = editingRecipeId ? recipes.find((r) => r.id === editingRecipeId) : null;
@@ -130,7 +146,7 @@ export default function App() {
         <RecipeSelector recipes={recipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
         <button
           className="generate-button"
-          onClick={handleGenerate}
+          onClick={() => generate(selectedRecipes)}
           disabled={selectedRecipes.length === 0}
         >
           Generate ({selectedRecipes.length} selected)

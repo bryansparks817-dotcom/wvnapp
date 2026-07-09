@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { buildScheduleRows } from "../lib/scheduleRows";
 import { recomputeRows } from "../lib/rescheduler";
 import { anchorTimeline } from "../lib/scheduler";
 import { formatMinutes, formatTimeOfDay, parseTimeToMinutes } from "../lib/format";
+import { loadDoneLog, saveDoneLog, loadScheduleSettings, saveScheduleSettings } from "../lib/storage";
 
 function formatDiff(diffMinutes) {
   if (diffMinutes === 0) return "on time";
@@ -11,11 +12,19 @@ function formatDiff(diffMinutes) {
 }
 
 export default function TimelineList({ timeline }) {
-  const [direction, setDirection] = useState("forward");
-  const [anchorTime, setAnchorTime] = useState("09:00");
-  const [completed, setCompleted] = useState({});
+  const [direction, setDirection] = useState(() => loadScheduleSettings().direction);
+  const [anchorTime, setAnchorTime] = useState(() => loadScheduleSettings().anchorTime);
+  const [completed, setCompleted] = useState(() => loadDoneLog());
   const [editingKey, setEditingKey] = useState(null);
   const [draftValue, setDraftValue] = useState("");
+
+  useEffect(() => {
+    saveScheduleSettings({ direction, anchorTime });
+  }, [direction, anchorTime]);
+
+  useEffect(() => {
+    saveDoneLog(completed);
+  }, [completed]);
 
   const anchored = useMemo(
     () => anchorTimeline(timeline, { direction, anchorMinutes: parseTimeToMinutes(anchorTime) }),
