@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import seedRecipes from "../data/sampleRecipes.json";
 import { loadRecipes, saveRecipes } from "../lib/storage";
+import { PENDING_PREFIX } from "../lib/recipeSheetImport";
 
 function slugify(name) {
   return name
@@ -44,5 +45,36 @@ export function useRecipes() {
     setRecipes((prev) => prev.filter((r) => r.id !== id));
   }
 
-  return { recipes, addRecipe, updateRecipe, deleteRecipe };
+  // Adds recipes from an imported recipe sheet. A recipe whose name matches an
+  // existing one replaces it (keeping its id, so other recipes that use it as
+  // a sub-recipe still point at it); anything else is added. Sub-recipe
+  // references to recipes from the same import are resolved to their new ids.
+  function importRecipes(incoming) {
+    setRecipes((prev) => {
+      const next = [...prev];
+      const existingIds = new Set(prev.map((r) => r.id));
+      const idByName = new Map();
+      const placed = [];
+      for (const recipe of incoming) {
+        const index = next.findIndex((r) => r.name.toLowerCase() === recipe.name.toLowerCase());
+        const id = index === -1 ? generateId(recipe.name, existingIds) : next[index].id;
+        existingIds.add(id);
+        idByName.set(recipe.name.toLowerCase(), id);
+        placed.push({ index, recipe: { ...recipe, id } });
+      }
+      for (const { index, recipe } of placed) {
+        const ingredients = recipe.ingredients.map((ing) =>
+          ing.subRecipeId?.startsWith(PENDING_PREFIX)
+            ? { ...ing, subRecipeId: idByName.get(ing.subRecipeId.slice(PENDING_PREFIX.length)) }
+            : ing,
+        );
+        const resolved = { ...recipe, ingredients };
+        if (index === -1) next.push(resolved);
+        else next[index] = resolved;
+      }
+      return next;
+    });
+  }
+
+  return { recipes, addRecipe, updateRecipe, deleteRecipe, importRecipes };
 }
