@@ -108,6 +108,41 @@
   margin-bottom: 16px;
 }
 
+.recipe-manager__import-button {
+  display: block;
+  margin: -4px 0 4px;
+}
+
+.recipe-manager__template-link {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.import-report {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--accent-bg);
+  font-size: 14px;
+}
+
+.import-report__list {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+
+.import-report__item--error {
+  color: #c0392b;
+}
+
+.import-report__item--error ul {
+  margin: 4px 0;
+  color: var(--text-muted);
+}
+
 /* Recipe form */
 
 .recipe-form {
