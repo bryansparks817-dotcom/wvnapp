@@ -1,4 +1,4 @@
-export const UNITS = ["lb", "cup", "tbsp", "tsp", "ea"];
+export const UNITS = ["g", "lb", "cup", "tbsp", "tsp", "ea"];
 
 const GRAMS_PER_LB = 453.592;
 const CUPS_PER_UNIT = { cup: 1, tbsp: 1 / 16, tsp: 1 / 48 };
@@ -13,13 +13,17 @@ export function buildIngredientIndex(ingredients) {
   return new Map(ingredients.map((entry) => [entry.name.toLowerCase(), entry]));
 }
 
-// Converts an ingredient quantity to grams. Weight units (lb) convert directly;
-// volume units (cup/tbsp/tsp) and "ea" require an ingredient-specific lookup
-// (density or average item weight) from the ingredient registry, since a
-// chef can edit those values per ingredient.
+// Converts an ingredient quantity to grams. Weight units (g, lb) convert
+// directly; volume units (cup/tbsp/tsp) and "ea" require an ingredient-specific
+// lookup (density or average item weight) from the ingredient registry, since
+// a chef can edit those values per ingredient.
 export function convertToGrams(name, qty, unit, ingredientIndex) {
   const key = name.toLowerCase();
   const normalizedUnit = unit.toLowerCase();
+
+  if (normalizedUnit === "g") {
+    return qty;
+  }
 
   if (normalizedUnit === "lb") {
     return qty * GRAMS_PER_LB;

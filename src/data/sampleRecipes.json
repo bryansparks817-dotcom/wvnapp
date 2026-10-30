@@ -109,5 +109,148 @@
       { "name": "Bake and chill", "type": "passive", "duration_minutes": 150 },
       { "name": "Torch sugar", "type": "active", "duration_minutes": 3 }
     ]
+  },
+  {
+    "id": "lobster-stock",
+    "name": "Lobster stock",
+    "isSubRecipe": true,
+    "ingredients": [
+      { "name": "Lobster bodies/shells", "qty": 25, "unit": "lb" },
+      { "name": "Onion", "qty": 1800, "unit": "g" },
+      { "name": "Celery", "qty": 900, "unit": "g" },
+      { "name": "Fennel bulb", "qty": 900, "unit": "g" },
+      { "name": "Carrots", "qty": 900, "unit": "g" },
+      { "name": "Garlic", "qty": 200, "unit": "g" },
+      { "name": "Tomato paste", "qty": 600, "unit": "g" },
+      { "name": "Canola oil", "qty": 400, "unit": "g" },
+      { "name": "White wine", "qty": 3000, "unit": "g" },
+      { "name": "Water", "qty": 34000, "unit": "g" },
+      { "name": "Thyme", "qty": 30, "unit": "g" },
+      { "name": "Bay leaf", "qty": 15, "unit": "g" },
+      { "name": "Black peppercorns", "qty": 30, "unit": "g" }
+    ],
+    "steps": [
+      { "name": "Preheat convection oven", "type": "passive", "duration_minutes": 15 },
+      { "name": "Roast lobster bodies with oil", "type": "passive", "duration_minutes": 35 },
+      { "name": "Roast/sauté onion, fennel, celery, carrot, garlic", "type": "active", "duration_minutes": 20 },
+      { "name": "Transfer shells and vegetables to stockpot", "type": "active", "duration_minutes": 10 },
+      { "name": "Add tomato paste, cook until brick red", "type": "active", "duration_minutes": 5 },
+      { "name": "Add white wine, scrape fond, reduce by half", "type": "active", "duration_minutes": 15 },
+      { "name": "Add water, thyme, bay leaves, peppercorns", "type": "active", "duration_minutes": 5 },
+      { "name": "Simmer gently, skimming", "type": "passive", "duration_minutes": 90 },
+      { "name": "Strain through fine chinois", "type": "active", "duration_minutes": 20 }
+    ]
+  },
+  {
+    "id": "clam-chowder-veloute",
+    "name": "Clam chowder veloute",
+    "isSubRecipe": true,
+    "ingredients": [
+      { "name": "Lobster stock", "qty": 1000, "unit": "g" },
+      { "name": "Clam juice", "qty": 500, "unit": "g" },
+      { "name": "White wine", "qty": 300, "unit": "g" },
+      { "name": "Shallot", "qty": 120, "unit": "g" },
+      { "name": "Fennel bulb", "qty": 80, "unit": "g" },
+      { "name": "Garlic", "qty": 10, "unit": "g" },
+      { "name": "Butter", "qty": 180, "unit": "g" },
+      { "name": "Thyme", "qty": 3, "unit": "g" },
+      { "name": "Bay leaf", "qty": 1, "unit": "g" },
+      { "name": "Heavy cream", "qty": 150, "unit": "g" },
+      { "name": "Lemon juice", "qty": 20, "unit": "g" },
+      { "name": "Mustard powder", "qty": 1, "unit": "g" }
+    ],
+    "steps": [
+      { "name": "Melt butter, sweat shallot and fennel", "type": "active", "duration_minutes": 8 },
+      { "name": "Add garlic and thyme", "type": "active", "duration_minutes": 2 },
+      { "name": "Add white wine, reduce", "type": "active", "duration_minutes": 8 },
+      { "name": "Add stock, clam juice, bay leaf; simmer and reduce", "type": "passive", "duration_minutes": 40 },
+      { "name": "Strain through fine chinois", "type": "active", "duration_minutes": 3 },
+      { "name": "Return to pan, add cream, reduce", "type": "active", "duration_minutes": 10 },
+      { "name": "Whisk in cold butter off heat", "type": "active", "duration_minutes": 5 },
+      { "name": "Season with lemon juice, pepper, salt", "type": "active", "duration_minutes": 2 }
+    ]
+  },
+  {
+    "id": "lobster-and-shrimp-bolognese",
+    "name": "Lobster and shrimp bolognese",
+    "isSubRecipe": true,
+    "ingredients": [
+      { "name": "Lobster c&k", "qty": 907, "unit": "g" },
+      { "name": "P/d shrimp", "qty": 1360, "unit": "g" },
+      { "name": "Onion", "qty": 300, "unit": "g" },
+      { "name": "Celery", "qty": 150, "unit": "g" },
+      { "name": "Fennel bulb", "qty": 200, "unit": "g" },
+      { "name": "Garlic", "qty": 30, "unit": "g" },
+      { "name": "Butter", "qty": 250, "unit": "g" },
+      { "name": "Olive oil", "qty": 40, "unit": "g" },
+      { "name": "White wine", "qty": 450, "unit": "g" },
+      { "name": "Lobster stock", "qty": 1000, "unit": "g" },
+      { "name": "Thyme", "qty": 5, "unit": "g" },
+      { "name": "Bay leaf", "qty": 1, "unit": "ea" },
+      { "name": "Lemon zest", "qty": 1, "unit": "ea" },
+      { "name": "Parsley", "qty": 20, "unit": "g" },
+      { "name": "All-purpose flour", "qty": 150, "unit": "g" },
+      { "name": "Milk", "qty": 1500, "unit": "g" },
+      { "name": "Parmesan", "qty": 150, "unit": "g" },
+      { "name": "Mascarpone", "qty": 4400, "unit": "g" }
+    ],
+    "steps": [
+      { "name": "Sweat onion, fennel, celery in butter and oil", "type": "active", "duration_minutes": 15 },
+      { "name": "Add garlic and thyme", "type": "active", "duration_minutes": 2 },
+      { "name": "Add chopped shrimp, cook until opaque", "type": "active", "duration_minutes": 5 },
+      { "name": "Deglaze with white wine, reduce nearly dry", "type": "active", "duration_minutes": 10 },
+      { "name": "Melt butter, whisk in flour (roux)", "type": "active", "duration_minutes": 5 },
+      { "name": "Whisk in milk and stock, simmer until thick", "type": "active", "duration_minutes": 10 },
+      { "name": "Fold bechamel into shrimp mixture, cook until dense", "type": "active", "duration_minutes": 10 },
+      { "name": "Cook remaining shrimp, fold in lobster, parmesan, zest, parsley", "type": "active", "duration_minutes": 10 },
+      { "name": "Chill completely", "type": "passive", "duration_minutes": 120 },
+      { "name": "Weigh base, fold in equal weight mascarpone", "type": "active", "duration_minutes": 10 }
+    ]
+  },
+  {
+    "id": "apple-cider-thyme-mignonette",
+    "name": "Apple cider-thyme mignonette",
+    "isSubRecipe": true,
+    "ingredients": [
+      { "name": "Apple cider vinegar", "qty": 600, "unit": "g" },
+      { "name": "Apple cider", "qty": 300, "unit": "g" },
+      { "name": "Shallot", "qty": 120, "unit": "g" },
+      { "name": "Thyme", "qty": 6, "unit": "g" },
+      { "name": "Sugar", "qty": 16, "unit": "g" },
+      { "name": "Salt", "qty": 8, "unit": "g" },
+      { "name": "Black pepper", "qty": 1, "unit": "g" }
+    ],
+    "steps": [
+      { "name": "Warm apple cider with thyme", "type": "active", "duration_minutes": 5 },
+      { "name": "Remove from heat, cover, steep", "type": "passive", "duration_minutes": 15 },
+      { "name": "Strain out thyme", "type": "active", "duration_minutes": 2 },
+      { "name": "Combine infused cider with vinegar, shallot, sugar, salt, pepper", "type": "active", "duration_minutes": 3 },
+      { "name": "Refrigerate to macerate", "type": "passive", "duration_minutes": 180 },
+      { "name": "Strain through chinois and fine filter", "type": "passive", "duration_minutes": 30 },
+      { "name": "Bottle", "type": "active", "duration_minutes": 10 }
+    ]
+  },
+  {
+    "id": "atomic-whipped-horseradish-cream",
+    "name": "Atomic whipped horseradish cream",
+    "isSubRecipe": true,
+    "ingredients": [
+      { "name": "Heavy cream", "qty": 500, "unit": "g" },
+      { "name": "Crème fraîche", "qty": 100, "unit": "g" },
+      { "name": "Atomic prepared horseradish", "qty": 100, "unit": "g" },
+      { "name": "Dijon mustard", "qty": 15, "unit": "g" },
+      { "name": "Lemon juice", "qty": 20, "unit": "g" },
+      { "name": "White wine vinegar", "qty": 10, "unit": "g" },
+      { "name": "Lemon zest", "qty": 4, "unit": "g" },
+      { "name": "Salt", "qty": 4, "unit": "g" },
+      { "name": "White pepper", "qty": 0.5, "unit": "g" }
+    ],
+    "steps": [
+      { "name": "Whisk crème fraîche, horseradish, dijon, lemon juice, vinegar, zest, salt, pepper", "type": "active", "duration_minutes": 5 },
+      { "name": "Taste base for pungency", "type": "active", "duration_minutes": 1 },
+      { "name": "Whip cold cream to medium-stiff peaks", "type": "active", "duration_minutes": 5 },
+      { "name": "Fold horseradish mixture into cream", "type": "active", "duration_minutes": 3 },
+      { "name": "Refrigerate before service", "type": "passive", "duration_minutes": 30 }
+    ]
   }
 ]

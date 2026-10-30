@@ -16,5 +16,7 @@
   { "name": "Salmon fillets", "gramsPerEach": 170 },
   { "name": "Lemon", "gramsPerEach": 100 },
   { "name": "Romaine", "gramsPerEach": 500 },
-  { "name": "Egg yolks", "gramsPerEach": 18 }
+  { "name": "Egg yolks", "gramsPerEach": 18 },
+  { "name": "Bay leaf", "gramsPerEach": 0.3 },
+  { "name": "Lemon zest", "gramsPerEach": 6 }
 ]
