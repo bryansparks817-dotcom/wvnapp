@@ -22,6 +22,26 @@ function save(key, value) {
   }
 }
 
+const ALL_KEYS = [
+  RECIPES_KEY,
+  INGREDIENTS_KEY,
+  SELECTED_RECIPE_IDS_KEY,
+  DONE_LOG_KEY,
+  SCHEDULE_SETTINGS_KEY,
+];
+
+// Wipes everything this app has stored locally (recipes, ingredients,
+// today's selection, the done-log, schedule settings), so the next load
+// falls back to whatever is currently seeded — used to recover from a
+// browser whose cached recipes have drifted from a newer build.
+export function clearAllLocalData() {
+  try {
+    for (const key of ALL_KEYS) localStorage.removeItem(key);
+  } catch {
+    // storage unavailable — nothing to clear
+  }
+}
+
 export function loadRecipes(seed) {
   return load(RECIPES_KEY, seed);
 }

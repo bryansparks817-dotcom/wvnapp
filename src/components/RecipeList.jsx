@@ -4,8 +4,9 @@ function pluralize(count, word) {
   return `${count} ${word}${count === 1 ? "" : "s"}`;
 }
 
-export default function RecipeList({ recipes, onDelete, onAdd, onEdit, onBack }) {
+export default function RecipeList({ recipes, onDelete, onAdd, onEdit, onReset, onBack }) {
   const [confirmingId, setConfirmingId] = useState(null);
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   function handleConfirmDelete(id) {
     onDelete(id);
@@ -21,9 +22,30 @@ export default function RecipeList({ recipes, onDelete, onAdd, onEdit, onBack })
         </button>
       </div>
 
-      <button type="button" className="generate-button recipe-manager__add-button" onClick={onAdd}>
-        + Add recipe
-      </button>
+      <div className="recipe-manager__toolbar">
+        <button type="button" className="generate-button recipe-manager__add-button" onClick={onAdd}>
+          + Add recipe
+        </button>
+
+        {confirmingReset ? (
+          <span className="recipe-manager__reset-confirm">
+            <span className="recipe-manager-row__confirm-text">
+              This clears any local edits, additions, deletions, and the done-log — back to
+              whatever's currently shipped. Continue?
+            </span>
+            <button type="button" className="schedule-row__save-button" onClick={onReset}>
+              Confirm
+            </button>
+            <button type="button" className="schedule-row__cancel-button" onClick={() => setConfirmingReset(false)}>
+              Cancel
+            </button>
+          </span>
+        ) : (
+          <button type="button" className="link-button" onClick={() => setConfirmingReset(true)}>
+            Reset to latest recipes
+          </button>
+        )}
+      </div>
 
       <ul className="recipe-manager-list">
         {recipes.map((recipe) => (

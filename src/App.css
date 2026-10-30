@@ -104,8 +104,24 @@
   color: var(--text-muted);
 }
 
-.recipe-manager__add-button {
+.recipe-manager__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+.recipe-manager__add-button {
+  margin-bottom: 0;
+}
+
+.recipe-manager__reset-confirm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 420px;
 }
 
 /* Recipe form */

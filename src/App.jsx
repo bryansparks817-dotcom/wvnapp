@@ -9,7 +9,7 @@ import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
 import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
-import { loadSelectedRecipeIds, saveSelectedRecipeIds } from "./lib/storage";
+import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
 import "./App.css";
 
 export default function App() {
@@ -43,6 +43,11 @@ export default function App() {
       return next;
     });
     setGenerated(null);
+  }
+
+  function handleResetToLatest() {
+    clearAllLocalData();
+    window.location.reload();
   }
 
   function openAddForm() {
@@ -123,6 +128,7 @@ export default function App() {
           onDelete={handleDeleteRecipe}
           onAdd={openAddForm}
           onEdit={openEditForm}
+          onReset={handleResetToLatest}
           onBack={() => setScreen("home")}
         />
       </div>
