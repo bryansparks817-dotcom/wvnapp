@@ -16,7 +16,8 @@ Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requ
   - **Green:** on schedule or ahead of it.
   - **Yellow:** some steps done on time and some behind, but still within a **margin of error the chef sets**.
   - **Red:** behind by more than that margin.
-- Open questions for later: what the plan's clock starts from (the cook's sign-in, the count confirm, or a set start time), and whether gather and collect count toward the schedule as well as prep.
+- **Schedule start (Bryan, 2026-11-03):** the clock starts when the cook finishes their gather list and is given their prep list (they tap FINISH on the Gather page). Gather itself isn't timed.
+- **Possible add-in:** a set amount of time for gather that scales with the size of the gather list, so gather could be timed too.
 
 ## End-of-night par report (Bryan, 2026-11-03)
 - At the end of the night, the chef receives **one consolidated list** of the levels of every item on every station against its pars (line par and lowboy par). It's built from each station's close count, plus the walk-in.
