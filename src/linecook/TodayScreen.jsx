@@ -1,7 +1,7 @@
 import { CheckBox, PassHeader, TabBar } from "./Chrome";
 import { formatMinutes } from "../lib/format";
+import { containerLabel, formatG, shelfLabel } from "../lib/inventory";
 
-const WHERE_LABEL = { lowboy: "LOWBOY", "walk-in": "WALK-IN" };
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
@@ -22,28 +22,42 @@ function EightySix({ items }) {
   );
 }
 
+const WHERE = { lowboy: "LOWBOY", "walk-in": "WALK-IN" };
+
+function TakeLine({ item, take, today }) {
+  return (
+    <span className="pass__take">
+      <span className="pass__where">{WHERE[take.where]}</span> {containerLabel(take)}
+      <span className="pass__muted"> · {shelfLabel(item, take.madeOn, today)}</span>
+    </span>
+  );
+}
+
+function tossText(row) {
+  return row.toss.map((t) => `${containerLabel(t)} (${t.where})`).join(", ");
+}
+
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef,
-  countDone, totalItems, eightySix,
-  collect, plan, collected, prepped, onToggleCollected, onTogglePrepped,
+  hasClose, eightySix, itemsById, today,
+  collect, tossOnly, plan, done, onToggle, onLoadSample,
 }) {
-  if (!countDone) {
+  if (!hasClose) {
     return (
       <div className="pass">
         <PassHeader station={station}>
           <span className="pass__date">{dateLine()}</span>
-          <h1 className="pass__title">Count first.</h1>
-          <p className="pass__lede">Your prep list builds itself from the count.</p>
+          <h1 className="pass__title">No close count yet</h1>
+          <p className="pass__lede">Your list builds itself from last night’s close count.</p>
         </PassHeader>
         <main className="pass__main">
           <section className="pass__gate">
-            <div className="pass__sectionhead">
-              <h2>TODAY’S COUNT</h2>
-              <span className="pass__mono pass__amber">0 of {totalItems}</span>
-            </div>
-            <p className="pass__hint">Pan by pan, in 25% steps. Then say what’s in the back.</p>
-            <button type="button" className="pass__cta" onClick={() => setScreen("count")}>
-              START COUNT →
+            <p className="pass__hint">At the end of the night, count your line pans and lowboy. Tomorrow’s Collect and Prep come from that.</p>
+            <button type="button" className="pass__cta" onClick={() => setScreen("close")}>
+              CLOSE COUNT →
+            </button>
+            <button type="button" className="pass__ghost" onClick={onLoadSample}>
+              Try it with a sample close
             </button>
           </section>
           <EightySix items={eightySix} />
@@ -53,20 +67,16 @@ export default function TodayScreen({
     );
   }
 
-  const openCollect = collect.filter((i) => !collected.has(i.id));
-  const doneCollect = collect.filter((i) => collected.has(i.id));
-  const blockKey = (b, i) => `${b.trackId}#${i}`;
-  const totalPrep = plan.blocks.length + plan.untimed.length;
-  const donePrep =
-    plan.blocks.filter((b, i) => prepped.has(blockKey(b, i))).length +
-    plan.untimed.filter((i) => prepped.has(i.id)).length;
-
+  const collectDone = collect.filter((r) => done[`c:${r.id}`]).length;
+  const prepRows = [...new Map(plan.blocks.filter((b) => b.item).map((b) => [b.item.id, b.item])).values(), ...plan.untimed];
+  const prepTotal = prepRows.length + tossOnly.length;
+  const prepDone = [...prepRows, ...tossOnly].filter((r) => done[`p:${r.id}`]).length;
   let lastDuring = null;
 
   return (
     <div className="pass">
       <PassHeader station={station}>
-        <span className="pass__date">{dateLine()} · COUNT DONE</span>
+        <span className="pass__date">{dateLine()} · COUNT CONFIRMED</span>
         <h1 className="pass__title">Today</h1>
       </PassHeader>
       <main className="pass__main">
@@ -75,80 +85,79 @@ export default function TodayScreen({
         <section>
           <div className="pass__sectionhead">
             <h2><span className="pass__vine">1</span> · COLLECT</h2>
-            <span className="pass__mono pass__vine">{doneCollect.length} of {collect.length}</span>
+            <span className="pass__mono pass__vine">{collectDone} of {collect.length}</span>
           </div>
-          <p className="pass__hint">Already made. Top up your station and get it off your mind.</p>
+          <p className="pass__hint">Already made. Oldest first. Top up and get it off your mind.</p>
           {collect.length === 0 && <p className="pass__empty">Nothing to collect.</p>}
           <ul className="pass__list">
-            {openCollect.map((item) => (
-              <li key={item.id}>
-                <button type="button" className="pass__row" onClick={() => onToggleCollected(item.id)}>
-                  <CheckBox checked={false} />
-                  <span className="pass__rowtext">
-                    <span className="pass__rowname">{item.name}</span>
-                    <span className="pass__rowsub">{item.pan} pan · counted {item.level}%</span>
-                  </span>
-                  <span className="pass__rowend">
-                    <span className="pass__where">{WHERE_LABEL[item.back]}</span>
-                    <span className="pass__mono">+{item.need}%</span>
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          {doneCollect.length > 0 && (
-            <ul className="pass__list pass__list--done">
-              {doneCollect.map((item) => (
-                <li key={item.id}>
-                  <button type="button" className="pass__row pass__row--done" onClick={() => onToggleCollected(item.id)}>
-                    <CheckBox checked />
-                    <span className="pass__rowname">{item.name}</span>
+            {collect.map((row) => {
+              const item = itemsById.get(row.id);
+              const isDone = Boolean(done[`c:${row.id}`]);
+              return (
+                <li key={row.id}>
+                  <button type="button" className={`pass__row pass__row--tall${isDone ? " pass__row--done" : ""}`} onClick={() => onToggle("c", row)}>
+                    <CheckBox checked={isDone} />
+                    <span className="pass__rowtext">
+                      <span className="pass__rowname">{item.name}</span>
+                      {!isDone && row.toLine.length > 0 && (
+                        <span className="pass__takes">
+                          <span className="pass__takehead">TO LINE ({item.pan} pan)</span>
+                          {row.toLine.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
+                        </span>
+                      )}
+                      {!isDone && row.toLowboy.length > 0 && (
+                        <span className="pass__takes">
+                          <span className="pass__takehead">TO LOWBOY</span>
+                          {row.toLowboy.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
+                        </span>
+                      )}
+                    </span>
                   </button>
                 </li>
-              ))}
-            </ul>
-          )}
+              );
+            })}
+          </ul>
         </section>
 
         <section>
           <div className="pass__sectionhead">
             <h2><span className="pass__amber">2</span> · PREP</h2>
-            <span className="pass__mono pass__amber">{donePrep} of {totalPrep}</span>
+            <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
           </div>
           <p className="pass__hint">
-            Nothing in the back. Start the long one, fill its downtime.
+            Make it to line par + lowboy par. Start the long one, fill its downtime.
             {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} total.`}
           </p>
-          {totalPrep === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
+          {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
           <ol className="pass__list">
             {plan.blocks.map((block, i) => {
-              const key = blockKey(block, i);
-              const done = prepped.has(key);
+              const row = block.item;
+              const isDone = row ? Boolean(done[`p:${row.id}`]) : false;
               const duringLabel = block.during ? `${block.during.name}: ${block.during.step}` : null;
               const showDuring = duringLabel && duringLabel !== lastDuring;
               lastDuring = duringLabel;
-              const minutes = block.end - block.start;
               return (
-                <li key={key} className={block.during ? "pass__while" : undefined}>
+                <li key={`${block.trackId}#${i}`} className={block.during ? "pass__while" : undefined}>
                   {showDuring && <span className="pass__whilelabel">WHILE {block.during.name.toUpperCase()} · {block.during.step.toLowerCase()}</span>}
                   <button
                     type="button"
-                    className={`pass__row${done ? " pass__row--done" : ""}${!block.during && i === 0 ? " pass__row--lead" : ""}`}
-                    onClick={() => onTogglePrepped(key)}
+                    className={`pass__row${isDone ? " pass__row--done" : ""}${!block.during && i === 0 ? " pass__row--lead" : ""}`}
+                    onClick={() => row && onToggle("p", row)}
                   >
-                    {done ? <CheckBox checked tone="amber" /> : <span className="pass__step">{i + 1}</span>}
+                    {isDone ? <CheckBox checked tone="amber" /> : <span className="pass__step">{i + 1}</span>}
                     <span className="pass__rowtext">
-                      <span className="pass__rowname">
-                        {block.firstForRecipe ? block.name : `Back to ${block.name}`}
-                      </span>
+                      <span className="pass__rowname">{block.firstForRecipe ? block.name : `Back to ${block.name}`}</span>
                       <span className="pass__rowsub">
-                        {formatMinutes(minutes)} hands-on
+                        {formatMinutes(block.end - block.start)} hands-on
                         {block.thenPassive && ` · then ${formatMinutes(block.thenPassive.minutes)} ${block.thenPassive.step.toLowerCase()}`}
                       </span>
+                      {block.firstForRecipe && row?.toss.length > 0 && (
+                        <span className="pass__toss">TOSS {tossText(row)} · last day</span>
+                      )}
                     </span>
-                    {block.firstForRecipe && block.item && (
+                    {block.firstForRecipe && row && (
                       <span className="pass__rowend">
-                        <span className="pass__mono pass__amber">+{block.item.need}%</span>
+                        <span className="pass__mono pass__amber">{formatG(row.makeG)}</span>
                       </span>
                     )}
                   </button>
@@ -160,24 +169,44 @@ export default function TodayScreen({
             <>
               <span className="pass__whilelabel">NO RECIPE TIMES YET</span>
               <ul className="pass__list">
-                {plan.untimed.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      className={`pass__row${prepped.has(item.id) ? " pass__row--done" : ""}`}
-                      onClick={() => onTogglePrepped(item.id)}
-                    >
-                      <CheckBox checked={prepped.has(item.id)} tone="amber" />
-                      <span className="pass__rowtext">
-                        <span className="pass__rowname">{item.name}</span>
-                        <span className="pass__rowsub">{item.pan} pan · counted {item.level}%</span>
-                      </span>
-                      <span className="pass__rowend">
-                        <span className="pass__mono pass__amber">+{item.need}%</span>
-                      </span>
-                    </button>
-                  </li>
-                ))}
+                {plan.untimed.map((row) => {
+                  const isDone = Boolean(done[`p:${row.id}`]);
+                  return (
+                    <li key={row.id}>
+                      <button type="button" className={`pass__row${isDone ? " pass__row--done" : ""}`} onClick={() => onToggle("p", row)}>
+                        <CheckBox checked={isDone} tone="amber" />
+                        <span className="pass__rowtext">
+                          <span className="pass__rowname">{row.name}</span>
+                          {row.toss.length > 0 && <span className="pass__toss">TOSS {tossText(row)} · last day</span>}
+                        </span>
+                        <span className="pass__rowend">
+                          <span className="pass__mono pass__amber">{formatG(row.makeG)}</span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+          {tossOnly.length > 0 && (
+            <>
+              <span className="pass__whilelabel">TOSS ONLY · enough backup left</span>
+              <ul className="pass__list">
+                {tossOnly.map((row) => {
+                  const isDone = Boolean(done[`p:${row.id}`]);
+                  return (
+                    <li key={row.id}>
+                      <button type="button" className={`pass__row${isDone ? " pass__row--done" : ""}`} onClick={() => onToggle("p", row)}>
+                        <CheckBox checked={isDone} tone="amber" />
+                        <span className="pass__rowtext">
+                          <span className="pass__rowname">{row.name}</span>
+                          <span className="pass__toss">TOSS {tossText(row)} · last day</span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             </>
           )}
