@@ -1,6 +1,6 @@
 # The Pass: line cook screens
 
-These are the screens a line cook sees. Chef-only screens (scaling, adding prep items, changing an item's pan) come later as their own set.
+These are the screens a line cook sees. Chef-only screens come later as their own set; see `chef-screens.md`.
 
 ## Opening the app
 - **No count yet today:** "Count first." with a Start Count button. The prep list is built from the count.
