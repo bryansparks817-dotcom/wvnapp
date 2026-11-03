@@ -67,8 +67,10 @@ export function gatherForPrep(prepRows, recipesById, ingredients, batchGramsOf) 
   return { items, missing };
 }
 
-// Splits a gather list into the storage zones the chef assigned, in walking
-// order. Anything without a zone lands in a "No zone yet" group at the end.
+// Splits a gather list into the storage zones the chef assigned. The chef
+// sets the order: zones follow the order of the zone list, and items inside a
+// zone follow the order the chef listed them in. Anything without a zone
+// lands in a "No zone yet" group at the end, alphabetical.
 export function groupByZone(items, zoneData) {
   const groups = zoneData.zones.map((z) => ({ ...z, items: [] }));
   const byId = new Map(groups.map((g) => [g.id, g]));
@@ -77,5 +79,7 @@ export function groupByZone(items, zoneData) {
     const zone = byId.get(zoneData.assignments[item.name.toLowerCase()]);
     (zone ?? none).items.push(item);
   }
+  const order = new Map(Object.keys(zoneData.assignments).map((k, i) => [k, i]));
+  for (const g of groups) g.items.sort((a, b) => order.get(a.name.toLowerCase()) - order.get(b.name.toLowerCase()));
   return [...groups, none].filter((g) => g.items.length > 0);
 }

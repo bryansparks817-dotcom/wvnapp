@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT. The chef assigns every ingredient (AP flour to lobster stock) a dedicated zone in the walk-in or dry storage. These assignments are Claude's guesses so the gather list can be grouped; replace them from the chef screen when it exists. Zones are listed in walking order.",
+  "_note": "DRAFT. The chef assigns every ingredient (AP flour to lobster stock) a dedicated zone in the walk-in or dry storage. These assignments are Claude's guesses so the gather list can be grouped; replace them from the chef screen when it exists. The gather list follows whatever order the chef sets: zones in the order listed here, and ingredients within a zone in the order listed under assignments.",
   "zones": [
     { "id": "protein", "name": "Protein", "area": "Walk-in" },
     { "id": "dairy", "name": "Dairy", "area": "Walk-in" },
