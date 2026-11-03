@@ -6,6 +6,7 @@ const SCHEDULE_SETTINGS_KEY = "kitchenPrep.scheduleSettings.v1";
 const INVENTORY_KEY = "thePass.inventory.v1";
 const SHIFT_KEY = "thePass.shift.v1";
 const COOK_KEY = "thePass.cook.v1";
+const STAFF_KEY = "thePass.staff.v1";
 const TIMERS_KEY = "thePass.timers.v1";
 const WASTE_KEY = "thePass.waste.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
@@ -37,6 +38,7 @@ const ALL_KEYS = [
   INVENTORY_KEY,
   SHIFT_KEY,
   COOK_KEY,
+  STAFF_KEY,
   TIMERS_KEY,
   WASTE_KEY,
   "thePass.lineDay.v1",
@@ -119,7 +121,16 @@ export function saveShift(shift) {
   save(SHIFT_KEY, shift);
 }
 
-// Who's on the station today: { date, initials }.
+// Staff roster: [{ name, initials }]. See lib/staff.js.
+export function loadStaff() {
+  return load(STAFF_KEY, []);
+}
+
+export function saveStaff(staff) {
+  save(STAFF_KEY, staff);
+}
+
+// Who's on the station today: { date, name, initials }.
 export function loadCook() {
   return load(COOK_KEY, null);
 }

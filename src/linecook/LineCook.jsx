@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import lineData from "../data/lineItems.json";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadWaste, saveWaste,
+  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepPlan } from "../lib/lineList";
 import { scaleRecipe } from "../lib/recipeScale";
 import { printLabel } from "../lib/label";
+import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
@@ -24,9 +25,10 @@ function dayName(iso) {
   return DAY_NAMES[new Date(y, m - 1, d).getDay()];
 }
 
-function WhoScreen({ station, onSet }) {
-  const [initials, setInitials] = useState("");
-  const ok = initials.trim().length >= 2;
+function WhoScreen({ station, roster, onSignIn }) {
+  const [name, setName] = useState("");
+  const initials = previewInitials(name, roster);
+  const ok = normalizeName(name).split(" ").length >= 2 || roster.some((p) => p.name.toLowerCase() === normalizeName(name).toLowerCase());
   return (
     <div className="pass">
       <PassHeader station={station}>
@@ -34,23 +36,39 @@ function WhoScreen({ station, onSet }) {
         <p className="pass__lede">Your initials go on counts, check-offs and labels today.</p>
       </PassHeader>
       <main className="pass__main">
+        {roster.length > 0 && (
+          <section className="pass__roster" aria-label="Staff">
+            <span className="pass__countlabel">TAP YOUR NAME</span>
+            <div className="pass__rosterlist">
+              {roster.map((p) => (
+                <button key={p.initials} type="button" className="pass__person" onClick={() => onSignIn(p.name)}>
+                  <span className="pass__personinit">{p.initials}</span>
+                  <span>{p.name}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
         <form
           className="pass__gate"
           onSubmit={(e) => {
             e.preventDefault();
-            if (ok) onSet(initials.trim().toUpperCase());
+            if (ok) onSignIn(name);
           }}
         >
-          <label className="pass__countlabel" htmlFor="pass-initials">INITIALS</label>
+          <label className="pass__countlabel" htmlFor="pass-name">{roster.length ? "OR ENTER YOUR FULL NAME" : "FULL NAME"}</label>
           <input
-            id="pass-initials"
-            className="pass__input pass__input--big"
-            value={initials}
-            maxLength={4}
-            autoComplete="off"
-            autoCapitalize="characters"
-            onChange={(e) => setInitials(e.target.value)}
+            id="pass-name"
+            className="pass__input pass__input--name"
+            value={name}
+            autoComplete="name"
+            autoCapitalize="words"
+            placeholder="First and last name"
+            onChange={(e) => setName(e.target.value)}
           />
+          <p className="pass__hint" aria-live="polite">
+            {initials ? <>You’ll sign as <strong className="pass__amber">{initials}</strong></> : "Your initials are set from your name."}
+          </p>
           <button type="submit" className="pass__cta" disabled={!ok}>START SHIFT →</button>
         </form>
       </main>
@@ -65,6 +83,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
   const [inventory, setInventory] = useState(() => loadInventory());
   const [shift, setShift] = useState(() => loadShift());
   const [cook, setCook] = useState(() => loadCook());
+  const [staff, setStaff] = useState(() => loadStaff());
   const [waste, setWaste] = useState(() => loadWaste());
   const [flags, setFlags] = useState(() => loadEightySix());
   const [screen, setScreen] = useState("today");
@@ -73,6 +92,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
   useEffect(() => { if (inventory) saveInventory(inventory); }, [inventory]);
   useEffect(() => { if (shift) saveShift(shift); }, [shift]);
   useEffect(() => { if (cook) saveCook(cook); }, [cook]);
+  useEffect(() => { saveStaff(staff); }, [staff]);
   useEffect(() => { saveWaste(waste); }, [waste]);
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
@@ -174,7 +194,17 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
   const shared = { station, onOpenChef, screen, setScreen, initials: by, onChangeCook: () => setCook(null) };
 
   if (!by) {
-    return <WhoScreen station={station} onSet={(initials) => setCook({ date: today, initials })} />;
+    return (
+      <WhoScreen
+        station={station}
+        roster={staff}
+        onSignIn={(name) => {
+          const { person, roster } = signIn(name, staff);
+          setStaff(roster);
+          setCook({ date: today, name: person.name, initials: person.initials });
+        }}
+      />
+    );
   }
 
   if (openPrepId && shiftIsToday) {

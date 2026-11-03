@@ -177,3 +177,10 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__86chip.is-low { color: var(--char) !important; }
 .pass__timers--empty { padding-top: 6px; padding-bottom: 6px; border-bottom: 1px solid #2c312d; }
 .pass__timerempty { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.08em; color: #8a8f88; text-align: center; }
+
+/* Who's on: staff roster + full name */
+.pass__input--name { font-size: 20px; }
+.pass__roster { display: flex; flex-direction: column; gap: 8px; }
+.pass__rosterlist { display: flex; flex-direction: column; gap: 6px; }
+.pass__person { min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 6px 12px; border-radius: 8px; border: 0; background: var(--card); text-align: left; font-size: 16px !important; font-weight: 600; }
+.pass__personinit { min-width: 44px; height: 32px; border-radius: 16px; border: 1.5px solid var(--amber); color: var(--amber); font-family: "DM Mono", monospace; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
