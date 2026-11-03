@@ -100,7 +100,7 @@ export default function App() {
   }, []);
 
   if (mode === "line") {
-    return <LineCook recipesById={recipesById} onOpenChef={() => setMode("chef")} />;
+    return <LineCook recipesById={recipesById} ingredients={ingredients} onOpenChef={() => setMode("chef")} />;
   }
 
   if (screen === "form") {
