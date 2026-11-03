@@ -5,6 +5,8 @@ import TimelineList from "./components/TimelineList";
 import RecipeList from "./components/RecipeList";
 import RecipeForm from "./components/RecipeForm";
 import LineCook from "./linecook/LineCook";
+import TimerBar from "./linecook/TimerBar";
+import { loadTimers, saveTimers } from "./lib/storage";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
@@ -18,6 +20,14 @@ export default function App() {
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
   // "line" = the line cook screens (default); "chef" = recipe and prep tools.
   const [mode, setMode] = useState("line");
+  // Prep timers live here so the timer strip shows on every screen, line or chef.
+  const [timers, setTimers] = useState(() => loadTimers());
+  useEffect(() => {
+    saveTimers(timers);
+  }, [timers]);
+  const startTimer = (label, minutes) =>
+    setTimers((t) => [...t, { id: `${Date.now()}`, label, endsAt: Date.now() + minutes * 60000 }]);
+  const timerBar = <TimerBar timers={timers} onDismiss={(id) => setTimers((t) => t.filter((x) => x.id !== id))} />;
   const [screen, setScreen] = useState("home");
   const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(() => new Set(loadSelectedRecipeIds()));
@@ -100,12 +110,25 @@ export default function App() {
   }, []);
 
   if (mode === "line") {
-    return <LineCook recipesById={recipesById} onOpenChef={() => setMode("chef")} />;
+    return (
+      <>
+        {timerBar}
+        <LineCook
+          recipesById={recipesById}
+          ingredients={ingredients}
+          onOpenChef={() => setMode("chef")}
+          timers={timers}
+          onStartTimer={startTimer}
+        />
+      </>
+    );
   }
 
   if (screen === "form") {
     const initialRecipe = editingRecipeId ? recipes.find((r) => r.id === editingRecipeId) : null;
     return (
+      <>
+      {timerBar}
       <div className="app">
         <header className="app__header">
           <h1>The Pass · Chef</h1>
@@ -121,11 +144,14 @@ export default function App() {
           onCancel={() => setScreen("manage")}
         />
       </div>
+      </>
     );
   }
 
   if (screen === "manage") {
     return (
+      <>
+      {timerBar}
       <div className="app">
         <header className="app__header">
           <h1>The Pass · Chef</h1>
@@ -139,10 +165,13 @@ export default function App() {
           onBack={() => setScreen("home")}
         />
       </div>
+      </>
     );
   }
 
   return (
+    <>
+    {timerBar}
     <div className="app">
       <header className="app__header">
         <button type="button" className="link-button" onClick={() => setMode("line")}>
@@ -183,5 +212,6 @@ export default function App() {
         </>
       )}
     </div>
+    </>
   );
 }

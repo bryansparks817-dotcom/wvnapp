@@ -45,3 +45,12 @@ Built on one phone (localStorage) in the line view; walk-in is sample data until
 - **Shelf life:** each prepped item shows how much time it has left (for example, "relish · 3 days left"). Batches are tracked separately by the date they were made, which is stamped when the cook checks off the prep. On a batch's last day, the app says to toss it and make fresh, and the item goes on Prep. Shelf life counts calendar days, including days the restaurant is closed (assumed).
 
 **Needs a shared database.** The walk-in count (chef's phone) and last night's count (closing cook's phone) both have to reach the next cook. The app currently only saves to the phone it runs on.
+
+## Line cook tools (added 2026-11-03)
+- **Who's on:** the cook enters their initials at the start of each day. Those initials are stamped on the close count, the notes, every check-off, 86/low flags, waste entries and labels. Tap the initials pill to change cooks.
+- **Recipe from a prep row:** tapping the row opens the recipe scaled to the grams Prep asks for, and the check on the left marks it done. Until a recipe has `yieldGrams`, scaling uses the total ingredient weight, which overstates yield for anything that reduces (like stock). The screen says so.
+- **Timers:** every passive step has a TIMER button. A timer strip sits at the top of every screen (line and chef, "NO TIMERS RUNNING" when empty), and they beep and vibrate when done. They're saved, so they survive a reload.
+- **Labels:** after prep is done, PRINT LABEL prints one label per container (the line pan plus each new qt/pt). Each shows the item, made date and time, initials, grams and USE BY (the last day of shelf life). The labels are sized for 62 mm continuous tape (DK-2205) on a Brother QL-820NWB, printed through the phone's print dialog (AirPrint / Mopria).
+- **Notes for next shift:** written on the Close screen, then shown on the next shift's confirm screen and Today.
+- **86 / running low:** cooks can flag any item. Tap a chip to clear it.
+- **Waste log:** tossing a batch on its last day logs its grams, the reason, the cook and the time (`thePass.waste.v1`), so it can feed food cost later.

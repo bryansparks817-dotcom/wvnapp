@@ -5,6 +5,9 @@ const DONE_LOG_KEY = "kitchenPrep.doneLog.v1";
 const SCHEDULE_SETTINGS_KEY = "kitchenPrep.scheduleSettings.v1";
 const INVENTORY_KEY = "thePass.inventory.v1";
 const SHIFT_KEY = "thePass.shift.v1";
+const COOK_KEY = "thePass.cook.v1";
+const TIMERS_KEY = "thePass.timers.v1";
+const WASTE_KEY = "thePass.waste.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
 
 function load(key, seed) {
@@ -33,6 +36,9 @@ const ALL_KEYS = [
   SCHEDULE_SETTINGS_KEY,
   INVENTORY_KEY,
   SHIFT_KEY,
+  COOK_KEY,
+  TIMERS_KEY,
+  WASTE_KEY,
   "thePass.lineDay.v1",
   EIGHTY_SIX_KEY,
 ];
@@ -113,7 +119,40 @@ export function saveShift(shift) {
   save(SHIFT_KEY, shift);
 }
 
-// The 86 board: a list of item names. Chef screens will edit it.
+// Who's on the station today: { date, initials }.
+export function loadCook() {
+  return load(COOK_KEY, null);
+}
+
+export function saveCook(cook) {
+  save(COOK_KEY, cook);
+}
+
+// Running timers: [{ id, label, endsAt (ms) }].
+export function loadTimers() {
+  return load(TIMERS_KEY, []);
+}
+
+export function saveTimers(timers) {
+  save(TIMERS_KEY, timers);
+}
+
+// Waste log: [{ key, date, itemId, name, grams, reason, by, at }].
+export function loadWaste() {
+  return load(WASTE_KEY, []);
+}
+
+export function saveWaste(entries) {
+  save(WASTE_KEY, entries);
+}
+
+// The 86 board: [{ name, kind: "86" | "low", by, at }]. Older builds stored
+// plain names; those read as 86s.
 export function loadEightySix() {
-  return load(EIGHTY_SIX_KEY, []);
+  const raw = load(EIGHTY_SIX_KEY, []);
+  return raw.map((f) => (typeof f === "string" ? { name: f, kind: "86", by: "", at: null } : f));
+}
+
+export function saveEightySix(flags) {
+  save(EIGHTY_SIX_KEY, flags);
 }

@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import lineData from "../data/lineItems.json";
-import { loadEightySix, loadInventory, saveInventory, loadShift, saveShift } from "../lib/storage";
-import { applyCollect, applyPrep, buildShift, emptyInventory, sampleInventory } from "../lib/inventory";
+import {
+  loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
+  loadCook, saveCook, loadWaste, saveWaste,
+} from "../lib/storage";
+import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepPlan } from "../lib/lineList";
+import { scaleRecipe } from "../lib/recipeScale";
+import { printLabel } from "../lib/label";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
+import RecipeScreen from "./RecipeScreen";
+import { PassHeader } from "./Chrome";
 import "./pass.css";
 
 function localDateKey(d = new Date()) {
@@ -17,24 +24,62 @@ function dayName(iso) {
   return DAY_NAMES[new Date(y, m - 1, d).getDay()];
 }
 
-export default function LineCook({ recipesById, onOpenChef }) {
+function WhoScreen({ station, onSet }) {
+  const [initials, setInitials] = useState("");
+  const ok = initials.trim().length >= 2;
+  return (
+    <div className="pass">
+      <PassHeader station={station}>
+        <h1 className="pass__title">Who’s on?</h1>
+        <p className="pass__lede">Your initials go on counts, check-offs and labels today.</p>
+      </PassHeader>
+      <main className="pass__main">
+        <form
+          className="pass__gate"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (ok) onSet(initials.trim().toUpperCase());
+          }}
+        >
+          <label className="pass__countlabel" htmlFor="pass-initials">INITIALS</label>
+          <input
+            id="pass-initials"
+            className="pass__input pass__input--big"
+            value={initials}
+            maxLength={4}
+            autoComplete="off"
+            autoCapitalize="characters"
+            onChange={(e) => setInitials(e.target.value)}
+          />
+          <button type="submit" className="pass__cta" disabled={!ok}>START SHIFT →</button>
+        </form>
+      </main>
+    </div>
+  );
+}
+
+export default function LineCook({ recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
   const today = localDateKey();
   const { items, linePar, station } = lineData;
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const [inventory, setInventory] = useState(() => loadInventory());
   const [shift, setShift] = useState(() => loadShift());
+  const [cook, setCook] = useState(() => loadCook());
+  const [waste, setWaste] = useState(() => loadWaste());
+  const [flags, setFlags] = useState(() => loadEightySix());
   const [screen, setScreen] = useState("today");
-  const eightySix = useMemo(() => loadEightySix(), []);
+  const [openPrepId, setOpenPrepId] = useState(null);
 
-  useEffect(() => {
-    if (inventory) saveInventory(inventory);
-  }, [inventory]);
-  useEffect(() => {
-    if (shift) saveShift(shift);
-  }, [shift]);
+  useEffect(() => { if (inventory) saveInventory(inventory); }, [inventory]);
+  useEffect(() => { if (shift) saveShift(shift); }, [shift]);
+  useEffect(() => { if (cook) saveCook(cook); }, [cook]);
+  useEffect(() => { saveWaste(waste); }, [waste]);
+  useEffect(() => { saveEightySix(flags); }, [flags]);
 
+  const by = cook?.date === today ? cook.initials : null;
   const invItems = inventory?.items ?? emptyInventory(items);
   const shiftIsToday = shift?.date === today;
+  const meta = shiftIsToday ? shift.meta ?? {} : {};
 
   const prepForPlan = useMemo(
     () => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []),
@@ -43,26 +88,41 @@ export default function LineCook({ recipesById, onOpenChef }) {
   const plan = useMemo(() => buildPrepPlan(prepForPlan, recipesById), [prepForPlan, recipesById]);
 
   function changeItem(id, next) {
-    setInventory((inv) => ({ closedOn: inv?.closedOn ?? null, items: { ...(inv?.items ?? emptyInventory(items)), [id]: next } }));
+    setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [id]: next } }));
+  }
+
+  function changeNotes(text) {
+    setInventory((inv) => ({ ...(inv ?? { items: emptyInventory(items) }), draftNotes: text }));
   }
 
   function saveClose() {
-    setInventory((inv) => ({ ...inv, items: inv?.items ?? emptyInventory(items), closedOn: today }));
+    setInventory((inv) => ({
+      ...inv,
+      items: inv?.items ?? emptyInventory(items),
+      closedOn: today,
+      closedBy: by,
+      notes: inv?.draftNotes?.trim() ? { text: inv.draftNotes.trim(), by } : null,
+      draftNotes: "",
+    }));
     setScreen("today");
   }
 
   function confirmCount() {
     const { collect, prep } = buildShift(items, invItems, linePar, today);
-    // Plain data only, so it survives a reload.
     const strip = (rows) => rows.map(({ item: _item, ...rest }) => rest);
-    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {} });
+    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {}, confirmedBy: by });
     setScreen("today");
   }
 
   function loadSample() {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    setInventory({ closedOn: localDateKey(yesterday), items: sampleInventory(items, today) });
+    setInventory({
+      closedOn: localDateKey(yesterday),
+      closedBy: "JR",
+      notes: { text: "Low on shallots for mignonette. Stock is on its last day, toss it.", by: "JR" },
+      items: sampleInventory(items, today),
+    });
     setShift(null);
   }
 
@@ -74,48 +134,119 @@ export default function LineCook({ recipesById, onOpenChef }) {
       const snapshot = shift.done[key];
       setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: snapshot } }));
       const done = { ...shift.done };
-      delete done[`c:${row.id}`];
-      delete done[`p:${row.id}`];
-      setShift({ ...shift, done });
+      const nextMeta = { ...meta };
+      for (const k of [`c:${row.id}`, `p:${row.id}`]) {
+        delete done[k];
+        delete nextMeta[k];
+      }
+      setShift({ ...shift, done, meta: nextMeta });
+      setWaste((w) => w.filter((e) => e.key !== `${today}:${row.id}`));
       return;
     }
     const before = invItems[row.id];
-    const after = kind === "c" ? applyCollect(before, row, linePar) : applyPrep(item, before, row, linePar, today);
+    const at = Date.now();
+    let labels = null;
+    let after;
+    if (kind === "c") {
+      after = applyCollect(before, row, linePar);
+    } else {
+      after = applyPrep(item, before, row, linePar, today);
+      const kept = before.lowboy.filter((c) => c.fill > 0 && !isLastDay(item, c.madeOn, today)).length;
+      const added = after.lowboy.slice(kept).map((c) => ({ size: c.size, grams: gramsIn(item, c) }));
+      const lineG = ((after.line - before.line) / 100) * item.panGrams;
+      labels = [...(lineG > 0 ? [{ size: `${item.pan} pan`, grams: lineG }] : []), ...added];
+      if (row.toss.length) {
+        const tossG = row.toss.reduce((s, t) => s + gramsIn(item, t), 0);
+        setWaste((w) => [
+          ...w,
+          { key: `${today}:${row.id}`, date: today, itemId: row.id, name: item.name, grams: tossG, reason: "shelf life", by, at },
+        ]);
+      }
+    }
     setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: after } }));
-    setShift({ ...shift, done: { ...shift.done, [key]: before } });
+    setShift({ ...shift, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
   }
 
-  const shared = { station, onOpenChef, screen, setScreen };
+  function addFlag(name, kind) {
+    setFlags((f) => [...f.filter((x) => x.name !== name), { name, kind, by, at: Date.now() }]);
+  }
+
+  const shared = { station, onOpenChef, screen, setScreen, initials: by, onChangeCook: () => setCook(null) };
+
+  if (!by) {
+    return <WhoScreen station={station} onSet={(initials) => setCook({ date: today, initials })} />;
+  }
+
+  if (openPrepId && shiftIsToday) {
+    const row = shift.prep.find((p) => p.id === openPrepId);
+    const recipe = row?.recipeId ? recipesById.get(row.recipeId) : null;
+    if (row) {
+      const scaled = recipe ? scaleRecipe(recipe, row.makeG, recipesById, ingredients) : null;
+      const key = `p:${row.id}`;
+      return (
+        <>
+          <RecipeScreen
+            row={row}
+            recipe={recipe}
+            scaled={scaled}
+            doneMeta={shift.done[key] ? meta[key] : null}
+            timers={timers}
+            onBack={() => setOpenPrepId(null)}
+            onToggleDone={() => toggleDone("p", row)}
+            onStartTimer={onStartTimer}
+            onPrintLabel={() =>
+              printLabel({ item: itemsById.get(row.id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] })
+            }
+          />
+        </>
+      );
+    }
+  }
 
   if (screen === "close" || (screen === "today" && inventory?.closedOn && !shiftIsToday)) {
     const mode = screen === "close" ? "close" : "confirm";
     return (
-      <CountScreen
-        {...shared}
-        mode={mode}
-        items={items}
-        inventory={invItems}
-        today={today}
-        closedOnLabel={inventory?.closedOn ? dayName(inventory.closedOn) : ""}
-        onChangeItem={changeItem}
-        onSubmit={mode === "close" ? saveClose : confirmCount}
-      />
+      <>
+        <CountScreen
+          {...shared}
+          mode={mode}
+          items={items}
+          inventory={invItems}
+          today={today}
+          closedOnLabel={inventory?.closedOn ? dayName(inventory.closedOn) : ""}
+          closedBy={inventory?.closedBy}
+          notes={mode === "close" ? inventory?.draftNotes ?? "" : null}
+          lastNotes={inventory?.notes}
+          onChangeNotes={changeNotes}
+          onChangeItem={changeItem}
+          onSubmit={mode === "close" ? saveClose : confirmCount}
+        />
+      </>
     );
   }
 
   return (
-    <TodayScreen
-      {...shared}
-      hasClose={Boolean(inventory?.closedOn)}
-      eightySix={eightySix}
-      itemsById={itemsById}
-      today={today}
-      collect={shiftIsToday ? shift.collect : []}
-      tossOnly={shiftIsToday ? shift.prep.filter((p) => p.makeG === 0) : []}
-      plan={plan}
-      done={shiftIsToday ? shift.done : {}}
-      onToggle={toggleDone}
-      onLoadSample={loadSample}
-    />
+    <>
+      <TodayScreen
+        {...shared}
+        hasClose={Boolean(inventory?.closedOn)}
+        lastNotes={inventory?.notes}
+        flags={flags}
+        onAddFlag={addFlag}
+        onRemoveFlag={(name) => setFlags((f) => f.filter((x) => x.name !== name))}
+        items={items}
+        itemsById={itemsById}
+        today={today}
+        collect={shiftIsToday ? shift.collect : []}
+        tossOnly={shiftIsToday ? shift.prep.filter((p) => p.makeG === 0) : []}
+        plan={plan}
+        done={shiftIsToday ? shift.done : {}}
+        meta={meta}
+        wasteToday={waste.filter((w) => w.date === today)}
+        onToggle={toggleDone}
+        onOpenPrep={setOpenPrepId}
+        onLoadSample={loadSample}
+      />
+    </>
   );
 }

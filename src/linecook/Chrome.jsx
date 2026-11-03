@@ -1,6 +1,6 @@
 // Header and bottom tabs shared by the line cook screens.
 
-export function PassHeader({ station, children }) {
+export function PassHeader({ station, initials, onChangeCook, children }) {
   return (
     <header className="pass__header">
       <div className="pass__brandrow">
@@ -8,7 +8,14 @@ export function PassHeader({ station, children }) {
           <span className="pass__brandbar" aria-hidden="true" />
           <span className="pass__wordmark">THE PASS</span>
         </div>
-        <span className="pass__station">{station}</span>
+        <span className="pass__headright">
+          <span className="pass__station">{station}</span>
+          {initials && (
+            <button type="button" className="pass__initials" onClick={onChangeCook} aria-label={`Signed in as ${initials}. Change cook`}>
+              {initials}
+            </button>
+          )}
+        </span>
       </div>
       {children}
     </header>
