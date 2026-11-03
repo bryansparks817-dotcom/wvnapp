@@ -3,6 +3,8 @@ const INGREDIENTS_KEY = "kitchenPrep.ingredients.v1";
 const SELECTED_RECIPE_IDS_KEY = "kitchenPrep.selectedRecipeIds.v1";
 const DONE_LOG_KEY = "kitchenPrep.doneLog.v1";
 const SCHEDULE_SETTINGS_KEY = "kitchenPrep.scheduleSettings.v1";
+const LINE_DAY_KEY = "thePass.lineDay.v1";
+const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
 
 function load(key, seed) {
   try {
@@ -28,6 +30,8 @@ const ALL_KEYS = [
   SELECTED_RECIPE_IDS_KEY,
   DONE_LOG_KEY,
   SCHEDULE_SETTINGS_KEY,
+  LINE_DAY_KEY,
+  EIGHTY_SIX_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -84,4 +88,21 @@ export function loadScheduleSettings() {
 
 export function saveScheduleSettings(settings) {
   save(SCHEDULE_SETTINGS_KEY, settings);
+}
+
+// Today's line count and progress: { date, entries: { itemId: { level, back } },
+// countDone, collected: [itemId], prepped: [itemId] }. A new day starts fresh.
+export function loadLineDay(today) {
+  const day = load(LINE_DAY_KEY, null);
+  if (day && day.date === today) return day;
+  return { date: today, entries: {}, countDone: false, collected: [], prepped: [] };
+}
+
+export function saveLineDay(day) {
+  save(LINE_DAY_KEY, day);
+}
+
+// The 86 board: a list of item names. Chef screens will edit it.
+export function loadEightySix() {
+  return load(EIGHTY_SIX_KEY, []);
 }

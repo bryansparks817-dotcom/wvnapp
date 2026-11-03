@@ -4,6 +4,7 @@ import GatherList from "./components/GatherList";
 import TimelineList from "./components/TimelineList";
 import RecipeList from "./components/RecipeList";
 import RecipeForm from "./components/RecipeForm";
+import LineCook from "./linecook/LineCook";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
@@ -15,6 +16,8 @@ import "./App.css";
 export default function App() {
   const { recipes, addRecipe, updateRecipe, deleteRecipe } = useRecipes();
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
+  // "line" = the line cook screens (default); "chef" = recipe and prep tools.
+  const [mode, setMode] = useState("line");
   const [screen, setScreen] = useState("home");
   const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(() => new Set(loadSelectedRecipeIds()));
@@ -96,12 +99,16 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (mode === "line") {
+    return <LineCook recipesById={recipesById} onOpenChef={() => setMode("chef")} />;
+  }
+
   if (screen === "form") {
     const initialRecipe = editingRecipeId ? recipes.find((r) => r.id === editingRecipeId) : null;
     return (
       <div className="app">
         <header className="app__header">
-          <h1>Kitchen Prep</h1>
+          <h1>The Pass · Chef</h1>
         </header>
         <RecipeForm
           initialRecipe={initialRecipe}
@@ -121,7 +128,7 @@ export default function App() {
     return (
       <div className="app">
         <header className="app__header">
-          <h1>Kitchen Prep</h1>
+          <h1>The Pass · Chef</h1>
         </header>
         <RecipeList
           recipes={recipes}
@@ -138,7 +145,10 @@ export default function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1>Kitchen Prep</h1>
+        <button type="button" className="link-button" onClick={() => setMode("line")}>
+          ← Line view
+        </button>
+        <h1>The Pass · Chef</h1>
         <p>Select today's recipes, then generate the gather list and prep timeline.</p>
       </header>
 
