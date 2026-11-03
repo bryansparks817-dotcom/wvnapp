@@ -3,7 +3,8 @@ const INGREDIENTS_KEY = "kitchenPrep.ingredients.v1";
 const SELECTED_RECIPE_IDS_KEY = "kitchenPrep.selectedRecipeIds.v1";
 const DONE_LOG_KEY = "kitchenPrep.doneLog.v1";
 const SCHEDULE_SETTINGS_KEY = "kitchenPrep.scheduleSettings.v1";
-const LINE_DAY_KEY = "thePass.lineDay.v1";
+const INVENTORY_KEY = "thePass.inventory.v1";
+const SHIFT_KEY = "thePass.shift.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
 
 function load(key, seed) {
@@ -30,7 +31,9 @@ const ALL_KEYS = [
   SELECTED_RECIPE_IDS_KEY,
   DONE_LOG_KEY,
   SCHEDULE_SETTINGS_KEY,
-  LINE_DAY_KEY,
+  INVENTORY_KEY,
+  SHIFT_KEY,
+  "thePass.lineDay.v1",
   EIGHTY_SIX_KEY,
 ];
 
@@ -90,16 +93,24 @@ export function saveScheduleSettings(settings) {
   save(SCHEDULE_SETTINGS_KEY, settings);
 }
 
-// Today's line count and progress: { date, entries: { itemId: { level, back } },
-// countDone, collected: [itemId], prepped: [itemId] }. A new day starts fresh.
-export function loadLineDay(today) {
-  const day = load(LINE_DAY_KEY, null);
-  if (day && day.date === today) return day;
-  return { date: today, entries: {}, countDone: false, collected: [], prepped: [] };
+// Inventory as of the last count: { closedOn, items: { itemId: { line, lowboy, walkIn } } }.
+// Carries over to the next shift (see docs/line-cook-screens.md).
+export function loadInventory() {
+  return load(INVENTORY_KEY, null);
 }
 
-export function saveLineDay(day) {
-  save(LINE_DAY_KEY, day);
+export function saveInventory(inventory) {
+  save(INVENTORY_KEY, inventory);
+}
+
+// The current shift: { date, collect, prep, done: { key: snapshot } }.
+// Built when the cook confirms last night's count.
+export function loadShift() {
+  return load(SHIFT_KEY, null);
+}
+
+export function saveShift(shift) {
+  save(SHIFT_KEY, shift);
 }
 
 // The 86 board: a list of item names. Chef screens will edit it.

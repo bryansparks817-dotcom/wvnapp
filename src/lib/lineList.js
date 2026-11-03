@@ -1,45 +1,9 @@
-// Turns a line count into the two lists a line cook works from.
-//
-// Counts are taken in 25% steps of the pan each item lives in (a ninth pan
-// half full = 50%). Par is a full pan for now; chef screens will set it.
-// Each item that is under par is then either:
-//   COLLECT — more is already made in the lowboy or walk-in; restock from there.
-//   PREP    — nothing in the back; make it from scratch.
+// Orders the shift's Prep list (see inventory.js for how it's built).
 // Prep is ordered by the existing scheduler: the longest remaining recipe
 // starts first and its passive time (simmer, braise, chill) is filled with
 // active steps from the other recipes.
 import { buildTracks } from "./recipeComposition";
 import { buildTimeline } from "./scheduler";
-
-export const LEVELS = [0, 25, 50, 75, 100];
-export const BACK_OPTIONS = [
-  { id: "none", label: "None" },
-  { id: "lowboy", label: "Lowboy" },
-  { id: "walk-in", label: "Walk-in" },
-];
-export const PAR = 100;
-
-export function isCounted(entry) {
-  if (!entry || entry.level == null) return false;
-  return entry.level >= PAR || entry.back != null;
-}
-
-export function needOf(entry) {
-  return Math.max(0, PAR - (entry?.level ?? 0));
-}
-
-export function splitCount(items, entries) {
-  const collect = [];
-  const prep = [];
-  for (const item of items) {
-    const entry = entries[item.id];
-    if (!isCounted(entry) || needOf(entry) === 0) continue;
-    const row = { ...item, level: entry.level, need: needOf(entry), back: entry.back };
-    if (entry.back === "none") prep.push(row);
-    else collect.push(row);
-  }
-  return { collect, prep };
-}
 
 // Builds the ordered prep plan. Returns blocks of hands-on work in order,
 // each tagged with whatever passive step is running in the background while

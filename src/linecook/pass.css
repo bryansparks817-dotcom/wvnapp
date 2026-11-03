@@ -100,3 +100,22 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__tabs { position: sticky; bottom: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); padding: 6px 8px calc(10px + env(safe-area-inset-bottom)); background: var(--char); }
 .pass__tab { min-height: 52px; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px !important; font-weight: 500; color: var(--steel) !important; }
 .pass__tab.is-active { color: var(--amber) !important; font-weight: 600; }
+
+/* Close / confirm count */
+.pass__countrow { display: flex; flex-direction: column; gap: 6px; }
+.pass__countlabel { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--steel); }
+.pass__container { display: flex; flex-direction: column; gap: 4px; padding-left: 10px; border-left: 2px solid var(--edge); }
+.pass__containerinfo { font-family: "DM Mono", monospace; font-size: 12px; color: #c9c4ba; }
+.pass__containerinfo.is-expiring { color: var(--amber); }
+.pass__none { font-size: 13px; color: var(--steel); }
+.pass__addrow { display: flex; gap: 6px; }
+.pass__add { min-height: 40px; padding: 0 14px; border-radius: 20px; border: 1.5px dashed var(--edge); background: transparent; font-family: "DM Mono", monospace !important; font-size: 13px !important; color: #c9c4ba !important; }
+.pass__walkin { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.04em; color: var(--steel); }
+.pass__ghost { min-height: 44px; border: 0; background: transparent; color: var(--steel) !important; font-size: 14px !important; text-decoration: underline; }
+
+/* Collect details */
+.pass__row--tall { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; }
+.pass__takes { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+.pass__takehead { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--steel); }
+.pass__take { font-family: "DM Mono", monospace; font-size: 13px; }
+.pass__toss { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: var(--char); background: var(--amber); border-radius: 4px; padding: 2px 6px; align-self: flex-start; margin-top: 4px; }

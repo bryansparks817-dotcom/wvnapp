@@ -24,9 +24,9 @@ The prep order comes from the optimization formula in `src/lib/scheduler.js`. Wh
 - `src/data/lineItems.json`: station items and pan sizes (sample data; the chef screens will edit this)
 - Today's count is saved in localStorage (`thePass.lineDay.v1`) and resets each day.
 
-## Counts and carry-over (agreed with Bryan, 2026-11-03; not built yet)
+## Counts and carry-over (agreed with Bryan, 2026-11-03)
 
-This replaces the "count first in the morning" flow above once it's built.
+Built on one phone (localStorage) in the line view; walk-in is sample data until the chef screens and Supabase exist. Code: `src/lib/inventory.js`.
 
 **Setup**
 - Each restaurant sets its service schedule during setup (for example, Wed–Sat dinner only, or Mon–Sun lunch and dinner). A count carries over to the **next scheduled shift**.
