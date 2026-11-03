@@ -12,7 +12,11 @@ Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requ
 - Shows **who is logged on**, on each station.
 - Each cook is color-coded **green, yellow, or red** based on productivity, meaning how far along they are on their prep list for the day.
 - Shows each cook's notes.
-- Open questions for later: the thresholds for green, yellow and red (for example, steps done vs. where the optimized plan says they should be by now, against the time until service), and whether it counts gather and collect as well as prep.
+- **Colors (Bryan, 2026-11-03).** Each cook is compared against the schedule from their optimized prep plan:
+  - **Green:** on schedule or ahead of it.
+  - **Yellow:** some steps done on time and some behind, but still within a **margin of error the chef sets**.
+  - **Red:** behind by more than that margin.
+- Open questions for later: what the plan's clock starts from (the cook's sign-in, the count confirm, or a set start time), and whether gather and collect count toward the schedule as well as prep.
 
 ## End-of-night par report (Bryan, 2026-11-03)
 - At the end of the night, the chef receives **one consolidated list** of the levels of every item on every station against its pars (line par and lowboy par). It's built from each station's close count, plus the walk-in.
