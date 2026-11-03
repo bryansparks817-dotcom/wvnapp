@@ -161,7 +161,7 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__ghostbtn { min-height: 52px; border-radius: 10px; border: 1.5px solid var(--ticket); background: transparent; font-family: "Oswald", sans-serif !important; font-weight: 600; font-size: 16px !important; letter-spacing: 0.06em; }
 
 /* Timers */
-.pass__timers { position: sticky; top: 0; margin: 0 auto; max-width: 560px; background: #1b1e1c; padding: 8px 12px calc(8px + env(safe-area-inset-top, 0px)) ; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; z-index: 20; }
+.pass__timers { position: sticky; top: 0; margin: 0 auto; background: #1b1e1c; padding: 8px 12px calc(8px + env(safe-area-inset-top, 0px)) ; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; z-index: 20; }
 .pass__timer { display: flex; align-items: center; gap: 10px; background: #2c312d; border: 1.5px solid var(--amber); border-radius: 10px; padding: 6px 6px 6px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
 .pass__timer.is-done { background: var(--amber); color: var(--char); animation: pass-pulse 1s ease-in-out infinite; }
 .pass__timerlabel { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -175,3 +175,5 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__timers button { font: inherit; color: inherit; cursor: pointer; }
 .pass__86chip { color: var(--ticket) !important; }
 .pass__86chip.is-low { color: var(--char) !important; }
+.pass__timers--empty { padding-top: 6px; padding-bottom: 6px; border-bottom: 1px solid #2c312d; }
+.pass__timerempty { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.08em; color: #8a8f88; text-align: center; }

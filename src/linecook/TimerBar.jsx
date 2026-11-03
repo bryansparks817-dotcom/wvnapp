@@ -32,7 +32,8 @@ function beep() {
   }
 }
 
-// Running timers, pinned above the tabs on every line screen.
+// The timer strip: pinned to the top of every screen, line or chef. It stays
+// visible when nothing is running so the space is always there to glance at.
 export default function TimerBar({ timers, onDismiss }) {
   const [now, setNow] = useState(() => Date.now());
   const alerted = useRef(new Set());
@@ -52,7 +53,13 @@ export default function TimerBar({ timers, onDismiss }) {
     }
   }, [timers, now]);
 
-  if (timers.length === 0) return null;
+  if (timers.length === 0) {
+    return (
+      <div className="pass__timers pass__timers--empty" role="status" aria-live="polite">
+        <span className="pass__timerempty">NO TIMERS RUNNING</span>
+      </div>
+    );
+  }
   return (
     <div className="pass__timers" role="status" aria-live="polite">
       {timers.map((t) => {

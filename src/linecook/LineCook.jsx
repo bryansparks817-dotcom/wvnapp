@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import lineData from "../data/lineItems.json";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadTimers, saveTimers, loadWaste, saveWaste,
+  loadCook, saveCook, loadWaste, saveWaste,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepPlan } from "../lib/lineList";
@@ -11,7 +11,6 @@ import { printLabel } from "../lib/label";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
-import TimerBar from "./TimerBar";
 import { PassHeader } from "./Chrome";
 import "./pass.css";
 
@@ -59,14 +58,13 @@ function WhoScreen({ station, onSet }) {
   );
 }
 
-export default function LineCook({ recipesById, ingredients, onOpenChef }) {
+export default function LineCook({ recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
   const today = localDateKey();
   const { items, linePar, station } = lineData;
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const [inventory, setInventory] = useState(() => loadInventory());
   const [shift, setShift] = useState(() => loadShift());
   const [cook, setCook] = useState(() => loadCook());
-  const [timers, setTimers] = useState(() => loadTimers());
   const [waste, setWaste] = useState(() => loadWaste());
   const [flags, setFlags] = useState(() => loadEightySix());
   const [screen, setScreen] = useState("today");
@@ -75,7 +73,6 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
   useEffect(() => { if (inventory) saveInventory(inventory); }, [inventory]);
   useEffect(() => { if (shift) saveShift(shift); }, [shift]);
   useEffect(() => { if (cook) saveCook(cook); }, [cook]);
-  useEffect(() => { saveTimers(timers); }, [timers]);
   useEffect(() => { saveWaste(waste); }, [waste]);
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
@@ -170,15 +167,10 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
     setShift({ ...shift, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
   }
 
-  function startTimer(label, minutes) {
-    setTimers((t) => [...t, { id: `${Date.now()}`, label, endsAt: Date.now() + minutes * 60000 }]);
-  }
-
   function addFlag(name, kind) {
     setFlags((f) => [...f.filter((x) => x.name !== name), { name, kind, by, at: Date.now() }]);
   }
 
-  const timerBar = <TimerBar timers={timers} onDismiss={(id) => setTimers((t) => t.filter((x) => x.id !== id))} />;
   const shared = { station, onOpenChef, screen, setScreen, initials: by, onChangeCook: () => setCook(null) };
 
   if (!by) {
@@ -193,7 +185,6 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
       const key = `p:${row.id}`;
       return (
         <>
-          {timerBar}
           <RecipeScreen
             row={row}
             recipe={recipe}
@@ -202,7 +193,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
             timers={timers}
             onBack={() => setOpenPrepId(null)}
             onToggleDone={() => toggleDone("p", row)}
-            onStartTimer={startTimer}
+            onStartTimer={onStartTimer}
             onPrintLabel={() =>
               printLabel({ item: itemsById.get(row.id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] })
             }
@@ -216,7 +207,6 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
     const mode = screen === "close" ? "close" : "confirm";
     return (
       <>
-        {timerBar}
         <CountScreen
           {...shared}
           mode={mode}
@@ -237,7 +227,6 @@ export default function LineCook({ recipesById, ingredients, onOpenChef }) {
 
   return (
     <>
-      {timerBar}
       <TodayScreen
         {...shared}
         hasClose={Boolean(inventory?.closedOn)}

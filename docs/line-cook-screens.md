@@ -49,7 +49,7 @@ Built on one phone (localStorage) in the line view; walk-in is sample data until
 ## Line cook tools (added 2026-11-03)
 - **Who's on:** the cook enters their initials at the start of each day. Those initials are stamped on the close count, the notes, every check-off, 86/low flags, waste entries and labels. Tap the initials pill to change cooks.
 - **Recipe from a prep row:** tapping the row opens the recipe scaled to the grams Prep asks for, and the check on the left marks it done. Until a recipe has `yieldGrams`, scaling uses the total ingredient weight, which overstates yield for anything that reduces (like stock). The screen says so.
-- **Timers:** every passive step has a TIMER button. Running timers stay pinned at the top of every line screen, and they beep and vibrate when done. They're saved, so they survive a reload.
+- **Timers:** every passive step has a TIMER button. A timer strip sits at the top of every screen (line and chef, "NO TIMERS RUNNING" when empty), and they beep and vibrate when done. They're saved, so they survive a reload.
 - **Labels:** after prep is done, PRINT LABEL prints one label per container (the line pan plus each new qt/pt). Each shows the item, made date and time, initials, grams and USE BY (the last day of shelf life). The labels are sized for 62 mm continuous tape (DK-2205) on a Brother QL-820NWB, printed through the phone's print dialog (AirPrint / Mopria).
 - **Notes for next shift:** written on the Close screen, then shown on the next shift's confirm screen and Today.
 - **86 / running low:** cooks can flag any item. Tap a chip to clear it.
