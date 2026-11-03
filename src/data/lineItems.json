@@ -1,0 +1,13 @@
+{
+  "station": "Garde manger",
+  "items": [
+    { "id": "preserved-lemon-fennel-relish", "name": "Preserved lemon & fennel relish", "pan": "1/9", "recipeId": null },
+    { "id": "apple-cider-thyme-mignonette", "name": "Apple cider thyme mignonette", "pan": "1/9", "recipeId": "apple-cider-thyme-mignonette" },
+    { "id": "atomic-whipped-horseradish-cream", "name": "Atomic horseradish cream", "pan": "1/9", "recipeId": "atomic-whipped-horseradish-cream" },
+    { "id": "magic-dust", "name": "Magic dust", "pan": "1/9", "recipeId": null },
+    { "id": "clam-chowder-veloute", "name": "Clam chowder veloute", "pan": "1/6", "recipeId": "clam-chowder-veloute" },
+    { "id": "lobster-and-shrimp-bolognese", "name": "Lobster & shrimp bolognese", "pan": "1/6", "recipeId": "lobster-and-shrimp-bolognese" },
+    { "id": "pasta-dough", "name": "Pasta dough", "pan": "1/6", "recipeId": null },
+    { "id": "lobster-stock", "name": "Lobster stock", "pan": "1/3", "recipeId": "lobster-stock" }
+  ]
+}
