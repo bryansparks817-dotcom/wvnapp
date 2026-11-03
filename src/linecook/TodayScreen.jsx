@@ -4,6 +4,7 @@ import { NoteCard } from "./CountScreen";
 import { formatMinutes } from "../lib/format";
 import { containerLabel, formatG, shelfLabel } from "../lib/inventory";
 import PrepSteps from "./PrepSteps";
+import GatherList from "./GatherList";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -76,7 +77,7 @@ function TakeLine({ item, take, today }) {
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, gather, gathered, onToggleGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -158,9 +159,20 @@ export default function TodayScreen({
           </ul>
         </section>
 
+        {(gather.items.length > 0 || gather.missing.length > 0) && (
+          <section>
+            <div className="pass__sectionhead">
+              <h2><span className="pass__amber">2</span> · GATHER</h2>
+              <span className="pass__mono pass__amber">{gather.items.filter((g) => gathered[g.name.toLowerCase()]).length} of {gather.items.length}</span>
+            </div>
+            <p className="pass__hint">Pull these from the walk-in and dry storage before you start. Amounts cover all of today’s prep.</p>
+            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
+          </section>
+        )}
+
         <section>
           <div className="pass__sectionhead">
-            <h2><span className="pass__amber">2</span> · PREP</h2>
+            <h2><span className="pass__amber">3</span> · PREP</h2>
             <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
           </div>
           <p className="pass__hint">

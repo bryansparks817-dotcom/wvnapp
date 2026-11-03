@@ -18,6 +18,9 @@ These are the screens a line cook sees. Chef-only screens (scaling, adding prep 
 ## Prep order
 The prep order comes from the optimization formula in `src/lib/scheduler.js`. Whatever recipe has the most time left starts first, and its passive time (simmer, braise, chill) is filled with hands-on steps from the other recipes. Step times come from each recipe's Active/Passive method steps. Items without a recipe in the app are listed under "No recipe times yet."
 
+## Gather
+Between Collect and Prep, the Today screen shows **2 · Gather**: every raw ingredient that station's Prep list needs (carrots, shallots, tomato paste…), scaled to the grams each item has to make and summed across items, with which items use it. The cook ticks each one off as it comes out of the walk-in or dry storage. Each station's gather list is built from that station's own Prep list, so every station gets its own (today the app has one station, Garde manger; station switching comes later). Water and ice are left off. Items with no recipe in the app are named so the cook can gather from the recipe book. Later: an ingredient's storage spot (walk-in, dry storage, reach-in) so the list can be grouped by where to walk.
+
 Prep shows as one simple numbered step list, built by `buildPrepSteps` in `src/lib/lineList.js`:
 - Each step is one thing to do now: a tag that says why it is there (START FIRST · LONGEST HANDS-OFF TIME, WHILE <recipe> · <its hands-off step>, BACK TO <recipe>, NEXT), the item, what to do (up to three method steps, then "+ N more"), hands-on minutes, and the hands-off time it kicks off with a one-tap TIMER.
 - A recipe that opens with a hands-off step (preheat, soak) gets its own "start" step, so it is never skipped.

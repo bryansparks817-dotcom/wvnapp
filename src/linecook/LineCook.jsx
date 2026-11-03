@@ -6,7 +6,8 @@ import {
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepSteps } from "../lib/lineList";
-import { scaleRecipe } from "../lib/recipeScale";
+import { batchGrams, scaleRecipe } from "../lib/recipeScale";
+import { gatherForPrep } from "../lib/gatherList";
 import { printLabel } from "../lib/label";
 import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
@@ -106,6 +107,17 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
     [shift, shiftIsToday]
   );
   const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById), [prepForPlan, recipesById]);
+  const gather = useMemo(
+    () => gatherForPrep(prepForPlan, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
+    [prepForPlan, recipesById, ingredients]
+  );
+
+  function toggleGather(key) {
+    const gathered = { ...(shift.gathered ?? {}) };
+    if (gathered[key]) delete gathered[key];
+    else gathered[key] = true;
+    setShift({ ...shift, gathered });
+  }
 
   function changeItem(id, next) {
     setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [id]: next } }));
@@ -286,6 +298,9 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
         plan={plan}
         done={shiftIsToday ? shift.done : {}}
         stepsDone={shiftIsToday ? shift.stepsDone ?? {} : {}}
+        gather={gather}
+        gathered={shiftIsToday ? shift.gathered ?? {} : {}}
+        onToggleGather={toggleGather}
         meta={meta}
         timers={timers}
         onToggleStep={toggleStep}

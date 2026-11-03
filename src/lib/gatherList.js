@@ -26,3 +26,43 @@ export function buildGatherList(recipes, ingredients, recipesById) {
 
   return Array.from(totals.values()).sort((a, b) => a.name.localeCompare(b.name));
 }
+
+// Nobody gathers these from storage.
+const NOT_GATHERED = new Set(["water", "ice", "ice water", "hot water", "cold water"]);
+
+// The line cook's gather list: every raw ingredient today's Prep needs, scaled
+// to the grams each item has to make, summed across items, with which items
+// use it. Items with no recipe in the app come back in `missing`.
+export function gatherForPrep(prepRows, recipesById, ingredients, batchGramsOf) {
+  const ingredientIndex = buildIngredientIndex(ingredients);
+  const totals = new Map();
+  const missing = [];
+
+  for (const row of prepRows) {
+    const recipe = row.recipeId ? recipesById.get(row.recipeId) : null;
+    if (!recipe) {
+      missing.push(row);
+      continue;
+    }
+    const batch = batchGramsOf(recipe);
+    const factor = batch > 0 ? row.makeG / batch : 1;
+    for (const { name, qty, unit } of flattenIngredients(recipe, recipesById, factor)) {
+      const key = name.toLowerCase();
+      if (NOT_GATHERED.has(key)) continue;
+      let grams = null;
+      try {
+        grams = convertToGrams(name, qty, unit, ingredientIndex);
+      } catch {
+        // no gram conversion for this ingredient: keep its own unit
+      }
+      const entry = totals.get(key) ?? { name, grams: 0, other: [], usedIn: [] };
+      if (grams != null) entry.grams += grams;
+      else entry.other.push({ qty, unit });
+      if (!entry.usedIn.includes(row.name)) entry.usedIn.push(row.name);
+      totals.set(key, entry);
+    }
+  }
+
+  const items = Array.from(totals.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return { items, missing };
+}
