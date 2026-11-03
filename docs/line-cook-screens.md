@@ -18,6 +18,13 @@ These are the screens a line cook sees. Chef-only screens (scaling, adding prep 
 ## Prep order
 The prep order comes from the optimization formula in `src/lib/scheduler.js`. Whatever recipe has the most time left starts first, and its passive time (simmer, braise, chill) is filled with hands-on steps from the other recipes. Step times come from each recipe's Active/Passive method steps. Items without a recipe in the app are listed under "No recipe times yet."
 
+Prep shows as one simple numbered step list, built by `buildPrepSteps` in `src/lib/lineList.js`:
+- Each step is one thing to do now: a tag that says why it is there (START FIRST · LONGEST HANDS-OFF TIME, WHILE <recipe> · <its hands-off step>, BACK TO <recipe>, NEXT), the item, what to do (up to three method steps, then "+ N more"), hands-on minutes, and the hands-off time it kicks off with a one-tap TIMER.
+- A recipe that opens with a hands-off step (preheat, soak) gets its own "start" step, so it is never skipped.
+- When nothing hands-on is free, a dashed WAIT line says how long and what is still cooking.
+- Expired backup to toss (when no prep is needed) comes first; items with no recipe times come last.
+- The first unticked step is marked NOW. Each step has its own tick. Ticking an item's last step checks the item off (restock, labels, waste log). Unticking any step of a finished item reopens it.
+
 ## Code
 - `src/linecook/`: the screens (LineCook, TodayScreen, CountScreen, Chrome, pass.css)
 - `src/lib/lineList.js`: count → collect/prep lists → ordered prep plan

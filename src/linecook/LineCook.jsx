@@ -5,7 +5,7 @@ import {
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
-import { buildPrepPlan } from "../lib/lineList";
+import { buildPrepSteps } from "../lib/lineList";
 import { scaleRecipe } from "../lib/recipeScale";
 import { printLabel } from "../lib/label";
 import { normalizeName, previewInitials, signIn } from "../lib/staff";
@@ -105,7 +105,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
     () => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []),
     [shift, shiftIsToday]
   );
-  const plan = useMemo(() => buildPrepPlan(prepForPlan, recipesById), [prepForPlan, recipesById]);
+  const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById), [prepForPlan, recipesById]);
 
   function changeItem(id, next) {
     setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [id]: next } }));
@@ -147,7 +147,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
   }
 
   // Checking a row applies it to inventory; unchecking restores that item.
-  function toggleDone(kind, row) {
+  function toggleDone(kind, row, stepsDone = shift.stepsDone) {
     const key = `${kind}:${row.id}`;
     const item = itemsById.get(row.id);
     if (shift.done[key]) {
@@ -159,7 +159,7 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
         delete done[k];
         delete nextMeta[k];
       }
-      setShift({ ...shift, done, meta: nextMeta });
+      setShift({ ...shift, stepsDone, done, meta: nextMeta });
       setWaste((w) => w.filter((e) => e.key !== `${today}:${row.id}`));
       return;
     }
@@ -184,7 +184,21 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
       }
     }
     setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: after } }));
-    setShift({ ...shift, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
+    setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
+  }
+
+  // Ticks one step of the prep list. Ticking an item's last step checks the
+  // item off (restock + labels); unticking it undoes that.
+  function toggleStep(step, isDone) {
+    const row = step.item ? shift.prep.find((p) => p.id === step.item.id) : null;
+    const itemDone = Boolean(row && shift.done[`p:${row.id}`]);
+    const stepsDone = { ...(shift.stepsDone ?? {}) };
+    if (isDone) delete stepsDone[step.key];
+    else stepsDone[step.key] = true;
+    const finishes = !isDone && step.lastForItem && !itemDone;
+    const reopens = isDone && itemDone;
+    if (row && (finishes || reopens)) toggleDone("p", row, stepsDone);
+    else setShift({ ...shift, stepsDone });
   }
 
   function addFlag(name, kind) {
@@ -271,7 +285,11 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
         tossOnly={shiftIsToday ? shift.prep.filter((p) => p.makeG === 0) : []}
         plan={plan}
         done={shiftIsToday ? shift.done : {}}
+        stepsDone={shiftIsToday ? shift.stepsDone ?? {} : {}}
         meta={meta}
+        timers={timers}
+        onToggleStep={toggleStep}
+        onStartTimer={onStartTimer}
         wasteToday={waste.filter((w) => w.date === today)}
         onToggle={toggleDone}
         onOpenPrep={setOpenPrepId}

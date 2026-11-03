@@ -184,3 +184,13 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__rosterlist { display: flex; flex-direction: column; gap: 6px; }
 .pass__person { min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 6px 12px; border-radius: 8px; border: 0; background: var(--card); text-align: left; font-size: 16px !important; font-weight: 600; }
 .pass__personinit { min-width: 44px; height: 32px; border-radius: 16px; border: 1.5px solid var(--amber); color: var(--amber); font-family: "DM Mono", monospace; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
+
+/* Prep as a simple step list */
+.pass__steplist { gap: 8px; }
+.pass__stepcard { align-items: stretch; flex-wrap: wrap; }
+.pass__stepcard .pass__rowopen { flex: 1 1 calc(100% - 60px); align-items: flex-start; padding-top: 10px; padding-bottom: 10px; }
+.pass__steptag { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.05em; color: var(--amber); text-transform: none; }
+.pass__row--done .pass__steptag { color: var(--steel); }
+.pass__stepdo { font-size: 14px; line-height: 1.35; margin: 2px 0; }
+.pass__steptimer { align-self: flex-start; margin: -4px 12px 10px 52px; font-size: 13px; white-space: nowrap; }
+.pass__waitstep { font-family: "DM Mono", monospace; font-size: 12px; color: var(--steel); border: 1.5px dashed var(--edge); border-radius: 8px; padding: 8px 12px; line-height: 1.4; }
