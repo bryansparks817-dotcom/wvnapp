@@ -3,6 +3,8 @@ import { CheckBox, PassHeader, TabBar } from "./Chrome";
 import { NoteCard } from "./CountScreen";
 import { formatMinutes } from "../lib/format";
 import { containerLabel, formatG, shelfLabel } from "../lib/inventory";
+import PrepSteps from "./PrepSteps";
+import GatherList from "./GatherList";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -72,39 +74,10 @@ function TakeLine({ item, take, today }) {
   );
 }
 
-function tossText(row) {
-  return row.toss.map((t) => `${containerLabel(t)} (${t.where})`).join(", ");
-}
-
-// A prep row: the check on the left marks it done; the rest opens the recipe.
-function PrepRow({ row, done, meta, step, lead, title, sub, showAmount, onToggle, onOpen }) {
-  return (
-    <div className={`pass__row pass__row--split${done ? " pass__row--done" : ""}${lead ? " pass__row--lead" : ""}`}>
-      <button type="button" className="pass__checkbtn" aria-pressed={done} aria-label={`${done ? "Undo" : "Mark done"}: ${row.name}`} onClick={onToggle}>
-        {done || step == null ? <CheckBox checked={done} tone="amber" /> : <span className="pass__step">{step}</span>}
-      </button>
-      <button type="button" className="pass__rowopen" onClick={onOpen}>
-        <span className="pass__rowtext">
-          <span className="pass__rowname">{title}</span>
-          {sub && <span className="pass__rowsub">{sub}</span>}
-          {done && meta && <span className="pass__rowsub">✓ {stamp(meta)}</span>}
-          {!done && row.toss?.length > 0 && <span className="pass__toss">TOSS {tossText(row)} · last day</span>}
-        </span>
-        {showAmount && (
-          <span className="pass__rowend">
-            <span className="pass__mono pass__amber">{formatG(row.makeG)}</span>
-            <span className="pass__open">RECIPE ›</span>
-          </span>
-        )}
-      </button>
-    </div>
-  );
-}
-
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, tossOnly, plan, done, meta, wasteToday, onToggle, onOpenPrep, onLoadSample,
+  collect, gather, gathered, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -132,12 +105,43 @@ export default function TodayScreen({
     );
   }
 
+  const hasGather = gather.items.length > 0 || gather.missing.length > 0;
+  if (hasGather && !gatherDone) {
+    const got = gather.items.filter((g) => gathered[g.name.toLowerCase()]).length;
+    return (
+      <div className="pass">
+        <PassHeader {...header}>
+          <span className="pass__date">{dateLine()} · COUNT CONFIRMED</span>
+          <h1 className="pass__title">Gather</h1>
+          <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
+        </PassHeader>
+        <main className="pass__main">
+          <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
+          {lastNotes && <NoteCard notes={lastNotes} />}
+          <section>
+            <div className="pass__sectionhead">
+              <h2>GATHER LIST</h2>
+              <span className="pass__mono pass__amber">{got} of {gather.items.length}</span>
+            </div>
+            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
+          </section>
+        </main>
+        <div className="pass__footer">
+          <button type="button" className="pass__cta" onClick={onFinishGather}>
+            FINISH · TO COLLECT &amp; PREP →
+          </button>
+          {got < gather.items.length && <span className="pass__hint">{gather.items.length - got} not ticked yet. You can still go on.</span>}
+        </div>
+        <TabBar screen={screen} setScreen={setScreen} onOpenChef={onOpenChef} />
+      </div>
+    );
+  }
+
   const collectDone = collect.filter((r) => done[`c:${r.id}`]).length;
-  const prepRows = [...new Map(plan.blocks.filter((b) => b.item).map((b) => [b.item.id, b.item])).values(), ...plan.untimed];
+  const prepRows = [...new Map(plan.steps.filter((s) => s.item).map((s) => [s.item.id, s.item])).values(), ...plan.untimed];
   const prepTotal = prepRows.length + tossOnly.length;
   const prepDone = [...prepRows, ...tossOnly].filter((r) => done[`p:${r.id}`]).length;
   const wasteG = wasteToday.reduce((s, w) => s + w.grams, 0);
-  let lastDuring = null;
 
   return (
     <div className="pass">
@@ -147,7 +151,12 @@ export default function TodayScreen({
       </PassHeader>
       <main className="pass__main">
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
-        {lastNotes && <NoteCard notes={lastNotes} />}
+        {lastNotes && !hasGather && <NoteCard notes={lastNotes} />}
+        {hasGather && (
+          <button type="button" className="pass__ghost pass__backgather" onClick={onReopenGather}>
+            ‹ Back to gather list
+          </button>
+        )}
 
         <section>
           <div className="pass__sectionhead">
@@ -193,76 +202,21 @@ export default function TodayScreen({
             <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
           </div>
           <p className="pass__hint">
-            Tap an item for its recipe, scaled. Start the long one, fill its downtime.
-            {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} total.`}
+            One step at a time, in order. The long hands-off recipe starts first and the rest fill its downtime. Tap a step for the scaled recipe.
+            {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} start to finish.`}
           </p>
           {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
-          <ol className="pass__list">
-            {plan.blocks.map((block, i) => {
-              const row = block.item;
-              if (!row) return null;
-              const key = `p:${row.id}`;
-              const duringLabel = block.during ? `${block.during.name}: ${block.during.step}` : null;
-              const showDuring = duringLabel && duringLabel !== lastDuring;
-              lastDuring = duringLabel;
-              return (
-                <li key={`${block.trackId}#${i}`} className={block.during ? "pass__while" : undefined}>
-                  {showDuring && <span className="pass__whilelabel">WHILE {block.during.name.toUpperCase()} · {block.during.step.toLowerCase()}</span>}
-                  <PrepRow
-                    row={row}
-                    done={Boolean(done[key])}
-                    meta={block.firstForRecipe ? meta[key] : null}
-                    step={i + 1}
-                    lead={!block.during && i === 0}
-                    title={block.firstForRecipe ? block.name : `Back to ${block.name}`}
-                    sub={`${formatMinutes(block.end - block.start)} hands-on${block.thenPassive ? ` · then ${formatMinutes(block.thenPassive.minutes)} ${block.thenPassive.step.toLowerCase()}` : ""}`}
-                    showAmount={block.firstForRecipe}
-                    onToggle={() => onToggle("p", row)}
-                    onOpen={() => onOpenPrep(row.id)}
-                  />
-                </li>
-              );
-            })}
-          </ol>
-          {plan.untimed.length > 0 && (
-            <>
-              <span className="pass__whilelabel">NO RECIPE TIMES YET</span>
-              <ul className="pass__list">
-                {plan.untimed.map((row) => (
-                  <li key={row.id}>
-                    <PrepRow
-                      row={row}
-                      done={Boolean(done[`p:${row.id}`])}
-                      meta={meta[`p:${row.id}`]}
-                      title={row.name}
-                      showAmount
-                      onToggle={() => onToggle("p", row)}
-                      onOpen={() => onOpenPrep(row.id)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-          {tossOnly.length > 0 && (
-            <>
-              <span className="pass__whilelabel">TOSS ONLY · enough backup left</span>
-              <ul className="pass__list">
-                {tossOnly.map((row) => (
-                  <li key={row.id}>
-                    <PrepRow
-                      row={row}
-                      done={Boolean(done[`p:${row.id}`])}
-                      meta={meta[`p:${row.id}`]}
-                      title={row.name}
-                      onToggle={() => onToggle("p", row)}
-                      onOpen={() => onToggle("p", row)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+          <PrepSteps
+            plan={plan}
+            tossOnly={tossOnly}
+            done={done}
+            stepsDone={stepsDone}
+            timers={timers}
+            onToggleStep={onToggleStep}
+            onToggleItem={(row) => onToggle("p", row)}
+            onOpenPrep={onOpenPrep}
+            onStartTimer={onStartTimer}
+          />
           {wasteG > 0 && (
             <p className="pass__waste">
               Tossed today: {formatG(wasteG)} ({wasteToday.map((w) => w.name).join(", ")}). Logged for food cost.
