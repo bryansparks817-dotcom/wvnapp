@@ -198,3 +198,7 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__gatherrow { min-height: 48px; }
 .pass__gatheramt { flex-shrink: 0; font-size: 15px; }
 .pass__backgather { align-self: flex-start; }
+.pass__zone { display: flex; flex-direction: column; margin-top: 14px; }
+.pass__zonehead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; border-bottom: 1.5px solid var(--amber); padding-bottom: 4px; }
+.pass__zonename { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.06em; color: var(--amber); }
+.pass__zonearea { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.04em; color: var(--steel); }

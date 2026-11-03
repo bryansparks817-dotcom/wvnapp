@@ -46,3 +46,4 @@ The station list itself (Garde manger, with these 8 items) is a placeholder. The
 - Restaurant service schedule (e.g. Wed–Sat dinner), which decides which shift a count carries over to
 - Walk-in count (chef screens)
 - Label exceptions: containers that aren't a qt or pt
+- **Storage zone for every ingredient (chef assigns).** The walk-in and dry storage are split into zones (Protein, Dairy, Produce, Dry, etc.). The chef gives every ingredient a dedicated zone, from AP flour to lobster stock, and the gather list is grouped by zone in walking order. Today `src/data/storageZones.json` holds Claude's draft guesses for the sample recipes' ingredients. Needed: the restaurant's real zone list and walking order, each ingredient's zone, and a chef screen to set them. Ingredients without a zone show under "No zone yet".

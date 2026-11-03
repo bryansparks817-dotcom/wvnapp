@@ -66,3 +66,16 @@ export function gatherForPrep(prepRows, recipesById, ingredients, batchGramsOf) 
   const items = Array.from(totals.values()).sort((a, b) => a.name.localeCompare(b.name));
   return { items, missing };
 }
+
+// Splits a gather list into the storage zones the chef assigned, in walking
+// order. Anything without a zone lands in a "No zone yet" group at the end.
+export function groupByZone(items, zoneData) {
+  const groups = zoneData.zones.map((z) => ({ ...z, items: [] }));
+  const byId = new Map(groups.map((g) => [g.id, g]));
+  const none = { id: "none", name: "No zone yet", area: "Ask the chef", items: [] };
+  for (const item of items) {
+    const zone = byId.get(zoneData.assignments[item.name.toLowerCase()]);
+    (zone ?? none).items.push(item);
+  }
+  return [...groups, none].filter((g) => g.items.length > 0);
+}
