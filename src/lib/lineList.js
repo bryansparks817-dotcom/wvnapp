@@ -58,7 +58,7 @@ export function buildPrepPlan(prepItems, recipesById) {
   const blocks = [];
   for (const row of timeline.chefTimeline) {
     const last = blocks[blocks.length - 1];
-    if (last && last.trackId === row.recipeId) {
+    if (last && last.trackId === row.recipeId && last.end === row.start) {
       last.end = row.end;
       last.steps.push(row.stepName);
     } else {
