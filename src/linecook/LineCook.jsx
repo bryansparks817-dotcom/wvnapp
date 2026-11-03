@@ -301,6 +301,9 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
         gather={gather}
         gathered={shiftIsToday ? shift.gathered ?? {} : {}}
         onToggleGather={toggleGather}
+        gatherDone={shiftIsToday && Boolean(shift.gatherDone)}
+        onFinishGather={() => { setShift({ ...shift, gatherDone: true }); window.scrollTo(0, 0); }}
+        onReopenGather={() => { setShift({ ...shift, gatherDone: false }); window.scrollTo(0, 0); }}
         meta={meta}
         timers={timers}
         onToggleStep={toggleStep}

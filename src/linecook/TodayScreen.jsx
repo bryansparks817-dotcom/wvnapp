@@ -77,7 +77,7 @@ function TakeLine({ item, take, today }) {
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, gather, gathered, onToggleGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, gather, gathered, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -105,6 +105,38 @@ export default function TodayScreen({
     );
   }
 
+  const hasGather = gather.items.length > 0 || gather.missing.length > 0;
+  if (hasGather && !gatherDone) {
+    const got = gather.items.filter((g) => gathered[g.name.toLowerCase()]).length;
+    return (
+      <div className="pass">
+        <PassHeader {...header}>
+          <span className="pass__date">{dateLine()} · COUNT CONFIRMED</span>
+          <h1 className="pass__title">Gather</h1>
+          <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
+        </PassHeader>
+        <main className="pass__main">
+          <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
+          {lastNotes && <NoteCard notes={lastNotes} />}
+          <section>
+            <div className="pass__sectionhead">
+              <h2>GATHER LIST</h2>
+              <span className="pass__mono pass__amber">{got} of {gather.items.length}</span>
+            </div>
+            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
+          </section>
+        </main>
+        <div className="pass__footer">
+          <button type="button" className="pass__cta" onClick={onFinishGather}>
+            FINISH · TO COLLECT &amp; PREP →
+          </button>
+          {got < gather.items.length && <span className="pass__hint">{gather.items.length - got} not ticked yet. You can still go on.</span>}
+        </div>
+        <TabBar screen={screen} setScreen={setScreen} onOpenChef={onOpenChef} />
+      </div>
+    );
+  }
+
   const collectDone = collect.filter((r) => done[`c:${r.id}`]).length;
   const prepRows = [...new Map(plan.steps.filter((s) => s.item).map((s) => [s.item.id, s.item])).values(), ...plan.untimed];
   const prepTotal = prepRows.length + tossOnly.length;
@@ -119,7 +151,12 @@ export default function TodayScreen({
       </PassHeader>
       <main className="pass__main">
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
-        {lastNotes && <NoteCard notes={lastNotes} />}
+        {lastNotes && !hasGather && <NoteCard notes={lastNotes} />}
+        {hasGather && (
+          <button type="button" className="pass__ghost pass__backgather" onClick={onReopenGather}>
+            ‹ Back to gather list
+          </button>
+        )}
 
         <section>
           <div className="pass__sectionhead">
@@ -159,20 +196,9 @@ export default function TodayScreen({
           </ul>
         </section>
 
-        {(gather.items.length > 0 || gather.missing.length > 0) && (
-          <section>
-            <div className="pass__sectionhead">
-              <h2><span className="pass__amber">2</span> · GATHER</h2>
-              <span className="pass__mono pass__amber">{gather.items.filter((g) => gathered[g.name.toLowerCase()]).length} of {gather.items.length}</span>
-            </div>
-            <p className="pass__hint">Pull these from the walk-in and dry storage before you start. Amounts cover all of today’s prep.</p>
-            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
-          </section>
-        )}
-
         <section>
           <div className="pass__sectionhead">
-            <h2><span className="pass__amber">3</span> · PREP</h2>
+            <h2><span className="pass__amber">2</span> · PREP</h2>
             <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
           </div>
           <p className="pass__hint">

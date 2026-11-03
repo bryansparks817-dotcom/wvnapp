@@ -197,3 +197,4 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__gatherlist { gap: 4px; }
 .pass__gatherrow { min-height: 48px; }
 .pass__gatheramt { flex-shrink: 0; font-size: 15px; }
+.pass__backgather { align-self: flex-start; }
