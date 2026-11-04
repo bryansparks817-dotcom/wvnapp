@@ -3,7 +3,7 @@
 These are the screens a line cook sees. Chef-only screens (scaling, adding prep items, changing an item's pan) come later as their own set.
 
 ## Stations
-Station tabs sit under the header: **Garde manger, Grill, Sauté, Pastry, Prep** (`src/data/stations.js`). Each station keeps its own close count, shift, gather list, collect and prep (saved per station; Garde manger keeps the original storage keys). The phone remembers the last station opened. Only Garde manger has items so far; the others say the chef still has to add their items. **Access:** in the beta every cook can open every station. The chef will toggle, in each cook's profile, which stations they can open (`person.stations` in the staff roster; no list = all).
+A station drop-down in the header (where the station name sits) picks **Garde manger, Grill, Sauté, Pastry, Prep** (`src/data/stations.js`). Each station keeps its own close count, shift, gather list, collect and prep (saved per station; Garde manger keeps the original storage keys). The phone remembers the last station opened. Only Garde manger has items so far; the others say the chef still has to add their items. **Access:** in the beta every cook can open every station. The chef will toggle, in each cook's profile, which stations they can open (`person.stations` in the staff roster; no list = all).
 
 ## Opening the app
 - **No count yet today:** "Count first." with a Start Count button. The prep list is built from the count.

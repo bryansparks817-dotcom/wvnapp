@@ -203,8 +203,9 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__zonename { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.06em; color: var(--amber); }
 .pass__zonearea { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.04em; color: var(--steel); }
 
-/* Station tabs */
-.pass__stationtabs { display: flex; gap: 6px; overflow-x: auto; margin: 2px -20px 0; padding: 2px 20px 4px; scrollbar-width: none; }
-.pass__stationtabs::-webkit-scrollbar { display: none; }
-.pass__stationtab { flex-shrink: 0; min-height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid var(--edge); background: transparent; color: var(--ticket) !important; font-size: 14px !important; font-weight: 500; white-space: nowrap; }
-.pass__stationtab.is-active { background: var(--amber); border-color: var(--amber); color: var(--char) !important; font-weight: 700; }
+/* Station picker */
+.pass__stationpick { position: relative; display: inline-flex; align-items: center; }
+.pass__stationpick select { appearance: none; -webkit-appearance: none; min-height: 40px; border: 1.5px solid var(--amber); border-radius: 22px; padding: 0 34px 0 14px; background: transparent; color: var(--ticket); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.pass__stationpick select option { color: #1b1e1c; }
+.pass__stationpick svg { position: absolute; right: 12px; pointer-events: none; color: var(--amber); }
+.pass__visuallyhidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
