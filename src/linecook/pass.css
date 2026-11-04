@@ -223,3 +223,9 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__gatherrow { flex-wrap: wrap; }
 .pass__gatherrow .pass__rowopen { flex: 1 1 0; }
 .pass__cantmake { display: block; margin: 8px 0 0 !important; padding: 6px 10px; }
+
+/* Gathered ingredients turn light blue once confirmed */
+.pass__check--blue { border-color: #8ec5e8; }
+.pass__check--blue.is-checked { background: #8ec5e8; border-color: #8ec5e8; color: #1b1e1c; }
+.pass__gatherrow.pass__row--done { border-color: rgba(142, 197, 232, 0.45); background: rgba(142, 197, 232, 0.08); }
+.pass__gatherrow.pass__row--done .pass__rowname, .pass__gatherrow.pass__row--done .pass__gatheramt { color: #8ec5e8 !important; }

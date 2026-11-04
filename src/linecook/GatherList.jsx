@@ -71,7 +71,7 @@ export default function GatherList({ gather, gathered, short, onToggle, onShort 
                 <li key={key}>
                   <div className={`pass__row pass__row--split pass__gatherrow${isDone ? " pass__row--done" : ""}${isShort ? " pass__row--short" : ""}`}>
                     <button type="button" className="pass__checkbtn" aria-pressed={isDone} aria-label={`${isDone ? "Undo" : "Got it"}: ${g.name}`} onClick={() => onToggle(key)}>
-                      <CheckBox checked={isDone} tone="amber" />
+                      <CheckBox checked={isDone} tone={isDone ? "blue" : "amber"} />
                     </button>
                     <button type="button" className="pass__rowopen" onClick={() => onToggle(key)}>
                       <span className="pass__rowtext">
