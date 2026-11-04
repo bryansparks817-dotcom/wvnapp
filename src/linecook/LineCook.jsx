@@ -21,9 +21,15 @@ function localDateKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-const DAY_NAMES = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-function dayName(iso) {
-  const [y, m, d] = iso.split("-").map(Number);
+const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+// "TUE 3:05 PM" for the close a count came from (older saves only have a date).
+function closeLabel(inv) {
+  if (inv?.closedAt) {
+    const d = new Date(inv.closedAt);
+    return `${DAY_NAMES[d.getDay()]} ${d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).toUpperCase()}`;
+  }
+  if (!inv?.closedOn) return "";
+  const [y, m, d] = inv.closedOn.split("-").map(Number);
   return DAY_NAMES[new Date(y, m - 1, d).getDay()];
 }
 
@@ -139,7 +145,11 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
   const invItems = inventory?.items ?? emptyInventory(items);
-  const shiftIsToday = shift?.date === today;
+  // Counts are taken at the end of every shift, not once a day. A shift runs
+  // from confirming a count to the next close count; the close ends it, and
+  // the next shift (same day or not) starts by confirming that count.
+  const shiftIsToday = Boolean(shift && !shift.closedAt && shift.date === today);
+  const unclosedShift = Boolean(shift && !shift.closedAt && shift.date !== today);
   const meta = shiftIsToday ? shift.meta ?? {} : {};
 
   // Prep as planned from the count, and as scaled down by any short
@@ -198,15 +208,25 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   }
 
   function saveClose() {
-    setInventory((inv) => ({
-      ...inv,
-      items: inv?.items ?? emptyInventory(items),
+    const closedAt = Date.now();
+    const nextInv = {
+      ...inventory,
+      items: inventory?.items ?? emptyInventory(items),
       closedOn: today,
+      closedAt,
       closedBy: by,
-      notes: inv?.draftNotes?.trim() ? { text: inv.draftNotes.trim(), by } : null,
+      notes: inventory?.draftNotes?.trim() ? { text: inventory.draftNotes.trim(), by } : null,
       draftNotes: "",
-    }));
+    };
+    const nextShift = shift ? { ...shift, closedAt } : shift;
+    // Saved right away: signing the cook out below unmounts this station.
+    saveInventory(nextInv, st.id);
+    if (nextShift) saveShift(nextShift, st.id);
+    setInventory(nextInv);
+    setShift(nextShift);
     setScreen("today");
+    // The shift is over: the next cook signs in and confirms this count.
+    onChangeCook();
   }
 
   function confirmCount() {
@@ -221,6 +241,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
     yesterday.setDate(yesterday.getDate() - 1);
     setInventory({
       closedOn: localDateKey(yesterday),
+      closedAt: yesterday.setHours(22, 30, 0, 0),
       closedBy: "JR",
       notes: { text: "Low on shallots for mignonette. Stock is on its last day, toss it.", by: "JR" },
       items: sampleInventory(items, today),
@@ -342,7 +363,8 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
           items={items}
           inventory={invItems}
           today={today}
-          closedOnLabel={inventory?.closedOn ? dayName(inventory.closedOn) : ""}
+          closedOnLabel={closeLabel(inventory)}
+          unclosed={mode === "confirm" && unclosedShift}
           closedBy={inventory?.closedBy}
           notes={mode === "close" ? inventory?.draftNotes ?? "" : null}
           lastNotes={inventory?.notes}

@@ -86,11 +86,11 @@ export default function TodayScreen({
         <PassHeader {...header}>
           <span className="pass__date">{dateLine()}</span>
           <h1 className="pass__title">No close count yet</h1>
-          <p className="pass__lede">Your list builds itself from last night’s close count.</p>
+          <p className="pass__lede">Your list builds itself from the last shift’s close count.</p>
         </PassHeader>
         <main className="pass__main">
           <section className="pass__gate">
-            <p className="pass__hint">At the end of the night, count your line pans and lowboy. Tomorrow’s Collect and Prep come from that.</p>
+            <p className="pass__hint">At the end of every shift, count your line pans and lowboy. The next shift’s Collect and Prep come from that.</p>
             <button type="button" className="pass__cta" onClick={() => setScreen("close")}>
               CLOSE COUNT →
             </button>

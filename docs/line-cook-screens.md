@@ -48,18 +48,19 @@ Built on one phone (localStorage) in the line view; walk-in is sample data until
 - Every item has a **line pan** (1/9, 1/6, 1/3…) with a **line par**, a **lowboy container** (quart or pint, with exceptions to come) with a **lowboy par**, and its weight in grams for a full pan, a quart and a pint. For example, relish: 1 qt = 950 g, full 1/9 pan = 1,000 g. The app does all the conversions, so the cook never does the math.
 - Shelf life comes from the recipe sheet.
 
-**At close**
+**At close: every shift, not every day (Bryan, 2026-11-04)**
+- A close count is required at the end of **each shift** (lunch and dinner are separate shifts). Saving the close ends the shift and signs the cook out; the next shift, same day or not, starts by confirming that count. If a shift was never closed, the next cook confirms from where it left off and is told so.
 - The **line cook** counts the line pans and the lowboy containers, both in 25% steps.
 - The **chef** enters the walk-in count (chef screens).
 
 **Next shift**
-- The app opens straight to Collect and Prep, built from last night's counts. There is no "Count first" screen.
+- The app opens straight to Collect and Prep, built from the last shift's close count. There is no "Count first" screen.
 - The cook **confirms** each carried-over quantity, since the AM crew may have used some or something may have been tossed.
 - **Collect** tops the line up from the lowboy and the walk-in combined, and names both (for example, "lowboy ½ qt + walk-in 1 qt"). Oldest batch first, always.
 - **Prep** makes whatever is needed to bring the line **and** the lowboy back to par, in grams. It is ordered by the scheduler as before.
 - **Shelf life:** each prepped item shows how much time it has left (for example, "relish · 3 days left"). Batches are tracked separately by the date they were made, which is stamped when the cook checks off the prep. On a batch's last day, the app says to toss it and make fresh, and the item goes on Prep. Shelf life counts calendar days, including days the restaurant is closed (assumed).
 
-**Needs a shared database.** The walk-in count (chef's phone) and last night's count (closing cook's phone) both have to reach the next cook. The app currently only saves to the phone it runs on.
+**Needs a shared database.** The walk-in count (chef's phone) and the last shift's count (closing cook's phone) both have to reach the next cook. The app currently only saves to the phone it runs on.
 
 ## Line cook tools (added 2026-11-03)
 - **Who's on:** the cook taps their name, or enters their full name, at the start of each day. Each name is linked to its own initials in a staff roster (`thePass.staff.v1`): first + last initial, plus more letters of the last name if those are taken (Bryan Sparks → BS, Ben Smith → BSM). The chef screens will manage the roster. Those initials are stamped on the close count, the notes, every check-off, 86/low flags, waste entries and labels. Tap the initials pill to change cooks.
