@@ -93,6 +93,9 @@ export default function LineCook(props) {
   const [cook, setCook] = useState(() => loadCook());
   const [staff, setStaff] = useState(() => loadStaff());
   const [stationId, setStationId] = useState(() => loadStation() ?? STATIONS[0].id);
+  // Every sign-in starts on the opening shift page (confirm the count), even
+  // when the shift is already underway.
+  const [opening, setOpening] = useState(false);
 
   useEffect(() => { if (cook) saveCook(cook); }, [cook]);
   useEffect(() => { saveStaff(staff); }, [staff]);
@@ -112,6 +115,7 @@ export default function LineCook(props) {
           const { person: p, roster } = signIn(name, staff);
           setStaff(roster);
           setCook({ date: today, name: p.name, initials: p.initials });
+          setOpening(true);
         }}
       />
     );
@@ -125,12 +129,14 @@ export default function LineCook(props) {
       station={station}
       stationTabs={tabs}
       by={signedIn.initials}
+      opening={opening}
+      onOpened={() => setOpening(false)}
       onChangeCook={() => setCook(null)}
     />
   );
 }
 
-function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
+function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
   const today = localDateKey();
   const { items, linePar } = st;
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
@@ -234,8 +240,9 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   function confirmCount() {
     const { collect, prep } = buildShift(items, invItems, linePar, today);
     const strip = (rows) => rows.map(({ item: _item, ...rest }) => rest);
-    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {}, confirmedBy: by });
+    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {}, confirmedBy: by, confirmedAt: Date.now() });
     setScreen("today");
+    onOpened();
   }
 
   function loadSample() {
@@ -353,6 +360,27 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
         </>
       );
     }
+  }
+
+  // Opening shift page for a shift that's already underway: check the
+  // count, then carry on (or rebuild the list from a fresh count).
+  if (opening && screen === "today" && shiftIsToday) {
+    return (
+      <CountScreen
+        {...shared}
+        mode="confirm"
+        items={items}
+        inventory={invItems}
+        today={today}
+        closedOnLabel={closeLabel(inventory)}
+        closedBy={inventory?.closedBy}
+        lastNotes={inventory?.notes}
+        underway={{ by: shift.confirmedBy, at: shift.confirmedAt }}
+        onChangeItem={changeItem}
+        onSubmit={onOpened}
+        onRestart={confirmCount}
+      />
+    );
   }
 
   if (screen === "close" || (screen === "today" && inventory?.closedOn && !shiftIsToday)) {
