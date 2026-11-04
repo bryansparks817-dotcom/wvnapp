@@ -229,3 +229,103 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__check--blue.is-checked { background: #8ec5e8; border-color: #8ec5e8; color: #1b1e1c; }
 .pass__gatherrow.pass__row--done { border-color: rgba(142, 197, 232, 0.45); background: rgba(142, 197, 232, 0.08); }
 .pass__gatherrow.pass__row--done .pass__rowname, .pass__gatherrow.pass__row--done .pass__gatheramt { color: #8ec5e8 !important; }
+
+/* Chef pages: the older recipe tools, dressed in The Pass look. Their
+   styles (App.css) read these variables. */
+.pass--chef {
+  --text: #f3eee4;
+  --text-muted: #8a8f88;
+  --bg: #1b1e1c;
+  --surface: #242825;
+  --border: #3a3f3b;
+  --accent: #e39b2d;
+  --accent-bg: rgba(227, 155, 45, 0.12);
+  color: var(--text);
+}
+.pass--chef .chef { gap: 0; }
+.pass--chef .chef h2, .pass--chef .chef h3 { font-family: "Oswald", sans-serif; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ticket); }
+.pass--chef .chef p { color: var(--steel); }
+.pass--chef .app__section { margin-bottom: 28px; }
+.pass--chef .generate-button,
+.pass--chef .recipe-form__toggle-option--active,
+.pass--chef .schedule-row__badge--active,
+.pass--chef .schedule-row__save-button { color: #1b1e1c; }
+.pass--chef .generate-button { min-height: 52px; width: 100%; font-family: "Oswald", sans-serif; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 12px; }
+.pass--chef .generate-button:disabled { background: #2c312d; color: #8a8f88; }
+.pass--chef input, .pass--chef select, .pass--chef textarea { background: #1b1e1c; color: var(--ticket); border-color: var(--edge); }
+.pass--chef .link-button { color: var(--amber); }
+
+/* Chef timeline: stack each row on a phone so the step text gets the full width. */
+.pass--chef .timeline { padding: 14px; }
+.pass--chef .timeline-summary__value { font-family: "DM Mono", monospace; }
+.pass--chef .schedule-start { flex-wrap: wrap; }
+.pass--chef .schedule-row__badge--passive { background: #6fa07f; color: #1b1e1c; }
+@media (max-width: 640px) {
+  .pass--chef .schedule-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "badge time dur"
+      "info info info"
+      "act act act";
+    gap: 6px 10px;
+    padding: 12px;
+  }
+  .pass--chef .schedule-row__time { grid-area: time; flex: none; font-family: "DM Mono", monospace; font-size: 12px; }
+  .pass--chef .schedule-row__badge { grid-area: badge; justify-self: start; }
+  .pass--chef .schedule-row__duration { grid-area: dur; font-family: "DM Mono", monospace; font-size: 12px; }
+  .pass--chef .schedule-row__info { grid-area: info; }
+  .pass--chef .schedule-row__actions { grid-area: act; }
+  .pass--chef .schedule-row__edit { flex-wrap: wrap; }
+}
+
+/* Chef recipe list and form on a phone. */
+.pass--chef .sub-recipe-badge { white-space: nowrap; }
+.pass--chef .recipe-form__row { padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.pass--chef .recipe-form__row input,
+.pass--chef .recipe-form__row select { min-height: 40px; }
+@media (max-width: 640px) {
+  .pass--chef .recipe-manager-row { flex-wrap: wrap; gap: 8px; }
+  .pass--chef .recipe-manager-row__info { flex: 1 1 100%; }
+  .pass--chef .recipe-manager-row__name { flex-wrap: wrap; }
+  .pass--chef .recipe-manager-row__actions { flex-wrap: wrap; }
+  .pass--chef .recipe-form__toggle--kind { flex: 1 1 100%; }
+  .pass--chef .recipe-form__toggle--kind .recipe-form__toggle-option { flex: 1; }
+  .pass--chef .recipe-form__hint { white-space: normal; }
+  .pass--chef .recipe-form__conversion-input { flex: 1 1 100%; }
+  .pass--chef .recipe-form__name-input { flex: 1 1 90px; min-width: 0; }
+  .pass--chef .recipe-form__qty-input { width: 72px; padding-right: 4px; }
+  .pass--chef .recipe-form__unit-select { width: 64px; }
+}
+
+/* Chef home */
+.chef__covers { background: var(--card); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.chef__servicetoggle { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--edge); border-radius: 8px; overflow: hidden; }
+.chef__servicetoggle button { min-height: 40px; border: 0; background: transparent; color: var(--steel) !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.08em; font-size: 14px !important; }
+.chef__servicetoggle button.is-on { background: var(--amber); color: var(--char) !important; }
+.chef__coverrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chef__coverfield { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pass--chef .chef__covernum { font-family: "DM Mono", monospace; font-size: 34px; font-weight: 500; padding: 6px 10px; color: var(--amber); }
+.pass--chef .chef__servicetime { font-family: "DM Mono", monospace; font-size: 18px; min-height: 58px; }
+.chef__margin { display: inline-flex; align-items: center; gap: 6px; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--steel); }
+.pass--chef .chef__margin input { width: 48px; min-height: 32px; padding: 2px 6px; text-align: center; font-family: "DM Mono", monospace; font-size: 14px; background: var(--char); color: var(--ticket); border: 1.5px solid var(--edge); border-radius: 6px; }
+.chef__cook { --dot: var(--steel); display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid var(--dot); }
+.chef__cook--green { --dot: #6fa07f; }
+.chef__cook--yellow { --dot: #e8c547; }
+.chef__cook--red { --dot: #d2553f; }
+.chef__cook--done { --dot: #8ec5e8; }
+.chef__cook--gathering, .chef__cook--signedin { --dot: var(--steel); }
+.chef__dot { width: 14px; height: 14px; border-radius: 7px; background: var(--dot); flex-shrink: 0; }
+.chef__state { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--dot); flex-shrink: 0; text-align: right; }
+.chef__late { color: #d2553f; }
+.chef__missing { margin-top: 8px; padding: 8px 12px; border: 1.5px dashed #d2553f; border-radius: 8px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; font-weight: 600; }
+.chef__badge { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.06em; background: #d2553f; color: var(--ticket); border-radius: 4px; padding: 2px 6px; }
+.chef__alert { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid #d2553f; }
+.chef__alert.is-seen { border-left-color: var(--edge); opacity: 0.7; }
+.chef__scaled { font-size: 13px; color: #c9c4ba; }
+.chef__ack { flex-shrink: 0; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid var(--amber); background: transparent; color: var(--amber) !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.06em; font-size: 13px !important; }
+.chef__close { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 8px; background: var(--card); }
+.chef__note { font-size: 14px; margin-top: 4px !important; border-left: 3px solid var(--vine); padding-left: 8px; }
+.chef__waste { margin-top: 8px; display: flex; flex-direction: column; gap: 2px; }
+.chef__todo { padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid var(--amber); font-size: 14px; }
+.chef__torecipes { align-self: flex-start; }

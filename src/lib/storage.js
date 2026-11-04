@@ -12,6 +12,9 @@ const WASTE_KEY = "thePass.waste.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
 const STATION_KEY = "thePass.station.v1";
 const CHEF_ALERTS_KEY = "thePass.chefAlerts.v1";
+const CHEF_KEY = "thePass.chef.v1";
+const CHEF_SETTINGS_KEY = "thePass.chefSettings.v1";
+const COVERS_KEY = "thePass.covers.v1";
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -50,6 +53,9 @@ const ALL_KEYS = [
   "thePass.lineDay.v1",
   EIGHTY_SIX_KEY,
   CHEF_ALERTS_KEY,
+  CHEF_KEY,
+  CHEF_SETTINGS_KEY,
+  COVERS_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -197,4 +203,36 @@ export function loadChefAlerts() {
 
 export function saveChefAlerts(alerts) {
   save(CHEF_ALERTS_KEY, alerts);
+}
+
+// The chef signed in on this phone today: { date, name, initials }.
+export function loadChef() {
+  return load(CHEF_KEY, null);
+}
+
+export function saveChef(chef) {
+  save(CHEF_KEY, chef);
+}
+
+// Chef settings: how far behind a cook can run before going red, and when
+// service starts for each shift ("HH:MM").
+export const DEFAULT_CHEF_SETTINGS = { marginMin: 15, serviceAt: { lunch: "11:30", dinner: "17:00" } };
+
+export function loadChefSettings() {
+  const s = load(CHEF_SETTINGS_KEY, {});
+  return { ...DEFAULT_CHEF_SETTINGS, ...s, serviceAt: { ...DEFAULT_CHEF_SETTINGS.serviceAt, ...(s.serviceAt ?? {}) } };
+}
+
+export function saveChefSettings(settings) {
+  save(CHEF_SETTINGS_KEY, settings);
+}
+
+// Reservation covers per shift, typed in by the chef until OpenTable is
+// connected: { "2026-11-04:dinner": 120 }.
+export function loadCovers() {
+  return load(COVERS_KEY, {});
+}
+
+export function saveCovers(covers) {
+  save(COVERS_KEY, covers);
 }
