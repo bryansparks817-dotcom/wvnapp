@@ -10,7 +10,7 @@
 
 export function stepIsDone(step, shift) {
   if (step.item && shift.done?.[`p:${step.item.id}`]) return true;
-  return Boolean(shift.stepsDone?.[step.key]);
+  return step.parts.every((p) => shift.stepsDone?.[p]);
 }
 
 export function crewStatus(shift, plan, now, marginMin) {

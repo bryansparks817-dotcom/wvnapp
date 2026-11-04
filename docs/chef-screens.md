@@ -5,7 +5,12 @@ Chef-only screens in The Pass, with Bryan's requirements collected as they come 
 ## Built: chef sign-in and Home (Bryan, 2026-11-04)
 The chef side looks and works like the line cook side: same header, initials pill (tap to sign out), and bottom tabs **Home · Crew · Stock · Line**. **The chef pages are for management, oversight and hole plugging, not recipe access (Bryan, 2026-11-04).** Setup is done once and then only for new menu items, so it's a link at the bottom of Home, not a tab. It holds Recipes, the prep plan tool, and (coming) stations/items/pars, staff and station access, and storage zones.
 
-- **Crew:** every cook's card with status, plus what they're on NOW, collect progress, and each prep item's state (not started, n/N steps, done, no recipe, can't make; ↓ = scaled down). Hole-plugging actions come next.
+- **Crew:** every cook's card with status, plus what they're on NOW, collect progress, and each prep item's state (not started, n/N steps, done, no recipe, can't make, skipped; ↓ = scaled down).
+- **Hole plugging (Crew, 2026-11-04)** (`src/lib/chefActions.js`). Each change is saved on that station's shift and shows on the cook's screen in a blue **FROM CHEF** card (GOT IT clears it):
+  - **DO FIRST:** the scheduler puts that item's recipe (and any sub-recipe it needs) ahead of the longest-remaining rule (`shift.bump`). The cook's list re-orders and the item's steps are tagged CHEF: DO THIS FIRST. Ticks are saved per recipe step (`parts`), so re-ordering keeps them.
+  - **SKIP / PUT BACK:** takes an item off today's list (`shift.skip`) or puts it back. Skipped items leave the gather list, prep steps and the cook's status.
+  - **+ Add a one-off item:** any recipe, any grams, added to that cook's list (`extra: true`). It joins the gather list and prep steps; finishing it doesn't change the count or print a label, since it has no pan or par.
+  - Not built yet: moving an item to another cook or station. That needs a second station with items (station setup). Until the shared database exists, changes only reach cooks on the same phone.
 - **Stock:** the 86 / low board (the chef can flag any item on any station), short-ingredient alerts, last close and waste. The walk-in count and the end-of-night par report go here next. The chef signs in by name on the same sign-in screen as the cooks (`thePass.chef.v1`, once a day). Code: `src/chef/ChefHome.jsx`, `src/lib/crew.js`.
 
 Home shows, top to bottom:

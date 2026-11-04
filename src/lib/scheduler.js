@@ -10,6 +10,8 @@ export function buildTimeline(tracks) {
       name: t.name,
       steps: t.steps,
       dependsOn: t.dependsOn,
+      // A chef "do this first" track wins over the longest-remaining rule.
+      priority: Boolean(t.priority),
       stepIndex: 0,
       clock: null, // null until ready to start
       finished: false,
@@ -48,6 +50,7 @@ export function buildTimeline(tracks) {
         recipeId: state.id,
         recipeName: state.name,
         stepName: step.name,
+        stepIndex: state.stepIndex,
         start,
         end,
         dependsOn: state.dependsOn,
@@ -95,7 +98,8 @@ export function buildTimeline(tracks) {
     let chosenRemaining = remainingTotal(chosen);
     for (const candidate of candidates.slice(1)) {
       const remaining = remainingTotal(candidate);
-      if (remaining > chosenRemaining) {
+      const better = candidate.priority === chosen.priority ? remaining > chosenRemaining : candidate.priority;
+      if (better) {
         chosen = candidate;
         chosenRemaining = remaining;
       }
@@ -108,6 +112,7 @@ export function buildTimeline(tracks) {
       recipeId: chosen.id,
       recipeName: chosen.name,
       stepName: step.name,
+      stepIndex: chosen.stepIndex,
       start,
       end,
       dependsOn: chosen.dependsOn,

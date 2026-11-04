@@ -75,7 +75,7 @@ export default function RecipeScreen({ row, recipe, scaled, doneMeta, timers, on
           <button type="button" className="pass__cta" onClick={onToggleDone}>
             {doneMeta ? `DONE · ${doneMeta.by} · UNDO` : "MARK DONE"}
           </button>
-          {doneMeta && (
+          {doneMeta && onPrintLabel && (
             <button type="button" className="pass__ghostbtn" onClick={onPrintLabel}>
               PRINT LABEL
             </button>
