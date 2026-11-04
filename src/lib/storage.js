@@ -15,6 +15,7 @@ const CHEF_ALERTS_KEY = "thePass.chefAlerts.v1";
 const CHEF_KEY = "thePass.chef.v1";
 const CHEF_SETTINGS_KEY = "thePass.chefSettings.v1";
 const COVERS_KEY = "thePass.covers.v1";
+const DAILY_NUMBERS_KEY = "thePass.dailyNumbers.v1";
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -56,6 +57,7 @@ const ALL_KEYS = [
   CHEF_KEY,
   CHEF_SETTINGS_KEY,
   COVERS_KEY,
+  DAILY_NUMBERS_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -235,4 +237,14 @@ export function loadCovers() {
 
 export function saveCovers(covers) {
   save(COVERS_KEY, covers);
+}
+
+// Daily sales, food purchases and labor, in dollars, typed in by the chef
+// until the POS and payroll are connected: { "2026-11-04": { sales, food, labor } }.
+export function loadDailyNumbers() {
+  return load(DAILY_NUMBERS_KEY, {});
+}
+
+export function saveDailyNumbers(numbers) {
+  save(DAILY_NUMBERS_KEY, numbers);
 }

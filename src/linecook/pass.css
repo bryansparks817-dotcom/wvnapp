@@ -342,3 +342,12 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__setuprow:disabled { opacity: 0.6; }
 .chef__setuprow .pass__rowtext { gap: 2px; }
 .chef__setuplink { align-self: stretch; min-height: 48px; margin-top: 8px; border: 1.5px dashed var(--edge); border-radius: 8px; background: transparent; color: var(--steel) !important; font-family: "DM Mono", monospace !important; font-size: 12px !important; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.chef__numbers { display: flex; flex-direction: column; gap: 10px; }
+.chef__tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.chef__tile { background: var(--card); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chef__big { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 30px; line-height: 1.1; color: var(--ticket); }
+.chef__delta { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.02em; color: var(--steel); }
+.chef__delta.is-up { color: #d2553f; }
+.chef__delta.is-down { color: #6fa07f; }
+.chef__entry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

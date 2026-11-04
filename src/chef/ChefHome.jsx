@@ -8,6 +8,7 @@ import { buildPrepSteps } from "../lib/lineList";
 import { applyShortages } from "../lib/shortage";
 import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/crew";
 import { formatG } from "../lib/inventory";
+import Numbers from "./Numbers";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -25,7 +26,7 @@ const STATE_LABEL = { green: "ON TIME", yellow: "IN MARGIN", red: "BEHIND", gath
 // view "home": the oversight board. "crew": each cook's live prep list.
 // "stock": 86s, short ingredients, waste.
 const VIEWS = {
-  home: { covers: true, crew: true, flags: true, alerts: true, close: true, todos: true },
+  home: { numbers: true, covers: true, crew: true, flags: true, alerts: true, close: true, todos: true },
   crew: { crew: true, lists: true },
   stock: { flags: true, addFlag: true, alerts: true, close: true, stock: true },
 };
@@ -175,6 +176,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
   const d = new Date(now);
   return (
     <>
+      {show.numbers && <Numbers today={today} />}
       {show.covers && (
       <section className="chef__covers" aria-label="Reservations">
         <div className="chef__servicetoggle" role="group" aria-label="Shift">
