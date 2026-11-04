@@ -6,6 +6,7 @@ import RecipeList from "./components/RecipeList";
 import RecipeForm from "./components/RecipeForm";
 import LineCook, { WhoScreen } from "./linecook/LineCook";
 import ChefHome from "./chef/ChefHome";
+import ChefSetup from "./chef/ChefSetup";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
 import { CHEF_TABS } from "./linecook/tabs";
@@ -176,7 +177,9 @@ export default function App() {
   }
 
   const shell = {
-    screen: screen === "form" ? "manage" : screen,
+    // Setup (and the recipes and prep plan tool under it) is off the daily
+    // tabs: it's done once, then only for new menu items. It hangs off Home.
+    screen: ["setup", "form", "manage", "plan"].includes(screen) ? "home" : screen,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
@@ -189,7 +192,36 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
-          <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} />
+          <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
+          <button type="button" className="chef__setuplink" onClick={() => setScreen("setup")}>
+            Setup &amp; new menu items ›
+          </button>
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "crew" || screen === "stock") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell
+          title={screen === "crew" ? "Crew" : "Stock"}
+          lede={screen === "crew" ? "Where every cook is on their list, step by step." : "86s, short ingredients and what got tossed."}
+          {...shell}
+        >
+          <ChefHome key={screen} view={screen} today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "setup") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Setup" lede="Done once, then for new menu items: recipes, stations, staff and storage." {...shell}>
+          <ChefSetup onOpen={setScreen} />
         </ChefShell>
       </>
     );
@@ -227,7 +259,7 @@ export default function App() {
           onAdd={openAddForm}
           onEdit={openEditForm}
           onReset={handleResetToLatest}
-          onBack={() => setScreen("plan")}
+          onBack={() => setScreen("setup")}
         />
       </ChefShell>
       </>
