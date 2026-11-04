@@ -6,6 +6,7 @@ Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requ
 - **Edit station setup:** scaling, adding prep items, and changing an item's pan (e.g. ninth pan → sixth pan). Only the chef can do this.
 - **Walk-in count:** the chef enters it at the end of the night. It's combined with the line cook's lowboy count to build the next shift's Collect list.
 - **Staff roster:** manage names and their linked initials.
+- **Station access (Bryan, 2026-11-04):** in each cook's profile, the chef toggles which stations (Garde manger, Grill, Sauté, Pastry, Prep) that cook can open. In the beta every cook can open all of them.
 - **Storage zones:** set up the walk-in and dry-storage zones (Protein, Dairy, Produce, Dry…), give every ingredient a dedicated zone (AP flour to lobster stock), and set the order. The line cook's gather list follows that order. See `recipe-data-gaps.md`.
 
 ## Live crew board (Bryan, 2026-11-03)
