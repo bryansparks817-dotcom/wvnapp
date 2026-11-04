@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import lineData from "../data/lineItems.json";
+import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff,
+  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepSteps } from "../lib/lineList";
@@ -13,7 +13,7 @@ import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
-import { PassHeader } from "./Chrome";
+import { PassHeader, StationTabs, TabBar } from "./Chrome";
 import "./pass.css";
 
 function localDateKey(d = new Date()) {
@@ -77,27 +77,66 @@ function WhoScreen({ station, roster, onSignIn }) {
   );
 }
 
-export default function LineCook({ recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
+// Sign-in and station choice. Each station's counts and shift live in their
+// own StationLine, which remounts when the station changes.
+export default function LineCook(props) {
   const today = localDateKey();
-  const { items, linePar, station } = lineData;
-  const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
-  const [inventory, setInventory] = useState(() => loadInventory());
-  const [shift, setShift] = useState(() => loadShift());
   const [cook, setCook] = useState(() => loadCook());
   const [staff, setStaff] = useState(() => loadStaff());
+  const [stationId, setStationId] = useState(() => loadStation() ?? STATIONS[0].id);
+
+  useEffect(() => { if (cook) saveCook(cook); }, [cook]);
+  useEffect(() => { saveStaff(staff); }, [staff]);
+  useEffect(() => { saveStation(stationId); }, [stationId]);
+
+  const signedIn = cook?.date === today ? cook : null;
+  const person = signedIn ? staff.find((p) => p.initials === signedIn.initials) : null;
+  const allowed = stationsFor(person);
+  const station = allowed.find((s) => s.id === stationId) ?? allowed[0];
+
+  if (!signedIn) {
+    return (
+      <WhoScreen
+        station={station.name}
+        roster={staff}
+        onSignIn={(name) => {
+          const { person: p, roster } = signIn(name, staff);
+          setStaff(roster);
+          setCook({ date: today, name: p.name, initials: p.initials });
+        }}
+      />
+    );
+  }
+
+  const tabs = <StationTabs stations={allowed} current={station.id} onPick={setStationId} />;
+  return (
+    <StationLine
+      key={station.id}
+      {...props}
+      station={station}
+      stationTabs={tabs}
+      by={signedIn.initials}
+      onChangeCook={() => setCook(null)}
+    />
+  );
+}
+
+function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
+  const today = localDateKey();
+  const { items, linePar } = st;
+  const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
+  const [inventory, setInventory] = useState(() => loadInventory(st.id));
+  const [shift, setShift] = useState(() => loadShift(st.id));
   const [waste, setWaste] = useState(() => loadWaste());
   const [flags, setFlags] = useState(() => loadEightySix());
   const [screen, setScreen] = useState("today");
   const [openPrepId, setOpenPrepId] = useState(null);
 
-  useEffect(() => { if (inventory) saveInventory(inventory); }, [inventory]);
-  useEffect(() => { if (shift) saveShift(shift); }, [shift]);
-  useEffect(() => { if (cook) saveCook(cook); }, [cook]);
-  useEffect(() => { saveStaff(staff); }, [staff]);
+  useEffect(() => { if (inventory) saveInventory(inventory, st.id); }, [inventory, st.id]);
+  useEffect(() => { if (shift) saveShift(shift, st.id); }, [shift, st.id]);
   useEffect(() => { saveWaste(waste); }, [waste]);
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
-  const by = cook?.date === today ? cook.initials : null;
   const invItems = inventory?.items ?? emptyInventory(items);
   const shiftIsToday = shift?.date === today;
   const meta = shiftIsToday ? shift.meta ?? {} : {};
@@ -217,19 +256,22 @@ export default function LineCook({ recipesById, ingredients, onOpenChef, timers,
     setFlags((f) => [...f.filter((x) => x.name !== name), { name, kind, by, at: Date.now() }]);
   }
 
-  const shared = { station, onOpenChef, screen, setScreen, initials: by, onChangeCook: () => setCook(null) };
+  const shared = { station: stationTabs, onOpenChef, screen, setScreen, initials: by, onChangeCook };
 
-  if (!by) {
+  if (items.length === 0) {
     return (
-      <WhoScreen
-        station={station}
-        roster={staff}
-        onSignIn={(name) => {
-          const { person, roster } = signIn(name, staff);
-          setStaff(roster);
-          setCook({ date: today, name: person.name, initials: person.initials });
-        }}
-      />
+      <div className="pass">
+        <PassHeader {...shared}>
+          <h1 className="pass__title">{st.name}</h1>
+          <p className="pass__lede">No items set up for this station yet.</p>
+        </PassHeader>
+        <main className="pass__main">
+          <section className="pass__gate">
+            <p className="pass__hint">The chef adds {st.name}’s items, pans and pars. Once they’re in, this station gets its own close count, gather list, collect and prep.</p>
+          </section>
+        </main>
+        <TabBar screen={screen} setScreen={setScreen} onOpenChef={onOpenChef} />
+      </div>
     );
   }
 

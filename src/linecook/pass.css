@@ -202,3 +202,10 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__zonehead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; border-bottom: 1.5px solid var(--amber); padding-bottom: 4px; }
 .pass__zonename { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.06em; color: var(--amber); }
 .pass__zonearea { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.04em; color: var(--steel); }
+
+/* Station picker */
+.pass__stationpick { position: relative; display: inline-flex; align-items: center; }
+.pass__stationpick select { appearance: none; -webkit-appearance: none; min-height: 40px; border: 1.5px solid var(--amber); border-radius: 22px; padding: 0 34px 0 14px; background: transparent; color: var(--ticket); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.pass__stationpick select option { color: #1b1e1c; }
+.pass__stationpick svg { position: absolute; right: 12px; pointer-events: none; color: var(--amber); }
+.pass__visuallyhidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

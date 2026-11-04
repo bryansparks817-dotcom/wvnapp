@@ -9,7 +9,7 @@ export function PassHeader({ station, initials, onChangeCook, children }) {
           <span className="pass__wordmark">THE PASS</span>
         </div>
         <span className="pass__headright">
-          <span className="pass__station">{station}</span>
+          {typeof station === "string" ? <span className="pass__station">{station}</span> : station}
           {initials && (
             <button type="button" className="pass__initials" onClick={onChangeCook} aria-label={`Signed in as ${initials}. Change cook`}>
               {initials}
@@ -19,6 +19,22 @@ export function PassHeader({ station, initials, onChangeCook, children }) {
       </div>
       {children}
     </header>
+  );
+}
+
+// Station picker: a drop-down of the stations this cook can open. Each keeps
+// its own counts and lists. Uses the phone's own picker.
+export function StationTabs({ stations, current, onPick }) {
+  return (
+    <label className="pass__stationpick">
+      <span className="pass__visuallyhidden">Station</span>
+      <select value={current} onChange={(e) => onPick(e.target.value)}>
+        {stations.map((s) => (
+          <option key={s.id} value={s.id}>{s.name}</option>
+        ))}
+      </select>
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+    </label>
   );
 }
 
