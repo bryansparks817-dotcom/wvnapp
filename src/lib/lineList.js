@@ -89,6 +89,7 @@ export function buildPrepSteps(prepItems, recipesById) {
       steps.push({
         kind: "wait",
         key: `wait@${busyUntil}`,
+        at: busyUntil,
         minutes: ev.start - busyUntil,
         on: cooking ? { name: cooking.recipeName, step: cooking.stepName } : null,
       });
@@ -98,6 +99,8 @@ export function buildPrepSteps(prepItems, recipesById) {
     steps.push({
       kind,
       key: `${ev.trackId}@${ev.start}${ev.kickoff ? "k" : ""}`,
+      // Planned start, in minutes from when the cook gets the prep list.
+      at: ev.start,
       name: ev.name,
       item: owner.get(ev.trackId) ?? null,
       firstForItem: false,

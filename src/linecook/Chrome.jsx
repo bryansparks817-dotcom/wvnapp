@@ -1,3 +1,4 @@
+import { TABS } from "./tabs";
 // Header and bottom tabs shared by the line cook screens.
 
 export function PassHeader({ station, initials, onChangeCook, children }) {
@@ -38,16 +39,10 @@ export function StationTabs({ stations, current, onPick }) {
   );
 }
 
-const TABS = [
-  { id: "today", label: "Today", path: "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" },
-  { id: "close", label: "Close", path: "M4 6h16M4 12h16M4 18h10" },
-  { id: "chef", label: "Chef", path: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" },
-];
-
-export function TabBar({ screen, setScreen, onOpenChef }) {
+export function TabBar({ screen, setScreen, onOpenChef, tabs = TABS }) {
   return (
-    <nav className="pass__tabs" aria-label="Main">
-      {TABS.map((tab) => (
+    <nav className="pass__tabs" aria-label="Main" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}>
+      {tabs.map((tab) => (
         <button
           key={tab.id}
           type="button"

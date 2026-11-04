@@ -1,6 +1,19 @@
 # Chef screens (planned)
 
-Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requirements, collected as they come up.
+Chef-only screens in The Pass, with Bryan's requirements collected as they come up. The chef sign-in and Home screen are built; the rest is planned.
+
+## Built: chef sign-in and Home (Bryan, 2026-11-04)
+The chef side looks and works like the line cook side: same header, initials pill (tap to sign out), and bottom tabs **Home · Plan · Recipes · Line**. The chef signs in by name on the same sign-in screen as the cooks (`thePass.chef.v1`, once a day). Code: `src/chef/ChefHome.jsx`, `src/lib/crew.js`.
+
+Home shows, top to bottom:
+1. **Covers** for Lunch or Dinner (picked by time of day, tap to switch), typed in by the chef until OpenTable is connected (`thePass.covers.v1`), plus the **service time** for that shift.
+2. **Crew:** each cook on an open shift, with green / yellow (IN MARGIN) / red (BEHIND), steps done, minutes behind, start time, and **projected finish against service** (flagged AFTER SERVICE when late). The chef sets the margin ("RED AFTER N MIN BEHIND", `thePass.chefSettings.v1`, default 15). A cook who signed in but hasn't confirmed a count shows as SIGNED IN. Stations with items but nobody on them show under **NO ONE ON**. Scheduled-but-not-in needs the staff schedule (later).
+3. **86 / Low** board (tap a chip to clear).
+4. **Low ingredients:** today's SHORT alerts with each item's scaled amount, newest first, with GOT IT to acknowledge. Walk-in stock levels join this once the walk-in count exists.
+5. **Last close** per station: when, who, the note left for the next shift, and anything tossed today.
+6. **Your to-dos:** shifts never closed, prep items with no recipe in the app, and stations with no items set up.
+
+How status is worked out: the clock starts at the cook's gather FINISH (`shift.gatherDoneAt`). Every prep step has a planned start (`at`) and hands-on time; the first unticked step that should already be done sets how far behind the cook is. Projected finish = start + planned total + minutes behind. Until the shared database exists, the board only sees the cooks on this phone.
 
 ## Already decided
 - **Edit station setup:** scaling, adding prep items, and changing an item's pan (e.g. ninth pan → sixth pan). Only the chef can do this.

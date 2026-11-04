@@ -33,15 +33,16 @@ function closeLabel(inv) {
   return DAY_NAMES[new Date(y, m - 1, d).getDay()];
 }
 
-function WhoScreen({ station, roster, onSignIn }) {
+// Sign-in by name. The chef uses the same screen with its own wording.
+export function WhoScreen({ station, roster, onSignIn, title = "Who’s on?", lede = "Your initials go on counts, check-offs and labels today.", cta = "START SHIFT →", extra = null }) {
   const [name, setName] = useState("");
   const initials = previewInitials(name, roster);
   const ok = normalizeName(name).split(" ").length >= 2 || roster.some((p) => p.name.toLowerCase() === normalizeName(name).toLowerCase());
   return (
     <div className="pass">
       <PassHeader station={station}>
-        <h1 className="pass__title">Who’s on?</h1>
-        <p className="pass__lede">Your initials go on counts, check-offs and labels today.</p>
+        <h1 className="pass__title">{title}</h1>
+        <p className="pass__lede">{lede}</p>
       </PassHeader>
       <main className="pass__main">
         {roster.length > 0 && (
@@ -77,8 +78,9 @@ function WhoScreen({ station, roster, onSignIn }) {
           <p className="pass__hint" aria-live="polite">
             {initials ? <>You’ll sign as <strong className="pass__amber">{initials}</strong></> : "Your initials are set from your name."}
           </p>
-          <button type="submit" className="pass__cta" disabled={!ok}>START SHIFT →</button>
+          <button type="submit" className="pass__cta" disabled={!ok}>{cta}</button>
         </form>
+        {extra}
       </main>
     </div>
   );
@@ -400,7 +402,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
         onShort={setShort}
         cantMake={cantMake}
         gatherDone={shiftIsToday && Boolean(shift.gatherDone)}
-        onFinishGather={() => { setShift({ ...shift, gatherDone: true }); window.scrollTo(0, 0); }}
+        onFinishGather={() => { setShift({ ...shift, gatherDone: true, gatherDoneAt: shift.gatherDoneAt ?? Date.now() }); window.scrollTo(0, 0); }}
         onReopenGather={() => { setShift({ ...shift, gatherDone: false }); window.scrollTo(0, 0); }}
         meta={meta}
         timers={timers}

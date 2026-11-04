@@ -4,11 +4,14 @@ import GatherList from "./components/GatherList";
 import TimelineList from "./components/TimelineList";
 import RecipeList from "./components/RecipeList";
 import RecipeForm from "./components/RecipeForm";
-import LineCook from "./linecook/LineCook";
+import LineCook, { WhoScreen } from "./linecook/LineCook";
+import ChefHome from "./chef/ChefHome";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
+import { CHEF_TABS } from "./linecook/tabs";
 import "./linecook/pass.css";
-import { loadTimers, saveTimers } from "./lib/storage";
+import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff } from "./lib/storage";
+import { signIn } from "./lib/staff";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
@@ -17,17 +20,22 @@ import { buildTimeline } from "./lib/scheduler";
 import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
 import "./App.css";
 
-// Chef pages share the line cook look: same header, colors, fonts and tabs.
-function ChefShell({ title, lede, onLine, children }) {
+function localDateKey(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// Chef pages share the line cook look and flow: same header, colors, fonts,
+// initials pill and bottom tabs.
+function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, children }) {
   return (
     <div className="pass pass--chef">
-      <PassHeader station="Chef">
+      <PassHeader station="Chef" initials={initials} onChangeCook={onSignOut}>
         <span className="pass__date">CHEF</span>
         <h1 className="pass__title">{title}</h1>
         {lede && <p className="pass__lede">{lede}</p>}
       </PassHeader>
       <main className="pass__main chef">{children}</main>
-      <TabBar screen="chef" setScreen={onLine} onOpenChef={() => {}} />
+      <TabBar screen={screen} setScreen={setScreen} tabs={CHEF_TABS} />
     </div>
   );
 }
@@ -46,6 +54,10 @@ export default function App() {
     setTimers((t) => [...t, { id: `${Date.now()}`, label, endsAt: Date.now() + minutes * 60000 }]);
   const timerBar = <TimerBar timers={timers} onDismiss={(id) => setTimers((t) => t.filter((x) => x.id !== id))} />;
   const [screen, setScreen] = useState("home");
+  const today = localDateKey();
+  const [chef, setChef] = useState(() => loadChef());
+  useEffect(() => { saveChef(chef); }, [chef]);
+  const chefOn = chef?.date === today ? chef : null;
   const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(() => new Set(loadSelectedRecipeIds()));
   const [generated, setGenerated] = useState(null);
@@ -141,12 +153,54 @@ export default function App() {
     );
   }
 
+  if (!chefOn) {
+    return (
+      <>
+        {timerBar}
+        <WhoScreen
+          station="Chef"
+          roster={loadStaff()}
+          title="Chef sign-in"
+          lede="See the crew, covers, 86s and anything waiting on you."
+          cta="OPEN CHEF VIEW →"
+          onSignIn={(name) => {
+            const { person, roster } = signIn(name, loadStaff());
+            saveStaff(roster);
+            setChef({ date: today, name: person.name, initials: person.initials });
+            setScreen("home");
+          }}
+          extra={<button type="button" className="pass__ghost" onClick={() => setMode("line")}>← Back to the line view</button>}
+        />
+      </>
+    );
+  }
+
+  const shell = {
+    screen: screen === "form" ? "manage" : screen,
+    setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
+    initials: chefOn.initials,
+    onSignOut: () => setChef(null),
+  };
+
+  if (screen === "home") {
+    const d = new Date();
+    const hello = d.getHours() < 12 ? "Morning" : d.getHours() < 17 ? "Afternoon" : "Evening";
+    return (
+      <>
+        {timerBar}
+        <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
+          <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} />
+        </ChefShell>
+      </>
+    );
+  }
+
   if (screen === "form") {
     const initialRecipe = editingRecipeId ? recipes.find((r) => r.id === editingRecipeId) : null;
     return (
       <>
       {timerBar}
-      <ChefShell title="Recipes" onLine={() => setMode("line")}>
+      <ChefShell title="Recipes" {...shell}>
         <RecipeForm
           initialRecipe={initialRecipe}
           recipes={recipes}
@@ -166,14 +220,14 @@ export default function App() {
     return (
       <>
       {timerBar}
-      <ChefShell title="Recipes" lede="Add, edit or import recipe sheets." onLine={() => setMode("line")}>
+      <ChefShell title="Recipes" lede="Add, edit or import recipe sheets." {...shell}>
         <RecipeList
           recipes={recipes}
           onDelete={handleDeleteRecipe}
           onAdd={openAddForm}
           onEdit={openEditForm}
           onReset={handleResetToLatest}
-          onBack={() => setScreen("home")}
+          onBack={() => setScreen("plan")}
         />
       </ChefShell>
       </>
@@ -183,7 +237,7 @@ export default function App() {
   return (
     <>
     {timerBar}
-    <ChefShell title="Chef" lede="Select today’s recipes, then generate the gather list and prep timeline." onLine={() => setMode("line")}>
+    <ChefShell title="Prep plan" lede="Select recipes, then generate the gather list and prep timeline." {...shell}>
 
       <section className="app__section">
         <div className="recipe-manager__header">

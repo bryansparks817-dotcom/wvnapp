@@ -297,3 +297,35 @@ body:has(.pass) { background: #1b1e1c; }
   .pass--chef .recipe-form__qty-input { width: 72px; padding-right: 4px; }
   .pass--chef .recipe-form__unit-select { width: 64px; }
 }
+
+/* Chef home */
+.chef__covers { background: var(--card); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.chef__servicetoggle { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--edge); border-radius: 8px; overflow: hidden; }
+.chef__servicetoggle button { min-height: 40px; border: 0; background: transparent; color: var(--steel) !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.08em; font-size: 14px !important; }
+.chef__servicetoggle button.is-on { background: var(--amber); color: var(--char) !important; }
+.chef__coverrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chef__coverfield { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pass--chef .chef__covernum { font-family: "DM Mono", monospace; font-size: 34px; font-weight: 500; padding: 6px 10px; color: var(--amber); }
+.pass--chef .chef__servicetime { font-family: "DM Mono", monospace; font-size: 18px; min-height: 58px; }
+.chef__margin { display: inline-flex; align-items: center; gap: 6px; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--steel); }
+.pass--chef .chef__margin input { width: 48px; min-height: 32px; padding: 2px 6px; text-align: center; font-family: "DM Mono", monospace; font-size: 14px; background: var(--char); color: var(--ticket); border: 1.5px solid var(--edge); border-radius: 6px; }
+.chef__cook { --dot: var(--steel); display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid var(--dot); }
+.chef__cook--green { --dot: #6fa07f; }
+.chef__cook--yellow { --dot: #e8c547; }
+.chef__cook--red { --dot: #d2553f; }
+.chef__cook--done { --dot: #8ec5e8; }
+.chef__cook--gathering, .chef__cook--signedin { --dot: var(--steel); }
+.chef__dot { width: 14px; height: 14px; border-radius: 7px; background: var(--dot); flex-shrink: 0; }
+.chef__state { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--dot); flex-shrink: 0; text-align: right; }
+.chef__late { color: #d2553f; }
+.chef__missing { margin-top: 8px; padding: 8px 12px; border: 1.5px dashed #d2553f; border-radius: 8px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; font-weight: 600; }
+.chef__badge { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.06em; background: #d2553f; color: var(--ticket); border-radius: 4px; padding: 2px 6px; }
+.chef__alert { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid #d2553f; }
+.chef__alert.is-seen { border-left-color: var(--edge); opacity: 0.7; }
+.chef__scaled { font-size: 13px; color: #c9c4ba; }
+.chef__ack { flex-shrink: 0; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid var(--amber); background: transparent; color: var(--amber) !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.06em; font-size: 13px !important; }
+.chef__close { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 8px; background: var(--card); }
+.chef__note { font-size: 14px; margin-top: 4px !important; border-left: 3px solid var(--vine); padding-left: 8px; }
+.chef__waste { margin-top: 8px; display: flex; flex-direction: column; gap: 2px; }
+.chef__todo { padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid var(--amber); font-size: 14px; }
+.chef__torecipes { align-self: flex-start; }
