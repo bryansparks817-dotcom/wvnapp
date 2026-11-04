@@ -6,6 +6,8 @@ import RecipeList from "./components/RecipeList";
 import RecipeForm from "./components/RecipeForm";
 import LineCook from "./linecook/LineCook";
 import TimerBar from "./linecook/TimerBar";
+import { PassHeader, TabBar } from "./linecook/Chrome";
+import "./linecook/pass.css";
 import { loadTimers, saveTimers } from "./lib/storage";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
@@ -14,6 +16,21 @@ import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
 import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
 import "./App.css";
+
+// Chef pages share the line cook look: same header, colors, fonts and tabs.
+function ChefShell({ title, lede, onLine, children }) {
+  return (
+    <div className="pass pass--chef">
+      <PassHeader station="Chef">
+        <span className="pass__date">CHEF</span>
+        <h1 className="pass__title">{title}</h1>
+        {lede && <p className="pass__lede">{lede}</p>}
+      </PassHeader>
+      <main className="pass__main chef">{children}</main>
+      <TabBar screen="chef" setScreen={onLine} onOpenChef={() => {}} />
+    </div>
+  );
+}
 
 export default function App() {
   const { recipes, addRecipe, updateRecipe, deleteRecipe } = useRecipes();
@@ -129,10 +146,7 @@ export default function App() {
     return (
       <>
       {timerBar}
-      <div className="app">
-        <header className="app__header">
-          <h1>The Pass · Chef</h1>
-        </header>
+      <ChefShell title="Recipes" onLine={() => setMode("line")}>
         <RecipeForm
           initialRecipe={initialRecipe}
           recipes={recipes}
@@ -143,7 +157,7 @@ export default function App() {
           onSave={handleSaveRecipe}
           onCancel={() => setScreen("manage")}
         />
-      </div>
+      </ChefShell>
       </>
     );
   }
@@ -152,10 +166,7 @@ export default function App() {
     return (
       <>
       {timerBar}
-      <div className="app">
-        <header className="app__header">
-          <h1>The Pass · Chef</h1>
-        </header>
+      <ChefShell title="Recipes" lede="Add, edit or import recipe sheets." onLine={() => setMode("line")}>
         <RecipeList
           recipes={recipes}
           onDelete={handleDeleteRecipe}
@@ -164,7 +175,7 @@ export default function App() {
           onReset={handleResetToLatest}
           onBack={() => setScreen("home")}
         />
-      </div>
+      </ChefShell>
       </>
     );
   }
@@ -172,14 +183,7 @@ export default function App() {
   return (
     <>
     {timerBar}
-    <div className="app">
-      <header className="app__header">
-        <button type="button" className="link-button" onClick={() => setMode("line")}>
-          ← Line view
-        </button>
-        <h1>The Pass · Chef</h1>
-        <p>Select today's recipes, then generate the gather list and prep timeline.</p>
-      </header>
+    <ChefShell title="Chef" lede="Select today’s recipes, then generate the gather list and prep timeline." onLine={() => setMode("line")}>
 
       <section className="app__section">
         <div className="recipe-manager__header">
@@ -211,7 +215,7 @@ export default function App() {
           </section>
         </>
       )}
-    </div>
+    </ChefShell>
     </>
   );
 }

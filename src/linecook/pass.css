@@ -229,3 +229,71 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__check--blue.is-checked { background: #8ec5e8; border-color: #8ec5e8; color: #1b1e1c; }
 .pass__gatherrow.pass__row--done { border-color: rgba(142, 197, 232, 0.45); background: rgba(142, 197, 232, 0.08); }
 .pass__gatherrow.pass__row--done .pass__rowname, .pass__gatherrow.pass__row--done .pass__gatheramt { color: #8ec5e8 !important; }
+
+/* Chef pages: the older recipe tools, dressed in The Pass look. Their
+   styles (App.css) read these variables. */
+.pass--chef {
+  --text: #f3eee4;
+  --text-muted: #8a8f88;
+  --bg: #1b1e1c;
+  --surface: #242825;
+  --border: #3a3f3b;
+  --accent: #e39b2d;
+  --accent-bg: rgba(227, 155, 45, 0.12);
+  color: var(--text);
+}
+.pass--chef .chef { gap: 0; }
+.pass--chef .chef h2, .pass--chef .chef h3 { font-family: "Oswald", sans-serif; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ticket); }
+.pass--chef .chef p { color: var(--steel); }
+.pass--chef .app__section { margin-bottom: 28px; }
+.pass--chef .generate-button,
+.pass--chef .recipe-form__toggle-option--active,
+.pass--chef .schedule-row__badge--active,
+.pass--chef .schedule-row__save-button { color: #1b1e1c; }
+.pass--chef .generate-button { min-height: 52px; width: 100%; font-family: "Oswald", sans-serif; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 12px; }
+.pass--chef .generate-button:disabled { background: #2c312d; color: #8a8f88; }
+.pass--chef input, .pass--chef select, .pass--chef textarea { background: #1b1e1c; color: var(--ticket); border-color: var(--edge); }
+.pass--chef .link-button { color: var(--amber); }
+
+/* Chef timeline: stack each row on a phone so the step text gets the full width. */
+.pass--chef .timeline { padding: 14px; }
+.pass--chef .timeline-summary__value { font-family: "DM Mono", monospace; }
+.pass--chef .schedule-start { flex-wrap: wrap; }
+.pass--chef .schedule-row__badge--passive { background: #6fa07f; color: #1b1e1c; }
+@media (max-width: 640px) {
+  .pass--chef .schedule-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "badge time dur"
+      "info info info"
+      "act act act";
+    gap: 6px 10px;
+    padding: 12px;
+  }
+  .pass--chef .schedule-row__time { grid-area: time; flex: none; font-family: "DM Mono", monospace; font-size: 12px; }
+  .pass--chef .schedule-row__badge { grid-area: badge; justify-self: start; }
+  .pass--chef .schedule-row__duration { grid-area: dur; font-family: "DM Mono", monospace; font-size: 12px; }
+  .pass--chef .schedule-row__info { grid-area: info; }
+  .pass--chef .schedule-row__actions { grid-area: act; }
+  .pass--chef .schedule-row__edit { flex-wrap: wrap; }
+}
+
+/* Chef recipe list and form on a phone. */
+.pass--chef .sub-recipe-badge { white-space: nowrap; }
+.pass--chef .recipe-form__row { padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.pass--chef .recipe-form__row input,
+.pass--chef .recipe-form__row select { min-height: 40px; }
+@media (max-width: 640px) {
+  .pass--chef .recipe-manager-row { flex-wrap: wrap; gap: 8px; }
+  .pass--chef .recipe-manager-row__info { flex: 1 1 100%; }
+  .pass--chef .recipe-manager-row__name { flex-wrap: wrap; }
+  .pass--chef .recipe-manager-row__actions { flex-wrap: wrap; }
+  .pass--chef .recipe-form__toggle--kind { flex: 1 1 100%; }
+  .pass--chef .recipe-form__toggle--kind .recipe-form__toggle-option { flex: 1; }
+  .pass--chef .recipe-form__hint { white-space: normal; }
+  .pass--chef .recipe-form__conversion-input { flex: 1 1 100%; }
+  .pass--chef .recipe-form__name-input { flex: 1 1 90px; min-width: 0; }
+  .pass--chef .recipe-form__qty-input { width: 72px; padding-right: 4px; }
+  .pass--chef .recipe-form__unit-select { width: 64px; }
+}
