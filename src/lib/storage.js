@@ -10,6 +10,11 @@ const STAFF_KEY = "thePass.staff.v1";
 const TIMERS_KEY = "thePass.timers.v1";
 const WASTE_KEY = "thePass.waste.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
+const STATION_KEY = "thePass.station.v1";
+
+// Count and shift data are kept per station. Garde manger keeps the original
+// keys so data saved before stations existed still loads.
+const stationKey = (key, stationId) => (!stationId || stationId === "garde-manger" ? key : `${key}.${stationId}`);
 
 function load(key, seed) {
   try {
@@ -52,6 +57,9 @@ const ALL_KEYS = [
 export function clearAllLocalData() {
   try {
     for (const key of ALL_KEYS) localStorage.removeItem(key);
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith(`${INVENTORY_KEY}.`) || key.startsWith(`${SHIFT_KEY}.`) || key === STATION_KEY) localStorage.removeItem(key);
+    }
   } catch {
     // storage unavailable — nothing to clear
   }
@@ -103,22 +111,31 @@ export function saveScheduleSettings(settings) {
 
 // Inventory as of the last count: { closedOn, items: { itemId: { line, lowboy, walkIn } } }.
 // Carries over to the next shift (see docs/line-cook-screens.md).
-export function loadInventory() {
-  return load(INVENTORY_KEY, null);
+export function loadInventory(stationId) {
+  return load(stationKey(INVENTORY_KEY, stationId), null);
 }
 
-export function saveInventory(inventory) {
-  save(INVENTORY_KEY, inventory);
+export function saveInventory(inventory, stationId) {
+  save(stationKey(INVENTORY_KEY, stationId), inventory);
 }
 
 // The current shift: { date, collect, prep, done: { key: snapshot } }.
 // Built when the cook confirms last night's count.
-export function loadShift() {
-  return load(SHIFT_KEY, null);
+export function loadShift(stationId) {
+  return load(stationKey(SHIFT_KEY, stationId), null);
 }
 
-export function saveShift(shift) {
-  save(SHIFT_KEY, shift);
+export function saveShift(shift, stationId) {
+  save(stationKey(SHIFT_KEY, stationId), shift);
+}
+
+// The station this phone last had open.
+export function loadStation() {
+  return load(STATION_KEY, null);
+}
+
+export function saveStation(stationId) {
+  save(STATION_KEY, stationId);
 }
 
 // Staff roster: [{ name, initials }]. See lib/staff.js.
