@@ -74,10 +74,17 @@ function TakeLine({ item, take, today }) {
   );
 }
 
+// Item name -> ingredients it's short on.
+function holdsByItem(short) {
+  const holds = {};
+  for (const s of Object.values(short)) for (const item of s.items) (holds[item] ??= []).push(s.name);
+  return holds;
+}
+
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, gather, gathered, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, gather, gathered, short, onShort, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -123,7 +130,7 @@ export default function TodayScreen({
               <h2>GATHER LIST</h2>
               <span className="pass__mono pass__amber">{got} of {gather.items.length}</span>
             </div>
-            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
+            <GatherList gather={gather} gathered={gathered} short={short} onToggle={onToggleGather} onShort={onShort} />
           </section>
         </main>
         <div className="pass__footer">
@@ -211,6 +218,7 @@ export default function TodayScreen({
             tossOnly={tossOnly}
             done={done}
             stepsDone={stepsDone}
+            holds={holdsByItem(short)}
             timers={timers}
             onToggleStep={onToggleStep}
             onToggleItem={(row) => onToggle("p", row)}

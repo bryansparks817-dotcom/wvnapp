@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation,
+  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepSteps } from "../lib/lineList";
@@ -150,6 +150,21 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
     () => gatherForPrep(prepForPlan, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
     [prepForPlan, recipesById, ingredients]
   );
+
+  // Short on an ingredient: alert the chef, hold the prep that needs it.
+  function setShort(entry, on) {
+    const key = entry.name.toLowerCase();
+    const short = { ...(shift.short ?? {}) };
+    const id = `${today}:${st.id}:${key}`;
+    if (on) short[key] = { name: entry.name, needG: entry.grams, items: entry.usedIn, by, at: Date.now() };
+    else delete short[key];
+    setShift({ ...shift, short });
+    const alerts = loadChefAlerts().filter((a) => a.id !== id);
+    if (on) {
+      alerts.push({ id, type: "short", date: today, station: st.name, ingredient: entry.name, needG: Math.round(entry.grams), items: entry.usedIn, by, at: Date.now() });
+    }
+    saveChefAlerts(alerts);
+  }
 
   function toggleGather(key) {
     const gathered = { ...(shift.gathered ?? {}) };
@@ -343,6 +358,8 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
         gather={gather}
         gathered={shiftIsToday ? shift.gathered ?? {} : {}}
         onToggleGather={toggleGather}
+        short={shiftIsToday ? shift.short ?? {} : {}}
+        onShort={setShort}
         gatherDone={shiftIsToday && Boolean(shift.gatherDone)}
         onFinishGather={() => { setShift({ ...shift, gatherDone: true }); window.scrollTo(0, 0); }}
         onReopenGather={() => { setShift({ ...shift, gatherDone: false }); window.scrollTo(0, 0); }}

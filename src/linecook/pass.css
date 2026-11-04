@@ -209,3 +209,9 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__stationpick select option { color: #1b1e1c; }
 .pass__stationpick svg { position: absolute; right: 12px; pointer-events: none; color: var(--amber); }
 .pass__visuallyhidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Short on an ingredient: chef alerted, prep on hold */
+.pass__shortbtn { align-self: center; flex-shrink: 0; min-height: 36px; margin-right: 10px; padding: 0 10px; border-radius: 6px; border: 1.5px solid #3a3f3b; background: transparent; color: #8a8f88 !important; font-family: "DM Mono", monospace !important; font-size: 11px !important; letter-spacing: 0.06em; }
+.pass__shortbtn.is-on { border-color: #d2553f; color: #f3eee4 !important; background: #d2553f; }
+.pass__row--short { border-color: #d2553f; }
+.pass__shortnote, .pass__holdnote { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: #f3eee4; background: #d2553f; border-radius: 4px; padding: 2px 6px; align-self: flex-start; margin-top: 3px; }

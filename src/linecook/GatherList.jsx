@@ -11,8 +11,11 @@ function amount(entry) {
   return parts.join(" + ");
 }
 
-// What to pull from the walk-in and dry storage before starting Prep.
-export default function GatherList({ gather, gathered, onToggle }) {
+// What to pull from the walk-in and dry storage before starting Prep. If
+// there isn't enough of something for a full production run, the cook taps
+// SHORT: the chef gets an alert and the prep that needs it goes on hold.
+// There is no making a smaller batch.
+export default function GatherList({ gather, gathered, short, onToggle, onShort }) {
   if (gather.items.length === 0 && gather.missing.length === 0) return <p className="pass__empty">Nothing to gather.</p>;
   return (
     <>
@@ -26,16 +29,34 @@ export default function GatherList({ gather, gathered, onToggle }) {
             {zone.items.map((g) => {
               const key = g.name.toLowerCase();
               const isDone = Boolean(gathered[key]);
+              const isShort = Boolean(short[key]);
               return (
                 <li key={key}>
-                  <button type="button" aria-pressed={isDone} className={`pass__row pass__gatherrow${isDone ? " pass__row--done" : ""}`} onClick={() => onToggle(key)}>
-                    <CheckBox checked={isDone} tone="amber" />
-                    <span className="pass__rowtext">
-                      <span className="pass__rowname">{g.name}</span>
-                      {!isDone && <span className="pass__rowsub">for {g.usedIn.join(", ")}</span>}
-                    </span>
-                    <span className="pass__mono pass__amber pass__gatheramt">{amount(g)}</span>
-                  </button>
+                  <div className={`pass__row pass__row--split pass__gatherrow${isDone ? " pass__row--done" : ""}${isShort ? " pass__row--short" : ""}`}>
+                    <button type="button" className="pass__checkbtn" aria-pressed={isDone} aria-label={`${isDone ? "Undo" : "Got it"}: ${g.name}`} onClick={() => onToggle(key)}>
+                      <CheckBox checked={isDone} tone="amber" />
+                    </button>
+                    <button type="button" className="pass__rowopen" onClick={() => onToggle(key)}>
+                      <span className="pass__rowtext">
+                        <span className="pass__rowname">{g.name}</span>
+                        {isShort ? (
+                          <span className="pass__shortnote">SHORT · CHEF ALERTED · {g.usedIn.join(", ")} on hold</span>
+                        ) : (
+                          !isDone && <span className="pass__rowsub">for {g.usedIn.join(", ")}</span>
+                        )}
+                      </span>
+                      <span className="pass__mono pass__amber pass__gatheramt">{amount(g)}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`pass__shortbtn${isShort ? " is-on" : ""}`}
+                      aria-pressed={isShort}
+                      aria-label={isShort ? `Undo short: ${g.name}` : `Not enough ${g.name} for a full batch. Alert the chef`}
+                      onClick={() => onShort(g, !isShort)}
+                    >
+                      {isShort ? "UNDO" : "SHORT"}
+                    </button>
+                  </div>
                 </li>
               );
             })}
