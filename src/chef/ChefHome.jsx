@@ -6,7 +6,7 @@ import {
 } from "../lib/storage";
 import { buildPrepSteps } from "../lib/lineList";
 import { applyShortages } from "../lib/shortage";
-import { crewStatus, currentServiceShift, todayAt } from "../lib/crew";
+import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/crew";
 import { formatG } from "../lib/inventory";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -22,7 +22,77 @@ const STATE_LABEL = { green: "ON TIME", yellow: "IN MARGIN", red: "BEHIND", gath
 // Everything the chef needs at the top of a shift, read from what the line
 // cooks have saved. Until the shared database exists this only sees the data
 // on this phone.
-export default function ChefHome({ today, recipesById, onOpenRecipes }) {
+// view "home": the oversight board. "crew": each cook's live prep list.
+// "stock": 86s, short ingredients, waste.
+const VIEWS = {
+  home: { covers: true, crew: true, flags: true, alerts: true, close: true, todos: true },
+  crew: { crew: true, lists: true },
+  stock: { flags: true, addFlag: true, alerts: true, close: true, stock: true },
+};
+
+// One cook's day at a glance: what they're on now, then every prep item
+// with how far along it is.
+function CookList({ shift, plan, rows }) {
+  const steps = plan.steps.filter((s) => s.kind !== "wait");
+  const next = steps.find((s) => !stepIsDone(s, shift));
+  const collectDone = shift.collect.filter((c) => shift.done?.[`c:${c.id}`]).length;
+  const items = rows.filter((r) => (r.plannedG ?? r.makeG) > 0);
+  return (
+    <div className="chef__cooklist">
+      {next && (
+        <p className="chef__now">
+          <span className="pass__steptag">NOW · </span>
+          {next.name}: {next.actions.length ? next.actions.slice(0, 2).join(" → ") : next.handsOff.map((h) => h.step).join(" → ")}
+        </p>
+      )}
+      {shift.collect.length > 0 && <span className="pass__rowsub">Collect {collectDone} of {shift.collect.length}</span>}
+      <ul className="chef__items">
+        {items.map((r) => {
+          const own = steps.filter((s) => s.item?.id === r.id);
+          const doneN = own.filter((s) => stepIsDone(s, shift)).length;
+          const done = Boolean(shift.done?.[`p:${r.id}`]);
+          const state = r.makeG === 0 ? "CAN’T MAKE" : done ? "DONE" : own.length === 0 ? "NO RECIPE" : doneN > 0 ? `${doneN}/${own.length} STEPS` : "NOT STARTED";
+          return (
+            <li key={r.id} className={done ? "is-done" : r.makeG === 0 ? "is-cant" : ""}>
+              <span>{r.name}</span>
+              <span className="pass__mono">{formatG(r.makeG)}{r.limitedBy ? " ↓" : ""}</span>
+              <span className="chef__itemstate">{state}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+// The 86 / low picker for the chef: any item on any station.
+function AddFlags({ onAdd }) {
+  const [open, setOpen] = useState(false);
+  const items = STATIONS.flatMap((st) => st.items.map((i) => ({ ...i, station: st.name })));
+  return (
+    <>
+      <button type="button" className="pass__flagbtn" aria-expanded={open} onClick={() => setOpen(!open)}>
+        {open ? "Done flagging" : "+ Flag 86 / running low"}
+      </button>
+      {open && (
+        <ul className="pass__flaglist">
+          {items.map((item) => (
+            <li key={`${item.station}:${item.id}`}>
+              <span>{item.name} <span className="pass__muted">· {item.station}</span></span>
+              <span className="pass__flagactions">
+                <button type="button" onClick={() => onAdd(item.name, "low")}>LOW</button>
+                <button type="button" onClick={() => onAdd(item.name, "86")}>86</button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+export default function ChefHome({ today, recipesById, onOpenRecipes, view = "home", by }) {
+  const show = VIEWS[view];
   const [now, setNow] = useState(() => Date.now());
   const [settings, setSettings] = useState(() => loadChefSettings());
   const [covers, setCovers] = useState(() => loadCovers());
@@ -55,12 +125,13 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
     const unclosed = Boolean(shift && !shift.closedAt && shift.date !== today);
     let plan = null;
     let status = null;
+    let rows = [];
     if (open) {
-      const rows = applyShortages(shift.prep, shift.short).filter((p) => p.makeG > 0);
-      plan = buildPrepSteps(rows, recipesById);
+      rows = applyShortages(shift.prep, shift.short);
+      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0), recipesById);
       status = crewStatus(shift, plan, now, settings.marginMin);
     }
-    return { st, shift, inventory, open, unclosed, plan, status };
+    return { st, shift, inventory, open, unclosed, plan, status, rows };
   }), [today, recipesById, now, settings.marginMin]);
 
   const cook = loadCook();
@@ -89,6 +160,12 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
     saveChefAlerts(next);
   }
 
+  function addFlag(name, kind) {
+    const next = [...loadEightySix().filter((f) => f.name !== name), { name, kind, by, at: Date.now() }];
+    setFlags(next);
+    saveEightySix(next);
+  }
+
   function clearFlag(name) {
     const next = flags.filter((f) => f.name !== name);
     setFlags(next);
@@ -98,6 +175,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
   const d = new Date(now);
   return (
     <>
+      {show.covers && (
       <section className="chef__covers" aria-label="Reservations">
         <div className="chef__servicetoggle" role="group" aria-label="Shift">
           {["lunch", "dinner"].map((s) => (
@@ -131,7 +209,8 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
         </div>
         <p className="pass__hint">{DAY_NAMES[d.getDay()]} · {MONTHS[d.getMonth()]} {d.getDate()}. Type covers in from OpenTable until it’s connected.</p>
       </section>
-
+      )}
+      {show.crew && (
       <section>
         <div className="pass__sectionhead">
           <h2>Crew</h2>
@@ -149,7 +228,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
           </label>
         </div>
         <ul className="pass__list">
-          {crew.map(({ st, shift, status }) => {
+          {crew.map(({ st, shift, status, plan, rows }) => {
             const late = status.finishAt && status.finishAt > serviceMs;
             return (
               <li key={st.id} className={`chef__cook chef__cook--${status.state}`}>
@@ -168,6 +247,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
                   )}
                 </span>
                 <span className="chef__state">{STATE_LABEL[status.state]}</span>
+                {show.lists && <CookList shift={shift} plan={plan} rows={rows} />}
               </li>
             );
           })}
@@ -191,7 +271,8 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
         )}
         <p className="pass__hint">Cooks who are scheduled but not signed in will show here once the staff schedule is in.</p>
       </section>
-
+      )}
+      {show.flags && (
       <section>
         <div className="pass__sectionhead"><h2>86 / Low</h2></div>
         {flags.length > 0 ? (
@@ -205,8 +286,10 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
         ) : (
           <p className="pass__empty">Nothing 86’d or running low.</p>
         )}
+        {show.addFlag && <AddFlags onAdd={addFlag} />}
       </section>
-
+      )}
+      {show.alerts && (
       <section>
         <div className="pass__sectionhead">
           <h2>Low ingredients</h2>
@@ -231,7 +314,8 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
         </ul>
         <p className="pass__hint">Walk-in stock levels show here once the walk-in count is in.</p>
       </section>
-
+      )}
+      {show.close && (
       <section>
         <div className="pass__sectionhead"><h2>Last close</h2></div>
         <ul className="pass__list">
@@ -255,7 +339,8 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
           </div>
         )}
       </section>
-
+      )}
+      {show.todos && (
       <section>
         <div className="pass__sectionhead"><h2>Your to-dos</h2></div>
         {todos.length === 0 ? (
@@ -271,6 +356,13 @@ export default function ChefHome({ today, recipesById, onOpenRecipes }) {
           <button type="button" className="pass__ghost chef__torecipes" onClick={onOpenRecipes}>Go to recipes</button>
         )}
       </section>
+      )}
+      {show.stock && (
+      <section>
+        <div className="pass__sectionhead"><h2>Walk-in &amp; pars</h2></div>
+        <p className="pass__hint">Next to build: the chef’s walk-in count at close, and the end-of-night par report for every station.</p>
+      </section>
+      )}
     </>
   );
 }

@@ -3,7 +3,10 @@
 Chef-only screens in The Pass, with Bryan's requirements collected as they come up. The chef sign-in and Home screen are built; the rest is planned.
 
 ## Built: chef sign-in and Home (Bryan, 2026-11-04)
-The chef side looks and works like the line cook side: same header, initials pill (tap to sign out), and bottom tabs **Home · Plan · Recipes · Line**. The chef signs in by name on the same sign-in screen as the cooks (`thePass.chef.v1`, once a day). Code: `src/chef/ChefHome.jsx`, `src/lib/crew.js`.
+The chef side looks and works like the line cook side: same header, initials pill (tap to sign out), and bottom tabs **Home · Crew · Stock · Line**. **The chef pages are for management, oversight and hole plugging, not recipe access (Bryan, 2026-11-04).** Setup is done once and then only for new menu items, so it's a link at the bottom of Home, not a tab. It holds Recipes, the prep plan tool, and (coming) stations/items/pars, staff and station access, and storage zones.
+
+- **Crew:** every cook's card with status, plus what they're on NOW, collect progress, and each prep item's state (not started, n/N steps, done, no recipe, can't make; ↓ = scaled down). Hole-plugging actions come next.
+- **Stock:** the 86 / low board (the chef can flag any item on any station), short-ingredient alerts, last close and waste. The walk-in count and the end-of-night par report go here next. The chef signs in by name on the same sign-in screen as the cooks (`thePass.chef.v1`, once a day). Code: `src/chef/ChefHome.jsx`, `src/lib/crew.js`.
 
 Home shows, top to bottom:
 1. **Covers** for Lunch or Dinner (picked by time of day, tap to switch), typed in by the chef until OpenTable is connected (`thePass.covers.v1`), plus the **service time** for that shift.
