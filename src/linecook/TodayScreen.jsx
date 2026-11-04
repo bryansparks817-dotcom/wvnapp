@@ -77,7 +77,7 @@ function TakeLine({ item, take, today }) {
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, gather, gathered, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -86,11 +86,11 @@ export default function TodayScreen({
         <PassHeader {...header}>
           <span className="pass__date">{dateLine()}</span>
           <h1 className="pass__title">No close count yet</h1>
-          <p className="pass__lede">Your list builds itself from last night’s close count.</p>
+          <p className="pass__lede">Your list builds itself from the last shift’s close count.</p>
         </PassHeader>
         <main className="pass__main">
           <section className="pass__gate">
-            <p className="pass__hint">At the end of the night, count your line pans and lowboy. Tomorrow’s Collect and Prep come from that.</p>
+            <p className="pass__hint">At the end of every shift, count your line pans and lowboy. The next shift’s Collect and Prep come from that.</p>
             <button type="button" className="pass__cta" onClick={() => setScreen("close")}>
               CLOSE COUNT →
             </button>
@@ -123,7 +123,7 @@ export default function TodayScreen({
               <h2>GATHER LIST</h2>
               <span className="pass__mono pass__amber">{got} of {gather.items.length}</span>
             </div>
-            <GatherList gather={gather} gathered={gathered} onToggle={onToggleGather} />
+            <GatherList gather={gather} gathered={gathered} short={short} onToggle={onToggleGather} onShort={onShort} />
           </section>
         </main>
         <div className="pass__footer">
@@ -206,6 +206,11 @@ export default function TodayScreen({
             {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} start to finish.`}
           </p>
           {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
+          {cantMake.length > 0 && (
+            <p className="pass__holdnote pass__cantmake">
+              CAN’T MAKE · {cantMake.map((r) => `${r.name} (out of ${r.limitedBy.map((l) => l.name).join(", ")})`).join("; ")}. Chef alerted.
+            </p>
+          )}
           <PrepSteps
             plan={plan}
             tossOnly={tossOnly}

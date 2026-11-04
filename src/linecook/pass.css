@@ -209,3 +209,23 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__stationpick select option { color: #1b1e1c; }
 .pass__stationpick svg { position: absolute; right: 12px; pointer-events: none; color: var(--amber); }
 .pass__visuallyhidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Short on an ingredient: chef alerted, prep on hold */
+.pass__shortbtn { align-self: center; flex-shrink: 0; min-height: 36px; margin-right: 10px; padding: 0 10px; border-radius: 6px; border: 1.5px solid #3a3f3b; background: transparent; color: #8a8f88 !important; font-family: "DM Mono", monospace !important; font-size: 11px !important; letter-spacing: 0.06em; }
+.pass__shortbtn.is-on { border-color: #d2553f; color: #f3eee4 !important; background: #d2553f; }
+.pass__row--short { border-color: #d2553f; }
+.pass__shortnote, .pass__holdnote { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: #f3eee4; background: #d2553f; border-radius: 4px; padding: 2px 6px; align-self: flex-start; margin-top: 3px; }
+.pass__shortform { flex-basis: 100%; display: flex; flex-direction: column; gap: 6px; padding: 0 12px 12px 52px; }
+.pass__shortinputs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pass__shortinputs .pass__input { width: 96px; min-height: 44px; }
+.pass__shortsend { min-height: 44px; padding: 0 12px; border-radius: 8px; border: 0; background: #d2553f; color: #f3eee4 !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.04em; font-size: 14px !important; }
+.pass__shortsend:disabled { background: #3a3f3b; color: #8a8f88 !important; }
+.pass__gatherrow { flex-wrap: wrap; }
+.pass__gatherrow .pass__rowopen { flex: 1 1 0; }
+.pass__cantmake { display: block; margin: 8px 0 0 !important; padding: 6px 10px; }
+
+/* Gathered ingredients turn light blue once confirmed */
+.pass__check--blue { border-color: #8ec5e8; }
+.pass__check--blue.is-checked { background: #8ec5e8; border-color: #8ec5e8; color: #1b1e1c; }
+.pass__gatherrow.pass__row--done { border-color: rgba(142, 197, 232, 0.45); background: rgba(142, 197, 232, 0.08); }
+.pass__gatherrow.pass__row--done .pass__rowname, .pass__gatherrow.pass__row--done .pass__gatheramt { color: #8ec5e8 !important; }

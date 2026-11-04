@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation,
+  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepSteps } from "../lib/lineList";
 import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
+import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
@@ -20,9 +21,15 @@ function localDateKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-const DAY_NAMES = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-function dayName(iso) {
-  const [y, m, d] = iso.split("-").map(Number);
+const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+// "TUE 3:05 PM" for the close a count came from (older saves only have a date).
+function closeLabel(inv) {
+  if (inv?.closedAt) {
+    const d = new Date(inv.closedAt);
+    return `${DAY_NAMES[d.getDay()]} ${d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).toUpperCase()}`;
+  }
+  if (!inv?.closedOn) return "";
+  const [y, m, d] = inv.closedOn.split("-").map(Number);
   return DAY_NAMES[new Date(y, m - 1, d).getDay()];
 }
 
@@ -138,18 +145,52 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
   const invItems = inventory?.items ?? emptyInventory(items);
-  const shiftIsToday = shift?.date === today;
+  // Counts are taken at the end of every shift, not once a day. A shift runs
+  // from confirming a count to the next close count; the close ends it, and
+  // the next shift (same day or not) starts by confirming that count.
+  const shiftIsToday = Boolean(shift && !shift.closedAt && shift.date === today);
+  const unclosedShift = Boolean(shift && !shift.closedAt && shift.date !== today);
   const meta = shiftIsToday ? shift.meta ?? {} : {};
 
-  const prepForPlan = useMemo(
-    () => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []),
-    [shift, shiftIsToday]
-  );
+  // Prep as planned from the count, and as scaled down by any short
+  // ingredient (see lib/shortage.js).
+  const fullPrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []), [shift, shiftIsToday]);
+  const prepRows = useMemo(() => (shiftIsToday ? applyShortages(shift.prep, shift.short) : []), [shift, shiftIsToday]);
+  const prepForPlan = useMemo(() => prepRows.filter((p) => p.makeG > 0), [prepRows]);
+  const cantMake = useMemo(() => prepRows.filter((p) => p.plannedG > 0 && p.makeG === 0), [prepRows]);
   const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById), [prepForPlan, recipesById]);
+  // What the full list needs (for judging a shortage) and what to actually pull.
+  const fullGather = useMemo(
+    () => gatherForPrep(fullPrep, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
+    [fullPrep, recipesById, ingredients]
+  );
   const gather = useMemo(
     () => gatherForPrep(prepForPlan, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
     [prepForPlan, recipesById, ingredients]
   );
+
+  // Short on an ingredient: scale the items that use it down to what's on
+  // hand and tell the chef which ingredient it is. haveG null clears it.
+  function setShort(entry, haveG) {
+    const key = entry.name.toLowerCase();
+    const full = fullGather.items.find((g) => g.name.toLowerCase() === key) ?? entry;
+    const short = { ...(shift.short ?? {}) };
+    const id = `${today}:${st.id}:${key}`;
+    if (haveG != null) short[key] = { name: full.name, needG: full.grams, haveG, items: full.usedIn, by, at: Date.now() };
+    else delete short[key];
+    setShift({ ...shift, short });
+    const alerts = loadChefAlerts().filter((a) => a.id !== id);
+    if (haveG != null) {
+      const scaled = applyShortages(shift.prep, short).filter((r) => full.usedIn.includes(r.name));
+      alerts.push({
+        id, type: "short", date: today, station: st.name, ingredient: full.name,
+        needG: Math.round(full.grams), haveG: Math.round(haveG),
+        items: scaled.map((r) => ({ name: r.name, plannedG: r.plannedG ?? r.makeG, makeG: r.makeG })),
+        by, at: Date.now(),
+      });
+    }
+    saveChefAlerts(alerts);
+  }
 
   function toggleGather(key) {
     const gathered = { ...(shift.gathered ?? {}) };
@@ -167,15 +208,25 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   }
 
   function saveClose() {
-    setInventory((inv) => ({
-      ...inv,
-      items: inv?.items ?? emptyInventory(items),
+    const closedAt = Date.now();
+    const nextInv = {
+      ...inventory,
+      items: inventory?.items ?? emptyInventory(items),
       closedOn: today,
+      closedAt,
       closedBy: by,
-      notes: inv?.draftNotes?.trim() ? { text: inv.draftNotes.trim(), by } : null,
+      notes: inventory?.draftNotes?.trim() ? { text: inventory.draftNotes.trim(), by } : null,
       draftNotes: "",
-    }));
+    };
+    const nextShift = shift ? { ...shift, closedAt } : shift;
+    // Saved right away: signing the cook out below unmounts this station.
+    saveInventory(nextInv, st.id);
+    if (nextShift) saveShift(nextShift, st.id);
+    setInventory(nextInv);
+    setShift(nextShift);
     setScreen("today");
+    // The shift is over: the next cook signs in and confirms this count.
+    onChangeCook();
   }
 
   function confirmCount() {
@@ -190,6 +241,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
     yesterday.setDate(yesterday.getDate() - 1);
     setInventory({
       closedOn: localDateKey(yesterday),
+      closedAt: yesterday.setHours(22, 30, 0, 0),
       closedBy: "JR",
       notes: { text: "Low on shallots for mignonette. Stock is on its last day, toss it.", by: "JR" },
       items: sampleInventory(items, today),
@@ -241,7 +293,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
   function toggleStep(step, isDone) {
-    const row = step.item ? shift.prep.find((p) => p.id === step.item.id) : null;
+    const row = step.item ? prepRows.find((p) => p.id === step.item.id) : null;
     const itemDone = Boolean(row && shift.done[`p:${row.id}`]);
     const stepsDone = { ...(shift.stepsDone ?? {}) };
     if (isDone) delete stepsDone[step.key];
@@ -276,7 +328,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   }
 
   if (openPrepId && shiftIsToday) {
-    const row = shift.prep.find((p) => p.id === openPrepId);
+    const row = prepRows.find((p) => p.id === openPrepId);
     const recipe = row?.recipeId ? recipesById.get(row.recipeId) : null;
     if (row) {
       const scaled = recipe ? scaleRecipe(recipe, row.makeG, recipesById, ingredients) : null;
@@ -311,7 +363,8 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
           items={items}
           inventory={invItems}
           today={today}
-          closedOnLabel={inventory?.closedOn ? dayName(inventory.closedOn) : ""}
+          closedOnLabel={closeLabel(inventory)}
+          unclosed={mode === "confirm" && unclosedShift}
           closedBy={inventory?.closedBy}
           notes={mode === "close" ? inventory?.draftNotes ?? "" : null}
           lastNotes={inventory?.notes}
@@ -343,6 +396,9 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
         gather={gather}
         gathered={shiftIsToday ? shift.gathered ?? {} : {}}
         onToggleGather={toggleGather}
+        short={shiftIsToday ? shift.short ?? {} : {}}
+        onShort={setShort}
+        cantMake={cantMake}
         gatherDone={shiftIsToday && Boolean(shift.gatherDone)}
         onFinishGather={() => { setShift({ ...shift, gatherDone: true }); window.scrollTo(0, 0); }}
         onReopenGather={() => { setShift({ ...shift, gatherDone: false }); window.scrollTo(0, 0); }}

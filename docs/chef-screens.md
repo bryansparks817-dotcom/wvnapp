@@ -9,6 +9,9 @@ Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requ
 - **Station access (Bryan, 2026-11-04):** in each cook's profile, the chef toggles which stations (Garde manger, Grill, Sauté, Pastry, Prep) that cook can open. In the beta every cook can open all of them.
 - **Storage zones:** set up the walk-in and dry-storage zones (Protein, Dairy, Produce, Dry…), give every ingredient a dedicated zone (AP flour to lobster stock), and set the order. The line cook's gather list follows that order. See `recipe-data-gaps.md`.
 
+## Short alerts (Bryan, 2026-11-04)
+- When an ingredient is too short for a full production run, The Pass scales the affected items down to what's on hand (the lowest ingredient sets the batch) and sends the chef a message naming the ingredient: station, grams needed vs. on hand, and each item's planned vs. scaled amount, who flagged it and when. Stored today in `thePass.chefAlerts.v1`.
+
 ## Live crew board (Bryan, 2026-11-03)
 - Shows **who is logged on**, on each station.
 - Each cook is color-coded **green, yellow, or red** based on productivity, meaning how far along they are on their prep list for the day.

@@ -15,18 +15,20 @@ export function NoteCard({ notes }) {
 export default function CountScreen({
   mode, station, screen, setScreen, onOpenChef,
   initials, onChangeCook,
-  items, inventory, today, closedOnLabel, closedBy, notes, lastNotes, onChangeNotes, onChangeItem, onSubmit,
+  items, inventory, today, closedOnLabel, closedBy, unclosed, notes, lastNotes, onChangeNotes, onChangeItem, onSubmit,
 }) {
   const isClose = mode === "close";
   return (
     <div className="pass">
       <PassHeader station={station} initials={initials} onChangeCook={onChangeCook}>
-        <span className="pass__date">{isClose ? "END OF NIGHT" : `FROM ${closedOnLabel}’S CLOSE${closedBy ? ` · ${closedBy}` : ""}`}</span>
+        <span className="pass__date">{isClose ? "END OF SHIFT" : `FROM THE ${closedOnLabel} CLOSE${closedBy ? ` · ${closedBy}` : ""}`}</span>
         <h1 className="pass__title">{isClose ? "Close count" : "Confirm the count"}</h1>
         <p className="pass__hint">
           {isClose
-            ? "Line pans and lowboy, in 25% steps. It carries over to the next shift."
-            : "Last night’s count, carried over. Fix anything that changed, then build your list."}
+            ? "Line pans and lowboy, in 25% steps. Every shift ends with a count; it carries over to the next shift."
+            : unclosed
+              ? "The last shift wasn’t closed with a count, so this is where it left off. Count carefully, then build your list."
+              : "The last shift’s count, carried over. Fix anything that changed, then build your list."}
         </p>
       </PassHeader>
 

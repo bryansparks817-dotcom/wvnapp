@@ -109,6 +109,11 @@ export default function PrepSteps({ plan, tossOnly, done, stepsDone, timers, onT
                 <span className="pass__rowtext">
                   <span className="pass__steptag">{isNow ? "NOW · " : ""}{tagFor(s)}</span>
                   <span className="pass__rowname">{s.name}{s.firstForItem && row && <span className="pass__mono pass__amber"> · make {formatG(row.makeG)}</span>}</span>
+                  {!r.done && s.firstForItem && row?.limitedBy && (
+                    <span className="pass__holdnote">
+                      SCALED DOWN · short on {row.limitedBy.map((l) => `${l.name} (${formatG(l.haveG)} of ${formatG(l.needG)})`).join(", ")}. Making {formatG(row.makeG)}, not {formatG(row.plannedG)}. Chef alerted.
+                    </span>
+                  )}
                   {!r.done && <span className="pass__stepdo">{whatToDo(s)}</span>}
                   {!r.done && timing && <span className="pass__rowsub">{timing}</span>}
                   {!r.done && s.firstForItem && row?.toss?.length > 0 && (

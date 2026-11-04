@@ -24,6 +24,8 @@ The prep order comes from the optimization formula in `src/lib/scheduler.js`. Wh
 ## Gather
 Once the count is confirmed, the cook lands on its own **Gather** page first: every raw ingredient that station's Prep list needs (carrots, shallots, tomato paste…), scaled to the grams each item has to make and summed across items, with which items use it. The cook ticks each one off as it comes out of the walk-in or dry storage. Each station's gather list is built from that station's own Prep list, so every station gets its own (today the app has one station, Garde manger; station switching comes later). A FINISH button at the bottom goes to the Collect & Prep page (1 · Collect, 2 · Prep), which has a "Back to gather list" link. Unticked items don't block finishing. Water and ice are left off. Items with no recipe in the app are named so the cook can gather from the recipe book. The list is grouped by storage zone (Protein, Dairy, Produce, House-made, Dry…) and follows whatever order the chef sets up (zone order, then item order within each zone), with a count per zone. The chef assigns every ingredient a zone (chef screen, later). Today's zones are draft guesses in `src/data/storageZones.json`.
 
+**No over or under production; the app scales to the short ingredient (Bryan, 2026-11-04).** Cooks never choose to make more or less than Prep asks. If there isn't enough of an ingredient for a full production run, the cook taps **SHORT** on that gather row and enters how much is on hand. The Pass then scales every item that uses it down to match (the lowest ingredient sets the batch, `src/lib/shortage.js`): the rest of the gather list shrinks with it, the prep step shows **SCALED DOWN · short on X (have of need). Making N g, not M g. Chef alerted.**, and the recipe, labels and inventory use the smaller amount. With none on hand the item shows under **CAN'T MAKE**. The chef gets a message naming the ingredient (`thePass.chefAlerts.v1`: station, ingredient, grams needed and on hand, each item's planned vs. scaled grams, who, when). UNDO clears it. Later, when the walk-in raw-ingredient count exists, the app can detect the shortage itself; until the shared database exists the message only lives on the cook's phone.
+
 Prep shows as one simple numbered step list, built by `buildPrepSteps` in `src/lib/lineList.js`:
 - Each step is one thing to do now: a tag that says why it is there (START FIRST · LONGEST HANDS-OFF TIME, WHILE <recipe> · <its hands-off step>, BACK TO <recipe>, NEXT), the item, what to do (up to three method steps, then "+ N more"), hands-on minutes, and the hands-off time it kicks off with a one-tap TIMER.
 - A recipe that opens with a hands-off step (preheat, soak) gets its own "start" step, so it is never skipped.
@@ -46,18 +48,19 @@ Built on one phone (localStorage) in the line view; walk-in is sample data until
 - Every item has a **line pan** (1/9, 1/6, 1/3…) with a **line par**, a **lowboy container** (quart or pint, with exceptions to come) with a **lowboy par**, and its weight in grams for a full pan, a quart and a pint. For example, relish: 1 qt = 950 g, full 1/9 pan = 1,000 g. The app does all the conversions, so the cook never does the math.
 - Shelf life comes from the recipe sheet.
 
-**At close**
+**At close: every shift, not every day (Bryan, 2026-11-04)**
+- A close count is required at the end of **each shift** (lunch and dinner are separate shifts). Saving the close ends the shift and signs the cook out; the next shift, same day or not, starts by confirming that count. If a shift was never closed, the next cook confirms from where it left off and is told so.
 - The **line cook** counts the line pans and the lowboy containers, both in 25% steps.
 - The **chef** enters the walk-in count (chef screens).
 
 **Next shift**
-- The app opens straight to Collect and Prep, built from last night's counts. There is no "Count first" screen.
+- The app opens straight to Collect and Prep, built from the last shift's close count. There is no "Count first" screen.
 - The cook **confirms** each carried-over quantity, since the AM crew may have used some or something may have been tossed.
 - **Collect** tops the line up from the lowboy and the walk-in combined, and names both (for example, "lowboy ½ qt + walk-in 1 qt"). Oldest batch first, always.
 - **Prep** makes whatever is needed to bring the line **and** the lowboy back to par, in grams. It is ordered by the scheduler as before.
 - **Shelf life:** each prepped item shows how much time it has left (for example, "relish · 3 days left"). Batches are tracked separately by the date they were made, which is stamped when the cook checks off the prep. On a batch's last day, the app says to toss it and make fresh, and the item goes on Prep. Shelf life counts calendar days, including days the restaurant is closed (assumed).
 
-**Needs a shared database.** The walk-in count (chef's phone) and last night's count (closing cook's phone) both have to reach the next cook. The app currently only saves to the phone it runs on.
+**Needs a shared database.** The walk-in count (chef's phone) and the last shift's count (closing cook's phone) both have to reach the next cook. The app currently only saves to the phone it runs on.
 
 ## Line cook tools (added 2026-11-03)
 - **Who's on:** the cook taps their name, or enters their full name, at the start of each day. Each name is linked to its own initials in a staff roster (`thePass.staff.v1`): first + last initial, plus more letters of the last name if those are taken (Bryan Sparks → BS, Ben Smith → BSM). The chef screens will manage the roster. Those initials are stamped on the close count, the notes, every check-off, 86/low flags, waste entries and labels. Tap the initials pill to change cooks.

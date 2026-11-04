@@ -11,6 +11,7 @@ const TIMERS_KEY = "thePass.timers.v1";
 const WASTE_KEY = "thePass.waste.v1";
 const EIGHTY_SIX_KEY = "thePass.eightySix.v1";
 const STATION_KEY = "thePass.station.v1";
+const CHEF_ALERTS_KEY = "thePass.chefAlerts.v1";
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -48,6 +49,7 @@ const ALL_KEYS = [
   WASTE_KEY,
   "thePass.lineDay.v1",
   EIGHTY_SIX_KEY,
+  CHEF_ALERTS_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -183,4 +185,16 @@ export function loadEightySix() {
 
 export function saveEightySix(flags) {
   save(EIGHTY_SIX_KEY, flags);
+}
+
+// Alerts waiting for the chef, e.g. a cook flagging an ingredient that's too
+// short for a full production run: [{ id, type, station, ingredient, needG,
+// items, by, at, date }]. The chef screens will show these; until the shared
+// database exists they only live on this phone.
+export function loadChefAlerts() {
+  return load(CHEF_ALERTS_KEY, []);
+}
+
+export function saveChefAlerts(alerts) {
+  save(CHEF_ALERTS_KEY, alerts);
 }
