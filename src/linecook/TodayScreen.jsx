@@ -74,17 +74,10 @@ function TakeLine({ item, take, today }) {
   );
 }
 
-// Item name -> ingredients it's short on.
-function holdsByItem(short) {
-  const holds = {};
-  for (const s of Object.values(short)) for (const item of s.items) (holds[item] ??= []).push(s.name);
-  return holds;
-}
-
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, gather, gathered, short, onShort, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -213,12 +206,16 @@ export default function TodayScreen({
             {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} start to finish.`}
           </p>
           {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
+          {cantMake.length > 0 && (
+            <p className="pass__holdnote pass__cantmake">
+              CAN’T MAKE · {cantMake.map((r) => `${r.name} (out of ${r.limitedBy.map((l) => l.name).join(", ")})`).join("; ")}. Chef alerted.
+            </p>
+          )}
           <PrepSteps
             plan={plan}
             tossOnly={tossOnly}
             done={done}
             stepsDone={stepsDone}
-            holds={holdsByItem(short)}
             timers={timers}
             onToggleStep={onToggleStep}
             onToggleItem={(row) => onToggle("p", row)}

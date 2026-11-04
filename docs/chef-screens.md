@@ -10,7 +10,7 @@ Chef-only screens in The Pass. Nothing here is built yet. These are Bryan's requ
 - **Storage zones:** set up the walk-in and dry-storage zones (Protein, Dairy, Produce, Dry…), give every ingredient a dedicated zone (AP flour to lobster stock), and set the order. The line cook's gather list follows that order. See `recipe-data-gaps.md`.
 
 ## Short alerts (Bryan, 2026-11-04)
-- When a cook flags an ingredient as too short for a full production run (SHORT on the gather list), the chef gets an alert: station, ingredient, grams needed, which items are on hold, who flagged it and when. Cooks can't make partial or oversized batches, so the chef decides what happens next. Stored today in `thePass.chefAlerts.v1`.
+- When an ingredient is too short for a full production run, The Pass scales the affected items down to what's on hand (the lowest ingredient sets the batch) and sends the chef a message naming the ingredient: station, grams needed vs. on hand, and each item's planned vs. scaled amount, who flagged it and when. Stored today in `thePass.chefAlerts.v1`.
 
 ## Live crew board (Bryan, 2026-11-03)
 - Shows **who is logged on**, on each station.

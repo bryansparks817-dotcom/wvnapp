@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CheckBox } from "./Chrome";
 import zoneData from "../data/storageZones.json";
 import { groupByZone } from "../lib/gatherList";
@@ -11,15 +12,51 @@ function amount(entry) {
   return parts.join(" + ");
 }
 
+const grams = (g) => `${Math.round(g).toLocaleString()} g`;
+
+// Asks how much of a short ingredient is on hand.
+function ShortForm({ entry, onSend, onCancel }) {
+  const [have, setHave] = useState("");
+  const value = Number(have);
+  const ok = have !== "" && value >= 0 && value < entry.grams;
+  return (
+    <form
+      className="pass__shortform"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (ok) onSend(value);
+      }}
+    >
+      <label className="pass__countlabel" htmlFor={`have-${entry.name}`}>HOW MUCH {entry.name.toUpperCase()} IS ON HAND? (needs {grams(entry.grams)})</label>
+      <div className="pass__shortinputs">
+        <input id={`have-${entry.name}`} className="pass__input" type="number" inputMode="decimal" min="0" step="1" value={have} placeholder="0" onChange={(e) => setHave(e.target.value)} autoFocus />
+        <span className="pass__mono">g</span>
+        <button type="submit" className="pass__shortsend" disabled={!ok}>SCALE DOWN &amp; ALERT CHEF</button>
+        <button type="button" className="pass__ghost" onClick={onCancel}>Cancel</button>
+      </div>
+    </form>
+  );
+}
+
 // What to pull from the walk-in and dry storage before starting Prep. If
 // there isn't enough of something for a full production run, the cook taps
-// SHORT: the chef gets an alert and the prep that needs it goes on hold.
-// There is no making a smaller batch.
+// SHORT and enters what's on hand: The Pass scales every item that uses it
+// down to match (the lowest ingredient sets the batch), the rest of this list
+// shrinks with it, and the chef gets a message naming the ingredient.
 export default function GatherList({ gather, gathered, short, onToggle, onShort }) {
-  if (gather.items.length === 0 && gather.missing.length === 0) return <p className="pass__empty">Nothing to gather.</p>;
+  const [asking, setAsking] = useState(null);
+  if (gather.items.length === 0 && gather.missing.length === 0 && Object.keys(short).length === 0) {
+    return <p className="pass__empty">Nothing to gather.</p>;
+  }
+  // An ingredient so short that nothing can be made drops off the list; keep
+  // it visible so the flag can be undone.
+  const shown = [...gather.items];
+  for (const [key, s] of Object.entries(short)) {
+    if (!shown.some((g) => g.name.toLowerCase() === key)) shown.push({ name: s.name, grams: 0, other: [], usedIn: s.items });
+  }
   return (
     <>
-      {groupByZone(gather.items, zoneData).map((zone) => (
+      {groupByZone(shown, zoneData).map((zone) => (
         <div key={zone.id} className="pass__zone">
           <div className="pass__zonehead">
             <span className="pass__zonename">{zone.name.toUpperCase()}</span>
@@ -40,7 +77,7 @@ export default function GatherList({ gather, gathered, short, onToggle, onShort 
                       <span className="pass__rowtext">
                         <span className="pass__rowname">{g.name}</span>
                         {isShort ? (
-                          <span className="pass__shortnote">SHORT · CHEF ALERTED · {g.usedIn.join(", ")} on hold</span>
+                          <span className="pass__shortnote">SHORT · {grams(short[key].haveG)} of {grams(short[key].needG)} · {short[key].items.join(", ")} scaled down · chef alerted</span>
                         ) : (
                           !isDone && <span className="pass__rowsub">for {g.usedIn.join(", ")}</span>
                         )}
@@ -51,11 +88,21 @@ export default function GatherList({ gather, gathered, short, onToggle, onShort 
                       type="button"
                       className={`pass__shortbtn${isShort ? " is-on" : ""}`}
                       aria-pressed={isShort}
-                      aria-label={isShort ? `Undo short: ${g.name}` : `Not enough ${g.name} for a full batch. Alert the chef`}
-                      onClick={() => onShort(g, !isShort)}
+                      aria-label={isShort ? `Undo short: ${g.name}` : `Not enough ${g.name} for a full batch`}
+                      onClick={() => (isShort ? onShort(g, null) : setAsking(asking === key ? null : key))}
                     >
                       {isShort ? "UNDO" : "SHORT"}
                     </button>
+                    {asking === key && !isShort && (
+                      <ShortForm
+                        entry={g}
+                        onSend={(haveG) => {
+                          onShort(g, haveG);
+                          setAsking(null);
+                        }}
+                        onCancel={() => setAsking(null)}
+                      />
+                    )}
                   </div>
                 </li>
               );

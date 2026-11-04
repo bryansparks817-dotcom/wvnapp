@@ -8,6 +8,7 @@ import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay
 import { buildPrepSteps } from "../lib/lineList";
 import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
+import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
@@ -141,27 +142,42 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   const shiftIsToday = shift?.date === today;
   const meta = shiftIsToday ? shift.meta ?? {} : {};
 
-  const prepForPlan = useMemo(
-    () => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []),
-    [shift, shiftIsToday]
-  );
+  // Prep as planned from the count, and as scaled down by any short
+  // ingredient (see lib/shortage.js).
+  const fullPrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []), [shift, shiftIsToday]);
+  const prepRows = useMemo(() => (shiftIsToday ? applyShortages(shift.prep, shift.short) : []), [shift, shiftIsToday]);
+  const prepForPlan = useMemo(() => prepRows.filter((p) => p.makeG > 0), [prepRows]);
+  const cantMake = useMemo(() => prepRows.filter((p) => p.plannedG > 0 && p.makeG === 0), [prepRows]);
   const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById), [prepForPlan, recipesById]);
+  // What the full list needs (for judging a shortage) and what to actually pull.
+  const fullGather = useMemo(
+    () => gatherForPrep(fullPrep, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
+    [fullPrep, recipesById, ingredients]
+  );
   const gather = useMemo(
     () => gatherForPrep(prepForPlan, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
     [prepForPlan, recipesById, ingredients]
   );
 
-  // Short on an ingredient: alert the chef, hold the prep that needs it.
-  function setShort(entry, on) {
+  // Short on an ingredient: scale the items that use it down to what's on
+  // hand and tell the chef which ingredient it is. haveG null clears it.
+  function setShort(entry, haveG) {
     const key = entry.name.toLowerCase();
+    const full = fullGather.items.find((g) => g.name.toLowerCase() === key) ?? entry;
     const short = { ...(shift.short ?? {}) };
     const id = `${today}:${st.id}:${key}`;
-    if (on) short[key] = { name: entry.name, needG: entry.grams, items: entry.usedIn, by, at: Date.now() };
+    if (haveG != null) short[key] = { name: full.name, needG: full.grams, haveG, items: full.usedIn, by, at: Date.now() };
     else delete short[key];
     setShift({ ...shift, short });
     const alerts = loadChefAlerts().filter((a) => a.id !== id);
-    if (on) {
-      alerts.push({ id, type: "short", date: today, station: st.name, ingredient: entry.name, needG: Math.round(entry.grams), items: entry.usedIn, by, at: Date.now() });
+    if (haveG != null) {
+      const scaled = applyShortages(shift.prep, short).filter((r) => full.usedIn.includes(r.name));
+      alerts.push({
+        id, type: "short", date: today, station: st.name, ingredient: full.name,
+        needG: Math.round(full.grams), haveG: Math.round(haveG),
+        items: scaled.map((r) => ({ name: r.name, plannedG: r.plannedG ?? r.makeG, makeG: r.makeG })),
+        by, at: Date.now(),
+      });
     }
     saveChefAlerts(alerts);
   }
@@ -256,7 +272,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
   function toggleStep(step, isDone) {
-    const row = step.item ? shift.prep.find((p) => p.id === step.item.id) : null;
+    const row = step.item ? prepRows.find((p) => p.id === step.item.id) : null;
     const itemDone = Boolean(row && shift.done[`p:${row.id}`]);
     const stepsDone = { ...(shift.stepsDone ?? {}) };
     if (isDone) delete stepsDone[step.key];
@@ -291,7 +307,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
   }
 
   if (openPrepId && shiftIsToday) {
-    const row = shift.prep.find((p) => p.id === openPrepId);
+    const row = prepRows.find((p) => p.id === openPrepId);
     const recipe = row?.recipeId ? recipesById.get(row.recipeId) : null;
     if (row) {
       const scaled = recipe ? scaleRecipe(recipe, row.makeG, recipesById, ingredients) : null;
@@ -360,6 +376,7 @@ function StationLine({ station: st, stationTabs, by, onChangeCook, recipesById, 
         onToggleGather={toggleGather}
         short={shiftIsToday ? shift.short ?? {} : {}}
         onShort={setShort}
+        cantMake={cantMake}
         gatherDone={shiftIsToday && Boolean(shift.gatherDone)}
         onFinishGather={() => { setShift({ ...shift, gatherDone: true }); window.scrollTo(0, 0); }}
         onReopenGather={() => { setShift({ ...shift, gatherDone: false }); window.scrollTo(0, 0); }}

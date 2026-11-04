@@ -215,3 +215,11 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__shortbtn.is-on { border-color: #d2553f; color: #f3eee4 !important; background: #d2553f; }
 .pass__row--short { border-color: #d2553f; }
 .pass__shortnote, .pass__holdnote { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: #f3eee4; background: #d2553f; border-radius: 4px; padding: 2px 6px; align-self: flex-start; margin-top: 3px; }
+.pass__shortform { flex-basis: 100%; display: flex; flex-direction: column; gap: 6px; padding: 0 12px 12px 52px; }
+.pass__shortinputs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pass__shortinputs .pass__input { width: 96px; min-height: 44px; }
+.pass__shortsend { min-height: 44px; padding: 0 12px; border-radius: 8px; border: 0; background: #d2553f; color: #f3eee4 !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.04em; font-size: 14px !important; }
+.pass__shortsend:disabled { background: #3a3f3b; color: #8a8f88 !important; }
+.pass__gatherrow { flex-wrap: wrap; }
+.pass__gatherrow .pass__rowopen { flex: 1 1 0; }
+.pass__cantmake { display: block; margin: 8px 0 0 !important; padding: 6px 10px; }

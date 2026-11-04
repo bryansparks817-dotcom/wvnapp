@@ -29,7 +29,7 @@ function TimerButton({ label, minutes, running, onStart }) {
 // One plain numbered list: toss what's expired, then each prep step in the
 // optimized order, then anything without recipe times yet. The first step not
 // yet ticked is "NOW".
-export default function PrepSteps({ plan, tossOnly, done, stepsDone, holds = {}, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer }) {
+export default function PrepSteps({ plan, tossOnly, done, stepsDone, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer }) {
   const running = new Set(timers.map((t) => t.label));
   const itemDone = (id) => Boolean(done[`p:${id}`]);
   const stepDone = (s) => (s.item && itemDone(s.item.id)) || Boolean(stepsDone[s.key]);
@@ -109,8 +109,10 @@ export default function PrepSteps({ plan, tossOnly, done, stepsDone, holds = {},
                 <span className="pass__rowtext">
                   <span className="pass__steptag">{isNow ? "NOW · " : ""}{tagFor(s)}</span>
                   <span className="pass__rowname">{s.name}{s.firstForItem && row && <span className="pass__mono pass__amber"> · make {formatG(row.makeG)}</span>}</span>
-                  {!r.done && row && holds[row.name] && (
-                    <span className="pass__holdnote">ON HOLD · short on {holds[row.name].join(", ")}. Chef alerted. No partial batch.</span>
+                  {!r.done && s.firstForItem && row?.limitedBy && (
+                    <span className="pass__holdnote">
+                      SCALED DOWN · short on {row.limitedBy.map((l) => `${l.name} (${formatG(l.haveG)} of ${formatG(l.needG)})`).join(", ")}. Making {formatG(row.makeG)}, not {formatG(row.plannedG)}. Chef alerted.
+                    </span>
                   )}
                   {!r.done && <span className="pass__stepdo">{whatToDo(s)}</span>}
                   {!r.done && timing && <span className="pass__rowsub">{timing}</span>}
