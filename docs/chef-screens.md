@@ -41,7 +41,9 @@ The Data tab (`src/chef/Insights.jsx`, `src/lib/analytics.js`), last 7 or 28 day
 6. **Shortages:** which ingredients ran short, how often.
 7. **Food cost:** theoretical (prep made × recipe cost) vs actual (purchases ÷ sales). Theoretical only covers prep made in The Pass, so it reads far below actual until the full menu is in.
 
-"Try it with four sample weeks" loads believable sample data (marked `sample`) next to real data, never over it (`src/lib/sampleData.js`).
+**Sample crew (Bryan, 2026-11-05):** "Try it with a sample crew and six weeks of history" adds one made-up cook per station, each with a random effectiveness (one per band, weak to strong). Effectiveness sets how fast they really work against recipe times (0.85×–1.5×) and how often they burn or drop a batch. It writes 42 days of shift history, waste, flags and shortages (marked `sample`, next to real data, never over it), and puts every cook on today's shift part way through their list so Crew and hole plugging have something to work on. Reshuffle, restart today's shifts, or remove it all from the Sample crew card on Data (`src/lib/sampleData.js`). Grill, Sauté, Pastry and Prep items and recipes are made up (`src/data/sampleStations.json`) until the real menu goes in.
+
+**Plan at a cook's pace:** Data → Cooks shows how fast each cook works against the recipe times. PLAN AT 1.2× stretches the hands-on steps on that cook's prep list (line screen and crew board) to their real speed (`thePass.chefSettings.v1` `cookPace`, `src/lib/pace.js`). The par check now only counts shelf-life tosses; burned or dropped batches say nothing about the par.
 
 **Recipe lookup** on Home: search, then a read-only recipe (ingredients and method). Editing stays under Setup → Recipes. A "Chef? Open the chef view" link sits on the line sign-in screen.
 

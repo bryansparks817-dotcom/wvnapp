@@ -1,11 +1,31 @@
 {
   "_note": "DRAFT. The chef assigns every ingredient (AP flour to lobster stock) a dedicated zone in the walk-in or dry storage. These assignments are Claude's guesses so the gather list can be grouped; replace them from the chef screen when it exists. The gather list follows whatever order the chef sets: zones in the order listed here, and ingredients within a zone in the order listed under assignments.",
   "zones": [
-    { "id": "protein", "name": "Protein", "area": "Walk-in" },
-    { "id": "dairy", "name": "Dairy", "area": "Walk-in" },
-    { "id": "produce", "name": "Produce", "area": "Walk-in" },
-    { "id": "house", "name": "House-made", "area": "Walk-in" },
-    { "id": "dry", "name": "Dry", "area": "Dry storage" }
+    {
+      "id": "protein",
+      "name": "Protein",
+      "area": "Walk-in"
+    },
+    {
+      "id": "dairy",
+      "name": "Dairy",
+      "area": "Walk-in"
+    },
+    {
+      "id": "produce",
+      "name": "Produce",
+      "area": "Walk-in"
+    },
+    {
+      "id": "house",
+      "name": "House-made",
+      "area": "Walk-in"
+    },
+    {
+      "id": "dry",
+      "name": "Dry",
+      "area": "Dry storage"
+    }
   ],
   "assignments": {
     "lobster bodies/shells": "protein",
@@ -41,6 +61,25 @@
     "tomato paste": "dry",
     "white pepper": "dry",
     "white wine": "dry",
-    "white wine vinegar": "dry"
+    "white wine vinegar": "dry",
+    "hanger steak": "protein",
+    "veal bones": "protein",
+    "chicken bones": "protein",
+    "egg yolks": "dairy",
+    "scallions": "produce",
+    "oregano": "produce",
+    "basil": "produce",
+    "cremini mushrooms": "produce",
+    "red onion": "produce",
+    "chili flake": "dry",
+    "soy sauce": "dry",
+    "brown sugar": "dry",
+    "red wine vinegar": "dry",
+    "red wine": "dry",
+    "sugar": "dry",
+    "vanilla bean": "dry",
+    "vanilla extract": "dry",
+    "canned san marzano tomatoes": "dry",
+    "water": "dry"
   }
 }

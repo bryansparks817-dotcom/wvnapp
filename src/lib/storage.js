@@ -19,6 +19,7 @@ const DAILY_NUMBERS_KEY = "thePass.dailyNumbers.v1";
 const HISTORY_KEY = "thePass.history.v1";
 const FLAG_LOG_KEY = "thePass.flagLog.v1";
 const PRICES_KEY = "thePass.prices.v1";
+const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -64,6 +65,7 @@ const ALL_KEYS = [
   HISTORY_KEY,
   FLAG_LOG_KEY,
   PRICES_KEY,
+  SEEDED_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -83,6 +85,17 @@ export function clearAllLocalData() {
 
 export function loadRecipes(seed) {
   return load(RECIPES_KEY, seed);
+}
+
+// Ids of the built-in recipes this browser has already been given, so a
+// recipe added to the app later shows up once, and one the chef deleted
+// stays deleted.
+export function loadSeededIds() {
+  return load(SEEDED_KEY, null);
+}
+
+export function saveSeededIds(ids) {
+  save(SEEDED_KEY, ids);
 }
 
 export function saveRecipes(recipes) {

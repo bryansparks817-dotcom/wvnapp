@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import seedRecipes from "../data/sampleRecipes.json";
-import { loadRecipes, saveRecipes } from "../lib/storage";
+import baseRecipes from "../data/sampleRecipes.json";
+import made from "../data/sampleStations.json";
+import { loadRecipes, saveRecipes, loadSeededIds, saveSeededIds } from "../lib/storage";
 import { PENDING_PREFIX } from "../lib/recipeSheetImport";
 
 function slugify(name) {
@@ -22,8 +23,22 @@ function generateId(name, existingIds) {
   return id;
 }
 
+const seedRecipes = [...baseRecipes, ...made.recipes];
+
+// Saved recipes, plus any built-in recipe this browser hasn't been given yet
+// (e.g. the made-up Grill, Sauté, Pastry and Prep recipes).
+function initialRecipes() {
+  const stored = loadRecipes(null);
+  const seeded = loadSeededIds();
+  saveSeededIds(seedRecipes.map((r) => r.id));
+  if (!stored) return seedRecipes;
+  const given = new Set(seeded ?? baseRecipes.map((r) => r.id));
+  const have = new Set(stored.map((r) => r.id));
+  return [...stored, ...seedRecipes.filter((r) => !given.has(r.id) && !have.has(r.id))];
+}
+
 export function useRecipes() {
-  const [recipes, setRecipes] = useState(() => loadRecipes(seedRecipes));
+  const [recipes, setRecipes] = useState(initialRecipes);
 
   useEffect(() => {
     saveRecipes(recipes);

@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { STATIONS } from "../data/stations";
 import {
-  loadWaste, loadFlagLog, loadHistory, loadChefAlerts, loadCovers, loadDailyNumbers, loadPrices, loadChefSettings,
+  loadWaste, loadFlagLog, loadHistory, loadChefAlerts, loadCovers, loadDailyNumbers, loadPrices, loadChefSettings, saveChefSettings, loadStaff,
 } from "../lib/storage";
-import { activeFactor, cookTrends, foodCost, parTuning, prepPerCovers, recipeTimes, shortageHistory, wasteReport } from "../lib/analytics";
+import { activeFactor, cookPace, cookTrends, foodCost, parTuning, prepPerCovers, recipeTimes, shortageHistory, wasteReport } from "../lib/analytics";
 import { allIngredientNames, costIndex } from "../lib/costing";
-import { hasSampleData, loadSampleData } from "../lib/sampleData";
+import { SAMPLE_DAYS, hasSampleData, loadSampleData, removeSampleData, sampleCrew, startSampleShifts } from "../lib/sampleData";
 import { currentServiceShift } from "../lib/crew";
 import { formatMinutes } from "../lib/format";
 import { formatG } from "../lib/inventory";
@@ -38,6 +38,15 @@ const CALL_CLASS = { RAISE: "is-raise", LOWER: "is-lower", WATCH: "is-watch", OK
 export default function Insights({ today, recipes, recipesById, ingredients, onUpdateRecipe, onOpenPrices }) {
   const [days, setDays] = useState(28);
   const [reload, setReload] = useState(0);
+  const [settings, setSettings] = useState(loadChefSettings);
+  const setPace = (cook, pace) => {
+    const cookPace = { ...(settings.cookPace ?? {}) };
+    if (pace == null) delete cookPace[cook];
+    else cookPace[cook] = pace;
+    const next = { ...settings, cookPace };
+    setSettings(next);
+    saveChefSettings(next);
+  };
   const [forecastCovers, setForecastCovers] = useState(() => {
     const c = loadCovers()[`${today}:${currentServiceShift()}`];
     return c ? String(c) : "";
@@ -53,7 +62,8 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
       covers: loadCovers(),
       daily: loadDailyNumbers(),
       prices: loadPrices(),
-      margin: loadChefSettings().marginMin,
+      staff: loadStaff(),
+      crew: sampleCrew(),
     };
   }, [reload]);
 
@@ -71,7 +81,12 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
   const waste = wasteReport(data.waste, costOfItem, today, days);
   const pars = parTuning(items, data.flags, data.waste, today, days);
   const perCovers = prepPerCovers(data.history, coversOn, today, days);
-  const cooks = cookTrends(data.history, today, data.margin);
+  const cooks = cookTrends(data.history, today, settings.marginMin);
+  const paces = cookPace(data.history, today, days);
+  const nameOf = (initials) => data.staff.find((p) => p.initials === initials)?.name ?? initials;
+  const stationName = (id) => STATIONS.find((s) => s.id === id)?.name ?? id;
+  const ingredientNames = () => allIngredientNames(recipes, recipesById, ingredients).map((n) => n.name);
+  const refresh = () => setReload((n) => n + 1);
   const times = recipeTimes(data.history, today, days, (id) => recipesById.get(id)?.timesUpdatedAt ?? 0);
   const shorts = shortageHistory(data.alerts, today, days);
   const food = foodCost(data.history, data.daily, costOfRecipe, today, days);
@@ -95,7 +110,7 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
   return (
     <>
       <div className="chef__servicetoggle" role="group" aria-label="Range">
-        {[7, 28].map((n) => (
+        {[7, 28, SAMPLE_DAYS].map((n) => (
           <button key={n} type="button" className={days === n ? "is-on" : ""} aria-pressed={days === n} onClick={() => setDays(n)}>
             LAST {n} DAYS
           </button>
@@ -111,13 +126,36 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
             type="button"
             className="pass__ghost"
             onClick={() => {
-              loadSampleData({ station: STATIONS[0], today, ingredientNames: allIngredientNames(recipes, recipesById, ingredients).map((n) => n.name) });
-              setReload((n) => n + 1);
+              loadSampleData({ today, recipesById, ingredientNames: ingredientNames() });
+              refresh();
             }}
           >
-            Try it with four sample weeks
+            Try it with a sample crew and six weeks of history
           </button>
         </section>
+      )}
+
+      {data.crew.length > 0 && (
+        <Section title="Sample crew" aside="MADE UP">
+          <ul className="chef__table">
+            {data.crew.map((p) => (
+              <li key={p.initials}>
+                <span className="pass__rowtext">
+                  <span className="pass__rowname">{p.name}</span>
+                  <span className="pass__rowsub">{stationName(p.stations[0])} · {p.initials}</span>
+                </span>
+                <span className={`pass__mono ${p.effectiveness >= 0.7 ? "pass__vine" : p.effectiveness < 0.4 ? "chef__late" : "pass__amber"}`}>{Math.round(p.effectiveness * 100)}% effective</span>
+                <span className="pass__mono pass__muted">works at {p.pace.toFixed(2)}×</span>
+              </li>
+            ))}
+          </ul>
+          <p className="pass__hint">Each cook got a random effectiveness. It sets how fast they really work against the recipe times and how often they burn or drop a batch. Their shifts today are part way through, so you can see them on Crew and plug holes.</p>
+          <div className="chef__sampleactions">
+            <button type="button" className="pass__ghost" onClick={() => { loadSampleData({ today, recipesById, ingredientNames: ingredientNames() }); refresh(); }}>Reshuffle the crew</button>
+            <button type="button" className="pass__ghost" onClick={() => { startSampleShifts({ today, recipesById, cookPace: settings.cookPace ?? {} }); refresh(); }}>Restart today’s shifts</button>
+            <button type="button" className="pass__ghost" onClick={() => { removeSampleData(); refresh(); }}>Remove sample data</button>
+          </div>
+        </Section>
       )}
 
       <Section title="Waste" aside={`${waste.entries} TOSSES`}>
@@ -173,9 +211,15 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
         <ul className="chef__table">
           {cooks.map(({ cook, now, before }) => {
             const better = now?.avgBehind != null && before?.avgBehind != null ? now.avgBehind < before.avgBehind : null;
+            const p = paces.get(cook);
+            const suggested = p ? Math.round(p.pace * 20) / 20 : null;
+            const planned = settings.cookPace?.[cook];
             return (
-              <li key={cook}>
-                <span className="pass__rowname">{cook}</span>
+              <li key={cook} className="chef__cookrow">
+                <span className="pass__rowtext">
+                  <span className="pass__rowname">{nameOf(cook)}</span>
+                  {p && <span className="pass__rowsub">works at {p.pace.toFixed(2)}× the recipe times · {p.n} items</span>}
+                </span>
                 <span className="pass__mono">
                   {now?.onTimePct != null ? `${Math.round(now.onTimePct)}% on time` : "—"}
                   {now?.unfinished ? ` · ${now.unfinished} unfinished` : ""}
@@ -184,11 +228,16 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
                   {now?.avgBehind != null ? `${Math.round(now.avgBehind)}m behind avg` : "no shifts"}
                   {now?.avgBehind != null && before?.avgBehind != null ? ` (${Math.round(before.avgBehind)}m)` : ""}
                 </span>
+                {planned ? (
+                  <button type="button" className="chef__ack is-on" onClick={() => setPace(cook, null)}>PLANNED AT {planned.toFixed(2)}× · UNDO</button>
+                ) : suggested && Math.abs(suggested - 1) >= 0.05 ? (
+                  <button type="button" className="chef__ack" onClick={() => setPace(cook, suggested)}>PLAN AT {suggested.toFixed(2)}×</button>
+                ) : null}
               </li>
             );
           })}
         </ul>
-        <p className="pass__hint">From each closed shift: when the last step was ticked vs the plan. In brackets: last week.</p>
+        <p className="pass__hint">From each closed shift: when the last step was ticked vs the plan. In brackets: last week. PLAN AT stretches (or shortens) the hands-on steps on that cook’s prep list to their real speed, so their list and the crew board fit how they actually work.</p>
       </Section>
 
       <Section title="Real recipe times" aside={times.length ? `${times.length} RECIPES` : ""}>

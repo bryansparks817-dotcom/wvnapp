@@ -8,7 +8,7 @@ const tickTimes = (steps, shift) =>
 
 // Planned minutes from the first step's start to the end of the last
 // hands-on step (ticks land when hands-on work ends, so the two compare).
-function plannedSpan(steps) {
+export function plannedSpan(steps) {
   const first = steps[0];
   const last = steps[steps.length - 1];
   return (last.at ?? 0) + last.handsOn - (first.at ?? 0);
