@@ -389,3 +389,5 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__cookrow > .chef__ack { grid-column: 1; grid-row: 2; justify-self: start; min-height: 34px; font-size: 12px !important; }
 .chef__ack.is-on { background: var(--amber); color: var(--bg, #111) !important; }
 .chef__sampleactions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chef__stack { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
+.chef__stack > span { font-size: 12px; }

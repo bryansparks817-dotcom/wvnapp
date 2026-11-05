@@ -9,6 +9,18 @@ import { SAMPLE_DAYS, hasSampleData, loadSampleData, removeSampleData, sampleCre
 import { currentServiceShift } from "../lib/crew";
 import { formatMinutes } from "../lib/format";
 import { formatG } from "../lib/inventory";
+import { batchGrams } from "../lib/recipeScale";
+
+// Grams as recipe batches, to the nearest quarter: "1/2 batch", "1 1/4 batches".
+const QUARTERS = ["", "1/4", "1/2", "3/4"];
+function batchLabel(grams, perBatch) {
+  if (!perBatch) return null;
+  const q = Math.round((grams / perBatch) * 4);
+  if (q === 0) return `${(grams / perBatch).toFixed(2)} batch`;
+  const whole = Math.floor(q / 4);
+  const text = [whole || "", QUARTERS[q % 4]].filter(Boolean).join(" ");
+  return `${text} ${q > 4 ? "batches" : "batch"}`;
+}
 
 const money = (v) => `$${Math.round(v).toLocaleString()}`;
 const pct = (v) => (v == null ? "—" : `${v.toFixed(1)}%`);
@@ -75,6 +87,10 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
     return c && c.priced > 0 ? c.perGram : null;
   };
   const costOfItem = (itemId) => (recipeOfItem.get(itemId) ? costOfRecipe(recipeOfItem.get(itemId)) : null);
+  const batchOfItem = (itemId) => {
+    const recipe = recipesById.get(recipeOfItem.get(itemId));
+    return recipe ? batchGrams(recipe, recipesById, ingredients).grams || null : null;
+  };
   const coversOn = (date) =>
     Object.entries(data.covers).filter(([k]) => k.startsWith(`${date}:`)).reduce((s, [, v]) => s + (Number(v) || 0), 0) || null;
 
@@ -195,15 +211,28 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
           <span className="pass__countlabel">COVERS</span>
         </label>
         <ul className="chef__table">
-          {perCovers.rows.map((e) => (
-            <li key={e.id}>
-              <span>{e.name}</span>
-              <span className="pass__mono">{formatG(e.per100)}</span>
-              <span className="pass__mono pass__amber">{Number(forecastCovers) > 0 ? formatG((e.per100 * Number(forecastCovers)) / 100) : "—"}</span>
-            </li>
-          ))}
+          {perCovers.rows.map((e) => {
+            const per = batchOfItem(e.id);
+            const forecastG = Number(forecastCovers) > 0 ? (e.per100 * Number(forecastCovers)) / 100 : null;
+            return (
+              <li key={e.id}>
+                <span className="pass__rowtext">
+                  <span className="pass__rowname">{e.name}</span>
+                  {per && <span className="pass__rowsub">1 batch = {formatG(per)}</span>}
+                </span>
+                <span className="pass__mono chef__stack">
+                  {formatG(e.per100)}
+                  {per && <span className="pass__muted">{batchLabel(e.per100, per)}</span>}
+                </span>
+                <span className="pass__mono pass__amber chef__stack">
+                  {forecastG != null ? formatG(forecastG) : "—"}
+                  {forecastG != null && per && <span>{batchLabel(forecastG, per)}</span>}
+                </span>
+              </li>
+            );
+          })}
         </ul>
-        <p className="pass__hint">Grams made per 100 covers, from closed shifts and the covers typed in on Home. Amber is the forecast.</p>
+        <p className="pass__hint">Grams made per 100 covers, from closed shifts and the covers typed in on Home, with the recipe batches that comes to (nearest quarter). Amber is the forecast. Items without a recipe in the app show grams only.</p>
       </Section>
 
       <Section title="Cooks" aside="THIS WEEK VS LAST">
