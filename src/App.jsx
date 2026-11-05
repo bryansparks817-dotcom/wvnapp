@@ -7,6 +7,9 @@ import RecipeForm from "./components/RecipeForm";
 import LineCook, { WhoScreen } from "./linecook/LineCook";
 import ChefHome from "./chef/ChefHome";
 import ChefSetup from "./chef/ChefSetup";
+import Insights from "./chef/Insights";
+import Prices from "./chef/Prices";
+import RecipeLookup from "./chef/RecipeLookup";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
 import { CHEF_TABS } from "./linecook/tabs";
@@ -179,7 +182,7 @@ export default function App() {
   const shell = {
     // Setup (and the recipes and prep plan tool under it) is off the daily
     // tabs: it's done once, then only for new menu items. It hangs off Home.
-    screen: ["setup", "form", "manage", "plan"].includes(screen) ? "home" : screen,
+    screen: ["setup", "form", "manage", "plan", "prices"].includes(screen) ? "home" : screen,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
@@ -192,6 +195,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
+          <RecipeLookup recipes={recipes} />
           <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
           <button type="button" className="chef__setuplink" onClick={() => setScreen("setup")}>
             Setup &amp; new menu items ›
@@ -211,6 +215,35 @@ export default function App() {
           {...shell}
         >
           <ChefHome key={screen} view={screen} today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "data") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Data" lede="What the line’s logs say: waste, pars, prep per cover, cooks, recipe times, shortages, food cost." {...shell}>
+          <Insights
+            today={today}
+            recipes={recipes}
+            recipesById={recipesById}
+            ingredients={ingredients}
+            onUpdateRecipe={updateRecipe}
+            onOpenPrices={() => setScreen("prices")}
+          />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "prices") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Prices" lede="Ingredient prices, $ per kg." {...shell}>
+          <Prices recipes={recipes} recipesById={recipesById} ingredients={ingredients} />
         </ChefShell>
       </>
     );

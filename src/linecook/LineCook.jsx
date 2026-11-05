@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
-  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts,
+  loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { buildPrepSteps } from "../lib/lineList";
@@ -10,6 +10,7 @@ import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
 import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
+import { recordShift, shiftRecord } from "../lib/history";
 import { normalizeName, previewInitials, signIn } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
@@ -111,6 +112,7 @@ export default function LineCook(props) {
       <WhoScreen
         station={station.name}
         roster={staff}
+        extra={<button type="button" className="pass__ghost" onClick={props.onOpenChef}>Chef? Open the chef view ›</button>}
         onSignIn={(name) => {
           const { person: p, roster } = signIn(name, staff);
           setStaff(roster);
@@ -230,6 +232,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
       draftNotes: "",
     };
     const nextShift = shift ? { ...shift, closedAt } : shift;
+    // The shift goes into the history the chef's Data tab learns from.
+    if (shiftIsToday) recordShift(shiftRecord({ station: st, shift, plan, rows: prepRows, closedAt }));
     // Saved right away: signing the cook out below unmounts this station.
     saveInventory(nextInv, st.id);
     if (nextShift) saveShift(nextShift, st.id);
@@ -324,7 +328,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const stepsDone = { ...(shift.stepsDone ?? {}) };
     for (const p of step.parts) {
       if (isDone) delete stepsDone[p];
-      else stepsDone[p] = true;
+      else stepsDone[p] = Date.now(); // when it was ticked, for the chef's Data tab
     }
     const finishes = !isDone && step.lastForItem && !itemDone;
     const reopens = isDone && itemDone;
@@ -334,6 +338,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
 
   function addFlag(name, kind) {
     setFlags((f) => [...f.filter((x) => x.name !== name), { name, kind, by, at: Date.now() }]);
+    logFlag({ date: today, name, kind, by, at: Date.now(), station: st.id });
   }
 
   const shared = { station: stationTabs, onOpenChef, screen, setScreen, initials: by, onChangeCook };
