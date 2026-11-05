@@ -63,6 +63,27 @@ function FlagBoard({ flags, items, onAdd, onRemove }) {
   );
 }
 
+// Changes the chef made to this list: do-first, skips, one-off items. The
+// cook taps GOT IT; acknowledged ones drop off.
+function ChefCard({ notes, onAck }) {
+  const open = notes.filter((m) => !m.seenAt);
+  if (open.length === 0) return null;
+  return (
+    <section className="pass__chefcard" aria-label="From the chef">
+      <span className="pass__countlabel">FROM CHEF</span>
+      {open.map((m) => (
+        <div key={m.id} className="pass__chefmsg">
+          <span className="pass__rowtext">
+            <span className="pass__rowname">{m.text}</span>
+            <span className="pass__rowsub">{m.by} · {new Date(m.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>
+          </span>
+          <button type="button" className="pass__chefack" onClick={() => onAck(m.id)}>GOT IT</button>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 const WHERE = { lowboy: "LOWBOY", "walk-in": "WALK-IN" };
 
 function TakeLine({ item, take, today }) {
@@ -77,7 +98,7 @@ function TakeLine({ item, take, today }) {
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -116,6 +137,7 @@ export default function TodayScreen({
           <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
         </PassHeader>
         <main className="pass__main">
+          <ChefCard notes={chefNotes} onAck={onAckChef} />
           <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
           {lastNotes && <NoteCard notes={lastNotes} />}
           <section>
@@ -150,6 +172,7 @@ export default function TodayScreen({
         <h1 className="pass__title">Today</h1>
       </PassHeader>
       <main className="pass__main">
+        <ChefCard notes={chefNotes} onAck={onAckChef} />
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
         {lastNotes && !hasGather && <NoteCard notes={lastNotes} />}
         {hasGather && (
@@ -213,6 +236,7 @@ export default function TodayScreen({
           )}
           <PrepSteps
             plan={plan}
+            bump={bump}
             tossOnly={tossOnly}
             done={done}
             stepsDone={stepsDone}

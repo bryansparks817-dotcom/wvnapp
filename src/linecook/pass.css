@@ -351,3 +351,17 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__delta.is-up { color: #d2553f; }
 .chef__delta.is-down { color: #6fa07f; }
 .chef__entry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Chef messages on the line */
+.pass__chefcard { border: 1.5px solid #8ec5e8; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.pass__chefcard > .pass__countlabel { color: #8ec5e8; }
+.pass__chefmsg { display: flex; align-items: center; gap: 10px; }
+.pass__chefack { flex-shrink: 0; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #8ec5e8; background: transparent; color: #8ec5e8 !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.06em; font-size: 13px !important; }
+.pass__chefbump { align-self: flex-start; font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #1b1e1c; background: #8ec5e8; border-radius: 4px; padding: 2px 6px; margin-bottom: 2px; }
+
+.chef__items li { grid-template-columns: 1fr auto auto; }
+.chef__items li.is-skipped { color: var(--steel); }
+.chef__itemacts { grid-column: 1 / -1; display: flex; gap: 6px; }
+.chef__itemacts button { min-height: 32px; padding: 0 10px; border-radius: 6px; border: 1.5px solid var(--edge); background: transparent; color: #c9c4ba !important; font-family: "DM Mono", monospace !important; font-size: 11px !important; letter-spacing: 0.06em; }
+.chef__addform { display: grid; grid-template-columns: 1fr 96px; gap: 6px; }
+.chef__addform select { grid-column: 1 / -1; }

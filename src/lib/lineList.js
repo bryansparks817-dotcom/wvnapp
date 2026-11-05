@@ -33,16 +33,21 @@ function ownersByTrack(tracks, itemByRecipe) {
 //     hands-off step), with what to do, how long, and the hands-off time it
 //     starts (with a timer).
 //   kind "wait": nothing hands-on is free; something is still cooking.
-export function buildPrepSteps(prepItems, recipesById) {
+// opts.first: a prep item id the chef wants done first. Its recipe (and any
+// sub-recipe it needs) is scheduled ahead of the longest-remaining rule.
+//
+// Each step lists the recipe steps it covers in `parts` ("track#index").
+// Ticks are saved per part, so they survive the list being re-ordered.
+export function buildPrepSteps(prepItems, recipesById, { first = null } = {}) {
   const timed = prepItems.filter((i) => i.recipeId && recipesById.has(i.recipeId));
   const untimed = prepItems.filter((i) => !i.recipeId || !recipesById.has(i.recipeId));
   if (timed.length === 0) return { steps: [], untimed, totalMinutes: 0 };
 
   const recipes = timed.map((i) => recipesById.get(i.recipeId));
   const tracks = buildTracks(recipes, recipesById);
-  const timeline = buildTimeline(tracks);
   const itemByRecipe = new Map(timed.map((i) => [i.recipeId, i]));
   const owner = ownersByTrack(tracks, itemByRecipe);
+  const timeline = buildTimeline(first ? tracks.map((t) => ({ ...t, priority: owner.get(t.id)?.id === first })) : tracks);
   const passives = [...timeline.passiveLanes.lanes].sort((a, b) => a.start - b.start);
 
   // The run of hands-off steps a track goes into at a given minute.
@@ -64,8 +69,9 @@ export function buildPrepSteps(prepItems, recipesById) {
     if (last && !last.kickoff && last.trackId === row.recipeId && last.end === row.start) {
       last.end = row.end;
       last.actions.push(row.stepName);
+      last.parts.push(`${row.recipeId}#${row.stepIndex}`);
     } else {
-      events.push({ trackId: row.recipeId, name: row.recipeName, start: row.start, end: row.end, actions: [row.stepName] });
+      events.push({ trackId: row.recipeId, name: row.recipeName, start: row.start, end: row.end, actions: [row.stepName], parts: [`${row.recipeId}#${row.stepIndex}`] });
     }
   }
   // Recipes that open with a hands-off step (preheat, soak) still need the
@@ -75,7 +81,7 @@ export function buildPrepSteps(prepItems, recipesById) {
     const followsWork = handsOnEnds.has(`${p.recipeId}@${p.start}`);
     const followsPassive = passives.some((q) => q.recipeId === p.recipeId && q.end === p.start);
     if (!followsWork && !followsPassive) {
-      events.push({ trackId: p.recipeId, name: p.recipeName, start: p.start, end: p.start, actions: [], kickoff: true });
+      events.push({ trackId: p.recipeId, name: p.recipeName, start: p.start, end: p.start, actions: [], kickoff: true, parts: [`${p.recipeId}#${p.stepIndex}`] });
     }
   }
   events.sort((a, b) => a.start - b.start || (a.kickoff ? -1 : 0) - (b.kickoff ? -1 : 0));
@@ -98,7 +104,8 @@ export function buildPrepSteps(prepItems, recipesById) {
     const kind = seen.has(ev.trackId) ? "back" : steps.length === 0 ? "start" : during ? "fill" : "next";
     steps.push({
       kind,
-      key: `${ev.trackId}@${ev.start}${ev.kickoff ? "k" : ""}`,
+      key: ev.parts.join("+"),
+      parts: ev.parts,
       // Planned start, in minutes from when the cook gets the prep list.
       at: ev.start,
       name: ev.name,

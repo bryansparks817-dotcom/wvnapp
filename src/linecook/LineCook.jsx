@@ -162,11 +162,14 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
 
   // Prep as planned from the count, and as scaled down by any short
   // ingredient (see lib/shortage.js).
-  const fullPrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => p.makeG > 0) : []), [shift, shiftIsToday]);
-  const prepRows = useMemo(() => (shiftIsToday ? applyShortages(shift.prep, shift.short) : []), [shift, shiftIsToday]);
+  // Items the chef took off today's list are left out (shift.skip).
+  const activePrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => !shift.skip?.[p.id]) : []), [shift, shiftIsToday]);
+  const fullPrep = useMemo(() => activePrep.filter((p) => p.makeG > 0), [activePrep]);
+  const prepRows = useMemo(() => (shiftIsToday ? applyShortages(activePrep, shift.short) : []), [activePrep, shift, shiftIsToday]);
   const prepForPlan = useMemo(() => prepRows.filter((p) => p.makeG > 0), [prepRows]);
   const cantMake = useMemo(() => prepRows.filter((p) => p.plannedG > 0 && p.makeG === 0), [prepRows]);
-  const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById), [prepForPlan, recipesById]);
+  const bump = shiftIsToday ? shift.bump ?? null : null;
+  const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById, { first: bump }), [prepForPlan, recipesById, bump]);
   // What the full list needs (for judging a shortage) and what to actually pull.
   const fullGather = useMemo(
     () => gatherForPrep(fullPrep, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),
@@ -261,6 +264,20 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // Checking a row applies it to inventory; unchecking restores that item.
   function toggleDone(kind, row, stepsDone = shift.stepsDone) {
     const key = `${kind}:${row.id}`;
+    // A one-off item the chef added: no pan or par, so just mark it done.
+    if (row.extra) {
+      const done = { ...shift.done };
+      const nextMeta = { ...meta };
+      if (done[key]) {
+        delete done[key];
+        delete nextMeta[key];
+      } else {
+        done[key] = true;
+        nextMeta[key] = { by, at: Date.now(), labels: null };
+      }
+      setShift({ ...shift, stepsDone, done, meta: nextMeta });
+      return;
+    }
     const item = itemsById.get(row.id);
     if (shift.done[key]) {
       const snapshot = shift.done[key];
@@ -305,8 +322,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const row = step.item ? prepRows.find((p) => p.id === step.item.id) : null;
     const itemDone = Boolean(row && shift.done[`p:${row.id}`]);
     const stepsDone = { ...(shift.stepsDone ?? {}) };
-    if (isDone) delete stepsDone[step.key];
-    else stepsDone[step.key] = true;
+    for (const p of step.parts) {
+      if (isDone) delete stepsDone[p];
+      else stepsDone[p] = true;
+    }
     const finishes = !isDone && step.lastForItem && !itemDone;
     const reopens = isDone && itemDone;
     if (row && (finishes || reopens)) toggleDone("p", row, stepsDone);
@@ -353,7 +372,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
             onBack={() => setOpenPrepId(null)}
             onToggleDone={() => toggleDone("p", row)}
             onStartTimer={onStartTimer}
-            onPrintLabel={() =>
+            onPrintLabel={row.extra ? null : () =>
               printLabel({ item: itemsById.get(row.id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] })
             }
           />
@@ -419,7 +438,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         itemsById={itemsById}
         today={today}
         collect={shiftIsToday ? shift.collect : []}
-        tossOnly={shiftIsToday ? shift.prep.filter((p) => p.makeG === 0) : []}
+        tossOnly={activePrep.filter((p) => p.makeG === 0)}
+        chefNotes={shiftIsToday ? shift.chef ?? [] : []}
+        bump={shiftIsToday ? shift.bump ?? null : null}
+        onAckChef={(id) => setShift({ ...shift, chef: (shift.chef ?? []).map((m) => (m.id === id ? { ...m, seenAt: Date.now() } : m)) })}
         plan={plan}
         done={shiftIsToday ? shift.done : {}}
         stepsDone={shiftIsToday ? shift.stepsDone ?? {} : {}}

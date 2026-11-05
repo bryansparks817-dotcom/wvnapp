@@ -9,6 +9,7 @@ import { applyShortages } from "../lib/shortage";
 import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/crew";
 import { formatG } from "../lib/inventory";
 import Numbers from "./Numbers";
+import { addItem, bumpItem, skipItem } from "../lib/chefActions";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -31,13 +32,17 @@ const VIEWS = {
   stock: { flags: true, addFlag: true, alerts: true, close: true, stock: true },
 };
 
-// One cook's day at a glance: what they're on now, then every prep item
-// with how far along it is.
-function CookList({ shift, plan, rows }) {
+// One cook's day at a glance, with the chef's hole-plugging controls: do an
+// item first, skip it today (or put it back), and add a one-off item.
+function CookList({ st, shift, plan, rows, recipes, by, onChanged }) {
+  const [adding, setAdding] = useState(false);
+  const [recipeId, setRecipeId] = useState("");
+  const [grams, setGrams] = useState("");
   const steps = plan.steps.filter((s) => s.kind !== "wait");
   const next = steps.find((s) => !stepIsDone(s, shift));
   const collectDone = shift.collect.filter((c) => shift.done?.[`c:${c.id}`]).length;
-  const items = rows.filter((r) => (r.plannedG ?? r.makeG) > 0);
+  const items = rows.filter((r) => (r.plannedG ?? r.makeG) > 0 || shift.skip?.[r.id]);
+  const act = (fn) => { fn(); onChanged(); };
   return (
     <div className="chef__cooklist">
       {next && (
@@ -52,16 +57,54 @@ function CookList({ shift, plan, rows }) {
           const own = steps.filter((s) => s.item?.id === r.id);
           const doneN = own.filter((s) => stepIsDone(s, shift)).length;
           const done = Boolean(shift.done?.[`p:${r.id}`]);
-          const state = r.makeG === 0 ? "CAN’T MAKE" : done ? "DONE" : own.length === 0 ? "NO RECIPE" : doneN > 0 ? `${doneN}/${own.length} STEPS` : "NOT STARTED";
+          const skipped = Boolean(shift.skip?.[r.id]);
+          const first = shift.bump === r.id;
+          const state = skipped ? "SKIPPED" : r.makeG === 0 ? "CAN’T MAKE" : done ? "DONE" : own.length === 0 && !r.extra ? "NO RECIPE" : doneN > 0 ? `${doneN}/${own.length} STEPS` : "NOT STARTED";
           return (
-            <li key={r.id} className={done ? "is-done" : r.makeG === 0 ? "is-cant" : ""}>
-              <span>{r.name}</span>
+            <li key={r.id} className={done ? "is-done" : skipped ? "is-skipped" : r.makeG === 0 ? "is-cant" : ""}>
+              <span>
+                {first && !done && <span className="pass__chefbump">FIRST</span>} {r.name}
+                {r.extra && <span className="pass__muted"> · added</span>}
+              </span>
               <span className="pass__mono">{formatG(r.makeG)}{r.limitedBy ? " ↓" : ""}</span>
               <span className="chef__itemstate">{state}</span>
+              {!done && (
+                <span className="chef__itemacts">
+                  {!skipped && !first && (
+                    <button type="button" onClick={() => act(() => bumpItem(st.id, r, by))}>DO FIRST</button>
+                  )}
+                  <button type="button" onClick={() => act(() => skipItem(st.id, r, !skipped, by))}>{skipped ? "PUT BACK" : "SKIP"}</button>
+                </span>
+              )}
             </li>
           );
         })}
       </ul>
+      {adding ? (
+        <form
+          className="chef__addform"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const recipe = recipes.find((x) => x.id === recipeId);
+            const g = Number(grams);
+            if (!recipe || !(g > 0)) return;
+            act(() => addItem(st.id, recipe, g, by));
+            setAdding(false);
+            setRecipeId("");
+            setGrams("");
+          }}
+        >
+          <select className="pass__input" value={recipeId} onChange={(e) => setRecipeId(e.target.value)} aria-label="Recipe">
+            <option value="">Pick a recipe…</option>
+            {recipes.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+          </select>
+          <input className="pass__input" type="number" inputMode="numeric" min="1" placeholder="grams" value={grams} onChange={(e) => setGrams(e.target.value)} aria-label="Grams to make" />
+          <button type="submit" className="chef__ack" disabled={!recipeId || !(Number(grams) > 0)}>ADD</button>
+          <button type="button" className="pass__ghost" onClick={() => setAdding(false)}>Cancel</button>
+        </form>
+      ) : (
+        <button type="button" className="pass__flagbtn" onClick={() => setAdding(true)}>+ Add a one-off item</button>
+      )}
     </div>
   );
 }
@@ -100,6 +143,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
   const [flags, setFlags] = useState(() => loadEightySix());
   const [alerts, setAlerts] = useState(() => loadChefAlerts());
   const [service, setService] = useState(() => currentServiceShift());
+  const recipes = useMemo(() => [...recipesById.values()].sort((a, b) => a.name.localeCompare(b.name)), [recipesById]);
 
   // Re-read the line's data and tick the clock so the board stays current.
   useEffect(() => {
@@ -129,7 +173,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
     let rows = [];
     if (open) {
       rows = applyShortages(shift.prep, shift.short);
-      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0), recipesById);
+      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0 && !shift.skip?.[p.id]), recipesById, { first: shift.bump });
       status = crewStatus(shift, plan, now, settings.marginMin);
     }
     return { st, shift, inventory, open, unclosed, plan, status, rows };
@@ -249,7 +293,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
                   )}
                 </span>
                 <span className="chef__state">{STATE_LABEL[status.state]}</span>
-                {show.lists && <CookList shift={shift} plan={plan} rows={rows} />}
+                {show.lists && <CookList st={st} shift={shift} plan={plan} rows={rows} recipes={recipes} by={by} onChanged={() => setNow(Date.now())} />}
               </li>
             );
           })}

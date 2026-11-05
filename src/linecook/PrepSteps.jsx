@@ -29,10 +29,10 @@ function TimerButton({ label, minutes, running, onStart }) {
 // One plain numbered list: toss what's expired, then each prep step in the
 // optimized order, then anything without recipe times yet. The first step not
 // yet ticked is "NOW".
-export default function PrepSteps({ plan, tossOnly, done, stepsDone, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer }) {
+export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer }) {
   const running = new Set(timers.map((t) => t.label));
   const itemDone = (id) => Boolean(done[`p:${id}`]);
-  const stepDone = (s) => (s.item && itemDone(s.item.id)) || Boolean(stepsDone[s.key]);
+  const stepDone = (s) => (s.item && itemDone(s.item.id)) || s.parts.every((p) => stepsDone[p]);
 
   const rows = [
     ...tossOnly.map((row) => ({ type: "toss", row, done: itemDone(row.id) })),
@@ -107,6 +107,7 @@ export default function PrepSteps({ plan, tossOnly, done, stepsDone, timers, onT
               </button>
               <button type="button" className="pass__rowopen" onClick={() => row && onOpenPrep(row.id)}>
                 <span className="pass__rowtext">
+                  {!r.done && bump && row?.id === bump && <span className="pass__chefbump">CHEF: DO THIS FIRST</span>}
                   <span className="pass__steptag">{isNow ? "NOW · " : ""}{tagFor(s)}</span>
                   <span className="pass__rowname">{s.name}{s.firstForItem && row && <span className="pass__mono pass__amber"> · make {formatG(row.makeG)}</span>}</span>
                   {!r.done && s.firstForItem && row?.limitedBy && (
