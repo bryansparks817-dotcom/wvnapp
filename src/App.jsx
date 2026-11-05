@@ -22,6 +22,7 @@ import { buildGatherList } from "./lib/gatherList";
 import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
 import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
+import { parseRecipeWorkbook } from "./lib/recipeSheetImport";
 import "./App.css";
 
 function localDateKey(d = new Date()) {
@@ -45,7 +46,7 @@ function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, childr
 }
 
 export default function App() {
-  const { recipes, addRecipe, updateRecipe, deleteRecipe } = useRecipes();
+  const { recipes, addRecipe, updateRecipe, deleteRecipe, importRecipes } = useRecipes();
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
   // "line" = the line cook screens (default); "chef" = recipe and prep tools.
   const [mode, setMode] = useState("line");
@@ -65,6 +66,7 @@ export default function App() {
   const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(() => new Set(loadSelectedRecipeIds()));
   const [generated, setGenerated] = useState(null);
+  const [importReport, setImportReport] = useState(null);
 
   useEffect(() => {
     saveSelectedRecipeIds(Array.from(selectedIds));
@@ -94,6 +96,35 @@ export default function App() {
   function handleResetToLatest() {
     clearAllLocalData();
     window.location.reload();
+  }
+
+  // Reads a standard recipe sheet workbook. Recipes with problems are skipped
+  // (not half-imported) and listed in the report so they can be fixed in the
+  // sheet and imported again.
+  async function handleImportSheet(file) {
+    setImportReport(null);
+    try {
+      // Loaded on demand so the spreadsheet reader isn't in the main bundle.
+      const { default: readXlsxFile } = await import("read-excel-file/browser");
+      const sheets = await readXlsxFile(file);
+      const results = parseRecipeWorkbook(sheets, { recipes, findIngredient });
+      const ok = results.filter((r) => r.recipe && r.errors.length === 0);
+      for (const { conversions } of ok) {
+        for (const { name, fields } of conversions) upsertIngredient(name, fields);
+      }
+      if (ok.length > 0) importRecipes(ok.map((r) => r.recipe));
+      setGenerated(null);
+      setImportReport(
+        results.map(({ sheet, label, recipe, errors }) => ({
+          sheet,
+          name: recipe?.name ?? label,
+          replaced: Boolean(recipe && recipes.some((r) => r.name.toLowerCase() === recipe.name.toLowerCase())),
+          errors,
+        })),
+      );
+    } catch {
+      setImportReport([{ sheet: file.name, name: file.name, errors: ["Couldn't read this file. Is it an .xlsx?"] }]);
+    }
   }
 
   function openAddForm() {
@@ -292,7 +323,13 @@ export default function App() {
           onAdd={openAddForm}
           onEdit={openEditForm}
           onReset={handleResetToLatest}
-          onBack={() => setScreen("setup")}
+          onImport={handleImportSheet}
+          importReport={importReport}
+          onDismissImport={() => setImportReport(null)}
+          onBack={() => {
+            setImportReport(null);
+            setScreen("setup");
+          }}
         />
       </ChefShell>
       </>
