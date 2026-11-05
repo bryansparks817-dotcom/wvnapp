@@ -10,6 +10,7 @@ export const CHEF_TABS = [
   { id: "home", label: "Home", path: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" },
   { id: "crew", label: "Crew", path: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" },
   { id: "stock", label: "Stock", path: "M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8" },
+  { id: "data", label: "Data", path: "M3 3v18h18M7 15l4-4 3 3 5-6" },
   { id: "line", label: "Line", path: "M3 12h18M3 6h18M3 18h18" },
 ];
 

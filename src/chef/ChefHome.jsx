@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { STATIONS } from "../data/stations";
 import {
   loadShift, loadInventory, loadCook, loadStaff, loadEightySix, saveEightySix, loadChefAlerts, saveChefAlerts,
-  loadWaste, loadChefSettings, saveChefSettings, loadCovers, saveCovers,
+  loadWaste, logFlag, loadChefSettings, saveChefSettings, loadCovers, saveCovers,
 } from "../lib/storage";
 import { buildPrepSteps } from "../lib/lineList";
 import { applyShortages } from "../lib/shortage";
@@ -207,6 +207,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
 
   function addFlag(name, kind) {
     const next = [...loadEightySix().filter((f) => f.name !== name), { name, kind, by, at: Date.now() }];
+    logFlag({ date: today, name, kind, by, at: Date.now() });
     setFlags(next);
     saveEightySix(next);
   }

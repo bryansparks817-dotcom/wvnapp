@@ -365,3 +365,22 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__itemacts button { min-height: 32px; padding: 0 10px; border-radius: 6px; border: 1.5px solid var(--edge); background: transparent; color: #c9c4ba !important; font-family: "DM Mono", monospace !important; font-size: 11px !important; letter-spacing: 0.06em; }
 .chef__addform { display: grid; grid-template-columns: 1fr 96px; gap: 6px; }
 .chef__addform select { grid-column: 1 / -1; }
+
+/* Chef Data tab */
+.chef__data { display: flex; flex-direction: column; gap: 8px; }
+.chef__tiles--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chef__table { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.chef__table li { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; font-size: 14px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.chef__table--pars li { grid-template-columns: auto 1fr; }
+.chef__table--times li { grid-template-columns: 1fr auto auto; }
+.chef__table--prices li { grid-template-columns: 1fr 96px; }
+.chef__call { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.06em; padding: 3px 6px; border-radius: 4px; border: 1.5px solid var(--edge); color: var(--steel); }
+.chef__call.is-raise { border-color: #d2553f; color: #d2553f; }
+.chef__call.is-lower { border-color: #8ec5e8; color: #8ec5e8; }
+.chef__call.is-watch { border-color: var(--amber); color: var(--amber); }
+.chef__forecast { display: grid; grid-template-columns: auto 100px auto; gap: 8px; align-items: center; }
+.chef__lookup { display: flex; flex-direction: column; gap: 8px; }
+.chef__recipe { background: var(--card); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.chef__method { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.pass__tabs { gap: 0; }
+.pass__tab { font-size: 11px !important; }

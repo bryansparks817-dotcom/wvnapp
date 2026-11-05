@@ -24,6 +24,29 @@ Home shows, top to bottom:
 
 How status is worked out: the clock starts at the cook's gather FINISH (`shift.gatherDoneAt`). Every prep step has a planned start (`at`) and hands-on time; the first unticked step that should already be done sets how far behind the cook is. Projected finish = start + planned total + minutes behind. Until the shared database exists, the board only sees the cooks on this phone.
 
+## Built: Data tab, prices and recipe lookup (Bryan, 2026-11-05)
+The chef side is mostly about collecting and analyzing data, not the daily grind, but the chef must still be able to reach recipes. Tabs are now **Home · Crew · Stock · Data · Line**.
+
+What gets collected:
+- **Shift history** (`thePass.history.v1`, `src/lib/history.js`): when a cook saves the close count, the shift is boiled down to one record: cook, planned vs actual finish, minutes behind (only for finished lists; unfinished ones are counted separately), and per item the grams planned/made and the real time it took (only when every step of that item was ticked). Step ticks are now timestamps.
+- **Flag log** (`thePass.flagLog.v1`): every 86 / low flag, from cooks or the chef.
+- **Ingredient prices** (`thePass.prices.v1`, `src/chef/Prices.jsx`): $ per kg as bought, typed in under Setup → Ingredient prices. Recipe cost per kg is worked out from them (`src/lib/costing.js`), sub-recipes included. Vendor CSV import comes later.
+
+The Data tab (`src/chef/Insights.jsx`, `src/lib/analytics.js`), last 7 or 28 days:
+1. **Waste in dollars:** waste log × recipe cost, by item and reason.
+2. **Par check:** RAISE (86'd or low often), LOWER (tossed for shelf life often), WATCH, OK.
+3. **Prep per 100 covers:** grams made per 100 covers per item, plus a forecast for a covers number the chef types in. Prep made stands in for usage until real usage is counted.
+4. **Cooks:** average minutes behind, on-time %, unfinished lists, per cook.
+5. **Real recipe times:** planned vs real time per recipe. USE REAL scales that recipe's hands-on steps by the drift (clamped 0.5–2×) so the scheduler plans with real times; older shifts are ignored after that.
+6. **Shortages:** which ingredients ran short, how often.
+7. **Food cost:** theoretical (prep made × recipe cost) vs actual (purchases ÷ sales). Theoretical only covers prep made in The Pass, so it reads far below actual until the full menu is in.
+
+"Try it with four sample weeks" loads believable sample data (marked `sample`) next to real data, never over it (`src/lib/sampleData.js`).
+
+**Recipe lookup** on Home: search, then a read-only recipe (ingredients and method). Editing stays under Setup → Recipes. A "Chef? Open the chef view" link sits on the line sign-in screen.
+
+Until the shared database exists, all of this lives on one phone.
+
 ## Already decided
 - **Edit station setup:** scaling, adding prep items, and changing an item's pan (e.g. ninth pan → sixth pan). Only the chef can do this.
 - **Walk-in count:** the chef enters it at the end of the night. It's combined with the line cook's lowboy count to build the next shift's Collect list.

@@ -16,6 +16,9 @@ const CHEF_KEY = "thePass.chef.v1";
 const CHEF_SETTINGS_KEY = "thePass.chefSettings.v1";
 const COVERS_KEY = "thePass.covers.v1";
 const DAILY_NUMBERS_KEY = "thePass.dailyNumbers.v1";
+const HISTORY_KEY = "thePass.history.v1";
+const FLAG_LOG_KEY = "thePass.flagLog.v1";
+const PRICES_KEY = "thePass.prices.v1";
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -58,6 +61,9 @@ const ALL_KEYS = [
   CHEF_SETTINGS_KEY,
   COVERS_KEY,
   DAILY_NUMBERS_KEY,
+  HISTORY_KEY,
+  FLAG_LOG_KEY,
+  PRICES_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -247,4 +253,36 @@ export function loadDailyNumbers() {
 
 export function saveDailyNumbers(numbers) {
   save(DAILY_NUMBERS_KEY, numbers);
+}
+
+// One record per closed shift, for the chef's Data tab (see lib/history.js).
+export function loadHistory() {
+  return load(HISTORY_KEY, []);
+}
+
+export function saveHistory(records) {
+  save(HISTORY_KEY, records);
+}
+
+// Every 86 / running-low flag ever raised: [{ date, name, kind, by, at }].
+// The 86 board itself is cleared as items come back; this log isn't.
+export function loadFlagLog() {
+  return load(FLAG_LOG_KEY, []);
+}
+
+export function saveFlagLog(entries) {
+  save(FLAG_LOG_KEY, entries);
+}
+
+export function logFlag(entry) {
+  save(FLAG_LOG_KEY, [...loadFlagLog(), entry]);
+}
+
+// Ingredient prices, dollars per kg, by lowercase ingredient name.
+export function loadPrices() {
+  return load(PRICES_KEY, {});
+}
+
+export function savePrices(prices) {
+  save(PRICES_KEY, prices);
 }
