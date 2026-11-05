@@ -384,3 +384,8 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__method { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
 .pass__tabs { gap: 0; }
 .pass__tab { font-size: 11px !important; }
+.chef__table li.chef__cookrow { grid-template-columns: 1fr auto; }
+.chef__cookrow > :nth-child(2), .chef__cookrow > :nth-child(3) { grid-column: 2; text-align: right; }
+.chef__cookrow > .chef__ack { grid-column: 1; grid-row: 2; justify-self: start; min-height: 34px; font-size: 12px !important; }
+.chef__ack.is-on { background: var(--amber); color: var(--bg, #111) !important; }
+.chef__sampleactions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }

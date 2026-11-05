@@ -1,0 +1,219 @@
+{
+  "_note": "MADE UP by Claude (2026-11-05) so every station can be tried out: items, pans, pars and recipes for Grill, Sauté, Pastry and Prep. Replace with the real menu during the recipe data pass.",
+  "stations": {
+    "grill": {
+      "linePar": 100,
+      "items": [
+        { "id": "marinated-hanger-steak", "name": "Marinated hanger steak", "pan": "1/3", "panGrams": 3000, "lowboySize": "qt", "qtGrams": 900, "lowboyPar": 2, "shelfLifeDays": 2, "recipeId": "hanger-steak-marinade", "sample": true },
+        { "id": "chimichurri", "name": "Chimichurri", "pan": "1/9", "panGrams": 800, "lowboySize": "qt", "qtGrams": 900, "lowboyPar": 1, "shelfLifeDays": 3, "recipeId": "chimichurri", "sample": true },
+        { "id": "charred-scallion-butter", "name": "Charred scallion butter", "pan": "1/9", "panGrams": 700, "lowboySize": "pt", "qtGrams": 450, "lowboyPar": 2, "shelfLifeDays": 7, "recipeId": "charred-scallion-butter", "sample": true }
+      ]
+    },
+    "saute": {
+      "linePar": 100,
+      "items": [
+        { "id": "veal-demi", "name": "Veal demi-glace", "pan": "1/6", "panGrams": 2000, "lowboySize": "qt", "qtGrams": 950, "lowboyPar": 2, "shelfLifeDays": 5, "recipeId": "veal-demi-glace", "sample": true },
+        { "id": "mushroom-duxelles", "name": "Mushroom duxelles", "pan": "1/6", "panGrams": 1500, "lowboySize": "qt", "qtGrams": 800, "lowboyPar": 1, "shelfLifeDays": 3, "recipeId": "mushroom-duxelles", "sample": true },
+        { "id": "garlic-confit", "name": "Garlic confit", "pan": "1/9", "panGrams": 900, "lowboySize": "qt", "qtGrams": 900, "lowboyPar": 1, "shelfLifeDays": 7, "recipeId": "garlic-confit", "sample": true }
+      ]
+    },
+    "pastry": {
+      "linePar": 100,
+      "items": [
+        { "id": "creme-anglaise", "name": "Vanilla crème anglaise", "pan": "1/6", "panGrams": 1800, "lowboySize": "qt", "qtGrams": 950, "lowboyPar": 1, "shelfLifeDays": 3, "recipeId": "vanilla-creme-anglaise", "sample": true },
+        { "id": "shortbread-dough", "name": "Brown butter shortbread dough", "pan": "1/6", "panGrams": 1600, "lowboySize": "qt", "qtGrams": 800, "lowboyPar": 1, "shelfLifeDays": 5, "recipeId": "brown-butter-shortbread", "sample": true },
+        { "id": "salted-caramel", "name": "Salted caramel", "pan": "1/9", "panGrams": 1000, "lowboySize": "qt", "qtGrams": 1100, "lowboyPar": 1, "shelfLifeDays": 10, "recipeId": "salted-caramel", "sample": true }
+      ]
+    },
+    "prep": {
+      "linePar": 100,
+      "items": [
+        { "id": "chicken-stock", "name": "Chicken stock", "pan": "1/3", "panGrams": 4000, "lowboySize": "qt", "qtGrams": 950, "lowboyPar": 4, "shelfLifeDays": 4, "recipeId": "chicken-stock", "sample": true },
+        { "id": "pickled-red-onion", "name": "Pickled red onion", "pan": "1/9", "panGrams": 900, "lowboySize": "qt", "qtGrams": 900, "lowboyPar": 2, "shelfLifeDays": 14, "recipeId": "pickled-red-onion", "sample": true },
+        { "id": "roasted-tomato-sauce", "name": "Roasted tomato sauce", "pan": "1/6", "panGrams": 2500, "lowboySize": "qt", "qtGrams": 950, "lowboyPar": 2, "shelfLifeDays": 5, "recipeId": "roasted-tomato-sauce", "sample": true }
+      ]
+    }
+  },
+  "recipes": [
+    {
+      "id": "hanger-steak-marinade", "name": "Marinated hanger steak", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Hanger steak", "qty": 3000, "unit": "g" }, { "name": "Soy sauce", "qty": 200, "unit": "g" },
+        { "name": "Garlic", "qty": 60, "unit": "g" }, { "name": "Brown sugar", "qty": 80, "unit": "g" },
+        { "name": "Canola oil", "qty": 150, "unit": "g" }, { "name": "Black peppercorns", "qty": 15, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Trim silverskin and portion steaks", "type": "active", "duration_minutes": 25 },
+        { "name": "Mix marinade", "type": "active", "duration_minutes": 5 },
+        { "name": "Bag steaks with marinade", "type": "active", "duration_minutes": 5 },
+        { "name": "Marinate in walk-in", "type": "passive", "duration_minutes": 120 }
+      ]
+    },
+    {
+      "id": "chimichurri", "name": "Chimichurri", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Parsley", "qty": 200, "unit": "g" }, { "name": "Oregano", "qty": 30, "unit": "g" },
+        { "name": "Garlic", "qty": 40, "unit": "g" }, { "name": "Red wine vinegar", "qty": 120, "unit": "g" },
+        { "name": "Olive oil", "qty": 400, "unit": "g" }, { "name": "Chili flake", "qty": 5, "unit": "g" },
+        { "name": "Salt", "qty": 10, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Pick and finely chop herbs", "type": "active", "duration_minutes": 15 },
+        { "name": "Mince garlic", "type": "active", "duration_minutes": 5 },
+        { "name": "Mix with vinegar, oil, chili and salt", "type": "active", "duration_minutes": 5 },
+        { "name": "Rest to marry flavors", "type": "passive", "duration_minutes": 30 }
+      ]
+    },
+    {
+      "id": "charred-scallion-butter", "name": "Charred scallion butter", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Butter", "qty": 1000, "unit": "g" }, { "name": "Scallions", "qty": 200, "unit": "g" },
+        { "name": "Lemon zest", "qty": 15, "unit": "g" }, { "name": "Salt", "qty": 12, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Temper butter", "type": "passive", "duration_minutes": 30 },
+        { "name": "Char scallions on the grill", "type": "active", "duration_minutes": 10 },
+        { "name": "Cool scallions", "type": "passive", "duration_minutes": 15 },
+        { "name": "Chop scallions, whip into butter with zest and salt", "type": "active", "duration_minutes": 12 },
+        { "name": "Roll logs and chill", "type": "passive", "duration_minutes": 30 }
+      ]
+    },
+    {
+      "id": "veal-demi-glace", "name": "Veal demi-glace", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Veal bones", "qty": 5000, "unit": "g" }, { "name": "Onion", "qty": 500, "unit": "g" },
+        { "name": "Carrots", "qty": 250, "unit": "g" }, { "name": "Celery", "qty": 250, "unit": "g" },
+        { "name": "Tomato paste", "qty": 150, "unit": "g" }, { "name": "Red wine", "qty": 750, "unit": "g" },
+        { "name": "Water", "qty": 6000, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Roast veal bones", "type": "passive", "duration_minutes": 45 },
+        { "name": "Roast mirepoix and tomato paste", "type": "active", "duration_minutes": 15 },
+        { "name": "Deglaze with red wine, add water", "type": "active", "duration_minutes": 10 },
+        { "name": "Simmer, skimming", "type": "passive", "duration_minutes": 180 },
+        { "name": "Strain", "type": "active", "duration_minutes": 10 },
+        { "name": "Reduce to nappe", "type": "passive", "duration_minutes": 60 }
+      ]
+    },
+    {
+      "id": "mushroom-duxelles", "name": "Mushroom duxelles", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Cremini mushrooms", "qty": 2000, "unit": "g" }, { "name": "Shallot", "qty": 200, "unit": "g" },
+        { "name": "Butter", "qty": 150, "unit": "g" }, { "name": "Thyme", "qty": 10, "unit": "g" },
+        { "name": "White wine", "qty": 150, "unit": "g" }, { "name": "Salt", "qty": 15, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Pulse mushrooms in batches", "type": "active", "duration_minutes": 15 },
+        { "name": "Sweat shallot in butter", "type": "active", "duration_minutes": 5 },
+        { "name": "Cook out mushrooms until dry", "type": "active", "duration_minutes": 25 },
+        { "name": "Deglaze with wine, season", "type": "active", "duration_minutes": 5 },
+        { "name": "Cool on sheet tray", "type": "passive", "duration_minutes": 30 }
+      ]
+    },
+    {
+      "id": "garlic-confit", "name": "Garlic confit", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Garlic", "qty": 1000, "unit": "g" }, { "name": "Olive oil", "qty": 1500, "unit": "g" },
+        { "name": "Thyme", "qty": 10, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Peel and trim garlic", "type": "active", "duration_minutes": 15 },
+        { "name": "Confit low in oil", "type": "passive", "duration_minutes": 60 },
+        { "name": "Cool in oil", "type": "passive", "duration_minutes": 30 }
+      ]
+    },
+    {
+      "id": "vanilla-creme-anglaise", "name": "Vanilla crème anglaise", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Milk", "qty": 1000, "unit": "g" }, { "name": "Heavy cream", "qty": 500, "unit": "g" },
+        { "name": "Sugar", "qty": 250, "unit": "g" }, { "name": "Egg yolks", "qty": 240, "unit": "g" },
+        { "name": "Vanilla bean", "qty": 10, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Scald milk and cream with vanilla", "type": "active", "duration_minutes": 10 },
+        { "name": "Temper yolks and sugar", "type": "active", "duration_minutes": 8 },
+        { "name": "Cook to nappe, stirring", "type": "active", "duration_minutes": 10 },
+        { "name": "Strain over ice bath and chill", "type": "passive", "duration_minutes": 60 }
+      ]
+    },
+    {
+      "id": "brown-butter-shortbread", "name": "Brown butter shortbread dough", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Butter", "qty": 900, "unit": "g" }, { "name": "All-purpose flour", "qty": 1200, "unit": "g" },
+        { "name": "Sugar", "qty": 400, "unit": "g" }, { "name": "Salt", "qty": 10, "unit": "g" },
+        { "name": "Vanilla extract", "qty": 15, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Brown butter", "type": "active", "duration_minutes": 10 },
+        { "name": "Chill browned butter until set", "type": "passive", "duration_minutes": 45 },
+        { "name": "Cream butter and sugar", "type": "active", "duration_minutes": 8 },
+        { "name": "Mix in flour, salt and vanilla", "type": "active", "duration_minutes": 5 },
+        { "name": "Shape logs and wrap", "type": "active", "duration_minutes": 10 },
+        { "name": "Chill logs", "type": "passive", "duration_minutes": 60 }
+      ]
+    },
+    {
+      "id": "salted-caramel", "name": "Salted caramel", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Sugar", "qty": 1000, "unit": "g" }, { "name": "Heavy cream", "qty": 700, "unit": "g" },
+        { "name": "Butter", "qty": 250, "unit": "g" }, { "name": "Salt", "qty": 15, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Cook sugar to deep amber", "type": "active", "duration_minutes": 20 },
+        { "name": "Whisk in butter, then warm cream", "type": "active", "duration_minutes": 8 },
+        { "name": "Season and cool", "type": "passive", "duration_minutes": 45 }
+      ]
+    },
+    {
+      "id": "chicken-stock", "name": "Chicken stock", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Chicken bones", "qty": 5000, "unit": "g" }, { "name": "Onion", "qty": 500, "unit": "g" },
+        { "name": "Carrots", "qty": 300, "unit": "g" }, { "name": "Celery", "qty": 300, "unit": "g" },
+        { "name": "Water", "qty": 8000, "unit": "g" }, { "name": "Bay leaf", "qty": 5, "unit": "g" },
+        { "name": "Black peppercorns", "qty": 10, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Blanch and rinse bones", "type": "active", "duration_minutes": 15 },
+        { "name": "Cut mirepoix, assemble pot", "type": "active", "duration_minutes": 12 },
+        { "name": "Simmer, skimming", "type": "passive", "duration_minutes": 240 },
+        { "name": "Strain", "type": "active", "duration_minutes": 12 },
+        { "name": "Chill in ice bath", "type": "passive", "duration_minutes": 45 }
+      ]
+    },
+    {
+      "id": "pickled-red-onion", "name": "Pickled red onion", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Red onion", "qty": 1500, "unit": "g" }, { "name": "Red wine vinegar", "qty": 800, "unit": "g" },
+        { "name": "Water", "qty": 400, "unit": "g" }, { "name": "Sugar", "qty": 200, "unit": "g" },
+        { "name": "Salt", "qty": 40, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Slice onions thin on the mandoline", "type": "active", "duration_minutes": 20 },
+        { "name": "Bring brine to a boil", "type": "active", "duration_minutes": 8 },
+        { "name": "Pour over onions and cool", "type": "passive", "duration_minutes": 60 }
+      ]
+    },
+    {
+      "id": "roasted-tomato-sauce", "name": "Roasted tomato sauce", "isSubRecipe": false, "sample": true,
+      "ingredients": [
+        { "name": "Canned San Marzano tomatoes", "qty": 3000, "unit": "g" }, { "name": "Onion", "qty": 400, "unit": "g" },
+        { "name": "Garlic", "qty": 80, "unit": "g" }, { "name": "Olive oil", "qty": 200, "unit": "g" },
+        { "name": "Basil", "qty": 30, "unit": "g" }, { "name": "Salt", "qty": 30, "unit": "g" }
+      ],
+      "steps": [
+        { "name": "Roast tomatoes", "type": "passive", "duration_minutes": 40 },
+        { "name": "Sweat onion and garlic", "type": "active", "duration_minutes": 15 },
+        { "name": "Combine, simmer", "type": "passive", "duration_minutes": 45 },
+        { "name": "Blend with basil, season", "type": "active", "duration_minutes": 10 },
+        { "name": "Cool", "type": "passive", "duration_minutes": 30 }
+      ]
+    }
+  ],
+  "staff": [
+    { "name": "Jordan Reyes", "initials": "JR", "station": "garde-manger" },
+    { "name": "Maya Torres", "initials": "MT", "station": "grill" },
+    { "name": "Andre Lewis", "initials": "AL", "station": "saute" },
+    { "name": "Priya Shah", "initials": "PS", "station": "pastry" },
+    { "name": "Sam Okafor", "initials": "SO", "station": "prep" }
+  ]
+}

@@ -5,6 +5,7 @@ import {
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
 } from "../lib/storage";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
+import { withPace, paceFor } from "../lib/pace";
 import { buildPrepSteps } from "../lib/lineList";
 import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
@@ -171,7 +172,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   const prepForPlan = useMemo(() => prepRows.filter((p) => p.makeG > 0), [prepRows]);
   const cantMake = useMemo(() => prepRows.filter((p) => p.plannedG > 0 && p.makeG === 0), [prepRows]);
   const bump = shiftIsToday ? shift.bump ?? null : null;
-  const plan = useMemo(() => buildPrepSteps(prepForPlan, recipesById, { first: bump }), [prepForPlan, recipesById, bump]);
+  // Planned at the cook's real speed when the chef has set one (lib/pace.js).
+  const cookOnShift = shiftIsToday ? shift.confirmedBy : null;
+  const pacedRecipes = useMemo(() => withPace(recipesById, paceFor(cookOnShift)), [recipesById, cookOnShift]);
+  const plan = useMemo(() => buildPrepSteps(prepForPlan, pacedRecipes, { first: bump }), [prepForPlan, pacedRecipes, bump]);
   // What the full list needs (for judging a shortage) and what to actually pull.
   const fullGather = useMemo(
     () => gatherForPrep(fullPrep, recipesById, ingredients, (r) => batchGrams(r, recipesById, ingredients).grams),

@@ -49,7 +49,9 @@ export function parTuning(items, flagLog, waste, today, days) {
     const flags = flagLog.filter((f) => f.name === item.name && inRange(f.date, today, days));
     const outs = flags.filter((f) => f.kind === "86").length;
     const lows = flags.filter((f) => f.kind === "low").length;
-    const tossed = waste.filter((w) => (w.itemId === item.id || w.name === item.name) && inRange(w.date, today, days));
+    // Burned or dropped batches say nothing about the par, so only
+    // shelf-life tosses count here.
+    const tossed = waste.filter((w) => (w.itemId === item.id || w.name === item.name) && inRange(w.date, today, days) && (!w.reason || w.reason === "shelf life"));
     const tossG = tossed.reduce((s, w) => s + w.grams, 0);
     const short = outs + lows;
     let call = "OK";
@@ -208,4 +210,24 @@ export function foodCost(history, daily, costOfRecipe, today, days) {
     theoreticalPct: sales ? (theoretical / sales) * 100 : null,
     actualPct: sales ? (actual / sales) * 100 : null,
   };
+}
+
+// How fast each cook really works against the plan: 1.2 = their hands-on
+// work takes 20% longer than the recipes say. From items where every step
+// was ticked; recipe drift that hits everyone is left in, so compare cooks
+// with each other rather than reading one number on its own.
+export function cookPace(history, today, days) {
+  const map = new Map();
+  for (const r of history) {
+    if (!r.cook || !inRange(r.date, today, days)) continue;
+    for (const it of r.items) {
+      if (it.actualSpan == null || !it.plannedSpan || !it.handsOn) continue;
+      const e = map.get(r.cook) ?? { cook: r.cook, over: 0, handsOn: 0, n: 0 };
+      e.over += it.actualSpan - it.plannedSpan;
+      e.handsOn += it.handsOn;
+      e.n += 1;
+      map.set(r.cook, e);
+    }
+  }
+  return new Map([...map].map(([cook, e]) => [cook, { n: e.n, pace: Math.min(2, Math.max(0.5, 1 + e.over / e.handsOn)) }]));
 }

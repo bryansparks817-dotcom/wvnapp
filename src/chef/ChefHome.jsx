@@ -5,6 +5,7 @@ import {
   loadWaste, logFlag, loadChefSettings, saveChefSettings, loadCovers, saveCovers,
 } from "../lib/storage";
 import { buildPrepSteps } from "../lib/lineList";
+import { withPace, paceFor } from "../lib/pace";
 import { applyShortages } from "../lib/shortage";
 import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/crew";
 import { formatG } from "../lib/inventory";
@@ -167,13 +168,13 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
     const shift = loadShift(st.id);
     const inventory = loadInventory(st.id);
     const open = Boolean(shift && !shift.closedAt && shift.date === today);
-    const unclosed = Boolean(shift && !shift.closedAt && shift.date !== today);
+    const unclosed = Boolean(shift && !shift.sample && !shift.closedAt && shift.date !== today);
     let plan = null;
     let status = null;
     let rows = [];
     if (open) {
       rows = applyShortages(shift.prep, shift.short);
-      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0 && !shift.skip?.[p.id]), recipesById, { first: shift.bump });
+      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0 && !shift.skip?.[p.id]), withPace(recipesById, paceFor(shift.confirmedBy)), { first: shift.bump });
       status = crewStatus(shift, plan, now, settings.marginMin);
     }
     return { st, shift, inventory, open, unclosed, plan, status, rows };
