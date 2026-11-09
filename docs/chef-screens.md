@@ -49,6 +49,13 @@ The Data tab (`src/chef/Insights.jsx`, `src/lib/analytics.js`), last 7 or 28 day
 
 Until the shared database exists, all of this lives on one phone.
 
+## Built: staff profiles and PINs (Bryan, 2026-11-09)
+Setup → Staff & station access (`src/chef/Staff.jsx`): add, edit and remove people. Each has a name, initials (unique), role (cook or chef), the stations they can open, and a 4-digit PIN. Removing someone keeps their name on old counts and history (`active: false`).
+- Sign-in: tap your name, enter your PIN. A wrong PIN is refused; the chef resets forgotten ones.
+- Only chefs can open the chef view. The very first chef sign-in sets up the first chef with a PIN; after that, new names can't add themselves on the sign-in screens.
+- The last chef can't be removed or made a cook.
+- The PIN keeps one cook from signing in as another on a shared phone. Real accounts come with the shared database.
+
 ## Already decided
 - **Edit station setup:** scaling, adding prep items, and changing an item's pan (e.g. ninth pan → sixth pan). Only the chef can do this.
 - **Walk-in count:** the chef enters it at the end of the night. It's combined with the line cook's lowboy count to build the next shift's Collect list.

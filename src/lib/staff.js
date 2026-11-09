@@ -40,3 +40,34 @@ export function previewInitials(name, roster) {
   if (!normalizeName(name)) return "";
   return findByName(roster, name)?.initials ?? initialsFor(name, roster);
 }
+
+// ---- Profiles (Setup → Staff) ----
+// A person: { name, initials, role: "cook" | "chef", stations?: [stationId]
+// (none = every station), pinHash?, active? (false = removed; kept so old
+// counts and history still show their name) }.
+//
+// The PIN only keeps one cook from signing in as another on a shared phone.
+// It is hashed so it isn't readable at a glance, but real security comes
+// with proper accounts in the shared database.
+export function hashPin(pin) {
+  let h = 2166136261;
+  for (const c of `thepass:${pin}`) {
+    h ^= c.charCodeAt(0);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h.toString(36);
+}
+
+export const validPin = (pin) => /^\d{4}$/.test(pin);
+export const checkPin = (person, pin) => !person?.pinHash || person.pinHash === hashPin(pin);
+export const activeStaff = (roster) => roster.filter((p) => p.active !== false);
+export const isChef = (p) => p?.role === "chef";
+export const hasChef = (roster) => activeStaff(roster).some(isChef);
+
+// Initials must be 1–4 letters/digits and not used by anyone else.
+export function initialsProblem(initials, roster, self = null) {
+  const v = initials.trim().toUpperCase();
+  if (!/^[A-Z0-9]{1,4}$/.test(v)) return "Use 1 to 4 letters.";
+  if (roster.some((p) => p !== self && p.initials === v)) return "Someone already signs with those.";
+  return null;
+}

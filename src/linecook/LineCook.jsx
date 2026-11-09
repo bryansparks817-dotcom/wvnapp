@@ -12,7 +12,7 @@ import { gatherForPrep } from "../lib/gatherList";
 import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import { recordShift, shiftRecord } from "../lib/history";
-import { normalizeName, previewInitials, signIn } from "../lib/staff";
+import { activeStaff, checkPin, hasChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
@@ -36,10 +36,50 @@ function closeLabel(inv) {
 }
 
 // Sign-in by name. The chef uses the same screen with its own wording.
-export function WhoScreen({ station, roster, onSignIn, title = "Who’s on?", lede = "Your initials go on counts, check-offs and labels today.", cta = "START SHIFT →", extra = null }) {
+// Tapping a name with a PIN asks for it. Typing a new name is only allowed
+// before the chef has set up the staff list (allowNew); newNeedsPin asks the
+// new person to pick a PIN (the first chef).
+function PinStep({ person, onOk, onBack }) {
+  const [pin, setPin] = useState("");
+  const [wrong, setWrong] = useState(false);
+  return (
+    <form
+      className="pass__gate"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (checkPin(person, pin)) onOk();
+        else { setWrong(true); setPin(""); }
+      }}
+    >
+      <span className="pass__countlabel">PIN FOR {person.name.toUpperCase()}</span>
+      <input
+        className="pass__input pass__input--name pass__input--pin"
+        type="password"
+        inputMode="numeric"
+        autoComplete="off"
+        maxLength={4}
+        aria-label="PIN"
+        autoFocus
+        value={pin}
+        onChange={(e) => { setWrong(false); setPin(e.target.value.replace(/\D/g, "")); }}
+      />
+      <p className="pass__hint" aria-live="polite">{wrong ? <span className="chef__late">That PIN doesn’t match. Try again.</span> : "Forgot it? The chef can set a new one in Setup → Staff."}</p>
+      <button type="submit" className="pass__cta" disabled={pin.length !== 4}>SIGN IN →</button>
+      <button type="button" className="pass__ghost" onClick={onBack}>← Not me</button>
+    </form>
+  );
+}
+
+export function WhoScreen({
+  station, roster, onSignIn, title = "Who’s on?", lede = "Your initials go on counts, check-offs and labels today.", cta = "START SHIFT →", extra = null,
+  allowNew = true, newNeedsPin = false, emptyHint = "Not on the list? Ask the chef to add you in Setup → Staff.",
+}) {
   const [name, setName] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [picked, setPicked] = useState(null);
   const initials = previewInitials(name, roster);
-  const ok = normalizeName(name).split(" ").length >= 2 || roster.some((p) => p.name.toLowerCase() === normalizeName(name).toLowerCase());
+  const known = roster.find((p) => p.name.toLowerCase() === normalizeName(name).toLowerCase());
+  const ok = (normalizeName(name).split(" ").length >= 2 || Boolean(known)) && (!newNeedsPin || known || validPin(newPin));
   return (
     <div className="pass">
       <PassHeader station={station}>
@@ -47,41 +87,59 @@ export function WhoScreen({ station, roster, onSignIn, title = "Who’s on?", le
         <p className="pass__lede">{lede}</p>
       </PassHeader>
       <main className="pass__main">
-        {roster.length > 0 && (
-          <section className="pass__roster" aria-label="Staff">
-            <span className="pass__countlabel">TAP YOUR NAME</span>
-            <div className="pass__rosterlist">
-              {roster.map((p) => (
-                <button key={p.initials} type="button" className="pass__person" onClick={() => onSignIn(p.name)}>
-                  <span className="pass__personinit">{p.initials}</span>
-                  <span>{p.name}</span>
-                </button>
-              ))}
-            </div>
-          </section>
+        {picked ? (
+          <PinStep person={picked} onOk={() => onSignIn(picked.name)} onBack={() => setPicked(null)} />
+        ) : (
+          <>
+            {roster.length > 0 && (
+              <section className="pass__roster" aria-label="Staff">
+                <span className="pass__countlabel">TAP YOUR NAME</span>
+                <div className="pass__rosterlist">
+                  {roster.map((p) => (
+                    <button key={p.initials} type="button" className="pass__person" onClick={() => (p.pinHash ? setPicked(p) : onSignIn(p.name))}>
+                      <span className="pass__personinit">{p.initials}</span>
+                      <span>{p.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+            {allowNew ? (
+              <form
+                className="pass__gate"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!ok) return;
+                  if (known?.pinHash) setPicked(known);
+                  else onSignIn(name, newNeedsPin && !known ? newPin : undefined);
+                }}
+              >
+                <label className="pass__countlabel" htmlFor="pass-name">{roster.length ? "OR ENTER YOUR FULL NAME" : "FULL NAME"}</label>
+                <input
+                  id="pass-name"
+                  className="pass__input pass__input--name"
+                  value={name}
+                  autoComplete="name"
+                  autoCapitalize="words"
+                  placeholder="First and last name"
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <p className="pass__hint" aria-live="polite">
+                  {initials ? <>You’ll sign as <strong className="pass__amber">{initials}</strong></> : "Your initials are set from your name."}
+                </p>
+                {newNeedsPin && !known && (
+                  <>
+                    <label className="pass__countlabel" htmlFor="pass-newpin">PICK A 4-DIGIT PIN</label>
+                    <input id="pass-newpin" className="pass__input pass__input--name pass__input--pin" type="password" inputMode="numeric" autoComplete="off" maxLength={4} value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))} />
+                  </>
+                )}
+                <button type="submit" className="pass__cta" disabled={!ok}>{cta}</button>
+              </form>
+            ) : (
+              <p className="pass__hint">{emptyHint}</p>
+            )}
+          </>
         )}
-        <form
-          className="pass__gate"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (ok) onSignIn(name);
-          }}
-        >
-          <label className="pass__countlabel" htmlFor="pass-name">{roster.length ? "OR ENTER YOUR FULL NAME" : "FULL NAME"}</label>
-          <input
-            id="pass-name"
-            className="pass__input pass__input--name"
-            value={name}
-            autoComplete="name"
-            autoCapitalize="words"
-            placeholder="First and last name"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <p className="pass__hint" aria-live="polite">
-            {initials ? <>You’ll sign as <strong className="pass__amber">{initials}</strong></> : "Your initials are set from your name."}
-          </p>
-          <button type="submit" className="pass__cta" disabled={!ok}>{cta}</button>
-        </form>
         {extra}
       </main>
     </div>
@@ -112,7 +170,8 @@ export default function LineCook(props) {
     return (
       <WhoScreen
         station={station.name}
-        roster={staff}
+        roster={activeStaff(staff)}
+        allowNew={!hasChef(staff)}
         extra={<button type="button" className="pass__ghost" onClick={props.onOpenChef}>Chef? Open the chef view ›</button>}
         onSignIn={(name) => {
           const { person: p, roster } = signIn(name, staff);
