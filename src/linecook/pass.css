@@ -399,3 +399,4 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__stationpick { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid var(--line); font-size: 14px; }
 .chef__stationpick.is-on { border-color: var(--amber); color: var(--amber); }
 .chef__stationpick input { accent-color: var(--amber); }
+.chef__syncrow { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 12px; font-size: 13px; }

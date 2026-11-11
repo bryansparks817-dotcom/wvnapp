@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import baseRecipes from "../data/sampleRecipes.json";
 import made from "../data/sampleStations.json";
-import { loadRecipes, saveRecipes, loadSeededIds, saveSeededIds } from "../lib/storage";
+import { loadRecipes, saveRecipes, loadSeededIds, saveSeededIds, KEYS } from "../lib/storage";
+import { onRemoteChange } from "../lib/sync";
 import { PENDING_PREFIX } from "../lib/recipeSheetImport";
 
 function slugify(name) {
@@ -43,6 +44,8 @@ export function useRecipes() {
   useEffect(() => {
     saveRecipes(recipes);
   }, [recipes]);
+  // Another phone changed the recipes.
+  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.RECIPES)) setRecipes(loadRecipes(seedRecipes)); }), []);
 
   function addRecipe(recipe) {
     setRecipes((prev) => {
