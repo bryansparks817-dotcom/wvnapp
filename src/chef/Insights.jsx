@@ -4,8 +4,7 @@ import {
   loadWaste, loadFlagLog, loadHistory, loadChefAlerts, loadCovers, loadDailyNumbers, loadPrices, loadChefSettings, saveChefSettings, loadStaff,
 } from "../lib/storage";
 import { activeFactor, cookPace, cookTrends, foodCost, parTuning, prepPerCovers, recipeTimes, shortageHistory, wasteReport } from "../lib/analytics";
-import { allIngredientNames, costIndex } from "../lib/costing";
-import { SAMPLE_DAYS, hasSampleData, loadSampleData, removeSampleData, sampleCrew, startSampleShifts } from "../lib/sampleData";
+import { costIndex } from "../lib/costing";
 import { currentServiceShift } from "../lib/crew";
 import { formatMinutes } from "../lib/format";
 import { formatG } from "../lib/inventory";
@@ -49,7 +48,6 @@ const CALL_CLASS = { RAISE: "is-raise", LOWER: "is-lower", WATCH: "is-watch", OK
 // cost. Everything comes from what the line already logs.
 export default function Insights({ today, recipes, recipesById, ingredients, onUpdateRecipe, onOpenPrices }) {
   const [days, setDays] = useState(28);
-  const [reload, setReload] = useState(0);
   const [settings, setSettings] = useState(loadChefSettings);
   const setPace = (cook, pace) => {
     const cookPace = { ...(settings.cookPace ?? {}) };
@@ -64,9 +62,7 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
     return c ? String(c) : "";
   });
 
-  const data = useMemo(() => {
-    void reload;
-    return {
+  const data = useMemo(() => ({
       waste: loadWaste(),
       flags: loadFlagLog(),
       history: loadHistory(),
@@ -75,9 +71,7 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
       daily: loadDailyNumbers(),
       prices: loadPrices(),
       staff: loadStaff(),
-      crew: sampleCrew(),
-    };
-  }, [reload]);
+    }), []);
 
   const costs = useMemo(() => costIndex(recipes, recipesById, ingredients, data.prices), [recipes, recipesById, ingredients, data.prices]);
   const items = STATIONS.flatMap((s) => s.items);
@@ -100,18 +94,11 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
   const cooks = cookTrends(data.history, today, settings.marginMin);
   const paces = cookPace(data.history, today, days);
   const nameOf = (initials) => data.staff.find((p) => p.initials === initials)?.name ?? initials;
-  const stationName = (id) => STATIONS.find((s) => s.id === id)?.name ?? id;
-  const ingredientNames = () => allIngredientNames(recipes, recipesById, ingredients).map((n) => n.name);
-  const refresh = () => setReload((n) => n + 1);
   const times = recipeTimes(data.history, today, days, (id) => recipesById.get(id)?.timesUpdatedAt ?? 0);
   const shorts = shortageHistory(data.alerts, today, days);
   const food = foodCost(data.history, data.daily, costOfRecipe, today, days);
   const flagged = pars.filter((p) => p.call !== "OK");
   const empty = data.history.length === 0 && data.waste.length === 0 && data.flags.length === 0;
-  const canSample = useMemo(() => {
-    void reload;
-    return !hasSampleData();
-  }, [reload]);
 
   function applyRealTimes(row) {
     const recipe = recipesById.get(row.recipeId);
@@ -126,52 +113,15 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
   return (
     <>
       <div className="chef__servicetoggle" role="group" aria-label="Range">
-        {[7, 28, SAMPLE_DAYS].map((n) => (
+        {[7, 28, 42].map((n) => (
           <button key={n} type="button" className={days === n ? "is-on" : ""} aria-pressed={days === n} onClick={() => setDays(n)}>
             LAST {n} DAYS
           </button>
         ))}
       </div>
 
-      {canSample && (
-        <section className="pass__gate">
-          <p className="pass__hint">
-            {empty ? "Nothing logged yet. " : "Only a little logged so far. "}Every closed shift, toss, 86 and short alert lands here.
-          </p>
-          <button
-            type="button"
-            className="pass__ghost"
-            onClick={() => {
-              loadSampleData({ today, recipesById, ingredientNames: ingredientNames() });
-              refresh();
-            }}
-          >
-            Try it with a sample crew and six weeks of history
-          </button>
-        </section>
-      )}
-
-      {data.crew.length > 0 && (
-        <Section title="Sample crew" aside="MADE UP">
-          <ul className="chef__table">
-            {data.crew.map((p) => (
-              <li key={p.initials}>
-                <span className="pass__rowtext">
-                  <span className="pass__rowname">{p.name}</span>
-                  <span className="pass__rowsub">{stationName(p.stations[0])} · {p.initials}</span>
-                </span>
-                <span className={`pass__mono ${p.effectiveness >= 0.7 ? "pass__vine" : p.effectiveness < 0.4 ? "chef__late" : "pass__amber"}`}>{Math.round(p.effectiveness * 100)}% effective</span>
-                <span className="pass__mono pass__muted">works at {p.pace.toFixed(2)}×</span>
-              </li>
-            ))}
-          </ul>
-          <p className="pass__hint">Each cook got a random effectiveness. It sets how fast they really work against the recipe times and how often they burn or drop a batch. Their shifts today are part way through, so you can see them on Crew and plug holes.</p>
-          <div className="chef__sampleactions">
-            <button type="button" className="pass__ghost" onClick={() => { loadSampleData({ today, recipesById, ingredientNames: ingredientNames() }); refresh(); }}>Reshuffle the crew</button>
-            <button type="button" className="pass__ghost" onClick={() => { startSampleShifts({ today, recipesById, cookPace: settings.cookPace ?? {} }); refresh(); }}>Restart today’s shifts</button>
-            <button type="button" className="pass__ghost" onClick={() => { removeSampleData(); refresh(); }}>Remove sample data</button>
-          </div>
-        </Section>
+      {empty && (
+        <p className="pass__hint">Nothing logged yet. Every closed shift, toss, 86 and short alert lands here.</p>
       )}
 
       <Section title="Waste" aside={`${waste.entries} TOSSES`}>

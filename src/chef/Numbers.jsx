@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadDailyNumbers, saveDailyNumbers } from "../lib/storage";
-import { rolling, sampleWeek } from "../lib/numbers";
+import { rolling } from "../lib/numbers";
 
 const pct = (v) => (v == null ? "—" : `${v.toFixed(1)}%`);
 const money = (v) => `$${Math.round(v).toLocaleString()}`;
@@ -68,11 +68,6 @@ export default function Numbers({ today }) {
             </label>
           ))}
         </div>
-      )}
-      {week.days === 0 && (
-        <button type="button" className="pass__ghost" onClick={() => setDaily({ ...sampleWeek(today), ...daily })}>
-          Try it with two sample weeks
-        </button>
       )}
       <p className="pass__hint">Prime = food + labor. Typed in daily until the POS and payroll are connected. Food is purchases ÷ sales for now.</p>
     </section>
