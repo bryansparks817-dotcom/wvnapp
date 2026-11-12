@@ -6,7 +6,7 @@ import {
   KEYS, shiftKeyFor, inventoryKeyFor,
 } from "../lib/storage";
 import { onRemoteChange } from "../lib/sync";
-import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
+import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay } from "../lib/inventory";
 import { withPace, paceFor } from "../lib/pace";
 import { buildPrepSteps } from "../lib/lineList";
 import { batchGrams, scaleRecipe } from "../lib/recipeScale";
@@ -326,19 +326,6 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     onOpened();
   }
 
-  function loadSample() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    setInventory({
-      closedOn: localDateKey(yesterday),
-      closedAt: yesterday.setHours(22, 30, 0, 0),
-      closedBy: "JR",
-      notes: { text: "Low on shallots for mignonette. Stock is on its last day, toss it.", by: "JR" },
-      items: sampleInventory(items, today),
-    });
-    setShift(null);
-  }
-
   // Checking a row applies it to inventory; unchecking restores that item.
   function toggleDone(kind, row, stepsDone = shift.stepsDone) {
     const key = `${kind}:${row.id}`;
@@ -540,7 +527,6 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         wasteToday={waste.filter((w) => w.date === today)}
         onToggle={toggleDone}
         onOpenPrep={setOpenPrepId}
-        onLoadSample={loadSample}
       />
     </>
   );

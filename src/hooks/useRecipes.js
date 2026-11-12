@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import baseRecipes from "../data/sampleRecipes.json";
-import made from "../data/sampleStations.json";
 import { loadRecipes, saveRecipes, loadSeededIds, saveSeededIds, KEYS } from "../lib/storage";
 import { onRemoteChange } from "../lib/sync";
 import { PENDING_PREFIX } from "../lib/recipeSheetImport";
@@ -24,10 +23,9 @@ function generateId(name, existingIds) {
   return id;
 }
 
-const seedRecipes = [...baseRecipes, ...made.recipes];
+const seedRecipes = baseRecipes;
 
-// Saved recipes, plus any built-in recipe this browser hasn't been given yet
-// (e.g. the made-up Grill, Sauté, Pastry and Prep recipes).
+// Saved recipes, plus any built-in recipe this browser hasn't been given yet.
 function initialRecipes() {
   const stored = loadRecipes(null);
   const seeded = loadSeededIds();

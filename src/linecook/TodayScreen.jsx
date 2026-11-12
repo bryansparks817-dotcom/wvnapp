@@ -98,7 +98,7 @@ function TakeLine({ item, take, today }) {
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   hasClose, lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
-  collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer, onLoadSample,
+  collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
 }) {
   const header = { station, initials, onChangeCook };
   if (!hasClose) {
@@ -114,9 +114,6 @@ export default function TodayScreen({
             <p className="pass__hint">At the end of every shift, count your line pans and lowboy. The next shift’s Collect and Prep come from that.</p>
             <button type="button" className="pass__cta" onClick={() => setScreen("close")}>
               CLOSE COUNT →
-            </button>
-            <button type="button" className="pass__ghost" onClick={onLoadSample}>
-              Try it with a sample close
             </button>
           </section>
           <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
