@@ -400,3 +400,8 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__stationpick.is-on { border-color: var(--amber); color: var(--amber); }
 .chef__stationpick input { accent-color: var(--amber); }
 .chef__syncrow { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 12px; font-size: 13px; }
+
+/* Add-to-home-screen hint on the sign-in screen */
+.pass__install { margin-top: 24px; padding: 12px 14px 4px; border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; gap: 6px; }
+.pass__install .pass__ghost { align-self: flex-start; padding: 0; }
+.pass__installbtn { min-height: 44px; border: 1.5px solid var(--amber); border-radius: 8px; background: transparent; color: var(--amber) !important; font-weight: 600; font-size: 15px !important; }

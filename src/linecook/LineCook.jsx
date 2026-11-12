@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import InstallHint from "./InstallHint";
 import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
@@ -143,6 +144,7 @@ export function WhoScreen({
           </>
         )}
         {extra}
+        {!picked && <InstallHint />}
       </main>
     </div>
   );
