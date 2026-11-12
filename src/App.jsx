@@ -17,6 +17,7 @@ import { CHEF_TABS } from "./linecook/tabs";
 import "./linecook/pass.css";
 import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff } from "./lib/storage";
 import { activeStaff, hasChef, hashPin, isChef, signIn } from "./lib/staff";
+import { onRemoteChange } from "./lib/sync";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
@@ -32,7 +33,24 @@ function localDateKey(d = new Date()) {
 
 // Chef pages share the line cook look and flow: same header, colors, fonts,
 // initials pill and bottom tabs.
+// Chef screens reload when another phone changes shared data, unless the
+// chef is typing (then right after they leave the field).
+function useRemoteVersion() {
+  const [version, setVersion] = useState(0);
+  useEffect(() => {
+    let waiting = false;
+    const typing = () => ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName);
+    const bump = () => setVersion((v) => v + 1);
+    const onBlur = () => { if (waiting) { waiting = false; setTimeout(bump, 0); } };
+    const off = onRemoteChange(() => { if (typing()) waiting = true; else bump(); });
+    document.addEventListener("focusout", onBlur);
+    return () => { off(); document.removeEventListener("focusout", onBlur); };
+  }, []);
+  return version;
+}
+
 function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, children }) {
+  const version = useRemoteVersion();
   return (
     <div className="pass pass--chef">
       <PassHeader station="Chef" initials={initials} onChangeCook={onSignOut}>
@@ -40,7 +58,7 @@ function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, childr
         <h1 className="pass__title">{title}</h1>
         {lede && <p className="pass__lede">{lede}</p>}
       </PassHeader>
-      <main className="pass__main chef">{children}</main>
+      <main key={version} className="pass__main chef">{children}</main>
       <TabBar screen={screen} setScreen={setScreen} tabs={CHEF_TABS} />
     </div>
   );

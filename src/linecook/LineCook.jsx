@@ -3,7 +3,9 @@ import { STATIONS, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
+  KEYS, shiftKeyFor, inventoryKeyFor,
 } from "../lib/storage";
+import { onRemoteChange } from "../lib/sync";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay, sampleInventory } from "../lib/inventory";
 import { withPace, paceFor } from "../lib/pace";
 import { buildPrepSteps } from "../lib/lineList";
@@ -152,6 +154,7 @@ export default function LineCook(props) {
   const today = localDateKey();
   const [cook, setCook] = useState(() => loadCook());
   const [staff, setStaff] = useState(() => loadStaff());
+  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.STAFF)) setStaff(loadStaff()); }), []);
   const [stationId, setStationId] = useState(() => loadStation() ?? STATIONS[0].id);
   // Every sign-in starts on the opening shift page (confirm the count), even
   // when the shift is already underway.
@@ -206,6 +209,14 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   const [shift, setShift] = useState(() => loadShift(st.id));
   const [waste, setWaste] = useState(() => loadWaste());
   const [flags, setFlags] = useState(() => loadEightySix());
+  // Another phone (the chef, or a cook on the same station) changed this
+  // station's shift or count, the waste log or the 86 board.
+  useEffect(() => onRemoteChange((keys) => {
+    if (keys.includes(shiftKeyFor(st.id))) setShift(loadShift(st.id));
+    if (keys.includes(inventoryKeyFor(st.id))) setInventory(loadInventory(st.id));
+    if (keys.includes(KEYS.WASTE)) setWaste(loadWaste());
+    if (keys.includes(KEYS.EIGHTY_SIX)) setFlags(loadEightySix());
+  }), [st.id]);
   const [screen, setScreen] = useState("today");
   const [openPrepId, setOpenPrepId] = useState(null);
 

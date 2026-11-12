@@ -21,8 +21,16 @@ const FLAG_LOG_KEY = "thePass.flagLog.v1";
 const PRICES_KEY = "thePass.prices.v1";
 const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 
+// Kept on this phone only, never shared: who is signed in here, which
+// station this phone is on, its running timers.
+export const DEVICE_KEYS = new Set([COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY]);
+// Key names, for screens that reload when another phone changes them.
+export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY };
+
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
+export const shiftKeyFor = (stationId) => stationKey(SHIFT_KEY, stationId);
+export const inventoryKeyFor = (stationId) => stationKey(INVENTORY_KEY, stationId);
 const stationKey = (key, stationId) => (!stationId || stationId === "garde-manger" ? key : `${key}.${stationId}`);
 
 function load(key, seed) {
@@ -35,12 +43,20 @@ function load(key, seed) {
   return seed;
 }
 
+// The shared-database sync (lib/sync.js) listens to every save so it can
+// send the change to the other phones.
+let onSave = null;
+export function setSaveListener(fn) {
+  onSave = fn;
+}
+
 function save(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
     // storage unavailable (e.g. private browsing) — edits just won't persist
   }
+  onSave?.(key, value);
 }
 
 const ALL_KEYS = [

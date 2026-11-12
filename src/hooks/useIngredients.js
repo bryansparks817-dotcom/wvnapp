@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import seedIngredients from "../data/ingredients.json";
-import { loadIngredients, saveIngredients } from "../lib/storage";
+import { loadIngredients, saveIngredients, KEYS } from "../lib/storage";
+import { onRemoteChange } from "../lib/sync";
 
 export function useIngredients() {
   const [ingredients, setIngredients] = useState(() => loadIngredients(seedIngredients));
@@ -8,6 +9,7 @@ export function useIngredients() {
   useEffect(() => {
     saveIngredients(ingredients);
   }, [ingredients]);
+  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.INGREDIENTS)) setIngredients(loadIngredients(seedIngredients)); }), []);
 
   function findIngredient(name) {
     const key = name.toLowerCase();

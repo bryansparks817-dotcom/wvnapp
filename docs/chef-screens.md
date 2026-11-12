@@ -56,6 +56,13 @@ Setup → Staff & station access (`src/chef/Staff.jsx`): add, edit and remove pe
 - The last chef can't be removed or made a cook.
 - The PIN keeps one cook from signing in as another on a shared phone. Real accounts come with the shared database.
 
+## Built: shared data with Supabase (Bryan, 2026-11-11)
+Every phone shares one set of data (`src/lib/sync.js`, table `kitchen_data` in `supabase/migrations/`). The app still reads and writes localStorage; each saved key is mirrored to one row, and other phones' changes arrive over Supabase Realtime and reload the screens that use them. Last write to a key wins. Who's signed in on a phone, its station and its timers stay on that phone.
+- A phone joins the kitchen once with the shared kitchen account ("Connect this phone"); people then sign in with their own name and PIN. "Use this phone on its own" skips sharing.
+- The first phone to connect to an empty database uploads its data; the rest pull it.
+- Setup shows whether this phone is connected, with Disconnect.
+- Config: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (the `NEXT_PUBLIC_` names work too). Without them the app runs on one phone as before.
+
 ## Already decided
 - **Edit station setup:** scaling, adding prep items, and changing an item's pan (e.g. ninth pan → sixth pan). Only the chef can do this.
 - **Walk-in count:** the chef enters it at the end of the night. It's combined with the line cook's lowboy count to build the next shift's Collect list.
