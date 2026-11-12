@@ -391,3 +391,11 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__sampleactions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .chef__stack { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
 .chef__stack > span { font-size: 12px; }
+.pass__input--pin { letter-spacing: 0.5em; text-align: center; max-width: 180px; }
+.chef__staffform { display: flex; flex-direction: column; gap: 8px; }
+.chef__staffrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chef__stafffield { display: flex; flex-direction: column; gap: 6px; }
+.chef__stationpicks { display: flex; flex-wrap: wrap; gap: 6px; }
+.chef__stationpick { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid var(--line); font-size: 14px; }
+.chef__stationpick.is-on { border-color: var(--amber); color: var(--amber); }
+.chef__stationpick input { accent-color: var(--amber); }

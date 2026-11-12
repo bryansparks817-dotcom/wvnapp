@@ -9,13 +9,14 @@ import ChefHome from "./chef/ChefHome";
 import ChefSetup from "./chef/ChefSetup";
 import Insights from "./chef/Insights";
 import Prices from "./chef/Prices";
+import Staff from "./chef/Staff";
 import RecipeLookup from "./chef/RecipeLookup";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
 import { CHEF_TABS } from "./linecook/tabs";
 import "./linecook/pass.css";
 import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff } from "./lib/storage";
-import { signIn } from "./lib/staff";
+import { activeStaff, hasChef, hashPin, isChef, signIn } from "./lib/staff";
 import { useRecipes } from "./hooks/useRecipes";
 import { useIngredients } from "./hooks/useIngredients";
 import { buildGatherList } from "./lib/gatherList";
@@ -194,13 +195,17 @@ export default function App() {
         {timerBar}
         <WhoScreen
           station="Chef"
-          roster={loadStaff()}
-          title="Chef sign-in"
-          lede="See the crew, covers, 86s and anything waiting on you."
+          roster={hasChef(loadStaff()) ? activeStaff(loadStaff()).filter(isChef) : []}
+          title={hasChef(loadStaff()) ? "Chef sign-in" : "Set up the chef"}
+          lede={hasChef(loadStaff()) ? "See the crew, covers, 86s and anything waiting on you." : "You’ll be the first chef. Pick a PIN so only you can open the chef view, then add your staff under Setup → Staff."}
           cta="OPEN CHEF VIEW →"
-          onSignIn={(name) => {
+          allowNew={!hasChef(loadStaff())}
+          newNeedsPin
+          emptyHint="Only chefs can open the chef view. A chef can make you one in Setup → Staff."
+          onSignIn={(name, pin) => {
             const { person, roster } = signIn(name, loadStaff());
-            saveStaff(roster);
+            const first = !hasChef(roster);
+            saveStaff(first ? roster.map((p) => (p === person || p.initials === person.initials ? { ...p, role: "chef", active: true, ...(pin ? { pinHash: hashPin(pin) } : {}) } : p)) : roster);
             setChef({ date: today, name: person.name, initials: person.initials });
             setScreen("home");
           }}
@@ -213,7 +218,7 @@ export default function App() {
   const shell = {
     // Setup (and the recipes and prep plan tool under it) is off the daily
     // tabs: it's done once, then only for new menu items. It hangs off Home.
-    screen: ["setup", "form", "manage", "plan", "prices"].includes(screen) ? "home" : screen,
+    screen: ["setup", "form", "manage", "plan", "prices", "staff"].includes(screen) ? "home" : screen,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
@@ -275,6 +280,17 @@ export default function App() {
         {timerBar}
         <ChefShell title="Prices" lede="Ingredient prices, $ per kg." {...shell}>
           <Prices recipes={recipes} recipesById={recipesById} ingredients={ingredients} />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "staff") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Staff" lede="Who signs in, what they can open, and their PIN." {...shell}>
+          <Staff />
         </ChefShell>
       </>
     );
