@@ -149,8 +149,9 @@ export default function RecipeForm({
 
       const ingName = row.name.trim();
       const qty = Number(row.qty);
-      if (!ingName || !Number.isFinite(qty) || qty <= 0) {
-        setError("Every ingredient needs a name and a positive quantity.");
+      // 0 is allowed for "to taste" / "as needed" lines.
+      if (!ingName || !Number.isFinite(qty) || qty < 0) {
+        setError("Every ingredient needs a name and a quantity (0 for to taste).");
         return;
       }
       const needsData = unitNeedsIngredientData(row.unit);
@@ -170,8 +171,8 @@ export default function RecipeForm({
     for (const row of stepRows) {
       const stepName = row.name.trim();
       const duration = Number(row.duration);
-      if (!stepName || !Number.isFinite(duration) || duration <= 0) {
-        setError("Every step needs a name and a positive duration.");
+      if (!stepName || !Number.isFinite(duration) || duration < 0) {
+        setError("Every step needs a name and a duration in minutes.");
         return;
       }
       steps.push({ name: stepName, type: row.type, duration_minutes: duration });

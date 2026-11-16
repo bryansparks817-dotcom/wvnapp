@@ -33,7 +33,10 @@ export default function RecipeScreen({ row, recipe, scaled, doneMeta, timers, on
               <ul className="pass__ingredients">
                 {scaled.lines.map((l, i) => (
                   <li key={i}>
-                    <span>{l.name}</span>
+                    <span>
+                      {l.name}
+                      {l.note && <span className="pass__rowsub">{l.note}</span>}
+                    </span>
                     <span className="pass__mono">{l.amount}</span>
                   </li>
                 ))}

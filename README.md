@@ -13,7 +13,9 @@ npm run dev
 
 ## How it works
 
-- Recipe data lives in `src/data/sampleRecipes.json` (no backend yet).
+- Recipes come from Bryan's recipe sheets: `src/data/recipeLibrary.json`, built by
+  `scripts/recipe-library/` and merged into every phone by `src/lib/recipeLibrary.js`.
+  Shared data syncs through Supabase (`src/lib/sync.js`).
 - `src/lib/gatherList.js` groups and sums ingredients across selected recipes.
 - `src/lib/scheduler.js` simulates a single resource (the chef) working through
   active steps one at a time while passive steps (braising, proofing, etc.)

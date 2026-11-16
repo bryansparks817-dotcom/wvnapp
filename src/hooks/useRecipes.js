@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import baseRecipes from "../data/sampleRecipes.json";
-import { loadRecipes, saveRecipes, loadSeededIds, saveSeededIds, KEYS } from "../lib/storage";
+import { loadRecipes, saveRecipes, loadSeededIds, loadLibraryState, saveLibraryState, KEYS } from "../lib/storage";
 import { onRemoteChange } from "../lib/sync";
 import { PENDING_PREFIX } from "../lib/recipeSheetImport";
+import { mergeLibrary, isLibraryRecipe, confirmDrafts, carryOverDetails } from "../lib/recipeLibrary";
+import builtInV1 from "../data/builtInRecipesV1.json";
 
 function slugify(name) {
   return name
@@ -23,17 +24,28 @@ function generateId(name, existingIds) {
   return id;
 }
 
-const seedRecipes = baseRecipes;
-
-// Saved recipes, plus any built-in recipe this browser hasn't been given yet.
-function initialRecipes() {
-  const stored = loadRecipes(null);
-  const seeded = loadSeededIds();
-  saveSeededIds(seedRecipes.map((r) => r.id));
-  if (!stored) return seedRecipes;
-  const given = new Set(seeded ?? baseRecipes.map((r) => r.id));
+// Before the recipe library, this phone tracked which built-in recipes it had
+// been given. One it was given but no longer has was deleted by the chef, so
+// it goes on the shared "removed" list and the library leaves it out.
+function carryOverOldDeletes(stored) {
+  const given = loadSeededIds();
+  if (!Array.isArray(given) || !Array.isArray(stored)) return;
   const have = new Set(stored.map((r) => r.id));
-  return [...stored, ...seedRecipes.filter((r) => !given.has(r.id) && !have.has(r.id))];
+  const deleted = builtInV1.map((r) => r.id).filter((id) => given.includes(id) && !have.has(id));
+  if (!deleted.length) return;
+  const state = loadLibraryState();
+  const removed = [...new Set([...(state.removed ?? []), ...deleted])];
+  if (removed.length !== (state.removed ?? []).length) saveLibraryState({ ...state, removed });
+}
+
+// The saved recipes with the recipe library merged in.
+function currentRecipes() {
+  return mergeLibrary(loadRecipes([]), loadLibraryState());
+}
+
+function initialRecipes() {
+  carryOverOldDeletes(loadRecipes(null));
+  return currentRecipes();
 }
 
 export function useRecipes() {
@@ -43,7 +55,12 @@ export function useRecipes() {
     saveRecipes(recipes);
   }, [recipes]);
   // Another phone changed the recipes.
-  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.RECIPES)) setRecipes(loadRecipes(seedRecipes)); }), []);
+  // Another phone changed the recipes (or deleted a library recipe). Merging
+  // again here also puts the library back if an older phone's list arrives.
+  useEffect(
+    () => onRemoteChange((keys) => { if (keys.includes(KEYS.RECIPES) || keys.includes(KEYS.LIBRARY)) setRecipes(currentRecipes()); }),
+    [],
+  );
 
   function addRecipe(recipe) {
     setRecipes((prev) => {
@@ -53,11 +70,22 @@ export function useRecipes() {
     });
   }
 
+  // Keeps what the recipe form doesn't edit (stations, yield, plating, prep
+  // notes, light-blue flags) from the saved recipe.
   function updateRecipe(id, recipe) {
-    setRecipes((prev) => prev.map((r) => (r.id === id ? { ...recipe, id } : r)));
+    setRecipes((prev) => prev.map((r) => (r.id === id ? { ...carryOverDetails(r, recipe), id } : r)));
+  }
+
+  // The chef has checked everything Claude drafted on this recipe.
+  function confirmRecipe(id) {
+    setRecipes((prev) => prev.map((r) => (r.id === id ? confirmDrafts(r) : r)));
   }
 
   function deleteRecipe(id) {
+    if (isLibraryRecipe(id)) {
+      const state = loadLibraryState();
+      saveLibraryState({ ...state, removed: [...new Set([...(state.removed ?? []), id])] });
+    }
     setRecipes((prev) => prev.filter((r) => r.id !== id));
   }
 
@@ -92,5 +120,5 @@ export function useRecipes() {
     });
   }
 
-  return { recipes, addRecipe, updateRecipe, deleteRecipe, importRecipes };
+  return { recipes, addRecipe, updateRecipe, confirmRecipe, deleteRecipe, importRecipes };
 }

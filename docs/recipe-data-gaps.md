@@ -40,7 +40,7 @@ The station list itself (Garde manger, with these 8 items) is a placeholder. The
 | Step Active/Passive + minutes | Present on all 5, not yet confirmed by Bryan | Prep order and timers |
 | Ingredient conversions (g per cup / g each) | Complete for the current 5 | Gather list and scaling |
 
-**Recipes to add:** preserved lemon & fennel relish, magic dust, pasta dough (they have cost sheets in the project files but aren't in the app yet), plus everything else on the menu.
+**Recipes:** all 67 cleaned round-2 recipe sheets are in the app as of 2026-11-16 (recipe library). Relish, magic dust and pasta dough line items now point at their recipes. Light-blue sheet cells show light blue in Chef → Find a recipe until the chef taps Confirm all. Still open: Pastry has no recipes, the deviled eggs build has no quantities or steps, a few steps have no minutes, and the new Grill / Sauté / Prep recipes still need line items (pan, par) before they show on those stations' counts.
 
 ## Other data, later
 - Restaurant service schedule (e.g. Wed–Sat dinner), which decides which shift a count carries over to

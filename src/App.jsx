@@ -65,7 +65,7 @@ function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, childr
 }
 
 export default function App() {
-  const { recipes, addRecipe, updateRecipe, deleteRecipe, importRecipes } = useRecipes();
+  const { recipes, addRecipe, updateRecipe, confirmRecipe, deleteRecipe, importRecipes } = useRecipes();
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
   // "line" = the line cook screens (default); "chef" = recipe and prep tools.
   const [mode, setMode] = useState("line");
@@ -158,7 +158,7 @@ export default function App() {
 
   function handleSaveRecipe(recipe) {
     if (editingRecipeId) {
-      updateRecipe(editingRecipeId, recipe);
+      updateRecipe(editingRecipeId, { ...recipe, edited: true });
     } else {
       addRecipe(recipe);
     }
@@ -249,7 +249,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
-          <RecipeLookup recipes={recipes} />
+          <RecipeLookup recipes={recipes} onConfirm={confirmRecipe} />
           <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
           <button type="button" className="chef__setuplink" onClick={() => setScreen("setup")}>
             Setup &amp; new menu items ›
