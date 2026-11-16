@@ -26,7 +26,7 @@ ID_OVERRIDE = {
 }
 DISHES = {'Albondigas_Finished_Dish_Winter_26_27.xlsx','Butternut_Soup_Build.xlsx','Calamari_Dish_Build.xlsx','Deviled_Eggs_-_full_dish.xlsx',
  'Fig_Pumpkin_Burrata_Salad.xlsx','Oysters_Rockefeller_Build.xlsx','Provoleta_Dish_Build.xlsx','Salmon_Wellington_Entree_Build.xlsx',
- 'Scallop_Entree_Build.xlsx','Spanish_Fried_Quail_One_Order.xlsx','Steakhouse_Wedge_Salad_Dish_Build.xlsx'}
+ 'Scallop_Entree_Build.xlsx','Spanish_Fried_Quail_One_Order.xlsx','Steakhouse_Wedge_Salad_Dish_Build.xlsx','Smoked_Duck_Entree_Build.xlsx'}
 STATION = {'garde': 'garde-manger', 'garde manger': 'garde-manger', 'grill': 'grill', 'fry': 'grill', 'saute': 'saute', 'sauté': 'saute', 'pastry': 'pastry', 'prep': 'prep'}
 
 # Ingredient name (lowercased, before the first comma) -> recipe file it is made from.
@@ -55,6 +55,9 @@ REF = {
  'spinach & oyster mushroom duxelle': 'Spinach_Oyster_Mushroom_Duxelle.xlsx', 'togarashi flour dredge': 'Calamari_Togarashi_Flour.xlsx',
  'winter rockefeller filling': 'Oysters_Rockefeller_Filling.xlsx', 'yukon gold pommes puree': 'Yukon_Gold_Pommes_Puree.xlsx',
  'black garlic egg filling': 'black_garlic_deviled_egg_filling.xlsx',
+ 'cherry-smoked dart rohan duck breast': 'Smoked_Duck_Breast.xlsx', 'cauliflower puree': 'Cauliflower_Puree.xlsx',
+ 'brown-butter roasted cauliflower': 'Brown_Butter_Roasted_Cauliflower.xlsx', 'smoked grape chutney': 'Smoked_Grape_Chutney.xlsx',
+ 'toasted hazelnuts': 'Toasted_Hazelnuts.xlsx',
 }
 # Links that are Claude's reading of the sheet, not written on it.
 REF_GUESS = {'chicken or vegetable stock': 'Sheet says chicken or vegetable stock; linked to the house chicken stock.',
