@@ -31,11 +31,12 @@ export function scaleRecipe(recipe, makeG, recipesById, ingredients) {
       const sub = recipesById.get(ing.subRecipeId);
       return { name: sub?.name ?? "Missing sub-recipe", amount: `${round(ing.qty * factor, 2)} batch` };
     }
+    if (ing.qty === 0) return { name: ing.name, amount: (ing.asNeeded ?? "to taste").toLowerCase(), note: ing.note };
     try {
       const g = convertToGrams(ing.name, ing.qty, ing.unit, index) * factor;
-      return { name: ing.name, amount: `${Math.round(g).toLocaleString()} g` };
+      return { name: ing.name, amount: `${Math.round(g).toLocaleString()} g`, note: ing.note };
     } catch {
-      return { name: ing.name, amount: `${round(ing.qty * factor, 2)} ${ing.unit}` };
+      return { name: ing.name, amount: `${round(ing.qty * factor, 2)} ${ing.unit}`, note: ing.note };
     }
   });
 

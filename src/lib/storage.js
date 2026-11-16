@@ -20,12 +20,13 @@ const HISTORY_KEY = "thePass.history.v1";
 const FLAG_LOG_KEY = "thePass.flagLog.v1";
 const PRICES_KEY = "thePass.prices.v1";
 const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
+const LIBRARY_KEY = "thePass.recipeLibrary.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
 export const DEVICE_KEYS = new Set([COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1"]);
 // Key names, for screens that reload when another phone changes them.
-export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY };
+export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY };
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -82,6 +83,7 @@ const ALL_KEYS = [
   FLAG_LOG_KEY,
   PRICES_KEY,
   SEEDED_KEY,
+  LIBRARY_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -112,6 +114,16 @@ export function loadSeededIds() {
 
 export function saveSeededIds(ids) {
   save(SEEDED_KEY, ids);
+}
+
+// Shared across phones: which recipe-library recipes the chef deleted, so
+// the library doesn't add them back. { removed: [recipeId] }
+export function loadLibraryState() {
+  return load(LIBRARY_KEY, { removed: [] });
+}
+
+export function saveLibraryState(state) {
+  save(LIBRARY_KEY, state);
 }
 
 export function saveRecipes(recipes) {

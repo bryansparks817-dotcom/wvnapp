@@ -12,7 +12,7 @@
       "qtGrams": 950,
       "lowboyPar": 1,
       "shelfLifeDays": 7,
-      "recipeId": null,
+      "recipeId": "preserved-lemon-fennel-relish",
       "unconfirmed": [
         "lowboyPar",
         "shelfLifeDays"
@@ -65,7 +65,7 @@
       "qtGrams": 500,
       "lowboyPar": 1,
       "shelfLifeDays": 30,
-      "recipeId": null,
+      "recipeId": "lobster-shell-pangrattato",
       "unconfirmed": [
         "pan",
         "panGrams",
@@ -122,7 +122,7 @@
       "qtGrams": 800,
       "lowboyPar": 1,
       "shelfLifeDays": 2,
-      "recipeId": null,
+      "recipeId": "pasta-dough",
       "unconfirmed": [
         "pan",
         "panGrams",

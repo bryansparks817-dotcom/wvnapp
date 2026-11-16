@@ -1,0 +1,7 @@
+[
+  { "name": "Whole eggs", "gramsPerEach": 50, "estimated": true },
+  { "name": "Phyllo dough", "gramsPerEach": 23, "estimated": true },
+  { "name": "Puff pastry sheet", "gramsPerEach": 245, "estimated": true },
+  { "name": "Round rice paper sheets", "gramsPerEach": 9, "estimated": true },
+  { "name": "Nori sheets", "gramsPerEach": 3, "estimated": true }
+]

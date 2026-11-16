@@ -53,10 +53,12 @@ export function buildPrepSteps(prepItems, recipesById, { first = null } = {}) {
   // The run of hands-off steps a track goes into at a given minute.
   function handsOffFrom(trackId, at) {
     const out = [];
+    const used = new Set(); // a 0-minute hands-off step starts and ends at the same minute
     let t = at;
     for (;;) {
-      const p = passives.find((x) => x.recipeId === trackId && x.start === t);
+      const p = passives.find((x) => x.recipeId === trackId && x.start === t && !used.has(x));
       if (!p) return out;
+      used.add(p);
       out.push({ step: p.stepName, minutes: p.end - p.start });
       t = p.end;
     }

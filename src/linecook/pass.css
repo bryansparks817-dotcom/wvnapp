@@ -400,3 +400,29 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__stationpick.is-on { border-color: var(--amber); color: var(--amber); }
 .chef__stationpick input { accent-color: var(--amber); }
 .chef__syncrow { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 12px; font-size: 13px; }
+
+/* Recipe lookup: stations, sheet details, light-blue drafts */
+.pass { --draft: #9bd3f5; }
+.chef__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chef__chip { border: 1px solid var(--edge); background: transparent; border-radius: 999px; padding: 5px 10px; font-size: 13px; }
+.chef__chip.is-on { background: var(--ticket); color: var(--char) !important; border-color: var(--ticket); }
+.chef__chip.is-on .pass__muted { color: var(--char); }
+.chef__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.chef__tag { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--edge); border-radius: 4px; padding: 2px 6px; color: var(--steel); }
+.chef__facts { margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.chef__facts div { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+.chef__facts dt { color: var(--steel); }
+.chef__facts dd { margin: 0; overflow-wrap: anywhere; }
+.chef__allergens { font-size: 14px; }
+.chef__table--ings li { grid-template-columns: 1fr auto; }
+.chef__table--ings li > span:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.chef__reflink { background: none; border: 0; padding: 0; text-align: left; color: var(--vine) !important; font-size: 14px; }
+.chef__plating { font-size: 14px; white-space: pre-line; overflow-wrap: anywhere; }
+.chef__review { margin: 0; padding-left: 18px; font-size: 13px; color: var(--amber); }
+.chef__draftnote { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--draft); }
+.chef__draftactions { display: flex; gap: 8px; align-items: center; }
+.chef__draftswatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--draft); vertical-align: -1px; }
+.chef__draftdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--draft); margin-left: 8px; vertical-align: 2px; }
+.chef__recipe .is-draft { color: var(--draft); box-shadow: inset 3px 0 0 var(--draft); padding-left: 8px; }
+.chef__recipe .chef__tag.is-draft { box-shadow: none; padding-left: 6px; border-color: var(--draft); }
+.pass__ingredients li > span:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; }

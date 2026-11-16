@@ -49,6 +49,7 @@ export function gatherForPrep(prepRows, recipesById, ingredients, batchGramsOf) 
     for (const { name, qty, unit } of flattenIngredients(recipe, recipesById, factor)) {
       const key = name.toLowerCase();
       if (NOT_GATHERED.has(key)) continue;
+      if (qty === 0) continue; // "to taste" / "as needed": on the recipe, nothing to weigh out
       let grams = null;
       try {
         grams = convertToGrams(name, qty, unit, ingredientIndex);
