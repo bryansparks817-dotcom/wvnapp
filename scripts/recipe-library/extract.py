@@ -49,7 +49,7 @@ for f in sorted(glob.glob(SRC+'*.xlsx')):
     for rr in range(row+1,row+4):
         v=ws.cell(rr,1).value
         if v:
-            al+=re.findall(r'\[\s*[Xx]\s*\]\s*([A-Za-z/ ]+?)(?=\s{2,}|\s*\[|$)',v); alblue|=isblue(ws.cell(rr,1))
+            al+=re.findall(r'\[\s*[Xx]\s*\]\s*([A-Za-z/ ]+?)\*?(?=\s{2,}|\s*\[|$)',v); alblue|=isblue(ws.cell(rr,1))
     r['allergens']=[a.strip() for a in al]; 
     if alblue: r['blue'].append('allergens')
     portions=None
