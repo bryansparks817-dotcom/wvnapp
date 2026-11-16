@@ -26,7 +26,8 @@ ID_OVERRIDE = {
 }
 DISHES = {'Albondigas_Finished_Dish_Winter_26_27.xlsx','Butternut_Soup_Build.xlsx','Calamari_Dish_Build.xlsx','Deviled_Eggs_-_full_dish.xlsx',
  'Fig_Pumpkin_Burrata_Salad.xlsx','Oysters_Rockefeller_Build.xlsx','Provoleta_Dish_Build.xlsx','Salmon_Wellington_Entree_Build.xlsx',
- 'Scallop_Entree_Build.xlsx','Spanish_Fried_Quail_One_Order.xlsx','Steakhouse_Wedge_Salad_Dish_Build.xlsx','Smoked_Duck_Entree_Build.xlsx'}
+ 'Scallop_Entree_Build.xlsx','Spanish_Fried_Quail_One_Order.xlsx','Steakhouse_Wedge_Salad_Dish_Build.xlsx','Smoked_Duck_Entree_Build.xlsx',
+ 'Wagyu_Short_Rib_Entree_Build.xlsx','Venison_Osso_Buco_Entree_Build.xlsx'}
 STATION = {'garde': 'garde-manger', 'garde manger': 'garde-manger', 'grill': 'grill', 'fry': 'grill', 'saute': 'saute', 'sauté': 'saute', 'pastry': 'pastry', 'prep': 'prep'}
 
 # Ingredient name (lowercased, before the first comma) -> recipe file it is made from.
@@ -58,6 +59,11 @@ REF = {
  'cherry-smoked dart rohan duck breast': 'Smoked_Duck_Breast.xlsx', 'cauliflower puree': 'Cauliflower_Puree.xlsx',
  'brown-butter roasted cauliflower': 'Brown_Butter_Roasted_Cauliflower.xlsx', 'smoked grape chutney': 'Smoked_Grape_Chutney.xlsx',
  'toasted hazelnuts': 'Toasted_Hazelnuts.xlsx',
+ 'braised wagyu short rib': 'Wagyu_Short_Rib_Braise.xlsx', 'defatted': 'Wagyu_Short_Rib_Braise.xlsx',
+ 'house gnocchi': 'House_Potato_Gnocchi.xlsx', 'gnocchi': 'House_Potato_Gnocchi.xlsx',
+ 'wagyu braising reduction': 'Wagyu_Braising_Reduction.xlsx', 'divina gigante beans': 'Gigante_Bean_Expo.xlsx',
+ 'parsley-lemon gremolata': 'Parsley_Lemon_Gremolata.xlsx', 'venison osso bucco': 'Venison_Osso_Buco_Braise.xlsx',
+ 'sweet potato & parsnip gruyere pave': 'Sweet_Potato_Parsnip_Pave.xlsx', 'shaved brussels sprout & green apple garnish': 'Brussels_Sprout_Apple_Garnish.xlsx',
 }
 # Links that are Claude's reading of the sheet, not written on it.
 REF_GUESS = {'chicken or vegetable stock': 'Sheet says chicken or vegetable stock; linked to the house chicken stock.',
@@ -65,6 +71,7 @@ REF_GUESS = {'chicken or vegetable stock': 'Sheet says chicken or vegetable stoc
  'house-made tomato sauce': 'Linked to the D.O.P. San Marzano sauce for winter; the farm heirloom sauce is the summer version.'}
 
 ALIAS = {
+ 'defatted': 'Defatted Wagyu braising liquid',
  'a/p flour': 'All-purpose flour', 'ap flour': 'All-purpose flour', 'all-purpose flour': 'All-purpose flour',
  'bay leaves': 'Bay leaf', 'bay leaf': 'Bay leaf', 'black peppercorn': 'Black peppercorns', 'black peppercorns': 'Black peppercorns',
  'creme fraiche': 'Crème fraîche', 'egg yolk': 'Egg yolks', 'egg yolks': 'Egg yolks', 'eggs': 'Whole eggs', 'whole egg': 'Whole eggs', 'whole eggs': 'Whole eggs',
