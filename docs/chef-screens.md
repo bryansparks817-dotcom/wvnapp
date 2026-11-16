@@ -90,3 +90,9 @@ Every phone shares one set of data (`src/lib/sync.js`, table `kitchen_data` in `
 
 ## Needs first
 Both the crew board and the par report need a **shared database** (Supabase, deferred). Today each phone only saves to itself, so the chef's phone can't see the cooks' progress or counts yet.
+
+## Built: paper prep lists (Bryan, 2026-11-16)
+For chefs who don't want cooks on their phones all shift. Crew → **PRINT PREP LISTS FOR COOKS** (`src/chef/PrintLists.jsx`, `src/lib/printLists.js`).
+1. **Who gets what:** each station's open shift is listed with a cook picker for the whole station, plus one per item to hand single items to someone else (`shift.printCook`, `shift.assign`). A station whose count wasn't confirmed on a phone today can be started from the last close count (BUILD LIST).
+2. **Print:** one letter page (or more) per cook across every station they were given: header (cook, date, stations, start, planned finish, service, chef), TOSS FIRST, COLLECT (what to pull from where, with dates), GATHER grouped by storage zone, PREP IN THIS ORDER (the same optimized order as the phone, with a clock time per step from "Lists start at", hands-on minutes, hands-off timers, MAKE grams), then a box for shorts/86s and sign-off lines. "Recipe pages" adds each recipe scaled to the amount.
+3. Printing marks the shift (`shift.printedAt`) and the Crew board shows ON PAPER. Ticks on paper don't reach the app; the close count at the end of the shift still goes in The Pass.
