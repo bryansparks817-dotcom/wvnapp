@@ -1240,6 +1240,119 @@
   }
  },
  {
+  "id": "brown-butter-roasted-cauliflower",
+  "name": "Brown-Butter Roasted Cauliflower",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep",
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Cauliflower",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "broken into irregular florets; Large irregular pieces; roast for deep caramelization",
+    "draft": true
+   },
+   {
+    "name": "Butter",
+    "qty": 100.0,
+    "unit": "g",
+    "note": "for brown butter; Finish / coat roasted cauliflower",
+    "draft": true
+   },
+   {
+    "name": "Thyme",
+    "qty": 5.0,
+    "unit": "g",
+    "note": "Supporting herb",
+    "draft": true
+   },
+   {
+    "name": "Toasted hazelnuts",
+    "recipeRef": "toasted-hazelnuts",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "Amount not set",
+    "note": "roughly chopped; Expo finish; portion TBD"
+   },
+   {
+    "name": "Fresh mint leaves",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "Amount not set",
+    "note": "Expo finish only; do not cook"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Break cauliflower into large, irregular florets to create varied surfaces for browning.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Roast until deeply caramelized. Exact oven temperature, time, and whether to blanch first remain to be established.",
+    "type": "passive",
+    "duration_minutes": 25.0,
+    "draft": true
+   },
+   {
+    "name": "Prepare brown butter and use it to finish / coat the roasted cauliflower.",
+    "type": "active",
+    "duration_minutes": 6.0,
+    "draft": true
+   },
+   {
+    "name": "Hold roasted cauliflower for service under approved procedures.",
+    "type": "passive",
+    "duration_minutes": 0.0,
+    "draft": true
+   },
+   {
+    "name": "At expo, finish with toasted hazelnuts and fresh mint leaves.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "At expo, apply preserved lemon liquor and sherry vinegar from separate squeeze bottles.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 800,
+  "category": "Winter 26/27",
+  "yieldText": "Approx. 800 g roasted (1,000 g raw)",
+  "portion": "100 g per entrée",
+  "storage": "Prepare under approved cooling/reheating and hot-holding procedures",
+  "shelfLife": "TBD / follow approved controls",
+  "portions": 8.0,
+  "allergens": [
+   "Dairy",
+   "Tree nut"
+  ],
+  "plating": "No cauliflower leaves. Fresh mint replaces the leaf garnish and is applied at expo. Preserved lemon liquor (from the preserved-lemon container) and sherry vinegar remain in separate squeeze bottles on the expo side. Quantities and roasting method are not yet finalized.",
+  "drafts": [
+   "allergens",
+   "portion",
+   "station",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "Brown_Butter_Roasted_Cauliflower.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  },
+  "needsReview": [
+   "Toasted hazelnuts, roughly chopped: no quantity on the sheet",
+   "Fresh mint leaves: no quantity on the sheet"
+  ]
+ },
+ {
   "id": "butternut-squash-feta-tart-for-duck-prosciutto-scallops",
   "name": "Butternut Squash & Feta Tart (for duck prosciutto scallops)",
   "isSubRecipe": true,
@@ -2014,6 +2127,273 @@
    "sheet": "Calamari_Caramelized_Miso_Aioli.xlsx",
    "rev": "Winter 26/27",
    "createdBy": "Claude draft"
+  }
+ },
+ {
+  "id": "cherry-smoked-dart-rohan-duck-breast",
+  "name": "Cherry-Smoked Dart Rohan Duck Breast",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep",
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Dart Rohan duck breast",
+    "qty": 1.0,
+    "unit": "g",
+    "note": "skin-on; 7–8 oz average; 4/pack, 10 packs/case",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Season immediately before smoking"
+   },
+   {
+    "name": "Black pepper",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Season immediately before smoking"
+   },
+   {
+    "name": "Cherry wood",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Smoking fuel"
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Small amount at pickup to regulate pan temperature"
+   },
+   {
+    "name": "Cold butter",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Baste at pickup"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Keep duck skin-on. Score the skin before seasoning.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Season with salt and black pepper immediately before smoking.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Smoke with cherry wood until approximately 103°F internal temperature (user's approximate process target).",
+    "type": "passive",
+    "duration_minutes": 60.0,
+    "draft": true
+   },
+   {
+    "name": "Chill after smoking; refrigerate before service.",
+    "type": "passive",
+    "duration_minutes": 60.0,
+    "draft": true
+   },
+   {
+    "name": "At pickup, hard-sear skin-side down to render and crisp the skin.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Use a little neutral oil as needed to regulate pan temperature; flip and baste with cold butter to finish.",
+    "type": "active",
+    "duration_minutes": 3.0,
+    "draft": true
+   },
+   {
+    "name": "Rest before slicing and plating.",
+    "type": "passive",
+    "duration_minutes": 5.0,
+    "draft": true
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "4 breasts (1 pack); 7–8 oz each",
+  "portion": "1 breast per entrée; final portioning TBD",
+  "storage": "Chill after smoking; refrigerated hold under approved procedures",
+  "shelfLife": "TBD / follow approved controls",
+  "portions": 4.0,
+  "allergens": [
+   "Dairy"
+  ],
+  "plating": "Important: 103°F is the user's partial-smoke process endpoint, not a validated ready-to-eat temperature. Final cooking must meet the establishment's applicable food-safety standard. Chill promptly using approved cooling procedures; establish and document validated time/temperature controls. No cure or marinade is used.",
+  "drafts": [
+   "allergens",
+   "station",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "Smoked_Duck_Breast.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  },
+  "needsReview": [
+   "Dart Rohan duck breast, skin-on: unit \"each\" not supported"
+  ]
+ },
+ {
+  "id": "cherry-smoked-grape-chutney",
+  "name": "Cherry-Smoked Grape Chutney",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Red seedless grapes",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "Whole; wash and dry thoroughly"
+   },
+   {
+    "name": "Shallot",
+    "qty": 100.0,
+    "unit": "g",
+    "note": "finely minced; Sweat until translucent",
+    "draft": true
+   },
+   {
+    "name": "Ruby port",
+    "qty": 150.0,
+    "unit": "g",
+    "note": "Reduce before adding grapes"
+   },
+   {
+    "name": "Red wine vinegar",
+    "qty": 120.0,
+    "unit": "g",
+    "note": "Add for acidity; adjust to taste"
+   },
+   {
+    "name": "Sugar",
+    "qty": 100.0,
+    "unit": "g",
+    "note": "Starting point; adjust to grape sweetness"
+   },
+   {
+    "name": "Olive oil",
+    "qty": 20.0,
+    "unit": "g",
+    "note": "For shallot",
+    "draft": true
+   },
+   {
+    "name": "Yellow mustard seed",
+    "qty": 8.0,
+    "unit": "g",
+    "note": "Optional warm spice note"
+   },
+   {
+    "name": "Thyme",
+    "qty": 4.0,
+    "unit": "g",
+    "note": "Leaves only",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 8.0,
+    "unit": "g",
+    "note": "Adjust after reduction",
+    "draft": true
+   },
+   {
+    "name": "Black pepper",
+    "qty": 2.0,
+    "unit": "g",
+    "note": "cracked; Adjust to taste",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Wash and dry grapes thoroughly. Spread in a single layer on a perforated tray or rack.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Smoke grapes with cherry wood at approximately 225°F until softened, lightly blistered, and noticeably smoky, about 15–25 minutes. Avoid collapsing them completely.",
+    "type": "passive",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Cool grapes briefly. Reserve any collected grape juices.",
+    "type": "passive",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Sweat shallot in olive oil until translucent. Add mustard seed and thyme; cook briefly until aromatic.",
+    "type": "active",
+    "duration_minutes": 6.0,
+    "draft": true
+   },
+   {
+    "name": "Add port and reduce by roughly half.",
+    "type": "active",
+    "duration_minutes": 8.0,
+    "draft": true
+   },
+   {
+    "name": "Add smoked grapes, reserved juices, vinegar, sugar, salt, and pepper.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Simmer gently, stirring carefully, until grapes begin to burst and the liquid becomes syrupy but the chutney still has texture.",
+    "type": "active",
+    "duration_minutes": 25.0,
+    "draft": true
+   },
+   {
+    "name": "Taste and adjust sweet/sour/salt balance. Cool rapidly in shallow pans and refrigerate.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 1300,
+  "category": "Winter 26/27",
+  "yieldText": "Approx. 1.2–1.4 kg finished; verify actual yield",
+  "portion": "Proposed 30–40 g per entrée; confirm at plating",
+  "storage": "Cool rapidly and refrigerate under approved procedures",
+  "shelfLife": "7 days",
+  "portions": 37.0,
+  "shelfLifeDays": 7,
+  "allergens": [],
+  "plating": "Development formula. Cherry wood is proposed to echo the duck smoke; confirm desired smoke intensity. Keep some grapes intact for texture. Proposed portion 30–40 g per entrée is not yet confirmed. Contains no declared major allergens in the listed ingredients; verify supplier labels and cross-contact.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station"
+  ],
+  "source": {
+   "sheet": "Smoked_Grape_Chutney.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
   }
  },
  {
@@ -6079,6 +6459,122 @@
   }
  },
  {
+  "id": "silky-cauliflower-puree",
+  "name": "Silky Cauliflower Purée",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Cauliflower florets",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "Trimmed weight"
+   },
+   {
+    "name": "Heavy cream",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "Warm before blending"
+   },
+   {
+    "name": "Unsalted butter",
+    "qty": 125.0,
+    "unit": "g",
+    "note": "cold and cubed; Emulsify at end",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 12.0,
+    "unit": "g",
+    "note": "Starting point; adjust",
+    "draft": true
+   },
+   {
+    "name": "White pepper",
+    "qty": 1.0,
+    "unit": "g",
+    "note": "Optional; keep flavor clean"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "Add gradually to brighten",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Cut cauliflower into even florets. Steam until completely tender; avoid boiling in excess water.",
+    "type": "active",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Drain thoroughly and allow steam to escape for several minutes to remove surface moisture.",
+    "type": "passive",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "Transfer hot cauliflower to a high-speed blender. Add warm cream gradually and blend until completely smooth.",
+    "type": "active",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "With blender running, add cold butter gradually to emulsify.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Season with salt, white pepper, and lemon juice. Adjust cream only as needed for a smooth, pipeable/platable consistency.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Pass through a fine chinois if needed for a refined texture.",
+    "type": "active",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "Cool rapidly for storage or hold hot under approved procedures for service.",
+    "type": "passive",
+    "duration_minutes": 20.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 1100,
+  "category": "Winter 26/27",
+  "yieldText": "Approx. 1.0–1.2 kg finished; verify actual yield",
+  "portion": "Proposed 60–75 g per entrée; confirm at plating",
+  "storage": "Cool rapidly; refrigerate or hot-hold under approved procedures",
+  "shelfLife": "4 days",
+  "portions": 16.0,
+  "shelfLifeDays": 4,
+  "allergens": [
+   "Dairy"
+  ],
+  "plating": "Development formula. Steaming and thorough draining are important to avoid a watery purée. Proposed portion 60–75 g per entrée is not confirmed. Contains dairy. Do not over-blend after butter is incorporated; avoid a gluey texture.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station"
+  ],
+  "source": {
+   "sheet": "Cauliflower_Puree.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  }
+ },
+ {
   "id": "slow-roasted-steakhouse-tomatoes",
   "name": "Slow roasted steakhouse tomatoes",
   "isSubRecipe": true,
@@ -6593,6 +7089,89 @@
    "sheet": "suncrisp apple butter.xlsx",
    "rev": "2026-10-30",
    "createdBy": ""
+  }
+ },
+ {
+  "id": "toasted-hazelnuts",
+  "name": "Toasted Hazelnuts",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Shelled hazelnuts",
+    "qty": 500.0,
+    "unit": "g",
+    "note": "Whole or halved; preferably blanched"
+   },
+   {
+    "name": "Fine salt",
+    "qty": 2.0,
+    "unit": "g",
+    "note": "Optional; light seasoning"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Preheat convection oven to 325°F.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Spread hazelnuts in a single layer on a sheet pan.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Toast 10–15 minutes, stirring once, until fragrant and golden. Time varies with nut size and oven.",
+    "type": "passive",
+    "duration_minutes": 12.0,
+    "draft": true
+   },
+   {
+    "name": "Rub warm nuts in a clean towel to remove loose skins if unblanched; cool completely.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Roughly chop for service and season lightly with salt if desired.",
+    "type": "active",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "Store airtight and dry. Keep chopped nuts separate from moist components until pickup.",
+    "type": "passive",
+    "duration_minutes": 0.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 500,
+  "category": "Winter 26/27",
+  "yieldText": "500 g",
+  "portion": "Proposed 8–10 g per entrée; confirm at plating",
+  "storage": "Cool completely; store airtight in a cool, dry place",
+  "shelfLife": "14 days",
+  "portions": 55.0,
+  "shelfLifeDays": 14,
+  "allergens": [
+   "Tree nut"
+  ],
+  "plating": "Development recipe. Confirm allergen declaration and cross-contact controls: hazelnuts are a tree nut. Proposed portion 8–10 g per entrée is not confirmed. Chop shortly before service for best texture.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station"
+  ],
+  "source": {
+   "sheet": "Toasted_Hazelnuts.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
   }
  },
  {
@@ -7808,6 +8387,151 @@
    "rev": "Winter 26/27",
    "createdBy": "BZ"
   }
+ },
+ {
+  "id": "smoked-duck-breast-entree-build-guide",
+  "name": "Smoked Duck Breast Entrée — Build Guide",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "stations": [
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Cherry-smoked Dart Rohan duck breast",
+    "recipeRef": "cherry-smoked-dart-rohan-duck-breast",
+    "qty": 1.0,
+    "unit": "g",
+    "note": "7–8 oz raw; hard-sear and butter-baste at pickup"
+   },
+   {
+    "name": "Cauliflower purée",
+    "recipeRef": "silky-cauliflower-puree",
+    "qty": 68.0,
+    "unit": "g",
+    "note": "See 'Cauliflower Puree' sheet; proposed 60–75 g",
+    "draft": true
+   },
+   {
+    "name": "Brown-butter roasted cauliflower",
+    "recipeRef": "brown-butter-roasted-cauliflower",
+    "qty": 100.0,
+    "unit": "g",
+    "note": "Irregular florets; portion TBD",
+    "draft": true
+   },
+   {
+    "name": "Smoked grape chutney",
+    "recipeRef": "cherry-smoked-grape-chutney",
+    "qty": 35.0,
+    "unit": "g",
+    "note": "See 'Smoked Grape Chutney' sheet; proposed 30–40 g",
+    "draft": true
+   },
+   {
+    "name": "Toasted hazelnuts",
+    "recipeRef": "toasted-hazelnuts",
+    "qty": 9.0,
+    "unit": "g",
+    "note": "See 'Toasted Hazelnuts' sheet; proposed 8–10 g at expo",
+    "draft": true
+   },
+   {
+    "name": "Fresh mint leaves",
+    "qty": 1.0,
+    "unit": "g",
+    "note": "Expo finish on roasted cauliflower",
+    "draft": true
+   },
+   {
+    "name": "Preserved lemon liquor",
+    "qty": 3.0,
+    "unit": "g",
+    "note": "Expo squeeze bottle; apply to roasted cauliflower",
+    "draft": true
+   },
+   {
+    "name": "Sherry vinegar",
+    "qty": 3.0,
+    "unit": "g",
+    "note": "Separate expo squeeze bottle; apply to roasted cauliflower",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Hard-sear chilled smoked duck breast skin-side down to render and crisp skin.",
+    "type": "active",
+    "duration_minutes": 6.0,
+    "draft": true
+   },
+   {
+    "name": "Flip duck; use a little neutral oil as needed to regulate pan temperature and baste with cold butter to finish.",
+    "type": "active",
+    "duration_minutes": 3.0,
+    "draft": true
+   },
+   {
+    "name": "Rest duck before slicing / plating.",
+    "type": "passive",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Plate cauliflower purée and smoked grape chutney; exact placement and portions remain to be established.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Add roasted cauliflower component.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "At expo, finish roasted cauliflower with toasted hazelnuts, fresh mint, preserved lemon liquor, and sherry vinegar.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Plate duck and serve immediately.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "1 entrée",
+  "portion": "1 duck breast; accompaniments TBD",
+  "storage": "See individual component sheets and approved holding procedures",
+  "shelfLife": "TBD / follow approved controls",
+  "portions": 1.0,
+  "allergens": [
+   "Dairy",
+   "Tree nut"
+  ],
+  "plating": "Menu price: $40. Confirmed protein: Dart Rohan duck breast, 7–8 oz average, skin-on, scored, 4 per pack / 10 packs per case. Cherry-smoked to approximately 103°F internal, then chilled; hard-seared skin-side down and basted with cold butter at pickup. Cauliflower purée, smoked grape chutney, and toasted hazelnut recipes are now included on separate sheets. Proposed portions are clearly marked and require confirmation. Roasted cauliflower expo finish: toasted hazelnuts, fresh mint, preserved lemon liquor and sherry vinegar from separate squeeze bottles. All unconfirmed weights remain development targets.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "drafts": [
+   "allergens",
+   "station",
+   "sub"
+  ],
+  "source": {
+   "sheet": "Smoked_Duck_Entree_Build.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  },
+  "needsReview": [
+   "Cherry-smoked Dart Rohan duck breast: unit \"each\" not supported"
+  ]
  },
  {
   "id": "spanish-fried-quail-complete-dish",
