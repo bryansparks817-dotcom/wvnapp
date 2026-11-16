@@ -1,5 +1,184 @@
 [
  {
+  "id": "12-hour-braised-wagyu-short-rib",
+  "name": "12-Hour Braised Wagyu Short Rib",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Wagyu short ribs",
+    "qty": 5000.0,
+    "unit": "g",
+    "note": "bone-in; English cut",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 50.0,
+    "unit": "g",
+    "note": "1% of meat weight",
+    "draft": true
+   },
+   {
+    "name": "Black pepper",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "Cracked",
+    "draft": true
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 60.0,
+    "unit": "g",
+    "note": "For searing",
+    "draft": true
+   },
+   {
+    "name": "Yellow onion",
+    "qty": 500.0,
+    "unit": "g",
+    "note": "Large dice",
+    "draft": true
+   },
+   {
+    "name": "Carrot",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "Large dice",
+    "draft": true
+   },
+   {
+    "name": "Celery",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "Large dice",
+    "draft": true
+   },
+   {
+    "name": "Garlic",
+    "qty": 60.0,
+    "unit": "g",
+    "note": "Smashed",
+    "draft": true
+   },
+   {
+    "name": "Tomato paste",
+    "qty": 100.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Dry red wine",
+    "qty": 750.0,
+    "unit": "g",
+    "note": "One bottle",
+    "draft": true
+   },
+   {
+    "name": "Veal stock",
+    "qty": 3000.0,
+    "unit": "g",
+    "note": "To come ¾ up the ribs",
+    "draft": true
+   },
+   {
+    "name": "Thyme",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "Sprigs",
+    "draft": true
+   },
+   {
+    "name": "Bay leaf",
+    "qty": 2.0,
+    "unit": "g",
+    "note": "About 4 leaves",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Season short ribs with salt and pepper; hold uncovered in the walk-in overnight if time allows.",
+    "type": "passive",
+    "duration_minutes": 0.0,
+    "draft": true
+   },
+   {
+    "name": "Sear ribs hard on all sides in oil; remove.",
+    "type": "active",
+    "duration_minutes": 30.0,
+    "draft": true
+   },
+   {
+    "name": "Sweat onion, carrot, celery and garlic in the same pan; add tomato paste and cook until rusty.",
+    "type": "active",
+    "duration_minutes": 15.0,
+    "draft": true
+   },
+   {
+    "name": "Deglaze with red wine and reduce by half.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Return ribs bone-side up; add veal stock, thyme and bay to come ¾ up the ribs.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Cover tightly and braise at 250°F for 12 hours, until spoon-tender.",
+    "type": "passive",
+    "duration_minutes": 720.0,
+    "draft": true
+   },
+   {
+    "name": "Cool ribs in the liquid, then chill overnight so the fat sets.",
+    "type": "passive",
+    "duration_minutes": 120.0,
+    "draft": true
+   },
+   {
+    "name": "Lift off fat (reserve), remove bones and sinew, and portion 113 g per order.",
+    "type": "active",
+    "duration_minutes": 30.0,
+    "draft": true
+   },
+   {
+    "name": "Strain and defat the braising liquid; send it to the Wagyu braising reduction.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 2250,
+  "category": "Protein, Wagyu short rib",
+  "yieldText": "Approx. 2,250 g cooked boneless (5 kg bone-in)",
+  "portion": "113 g (4 oz) cooked per entrée",
+  "storage": "Cool in braising liquid; portion and hold covered at ≤41°F",
+  "shelfLife": "4 days refrigerated in braising liquid",
+  "portions": 20.0,
+  "shelfLifeDays": 4,
+  "allergens": [],
+  "plating": "DRAFT: the 12-hour braise was referenced but not in the workbook. This is a standard red-wine braise at 250°F; swap in your temperature, liquid and aromatics.\n\nYIELD: bone-in short rib usually gives about 45% as cooked boneless meat. 5 kg ≈ 2,250 g ≈ 20 portions at 113 g. Weigh the first batch.\n\nPICKUP: warm portions in the veal stock bath; see the entrée build.",
+  "drafts": [
+   "allergens",
+   "portion",
+   "shelfLife",
+   "storage",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "Wagyu_Short_Rib_Braise.xlsx",
+   "rev": "Winter 26/27",
+   "createdBy": "BZ"
+  }
+ },
+ {
   "id": "albondigas-meatballs",
   "name": "Albondigas Meatballs",
   "isSubRecipe": true,
@@ -1351,6 +1530,123 @@
    "Toasted hazelnuts, roughly chopped: no quantity on the sheet",
    "Fresh mint leaves: no quantity on the sheet"
   ]
+ },
+ {
+  "id": "brussels-sprout-gnocchi-pickup",
+  "name": "Brussels sprout & gnocchi pickup",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Gnocchi",
+    "recipeRef": "house-potato-gnocchi",
+    "qty": 142.0,
+    "unit": "g",
+    "note": "current house preparation; Confirmed portion."
+   },
+   {
+    "name": "Brussels sprout leaves",
+    "qty": 71.0,
+    "unit": "g",
+    "note": "cleaned; Confirmed raw weight; retain slight bite."
+   },
+   {
+    "name": "Shallot",
+    "qty": 4.5,
+    "unit": "g",
+    "note": "minced fresh; 4–5 g range; midpoint.",
+    "draft": true
+   },
+   {
+    "name": "Garlic",
+    "qty": 2.5,
+    "unit": "g",
+    "note": "minced fresh; 2–3 g range; midpoint.",
+    "draft": true
+   },
+   {
+    "name": "Wagyu braising reduction",
+    "recipeRef": "wagyu-braising-reduction",
+    "qty": 47.5,
+    "unit": "g",
+    "note": "45–50 g range; midpoint."
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 5.0,
+    "unit": "g",
+    "note": "Only as needed for sauté.",
+    "draft": true
+   },
+   {
+    "name": "Salt",
+    "qty": 1.0,
+    "unit": "g",
+    "note": "As needed; sauce seasoning varies.",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Heat sauté pan with minimal cooking fat as needed.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Add fresh minced shallot and sauté until translucent.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Add fresh minced garlic shortly before Brussels leaves; cook briefly without browning.",
+    "type": "active",
+    "duration_minutes": 0.0,
+    "draft": true
+   },
+   {
+    "name": "Add cleaned Brussels leaves and sauté until tender but retaining a little bite.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Add prepared gnocchi and concentrated braising reduction.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Toss until gnocchi and leaves are evenly coated and hot; serve immediately.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "1 entrée",
+  "portion": "5 oz / 142 g gnocchi; 2.5 oz / 71 g raw leaves",
+  "storage": "À la minute",
+  "shelfLife": "Serve immediately",
+  "portions": 1.0,
+  "allergens": [
+   "Egg",
+   "Wheat/Gluten"
+  ],
+  "plating": "Pickup component. Confirmed portions: 5 oz / 142 g gnocchi; 2.5 oz / 71 g raw cleaned Brussels leaves; 45–50 g concentrated braising reduction. Fresh aromatics: 4–5 g shallot and 2–3 g garlic per entrée. Midpoints shown for operational clarity. Keep leaves slightly al dente. Toss gnocchi and Brussels together in concentrated sauce.",
+  "drafts": [
+   "allergens",
+   "station"
+  ],
+  "source": {
+   "sheet": "Brussels_Sprout_Gnocchi_Pickup.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  }
  },
  {
   "id": "butternut-squash-feta-tart-for-duck-prosciutto-scallops",
@@ -3821,6 +4117,229 @@
   }
  },
  {
+  "id": "gigante-beans-expo-garnish",
+  "name": "Gigante beans — expo garnish",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep",
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Divina Giant White Beans",
+    "qty": 400.0,
+    "unit": "g",
+    "note": "drained; One pint working batch; exact drained weight not established.",
+    "draft": true
+   },
+   {
+    "name": "Veal or vegetable stock",
+    "qty": 60.0,
+    "unit": "g",
+    "note": "Small amount to warm gently.",
+    "draft": true
+   },
+   {
+    "name": "Olive oil",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "Small amount.",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 2.0,
+    "unit": "g",
+    "note": "As needed.",
+    "draft": true
+   },
+   {
+    "name": "Lemon zest",
+    "qty": 2.0,
+    "unit": "g",
+    "note": "Fresh at expo.",
+    "draft": true
+   },
+   {
+    "name": "Parsley",
+    "qty": 5.0,
+    "unit": "g",
+    "note": "finely chopped; Fresh at expo.",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Drain beans and gently rinse away excess packing liquid.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Warm a pint working batch gently with a little stock, olive oil, and salt; avoid boiling or vigorous stirring.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Transfer to a small covered, temperature-controlled hot-holding vessel.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Maintain hot holding at 135°F or above, following applicable food code and approved procedures; replenish with freshly warmed batches as needed.",
+    "type": "passive",
+    "duration_minutes": 0.0,
+    "draft": true
+   },
+   {
+    "name": "At expo, portion 40–50 g drained beans per entrée and finish with fresh lemon zest and parsley.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "1 pint working batch; service volume adjusted",
+  "portion": "40–50 g drained beans / entrée",
+  "storage": "Hot-held separately; small batches",
+  "shelfLife": "Service batch only; approved procedures",
+  "portions": 9.0,
+  "allergens": [],
+  "plating": "User-approved method: warm approximately one pint at a time, add as separate expo garnish, held apart from braising sauce. Add a little stock, olive oil, salt; finish with fresh lemon zest and parsley. Portion 40–50 g drained beans. Do not repeatedly warm/cool same batch. Exact pint weight and liquid quantities not established. Follow approved hot-holding and time/temperature procedures.",
+  "drafts": [
+   "allergens",
+   "station"
+  ],
+  "source": {
+   "sheet": "Gigante_Bean_Expo.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  }
+ },
+ {
+  "id": "house-potato-gnocchi",
+  "name": "House Potato Gnocchi",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Russet potatoes",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "Whole, scrubbed",
+    "draft": true
+   },
+   {
+    "name": "All-purpose flour",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "Plus more for dusting",
+    "draft": true
+   },
+   {
+    "name": "Whole eggs",
+    "qty": 50.0,
+    "unit": "g",
+    "note": "1 large, beaten",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 12.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 15.0,
+    "unit": "g",
+    "note": "To coat after blanching",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Bake whole russets at 400°F until fully tender, about 60 minutes.",
+    "type": "passive",
+    "duration_minutes": 60.0,
+    "draft": true
+   },
+   {
+    "name": "Peel while hot and pass through a ricer onto a sheet tray; spread to release steam.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Cool until just warm, about 10 minutes.",
+    "type": "passive",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Sprinkle with salt, add beaten egg, then flour in two additions; mix gently into a soft dough. Do not overwork.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Roll into ¾-inch ropes on a floured board and cut into ¾-inch pieces.",
+    "type": "active",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Boil in well-salted water until they float, then 1 minute more.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Shock in ice water, drain well and toss lightly with oil.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Portion 142 g per order; refrigerate, or freeze on trays and bag.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 1100,
+  "category": "Component, Wagyu short rib",
+  "yieldText": "Approx. 1,100 g (7 portions)",
+  "portion": "142 g (5 oz) per entrée",
+  "storage": "Blanched, oiled, portioned; refrigerate or freeze on sheet trays",
+  "shelfLife": "2 days refrigerated; freeze for longer",
+  "portions": 7.0,
+  "shelfLifeDays": 2,
+  "allergens": [
+   "Egg",
+   "Wheat/Gluten"
+  ],
+  "plating": "DRAFT: your house gnocchi wasn't in the workbook, so this is a standard potato gnocchi built on AP flour and egg as you confirmed. Swap in your own ratios.\n\nAt pickup: sauté from blanched with the Brussels leaves and braising reduction (see Brussels Sprout & Gnocchi Pickup).",
+  "drafts": [
+   "allergens",
+   "portion",
+   "shelfLife",
+   "storage",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "House_Potato_Gnocchi.xlsx",
+   "rev": "Winter 26/27",
+   "createdBy": "BZ"
+  }
+ },
+ {
   "id": "house-made-hot-honey-glaze",
   "name": "House-Made Hot Honey Glaze",
   "isSubRecipe": true,
@@ -4634,6 +5153,85 @@
   "source": {
    "sheet": "Marcona_Almond_Praline.xlsx",
    "rev": "Winter 26/27",
+   "createdBy": "BZ"
+  }
+ },
+ {
+  "id": "parsley-lemon-gremolata",
+  "name": "Parsley-lemon gremolata",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Parsley",
+    "qty": 200.0,
+    "unit": "g",
+    "note": "leaves; Wash and dry thoroughly; chop finely."
+   },
+   {
+    "name": "Lemon zest",
+    "qty": 25.0,
+    "unit": "g",
+    "note": "Zest fresh; yellow only."
+   },
+   {
+    "name": "Garlic",
+    "qty": 6.0,
+    "unit": "g",
+    "note": "Microplane or mince very finely; restrained.",
+    "draft": true
+   },
+   {
+    "name": "Fine salt",
+    "qty": 3.0,
+    "unit": "g",
+    "note": "Adjust to taste."
+   }
+  ],
+  "steps": [
+   {
+    "name": "Wash parsley and dry completely.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Zest lemons fresh; prepare garlic fresh.",
+    "type": "active",
+    "duration_minutes": 3.0,
+    "draft": true
+   },
+   {
+    "name": "Finely chop parsley; combine with zest, garlic, and salt shortly before service.",
+    "type": "active",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "Hold refrigerated between uses; prepare fresh daily and discard at end of service day.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "Daily batch; scale to expected covers",
+  "portion": "5–6 g / entrée",
+  "storage": "Refrigerated; prepare fresh daily",
+  "shelfLife": "Same day only",
+  "portions": 42.0,
+  "allergens": [],
+  "plating": "Fresh daily mise en place. No oil. Parsley-forward, lemon-heavy, garlic restrained. Portion 5–6 g directly over sliced short rib at expo. Scale batch to expected covers; do not carry over. 200 g parsley formula is a proposed starting point, not a fixed daily requirement.",
+  "drafts": [
+   "allergens",
+   "station"
+  ],
+  "source": {
+   "sheet": "Parsley_Lemon_Gremolata.xlsx",
+   "rev": "2026-10-27",
    "createdBy": "BZ"
   }
  },
@@ -6459,6 +7057,107 @@
   }
  },
  {
+  "id": "shaved-brussels-sprout-green-apple-garnish",
+  "name": "Shaved Brussels Sprout & Green Apple Garnish",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Brussels sprouts",
+    "qty": 500.0,
+    "unit": "g",
+    "note": "finely shaved; Remove tough cores; keep cold and crisp"
+   },
+   {
+    "name": "Green apple",
+    "qty": 300.0,
+    "unit": "g",
+    "note": "fine julienne; Cut close to service to limit browning"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 30.0,
+    "unit": "g",
+    "note": "Adjust to taste",
+    "draft": true
+   },
+   {
+    "name": "Champagne vinegar",
+    "qty": 25.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 40.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 8.0,
+    "unit": "g",
+    "note": "Start lower; season to taste",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Trim and finely shave Brussels sprouts. Hold refrigerated and dry.",
+    "type": "active",
+    "duration_minutes": 15.0,
+    "draft": true
+   },
+   {
+    "name": "Cut green apple into fine julienne as close to service as practical.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Whisk lemon juice, champagne vinegar, olive oil and salt into a light dressing.",
+    "type": "active",
+    "duration_minutes": 3.0,
+    "draft": true
+   },
+   {
+    "name": "At pickup, lightly dress a small amount of Brussels sprouts and apple; toss gently.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Place approximately 10–15 g garnish on top of each pavé immediately before service.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 900,
+  "category": "Winter 26/27",
+  "yieldText": "Approx. 900 g before dressing loss (development batch)",
+  "portion": "10–15 g per entrée",
+  "storage": "Components refrigerated separately; dress à la minute",
+  "shelfLife": "2 days undressed",
+  "shelfLifeDays": 2,
+  "allergens": [],
+  "plating": "Keep shaved sprouts and cut apple refrigerated. Prefer cutting apple close to service. Dress only small quantities à la minute; do not hold dressed garnish overnight.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station",
+   "sub"
+  ],
+  "source": {
+   "sheet": "Brussels_Sprout_Apple_Garnish.xlsx",
+   "rev": "2026-11-16",
+   "createdBy": "BZ"
+  }
+ },
+ {
   "id": "silky-cauliflower-puree",
   "name": "Silky Cauliflower Purée",
   "isSubRecipe": true,
@@ -7092,6 +7791,159 @@
   }
  },
  {
+  "id": "sweet-potato-parsnip-gruyere-pave",
+  "name": "Sweet Potato & Parsnip Gruyère Pavé",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep",
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Sweet potato",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "peeled and thinly sliced; 50% of vegetable weight"
+   },
+   {
+    "name": "Parsnip",
+    "qty": 1000.0,
+    "unit": "g",
+    "note": "peeled and thinly sliced; 50% of vegetable weight"
+   },
+   {
+    "name": "Heavy cream",
+    "qty": 600.0,
+    "unit": "g",
+    "note": "Infusion base"
+   },
+   {
+    "name": "Whole eggs",
+    "qty": 200.0,
+    "unit": "g",
+    "note": "beaten; Approx. 4 large eggs; weigh"
+   },
+   {
+    "name": "Gruyère",
+    "qty": 350.0,
+    "unit": "g",
+    "note": "finely grated; Use throughout layers"
+   },
+   {
+    "name": "Garlic",
+    "qty": 20.0,
+    "unit": "g",
+    "note": "lightly crushed; Infuse in cream; strain if desired",
+    "draft": true
+   },
+   {
+    "name": "Fresh thyme sprigs",
+    "qty": 8.0,
+    "unit": "g",
+    "note": "Infuse in cream"
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 22.0,
+    "unit": "g",
+    "note": "Development seasoning",
+    "draft": true
+   },
+   {
+    "name": "Black pepper",
+    "qty": 3.0,
+    "unit": "g",
+    "note": "finely ground",
+    "draft": true
+   },
+   {
+    "name": "Rendered beef fat",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Line a hotel pan or terrine mold with parchment, allowing overhang for pressing.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Warm cream with garlic and thyme; steep 15 minutes, then strain and cool until warm, not hot.",
+    "type": "active",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Whisk eggs with salt and pepper; gradually whisk in infused cream.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Layer sweet potato and parsnip in rustic, irregular alternating layers. Distribute Gruyère throughout.",
+    "type": "active",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Pour custard evenly over layers, pressing gently so it settles through the layers.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Cover tightly with parchment and foil. Bake at 325°F until vegetables are fully tender and custard is set; verify with a thin skewer.",
+    "type": "active",
+    "duration_minutes": 90.0,
+    "draft": true
+   },
+   {
+    "name": "Cool briefly, then apply even weight while cooling. Refrigerate under refrigeration overnight while pressed.",
+    "type": "passive",
+    "duration_minutes": 720.0,
+    "draft": true
+   },
+   {
+    "name": "Unmold cold and cut into 3 oz / 85 g portions. Keep refrigerated until service.",
+    "type": "active",
+    "duration_minutes": 20.0
+   },
+   {
+    "name": "Brush portions with rendered beef fat and heat in oven until hot throughout and exterior is crisp. Do not pan-sear.",
+    "type": "active",
+    "duration_minutes": 12.0
+   }
+  ],
+  "yieldGrams": 3200,
+  "category": "Winter 26/27",
+  "yieldText": "Approx. 3.2 kg finished (development estimate)",
+  "portion": "85 g / 3 oz",
+  "storage": "Refrigerated, covered and pressed overnight",
+  "shelfLife": "3 days",
+  "shelfLifeDays": 3,
+  "allergens": [
+   "Dairy",
+   "Egg"
+  ],
+  "plating": "Bake covered. Press while cooling under refrigeration; hold overnight. Portion cold. Keep raw egg/cream mixture refrigerated and follow approved cooling and reheating procedures. Reheat portions to applicable hot-holding/service temperature; do not rely on oven time alone.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station",
+   "sub"
+  ],
+  "source": {
+   "sheet": "Sweet_Potato_Parsnip_Pave.xlsx",
+   "rev": "2026-11-16",
+   "createdBy": "BZ"
+  }
+ },
+ {
   "id": "toasted-hazelnuts",
   "name": "Toasted Hazelnuts",
   "isSubRecipe": true,
@@ -7255,6 +8107,305 @@
   "source": {
    "sheet": "Calamari_Togarashi_Flour.xlsx",
    "rev": "Winter 26/27",
+   "createdBy": "BZ"
+  }
+ },
+ {
+  "id": "venison-osso-bucco-traditional-braise",
+  "name": "Venison Osso Bucco – Traditional Braise",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Venison cross-cut osso bucco shanks",
+    "qty": 4.0,
+    "unit": "ea",
+    "note": "4 pieces; pack total weight approx. 2.5–4 lb per product description"
+   },
+   {
+    "name": "Kosher salt",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Season shanks before searing",
+    "draft": true
+   },
+   {
+    "name": "Black pepper",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Season shanks before searing",
+    "draft": true
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 80.0,
+    "unit": "g",
+    "note": "For searing"
+   },
+   {
+    "name": "Yellow onion",
+    "qty": 400.0,
+    "unit": "g",
+    "note": "medium dice; Mirepoix",
+    "draft": true
+   },
+   {
+    "name": "Carrot",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "medium dice; Mirepoix",
+    "draft": true
+   },
+   {
+    "name": "Celery",
+    "qty": 200.0,
+    "unit": "g",
+    "note": "medium dice; Mirepoix",
+    "draft": true
+   },
+   {
+    "name": "Tomato paste",
+    "qty": 120.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Dry red wine",
+    "qty": 1500.0,
+    "unit": "g",
+    "note": "Development starting quantity"
+   },
+   {
+    "name": "Veal stock",
+    "qty": 1800.0,
+    "unit": "g",
+    "note": "Development starting quantity; enough to braise"
+   },
+   {
+    "name": "Garlic",
+    "qty": 40.0,
+    "unit": "g",
+    "note": "crushed",
+    "draft": true
+   },
+   {
+    "name": "Dried porcini",
+    "qty": 12.0,
+    "unit": "g",
+    "note": "Keep subtle"
+   },
+   {
+    "name": "Hot water for porcini",
+    "qty": 250.0,
+    "unit": "g",
+    "note": "Steep; strain liquor carefully"
+   },
+   {
+    "name": "Juniper berries",
+    "qty": 6.0,
+    "unit": "g",
+    "note": "lightly crushed; Use sparingly"
+   },
+   {
+    "name": "Thyme",
+    "qty": 8.0,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Bay leaf",
+    "qty": 2.0,
+    "unit": "ea"
+   },
+   {
+    "name": "Orange peel",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "broad strips; Avoid pith; remove before straining"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Season venison shanks with salt and black pepper.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Sear shanks in neutral oil until deeply browned on all sides. Remove and reserve.",
+    "type": "active",
+    "duration_minutes": 20.0,
+    "draft": true
+   },
+   {
+    "name": "Sweat onion, carrot and celery in the braising vessel until softened and lightly caramelized.",
+    "type": "active",
+    "duration_minutes": 15.0,
+    "draft": true
+   },
+   {
+    "name": "Add tomato paste and cook until brick red and aromatic.",
+    "type": "active",
+    "duration_minutes": 4.0,
+    "draft": true
+   },
+   {
+    "name": "Deglaze with red wine and reduce by approximately half.",
+    "type": "active",
+    "duration_minutes": 15.0,
+    "draft": true
+   },
+   {
+    "name": "Steep dried porcini in hot water; strain liquor through a fine filter to remove grit. Add measured liquor to braise.",
+    "type": "active",
+    "duration_minutes": 15.0,
+    "draft": true
+   },
+   {
+    "name": "Return shanks. Add veal stock, garlic, juniper, thyme, bay and orange peel. Liquid should come appropriately up the shanks; adjust with stock as needed.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Cover and braise gently at approximately 300°F until fork-tender but holding together. Check periodically; time will vary with shank size.",
+    "type": "passive",
+    "duration_minutes": 180.0
+   },
+   {
+    "name": "Remove shanks carefully. Strain braising liquid; discard solids. Rapidly cool shanks and liquid separately using approved procedures.",
+    "type": "active",
+    "duration_minutes": 25.0
+   },
+   {
+    "name": "Refrigerate covered until service. Reheat shanks gently in the established veal-stock bath.",
+    "type": "passive",
+    "duration_minutes": 720.0
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "4 whole cross-cut shanks (development batch)",
+  "portion": "1 whole shank per entrée",
+  "storage": "Cool promptly; refrigerate covered",
+  "shelfLife": "4 days",
+  "shelfLifeDays": 4,
+  "allergens": [],
+  "plating": "Cool shanks and braising liquid promptly under approved food-safety procedures. Refrigerate at 41°F / 5°C or below. Reheat gently in the same veal-stock bath used for Wagyu short rib, following approved reheating and hot-holding procedures. Braise tenderness and safe final temperature must be verified in production.",
+  "drafts": [
+   "allergens",
+   "shelfLife",
+   "station",
+   "sub"
+  ],
+  "source": {
+   "sheet": "Venison_Osso_Buco_Braise.xlsx",
+   "rev": "2026-11-16",
+   "createdBy": "BZ"
+  }
+ },
+ {
+  "id": "wagyu-braising-reduction",
+  "name": "Wagyu braising reduction",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "stations": [
+   "prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Veal stock",
+    "qty": 500.0,
+    "unit": "g",
+    "note": "Proposed starting ratio."
+   },
+   {
+    "name": "Defatted Wagyu braising liquid",
+    "recipeRef": "12-hour-braised-wagyu-short-rib",
+    "qty": 350.0,
+    "unit": "g",
+    "note": "strained Wagyu braising liquid; Separate and reserve rendered fat."
+   },
+   {
+    "name": "Dry red wine",
+    "qty": 150.0,
+    "unit": "g",
+    "note": "Reduce by approximately half first."
+   },
+   {
+    "name": "Sherry vinegar",
+    "qty": 5.0,
+    "unit": "g",
+    "note": "Add off heat at end; adjust to taste.",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Strain braising liquid; separate rendered Wagyu fat and reserve for other uses.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Reduce red wine gently by approximately half.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Add veal stock and defatted braising liquid.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Simmer and reduce to concentrated, gelatin-rich, glossy consistency; skim as needed.",
+    "type": "passive",
+    "duration_minutes": 30.0,
+    "draft": true
+   },
+   {
+    "name": "Pass through a fine chinois for a completely smooth, refined sauce.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Add sherry vinegar off heat, incrementally, tasting for brightness without overt vinegar flavor.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Cool rapidly in shallow containers and refrigerate under approved procedures.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   }
+  ],
+  "yieldGrams": 500,
+  "category": "Winter 26/27",
+  "yieldText": "About 500 g from 1,000 g liquid; measure",
+  "portion": "45–50 g / entrée",
+  "storage": "Refrigerated, covered",
+  "shelfLife": "3 days proposed; follow approved procedures",
+  "portions": 10.0,
+  "shelfLifeDays": 3,
+  "allergens": [],
+  "plating": "Development ratio per 1,000 g starting liquid: 500 g veal stock, 350 g defatted braising liquid, 150 g dry red wine. Reduce wine by half before adding stock/liquid. Final reduction endpoint and finished yield not established; test against actual braising liquid. Sherry vinegar quantity left open for sensory adjustment. Rendered Wagyu fat reserved for crostini/grilled vegetables, not added back. Target rich, gelatinous, glossy, completely smooth, with brightness. Portion 45–50 g per entrée.",
+  "drafts": [
+   "allergens",
+   "station",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "Wagyu_Braising_Reduction.xlsx",
+   "rev": "2026-10-27",
    "createdBy": "BZ"
   }
  },
@@ -8803,6 +9954,299 @@
    "rev": "Winter 26/27",
    "createdBy": "BZ"
   }
+ },
+ {
+  "id": "venison-osso-bucco-finished-dish-build",
+  "name": "Venison Osso Bucco – Finished Dish Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "stations": [
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Venison osso bucco",
+    "recipeRef": "venison-osso-bucco-traditional-braise",
+    "qty": 1.0,
+    "unit": "ea",
+    "note": "braised whole; One cross-cut shank; bone presented upright"
+   },
+   {
+    "name": "Yukon Gold pommes purée",
+    "recipeRef": "robuchon-style-yukon-gold-pommes-puree",
+    "qty": 113.0,
+    "unit": "g",
+    "note": "Reuse existing Salmon Wellington pommes purée recipe"
+   },
+   {
+    "name": "Sweet potato & parsnip Gruyère pavé",
+    "recipeRef": "sweet-potato-parsnip-gruyere-pave",
+    "qty": 85.0,
+    "unit": "g",
+    "note": "One portion; brush with beef fat and oven-crisp"
+   },
+   {
+    "name": "Wagyu braising reduction",
+    "recipeRef": "wagyu-braising-reduction",
+    "qty": 40.0,
+    "unit": "g",
+    "note": "Reuse existing Wagyu short rib reduction; finish with sherry vinegar",
+    "draft": true
+   },
+   {
+    "name": "Shaved Brussels sprout & green apple garnish",
+    "recipeRef": "shaved-brussels-sprout-green-apple-garnish",
+    "qty": 10.0,
+    "unit": "g",
+    "note": "Lightly dressed; garnish pavé at pass"
+   },
+   {
+    "name": "Veal stock",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed",
+    "note": "Shared gentle reheating bath for venison and Wagyu",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Reheat braised venison gently in veal-stock bath until hot throughout; handle carefully to preserve shape.",
+    "type": "active",
+    "duration_minutes": 10.0,
+    "draft": true
+   },
+   {
+    "name": "Reheat pommes purée using established service procedure.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Brush pavé with rendered beef fat and oven-finish until hot throughout and crisp outside.",
+    "type": "active",
+    "duration_minutes": 12.0,
+    "draft": true
+   },
+   {
+    "name": "Place venison in center of warm plate with bone pointing upward.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Arrange 113 g pommes purée and 85 g pavé around the venison.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Spoon glossy Wagyu reduction over venison meat and exposed bone; avoid flooding sides.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Top pavé with 10–15 g lightly dressed Brussels sprout and green apple garnish.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Serve immediately.",
+    "type": "active",
+    "duration_minutes": 0.0
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "1 entrée",
+  "portion": "1 order",
+  "storage": "See component recipes",
+  "allergens": [
+   "Dairy",
+   "Egg"
+  ],
+  "plating": "Keep hot components at approved hot-holding temperatures. Sauce the venison, not the pavé; garnish pavé at the pass. Final portion and sauce amount to be confirmed during plating test.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "drafts": [
+   "allergens",
+   "station",
+   "yieldText"
+  ],
+  "source": {
+   "sheet": "Venison_Osso_Buco_Entree_Build.xlsx",
+   "rev": "2026-11-16",
+   "createdBy": "BZ"
+  }
+ },
+ {
+  "id": "wagyu-short-rib-entree-build",
+  "name": "Wagyu short rib — entrée build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "stations": [
+   "saute"
+  ],
+  "ingredients": [
+   {
+    "name": "Braised Wagyu short rib",
+    "recipeRef": "12-hour-braised-wagyu-short-rib",
+    "qty": 113.0,
+    "unit": "g",
+    "note": "cooked; Confirmed 4 oz cooked portion; 12-hour braise."
+   },
+   {
+    "name": "House gnocchi",
+    "recipeRef": "house-potato-gnocchi",
+    "qty": 142.0,
+    "unit": "g",
+    "note": "Confirmed 5 oz portion."
+   },
+   {
+    "name": "Brussels sprout leaves",
+    "qty": 71.0,
+    "unit": "g",
+    "note": "raw cleaned; Confirmed 2.5 oz portion."
+   },
+   {
+    "name": "Shallot",
+    "qty": 4.5,
+    "unit": "g",
+    "note": "minced fresh; 4–5 g range; midpoint.",
+    "draft": true
+   },
+   {
+    "name": "Garlic",
+    "qty": 2.5,
+    "unit": "g",
+    "note": "minced fresh; 2–3 g range; midpoint.",
+    "draft": true
+   },
+   {
+    "name": "Wagyu braising reduction",
+    "recipeRef": "wagyu-braising-reduction",
+    "qty": 47.5,
+    "unit": "g",
+    "note": "45–50 g range; midpoint."
+   },
+   {
+    "name": "Divina gigante beans",
+    "recipeRef": "gigante-beans-expo-garnish",
+    "qty": 45.0,
+    "unit": "g",
+    "note": "drained; 40–50 g range; midpoint."
+   },
+   {
+    "name": "Parsley-lemon gremolata",
+    "recipeRef": "parsley-lemon-gremolata",
+    "qty": 5.5,
+    "unit": "g",
+    "note": "5–6 g range; fresh daily."
+   },
+   {
+    "name": "Veal stock for reheating",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "Amount not set",
+    "note": "Continuous bath: approx. 2–3 qt/service; replenish as needed."
+   },
+   {
+    "name": "Sherry vinegar",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "Amount not set",
+    "note": "Add to finished reduction off heat; quantity to taste."
+   }
+  ],
+  "steps": [
+   {
+    "name": "Maintain continuous veal-stock bath for reheating short rib; approximately 2–3 qt per service, replenishing as needed.",
+    "type": "passive",
+    "duration_minutes": 0.0,
+    "draft": true
+   },
+   {
+    "name": "Gently bring short-rib portions up in veal stock; avoid boiling.",
+    "type": "active",
+    "duration_minutes": 5.0,
+    "draft": true
+   },
+   {
+    "name": "Remove short rib and rest briefly; slice into 3–4 slices.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Sauté Brussels sprout leaves with fresh shallot and garlic; retain a little bite.",
+    "type": "active",
+    "duration_minutes": 3.0,
+    "draft": true
+   },
+   {
+    "name": "Add gnocchi and concentrated braising reduction; toss together until hot and evenly coated.",
+    "type": "active",
+    "duration_minutes": 2.0,
+    "draft": true
+   },
+   {
+    "name": "Plate gnocchi and Brussels mixture; arrange short rib in 3–4 slices.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Add 40–50 g separately warmed gigante beans as an expo garnish.",
+    "type": "active",
+    "duration_minutes": 1.0,
+    "draft": true
+   },
+   {
+    "name": "Finish short rib with 5–6 g fresh parsley-lemon gremolata.",
+    "type": "active",
+    "duration_minutes": 1.0
+   },
+   {
+    "name": "Serve immediately.",
+    "type": "active",
+    "duration_minutes": 0.0
+   }
+  ],
+  "category": "Winter 26/27",
+  "yieldText": "1 entrée",
+  "portion": "4 oz / 113 g cooked short rib",
+  "storage": "À la minute; serve immediately",
+  "shelfLife": "Serve immediately",
+  "portions": 1.0,
+  "allergens": [
+   "Egg",
+   "Wheat/Gluten"
+  ],
+  "plating": "Confirmed portions: 4 oz / 113 g cooked Wagyu short rib; 5 oz / 142 g gnocchi; 2.5 oz / 71 g raw cleaned Brussels leaves; 40–50 g drained Divina gigante beans; 5–6 g fresh daily parsley-lemon gremolata; 45–50 g concentrated braising reduction. Aromatics: 4–5 g shallot and 2–3 g garlic, minced fresh per order. Short rib gently reheated in continuous veal-stock bath (approx. 2–3 qt/service, more as needed), rested, sliced into 3–4 slices. Beans warmed separately in pint working batches and plated at expo. Sauce ratio is proposed only: 500 g veal stock / 350 g defatted braising liquid / 150 g dry red wine per 1,000 g starting liquid; reduce wine first. Finish with sherry vinegar off heat to taste. Rendered Wagyu fat reserved for other applications. Final reduction endpoint and vinegar quantity require testing.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "drafts": [
+   "allergens",
+   "station"
+  ],
+  "source": {
+   "sheet": "Wagyu_Short_Rib_Entree_Build.xlsx",
+   "rev": "2026-10-27",
+   "createdBy": "BZ"
+  },
+  "needsReview": [
+   "Veal stock for reheating: no quantity on the sheet",
+   "Sherry vinegar: no quantity on the sheet"
+  ]
  },
  {
   "id": "winter-oysters-rockefeller",
