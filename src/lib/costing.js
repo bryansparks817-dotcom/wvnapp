@@ -9,7 +9,7 @@ import { gatherForPrep } from "./gatherList";
 import { batchGrams } from "./recipeScale";
 
 // Ingredient name -> the house recipe it's made from, across all recipes.
-function houseRecipeNames(recipesById) {
+export function houseRecipeNames(recipesById) {
   const map = new Map();
   for (const r of recipesById.values()) {
     for (const ing of r.ingredients ?? []) if (ing.recipeRef && ing.name) map.set(ing.name.toLowerCase(), ing.recipeRef);

@@ -374,6 +374,11 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__table--pars li { grid-template-columns: auto 1fr; }
 .chef__table--times li { grid-template-columns: 1fr auto auto; }
 .chef__table--prices li { grid-template-columns: 1fr 96px; }
+.chef__table li:has(> .chef__rowbtn) { display: block; padding: 0; }
+.chef__rowbtn { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; width: 100%; padding: 7px 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.chef__rowbtn:disabled { cursor: default; }
+.chef__row--on .chef__rowbtn > span:first-child { color: var(--amber, #e8a33d); font-weight: 600; }
+.chef__filterbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 6px 0 10px; }
 .chef__call { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.06em; padding: 3px 6px; border-radius: 4px; border: 1.5px solid var(--edge); color: var(--steel); }
 .chef__call.is-raise { border-color: #d2553f; color: #d2553f; }
 .chef__call.is-lower { border-color: #8ec5e8; color: #8ec5e8; }

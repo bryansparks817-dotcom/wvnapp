@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { loadPrices, priceSources, savePrices } from "../lib/storage";
-import { allIngredientNames, costIndex } from "../lib/costing";
+import { allIngredientNames, costIndex, houseRecipeNames } from "../lib/costing";
 
 // Ingredient prices in $ per kg. They feed recipe cost, waste in dollars
 // and the theoretical food cost. Prices from the vendor order guides are loaded once
@@ -11,6 +11,36 @@ export default function Prices({ recipes, recipesById, ingredients }) {
   const names = useMemo(() => allIngredientNames(recipes, recipesById, ingredients), [recipes, recipesById, ingredients]);
   const costs = useMemo(() => costIndex(recipes, recipesById, ingredients, prices), [recipes, recipesById, ingredients, prices]);
   const priced = names.filter((n) => prices[n.name.toLowerCase()] != null).length;
+  // Tapping a recipe narrows the ingredient list to what that recipe still
+  // needs priced. The list is fixed at the tap, so a row doesn't disappear
+  // while the chef is typing its price.
+  const [focus, setFocus] = useState(null); // { id, name, keys: Set, via: [house-made names] }
+  const refs = useMemo(() => houseRecipeNames(recipesById), [recipesById]);
+  const listRef = useRef(null);
+  const shown = focus ? names.filter((n) => focus.keys.has(n.name.toLowerCase())) : names;
+  function pick(r, c) {
+    if (!c.missing.length || focus?.id === r.id) {
+      setFocus(null);
+      return;
+    }
+    // A house-made component (mole, lobster stock…) that isn't fully priced
+    // is unpriced because of its own ingredients, so those are shown too.
+    const keys = new Set();
+    const via = [];
+    const walk = (missing, chain) => {
+      for (const m of missing) {
+        const key = m.toLowerCase();
+        const refId = refs.get(key);
+        if (refId && costs.has(refId) && !chain.includes(refId)) {
+          via.push(m);
+          walk(costs.get(refId).missing, [...chain, refId]);
+        } else keys.add(key);
+      }
+    };
+    walk(c.missing, [r.id]);
+    setFocus({ id: r.id, name: r.name, keys, via: [...new Set(via)] });
+    requestAnimationFrame(() => listRef.current?.scrollIntoView({ block: "start" }));
+  }
 
   return (
     <>
@@ -23,19 +53,30 @@ export default function Prices({ recipes, recipesById, ingredients }) {
           {recipes.map((r) => {
             const c = costs.get(r.id);
             return (
-              <li key={r.id}>
-                <span>{r.name}</span>
-                <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
-                <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced` : "all priced"}</span>
+              <li key={r.id} className={focus?.id === r.id ? "chef__row--on" : undefined}>
+                <button type="button" className="chef__rowbtn" onClick={() => pick(r, c)} disabled={!c.missing.length} aria-pressed={focus?.id === r.id}>
+                  <span>{r.name}</span>
+                  <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
+                  <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced ›` : "all priced"}</span>
+                </button>
               </li>
             );
           })}
         </ul>
       </section>
       <section className="chef__data">
-        <div className="pass__sectionhead"><h2>Ingredients</h2><span className="pass__countlabel">$ PER KG</span></div>
+        <div className="pass__sectionhead" ref={listRef}><h2>Ingredients</h2><span className="pass__countlabel">$ PER KG</span></div>
+        {focus && (
+          <div className="chef__filterbar">
+            <span>Unpriced in <b>{focus.name}</b> ({shown.length})</span>
+            <button type="button" className="pass__ghost" onClick={() => setFocus(null)}>Show all</button>
+          </div>
+        )}
+        {focus?.via.length > 0 && (
+          <p className="pass__hint">Includes what {focus.via.join(", ")} still need{focus.via.length === 1 ? "s" : ""}. Those are house-made, so they're priced from their own ingredients.</p>
+        )}
         <ul className="chef__table chef__table--prices">
-          {names.map((n) => {
+          {shown.map((n) => {
             const key = n.name.toLowerCase();
             return (
               <li key={key}>
