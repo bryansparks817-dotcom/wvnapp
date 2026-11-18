@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { loadPrices, savePrices } from "../lib/storage";
+import { loadPrices, priceSources, savePrices } from "../lib/storage";
 import { allIngredientNames, costIndex } from "../lib/costing";
 
 // Ingredient prices in $ per kg. They feed recipe cost, waste in dollars
-// and the theoretical food cost. (Vendor CSV import comes later.)
+// and the theoretical food cost. Prices from the vendor order guides are loaded once
+// (see loadPrices); after that the chef's numbers win.
 export default function Prices({ recipes, recipesById, ingredients }) {
   const [prices, setPrices] = useState(() => loadPrices());
   useEffect(() => { savePrices(prices); }, [prices]);
@@ -41,6 +42,7 @@ export default function Prices({ recipes, recipesById, ingredients }) {
                 <span className="pass__rowtext">
                   <span className="pass__rowname">{n.name}</span>
                   <span className="pass__rowsub">{n.usedIn.join(", ")}</span>
+                  {priceSources[key] && prices[key] != null && <span className="pass__rowsub">From {priceSources[key]}</span>}
                 </span>
                 <input
                   className="pass__input"

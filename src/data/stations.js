@@ -1,18 +1,19 @@
-// The restaurant's stations. Garde manger has its items; Grill, Sauté,
-// Pastry and Prep get theirs when the real menu goes in.
+// The restaurant's stations. Garde manger's first items are in lineItems.json;
+// everything else came from the kitchen setup workbook (stationItems.json,
+// built by scripts/setup-workbook/stations.py). Pastry and Prep get theirs
+// when their recipes go in.
 import garde from "./lineItems.json";
+import fromSetup from "./stationItems.json";
+
+const extra = (id) => fromSetup.stations[id] ?? [];
 
 export const STATIONS = [
-  { id: "garde-manger", name: "Garde manger", linePar: garde.linePar, items: garde.items },
-  { id: "grill", name: "Grill", linePar: 100, items: [] },
-  { id: "saute", name: "Sauté", linePar: 100, items: [] },
-  { id: "pastry", name: "Pastry", linePar: 100, items: [] },
-  { id: "prep", name: "Prep", linePar: 100, items: [] },
+  { id: "garde-manger", name: "Garde manger", linePar: garde.linePar, items: [...garde.items, ...extra("garde-manger")] },
+  { id: "grill", name: "Grill", linePar: 100, items: extra("grill") },
+  { id: "saute", name: "Sauté", linePar: 100, items: extra("saute") },
+  { id: "pastry", name: "Pastry", linePar: 100, items: extra("pastry") },
+  { id: "prep", name: "Prep", linePar: 100, items: extra("prep") },
 ];
-
-// Which stations a cook can open. The chef will toggle these per cook in the
-// cook's profile (person.stations = [stationId, ...]). In the beta every cook
-// can open every station, so a profile without a list gets them all.
 export function stationsFor(person) {
   const allowed = person?.stations;
   if (!Array.isArray(allowed)) return STATIONS;

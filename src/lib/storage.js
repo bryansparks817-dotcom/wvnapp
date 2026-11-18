@@ -1,3 +1,8 @@
+import priceSeed from "../data/ingredientPrices.json";
+
+// Bump when ingredientPrices.json is rebuilt from a newer inventory sheet.
+export const PRICE_SEED_REV = 1;
+
 const RECIPES_KEY = "kitchenPrep.recipes.v1";
 const INGREDIENTS_KEY = "kitchenPrep.ingredients.v1";
 const SELECTED_RECIPE_IDS_KEY = "kitchenPrep.selectedRecipeIds.v1";
@@ -19,6 +24,7 @@ const DAILY_NUMBERS_KEY = "thePass.dailyNumbers.v1";
 const HISTORY_KEY = "thePass.history.v1";
 const FLAG_LOG_KEY = "thePass.flagLog.v1";
 const PRICES_KEY = "thePass.prices.v1";
+const PRICE_SEED_KEY = "thePass.priceSeed.v1";
 const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 const LIBRARY_KEY = "thePass.recipeLibrary.v1";
 
@@ -82,6 +88,7 @@ const ALL_KEYS = [
   HISTORY_KEY,
   FLAG_LOG_KEY,
   PRICES_KEY,
+  PRICE_SEED_KEY,
   SEEDED_KEY,
   LIBRARY_KEY,
 ];
@@ -320,9 +327,23 @@ export function logFlag(entry) {
 }
 
 // Ingredient prices, dollars per kg, by lowercase ingredient name.
+// The first time a phone opens prices after a new vendor price load
+// (src/data/ingredientPrices.json), the loaded prices fill in every
+// ingredient the chef hasn't priced. A price the chef set is never changed,
+// and one the chef clears afterwards stays cleared.
 export function loadPrices() {
-  return load(PRICES_KEY, {});
+  const prices = load(PRICES_KEY, {});
+  const seeded = load(PRICE_SEED_KEY, { rev: 0 });
+  if ((seeded?.rev ?? 0) >= PRICE_SEED_REV) return prices;
+  const next = { ...prices };
+  for (const [name, perKg] of Object.entries(priceSeed.prices)) if (next[name] == null) next[name] = perKg;
+  save(PRICES_KEY, next);
+  save(PRICE_SEED_KEY, { rev: PRICE_SEED_REV });
+  return next;
 }
+
+// Where a loaded price came from (vendor, case price), for the prices screen.
+export const priceSources = priceSeed.source;
 
 export function savePrices(prices) {
   save(PRICES_KEY, prices);
