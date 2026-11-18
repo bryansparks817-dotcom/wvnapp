@@ -1,0 +1,987 @@
+{
+ "_note": "Built from the kitchen setup workbook by scripts/setup-workbook/stations.py. Fields in an item's 'unconfirmed' are Claude's defaults for the chef to check.",
+ "stations": {
+  "garde-manger": [
+   {
+    "id": "albondigas-meatballs",
+    "name": "GF beef & pork albondigas",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "albondigas-meatballs",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "albondigas-sauce",
+    "name": "Albondigas sauce",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "albondigas-sauce",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "bacon-crumbs",
+    "name": "Oven-roasted bacon crumbs",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "bacon-crumbs",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "balsamic-reduction",
+    "name": "Balsamic reduction",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 21,
+    "recipeId": "balsamic-reduction",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "black-garlic-deviled-egg-filling",
+    "name": "Black garlic egg filling",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "black-garlic-deviled-egg-filling",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "crispy-caper-preserved-lemon-crumb",
+    "name": "Crispy caper & preserved lemon crumb",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "crispy-caper-preserved-lemon-crumb",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "individual-salmon-wellington-make-ahead-assembly",
+    "name": "Individual salmon Wellington",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "individual-salmon-wellington-make-ahead-assembly",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "pickled-yellow-mustard-seeds",
+    "name": "Drained pickled mustard seeds",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "pickled-yellow-mustard-seeds",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "poached-figs",
+    "name": "Poached figs",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 10,
+    "recipeId": "poached-figs",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "ranch-dressing",
+    "name": "Crème fraîche ranch",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 6,
+    "recipeId": "ranch-dressing",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "red-wine-vinaigrette",
+    "name": "Red wine vinaigrette",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "red-wine-vinaigrette",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "roasted-pumpkin-small-dice",
+    "name": "Roasted pumpkin",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "roasted-pumpkin-small-dice",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "robuchon-style-yukon-gold-pommes-puree",
+    "name": "Yukon Gold pommes purée",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "robuchon-style-yukon-gold-pommes-puree",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "slow-roasted-steakhouse-tomatoes",
+    "name": "Slow-roasted steakhouse tomatoes",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "slow-roasted-steakhouse-tomatoes",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "winter-rockefeller-filling",
+    "name": "Winter Rockefeller filling",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "winter-rockefeller-filling",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   }
+  ],
+  "grill": [
+   {
+    "id": "caramelized-miso-aioli",
+    "name": "Caramelized miso aioli",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 5,
+    "recipeId": "caramelized-miso-aioli",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "chicken-flour-seasoning",
+    "name": "Chicken flour seasoning",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 30,
+    "recipeId": "chicken-flour-seasoning",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "clam-chowder-veloute",
+    "name": "Clam chowder velouté",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "clam-chowder-veloute",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "crispy-caper-preserved-lemon-crumb",
+    "name": "Crispy caper & preserved lemon crumb",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "crispy-caper-preserved-lemon-crumb",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "foie-gras-butter",
+    "name": "Foie gras butter",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "foie-gras-butter",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "house-made-hot-honey-glaze",
+    "name": "House-made hot honey glaze",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "house-made-hot-honey-glaze",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "individual-salmon-wellington-make-ahead-assembly",
+    "name": "Individual salmon Wellington",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "individual-salmon-wellington-make-ahead-assembly",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "lobster-shell-pangrattato",
+    "name": "Lobster-shell pangrattato (magic dust)",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 10,
+    "recipeId": "lobster-shell-pangrattato",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "pickled-yellow-mustard-seeds",
+    "name": "Pickled yellow mustard seeds",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "pickled-yellow-mustard-seeds",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "quick-pickled-shishito-peppers",
+    "name": "Quick-pickled shishito peppers",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "quick-pickled-shishito-peppers",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "rice-paper-nori-chips",
+    "name": "Rice paper & nori chips",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "rice-paper-nori-chips",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "robuchon-style-yukon-gold-pommes-puree",
+    "name": "Yukon Gold pommes purée",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "robuchon-style-yukon-gold-pommes-puree",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "savory-bacon-challah-bread-pudding",
+    "name": "Savory bacon-challah bread pudding",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "savory-bacon-challah-bread-pudding",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "spanish-quail-buttermilk-brine",
+    "name": "Spanish quail buttermilk brine",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 2,
+    "recipeId": "spanish-quail-buttermilk-brine",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "togarashi-flour-dredge",
+    "name": "Togarashi flour dredge",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "togarashi-flour-dredge",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "winter-rockefeller-filling",
+    "name": "Winter Rockefeller filling",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "winter-rockefeller-filling",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   }
+  ],
+  "saute": [
+   {
+    "id": "12-hour-braised-wagyu-short-rib",
+    "name": "Braised Wagyu short rib",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 4,
+    "recipeId": "12-hour-braised-wagyu-short-rib",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "balsamic-reduction",
+    "name": "House balsamic reduction",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 21,
+    "recipeId": "balsamic-reduction",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "blackberry-demi-glace-scallop-sauce",
+    "name": "Blackberry demi-glace",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "blackberry-demi-glace-scallop-sauce",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "brown-butter-roasted-cauliflower",
+    "name": "Brown-butter roasted cauliflower",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "brown-butter-roasted-cauliflower",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "butternut-squash-feta-tart-for-duck-prosciutto-scallops",
+    "name": "Butternut squash & feta tart",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "butternut-squash-feta-tart-for-duck-prosciutto-scallops",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "butternut-squash-puree-tart-layer",
+    "name": "Butternut squash purée",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "butternut-squash-puree-tart-layer",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "butternut-squash-soup",
+    "name": "Butternut squash soup",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "butternut-squash-soup",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "cherry-smoked-dart-rohan-duck-breast",
+    "name": "Cherry-smoked Dart Rohan duck breast",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "cherry-smoked-dart-rohan-duck-breast",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "cherry-smoked-grape-chutney",
+    "name": "Smoked grape chutney",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 7,
+    "recipeId": "cherry-smoked-grape-chutney",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "crispy-sage-leaves-brown-butter-finish",
+    "name": "Crispy sage leaves",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "crispy-sage-leaves-brown-butter-finish",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "duck-breast-prosciutto-dry-cured",
+    "name": "Duck breast prosciutto",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "duck-breast-prosciutto-dry-cured",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "gigante-beans-expo-garnish",
+    "name": "Divina gigante beans",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "gigante-beans-expo-garnish",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "house-potato-gnocchi",
+    "name": "House gnocchi",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 2,
+    "recipeId": "house-potato-gnocchi",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "marcona-almond-praline-honey-caramel",
+    "name": "Marcona almond praline",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "marcona-almond-praline-honey-caramel",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "parsley-lemon-gremolata",
+    "name": "Parsley-lemon gremolata",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "parsley-lemon-gremolata",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "robuchon-style-yukon-gold-pommes-puree",
+    "name": "Yukon Gold pommes purée",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "robuchon-style-yukon-gold-pommes-puree",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams",
+     "shelfLifeDays"
+    ]
+   },
+   {
+    "id": "shaved-brussels-sprout-green-apple-garnish",
+    "name": "Shaved Brussels sprout & green apple garnish",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 2,
+    "recipeId": "shaved-brussels-sprout-green-apple-garnish",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "silky-cauliflower-puree",
+    "name": "Cauliflower purée",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 4,
+    "recipeId": "silky-cauliflower-puree",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "sweet-potato-parsnip-gruyere-pave",
+    "name": "Sweet potato & parsnip Gruyère pavé",
+    "pan": "1/3",
+    "panGrams": 4000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "sweet-potato-parsnip-gruyere-pave",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "toasted-hazelnuts",
+    "name": "Toasted hazelnuts",
+    "pan": "1/9",
+    "panGrams": 1000,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 14,
+    "recipeId": "toasted-hazelnuts",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "venison-osso-bucco-traditional-braise",
+    "name": "Venison osso bucco",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 4,
+    "recipeId": "venison-osso-bucco-traditional-braise",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   },
+   {
+    "id": "wagyu-braising-reduction",
+    "name": "Wagyu braising reduction",
+    "pan": "1/6",
+    "panGrams": 2500,
+    "lowboySize": "qt",
+    "qtGrams": 950,
+    "lowboyPar": 1,
+    "shelfLifeDays": 3,
+    "recipeId": "wagyu-braising-reduction",
+    "unconfirmed": [
+     "pan",
+     "lowboySize",
+     "qtGrams",
+     "lowboyPar",
+     "panGrams"
+    ]
+   }
+  ]
+ }
+}

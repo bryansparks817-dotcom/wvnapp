@@ -12,6 +12,9 @@ create table if not exists public.kitchen_data (
 
 alter table public.kitchen_data enable row level security;
 
+-- Signed-in phones need table access; the policies below decide which rows.
+grant select, insert, update, delete on table public.kitchen_data to authenticated;
+
 -- Only phones signed in with a kitchen account can read or write.
 -- (New sign-ups are turned off in Supabase Auth: the chef adds the
 -- kitchen account by hand.)
