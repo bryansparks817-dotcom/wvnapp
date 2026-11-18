@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { loadPrices, priceSources, savePrices } from "../lib/storage";
 import { allIngredientNames, costIndex, houseRecipeNames } from "../lib/costing";
+import { groupRecipes } from "../lib/recipeCategories";
 
 // Ingredient prices in $ per kg. They feed recipe cost, waste in dollars
 // and the theoretical food cost. Prices from the vendor order guides are loaded once
@@ -17,6 +18,8 @@ export default function Prices({ recipes, recipesById, ingredients }) {
   const [focus, setFocus] = useState(null); // { id, name, keys: Set, via: [house-made names] }
   const refs = useMemo(() => houseRecipeNames(recipesById), [recipesById]);
   const listRef = useRef(null);
+  // Full dish builds first, then house recipes by category (proteins, sauces…).
+  const groups = useMemo(() => groupRecipes(recipes), [recipes]);
   const shown = focus ? names.filter((n) => focus.keys.has(n.name.toLowerCase())) : names;
   function pick(r, c) {
     if (!c.missing.length || focus?.id === r.id) {
@@ -49,20 +52,28 @@ export default function Prices({ recipes, recipesById, ingredients }) {
           <h2>Recipe cost</h2>
           <span className="pass__countlabel">{priced} OF {names.length} PRICED</span>
         </div>
-        <ul className="chef__table">
-          {recipes.map((r) => {
-            const c = costs.get(r.id);
-            return (
-              <li key={r.id} className={focus?.id === r.id ? "chef__row--on" : undefined}>
-                <button type="button" className="chef__rowbtn" onClick={() => pick(r, c)} disabled={!c.missing.length} aria-pressed={focus?.id === r.id}>
-                  <span>{r.name}</span>
-                  <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
-                  <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced ›` : "all priced"}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        {groups.map((g) => (
+          <div key={g.name} className="chef__group">
+            <div className="chef__grouphead">
+              <h3>{g.name}</h3>
+              <span className="pass__countlabel">{g.recipes.length}</span>
+            </div>
+            <ul className="chef__table">
+              {g.recipes.map((r) => {
+                const c = costs.get(r.id);
+                return (
+                  <li key={r.id} className={focus?.id === r.id ? "chef__row--on" : undefined}>
+                    <button type="button" className="chef__rowbtn" onClick={() => pick(r, c)} disabled={!c.missing.length} aria-pressed={focus?.id === r.id}>
+                      <span>{r.name}</span>
+                      <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
+                      <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced ›` : "all priced"}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </section>
       <section className="chef__data">
         <div className="pass__sectionhead" ref={listRef}><h2>Ingredients</h2><span className="pass__countlabel">$ PER KG</span></div>
