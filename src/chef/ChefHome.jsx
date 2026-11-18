@@ -136,7 +136,7 @@ function AddFlags({ onAdd }) {
   );
 }
 
-export default function ChefHome({ today, recipesById, onOpenRecipes, view = "home", by }) {
+export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrint, view = "home", by }) {
   const show = VIEWS[view];
   const [now, setNow] = useState(() => Date.now());
   const [settings, setSettings] = useState(() => loadChefSettings());
@@ -258,6 +258,9 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
         <p className="pass__hint">{DAY_NAMES[d.getDay()]} · {MONTHS[d.getMonth()]} {d.getDate()}. Type covers in from OpenTable until it’s connected.</p>
       </section>
       )}
+      {show.lists && onOpenPrint && (
+        <button type="button" className="pass__cta chef__printlink" onClick={onOpenPrint}>PRINT PREP LISTS FOR COOKS ›</button>
+      )}
       {show.crew && (
       <section>
         <div className="pass__sectionhead">
@@ -288,6 +291,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, view = "ho
                       ? "On the gather list. Clock starts at FINISH."
                       : `${status.doneSteps} of ${status.totalSteps} steps${status.behindMin > 0 ? ` · ${status.behindMin} min behind` : ""}${status.startedAt ? ` · started ${time(status.startedAt)}` : ""}`}
                   </span>
+                  {shift.printedAt && <span className="pass__rowsub pass__vine">ON PAPER · printed for {Object.keys(shift.printedAt).map(nameOf).join(", ")}</span>}
                   {status.finishAt && (
                     <span className={`pass__rowsub${late ? " chef__late" : ""}`}>
                       Done ~{time(status.finishAt)}{late ? ` · AFTER SERVICE (${time(serviceMs)})` : ` · service ${time(serviceMs)}`}

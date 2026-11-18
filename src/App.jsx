@@ -11,6 +11,7 @@ import Insights from "./chef/Insights";
 import Prices from "./chef/Prices";
 import Staff from "./chef/Staff";
 import RecipeLookup from "./chef/RecipeLookup";
+import PrintLists from "./chef/PrintLists";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
 import { CHEF_TABS } from "./linecook/tabs";
@@ -236,7 +237,7 @@ export default function App() {
   const shell = {
     // Setup (and the recipes and prep plan tool under it) is off the daily
     // tabs: it's done once, then only for new menu items. It hangs off Home.
-    screen: ["setup", "form", "manage", "plan", "prices", "staff"].includes(screen) ? "home" : screen,
+    screen: ["setup", "form", "manage", "plan", "prices", "staff"].includes(screen) ? "home" : screen === "print" ? "crew" : screen,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
@@ -268,7 +269,19 @@ export default function App() {
           lede={screen === "crew" ? "Where every cook is on their list, step by step." : "86s, short ingredients and what got tossed."}
           {...shell}
         >
-          <ChefHome key={screen} view={screen} today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
+          <ChefHome key={screen} view={screen} today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} onOpenPrint={() => setScreen("print")} by={chefOn.initials} />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "print") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Print lists" lede="Hand out each station’s work and print one page per cook, so the crew can work off paper." {...shell}>
+          <button type="button" className="pass__ghost" onClick={() => setScreen("crew")}>← Back to Crew</button>
+          <PrintLists today={today} recipesById={recipesById} ingredients={ingredients} chef={chefOn} />
         </ChefShell>
       </>
     );
