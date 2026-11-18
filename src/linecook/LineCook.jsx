@@ -468,7 +468,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     );
   }
 
-  if (screen === "close" || (screen === "today" && inventory?.closedOn && !shiftIsToday)) {
+  // Before a shift starts, Today is the count: the last close carried over,
+  // or, for a station that has never been closed, every item at zero so the
+  // cook can count what's there and build the first list.
+  if (screen === "close" || (screen === "today" && !shiftIsToday)) {
     const mode = screen === "close" ? "close" : "confirm";
     return (
       <>
@@ -480,6 +483,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
           today={today}
           closedOnLabel={closeLabel(inventory)}
           unclosed={mode === "confirm" && unclosedShift}
+          firstCount={mode === "confirm" && !inventory?.closedOn}
           closedBy={inventory?.closedBy}
           notes={mode === "close" ? inventory?.draftNotes ?? "" : null}
           lastNotes={inventory?.notes}
@@ -495,7 +499,6 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     <>
       <TodayScreen
         {...shared}
-        hasClose={Boolean(inventory?.closedOn)}
         lastNotes={inventory?.notes}
         flags={flags}
         onAddFlag={addFlag}

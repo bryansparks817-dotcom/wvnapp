@@ -16,19 +16,21 @@ export default function CountScreen({
   mode, station, screen, setScreen, onOpenChef,
   initials, onChangeCook,
   items, inventory, today, closedOnLabel, closedBy, unclosed, notes, lastNotes, onChangeNotes, onChangeItem, onSubmit,
-  underway, onRestart,
+  underway, onRestart, firstCount = false,
 }) {
   const isClose = mode === "close";
   const startedAt = underway?.at ? new Date(underway.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : null;
   return (
     <div className="pass">
       <PassHeader station={station} initials={initials} onChangeCook={onChangeCook}>
-        <span className="pass__date">{isClose ? "END OF SHIFT" : `FROM THE ${closedOnLabel} CLOSE${closedBy ? ` · ${closedBy}` : ""}`}</span>
-        <h1 className="pass__title">{isClose ? "Close count" : "Confirm the count"}</h1>
+        <span className="pass__date">{isClose ? "END OF SHIFT" : firstCount ? "NO CLOSE COUNT YET" : `FROM THE ${closedOnLabel} CLOSE${closedBy ? ` · ${closedBy}` : ""}`}</span>
+        <h1 className="pass__title">{isClose ? "Close count" : firstCount ? "First count" : "Confirm the count"}</h1>
         <p className="pass__hint">
           {isClose
             ? "Line pans and lowboy, in 25% steps. Every shift ends with a count; it carries over to the next shift."
-            : underway
+            : firstCount
+              ? "This station hasn’t been closed with a count yet. Count your line pans and lowboy now, then build your list."
+              : underway
               ? `This shift is already underway${underway.by ? ` (started by ${underway.by}${startedAt ? ` at ${startedAt}` : ""})` : ""}. Check the count, then carry on where it left off.`
               : unclosed
               ? "The last shift wasn’t closed with a count, so this is where it left off. Count carefully, then build your list."
@@ -64,7 +66,7 @@ export default function CountScreen({
 
       <div className="pass__footer">
         <button type="button" className="pass__cta" onClick={onSubmit}>
-          {isClose ? "SAVE CLOSE COUNT" : underway ? "CONFIRMED · CONTINUE SHIFT →" : "CONFIRMED · BUILD MY LIST →"}
+          {isClose ? "SAVE CLOSE COUNT" : firstCount ? "COUNTED · BUILD MY LIST →" : underway ? "CONFIRMED · CONTINUE SHIFT →" : "CONFIRMED · BUILD MY LIST →"}
         </button>
         {underway && onRestart && (
           <button type="button" className="pass__ghost" onClick={onRestart}>Recount: rebuild the list (clears today’s ticks)</button>
