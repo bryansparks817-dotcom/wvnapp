@@ -1,7 +1,7 @@
 [
  {
   "id": "12-hour-braised-wagyu-short-rib",
-  "name": "12-Hour Braised Wagyu Short Rib",
+  "name": "Braised Wagyu Short Rib",
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
@@ -9,107 +9,130 @@
   ],
   "ingredients": [
    {
-    "name": "Wagyu short ribs",
-    "qty": 5000.0,
+    "name": "Wagyu short rib, boneless",
+    "qty": 10433.0,
     "unit": "g",
-    "note": "bone-in; English cut",
-    "draft": true
+    "note": "1 case avg 23 lb (BEK Beef Chuck Short Rib BNLS Gold Grade); weigh and log each case"
    },
    {
     "name": "Kosher salt",
-    "qty": 50.0,
+    "qty": 104.0,
     "unit": "g",
     "note": "1% of meat weight",
     "draft": true
    },
    {
     "name": "Black pepper",
-    "qty": 10.0,
+    "qty": 21.0,
     "unit": "g",
     "note": "Cracked",
     "draft": true
    },
    {
     "name": "Neutral oil",
-    "qty": 60.0,
+    "qty": 125.0,
     "unit": "g",
     "note": "For searing",
     "draft": true
    },
    {
     "name": "Yellow onion",
-    "qty": 500.0,
+    "qty": 1045.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Carrot",
-    "qty": 250.0,
+    "qty": 520.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Celery",
-    "qty": 250.0,
+    "qty": 520.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Garlic",
-    "qty": 60.0,
+    "qty": 125.0,
     "unit": "g",
     "note": "Smashed",
     "draft": true
    },
    {
     "name": "Tomato paste",
-    "qty": 100.0,
+    "qty": 210.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Dry red wine",
-    "qty": 750.0,
+    "qty": 1500.0,
     "unit": "g",
-    "note": "One bottle",
+    "note": "Two bottles",
     "draft": true
    },
    {
     "name": "Veal stock",
-    "qty": 3000.0,
+    "qty": 6250.0,
     "unit": "g",
     "note": "To come ¾ up the ribs",
     "draft": true
    },
    {
+    "name": "Rosemary",
+    "qty": 15.0,
+    "unit": "g",
+    "note": "Whole sprigs; pull before portioning",
+    "draft": true
+   },
+   {
     "name": "Thyme",
+    "qty": 20.0,
+    "unit": "g",
+    "note": "Whole sprigs; pull before portioning",
+    "draft": true
+   },
+   {
+    "name": "Sage",
     "qty": 10.0,
     "unit": "g",
-    "note": "Sprigs",
+    "note": "Whole sprigs; pull before portioning",
     "draft": true
    },
    {
     "name": "Bay leaf",
-    "qty": 2.0,
+    "qty": 4.0,
     "unit": "g",
-    "note": "About 4 leaves",
+    "note": "About 8 leaves",
     "draft": true
    }
   ],
   "steps": [
    {
-    "name": "Season short ribs with salt and pepper; hold uncovered in the walk-in overnight if time allows.",
-    "type": "passive",
-    "duration_minutes": 0.0,
+    "name": "Weigh the full case and write the raw weight on the protein portion log.",
+    "type": "active",
+    "duration_minutes": 5.0
+   },
+   {
+    "name": "Trim excess fat cap and silver skin; weigh the trim and log it.",
+    "type": "active",
+    "duration_minutes": 30.0,
     "draft": true
    },
    {
-    "name": "Sear ribs hard on all sides in oil; remove.",
+    "name": "Season short ribs with salt and pepper; hold uncovered in the walk-in overnight.",
+    "type": "passive",
+    "duration_minutes": 0.0
+   },
+   {
+    "name": "Sear ribs hard on all sides in oil, in batches; remove.",
     "type": "active",
-    "duration_minutes": 30.0,
+    "duration_minutes": 45.0,
     "draft": true
    },
    {
@@ -121,31 +144,33 @@
    {
     "name": "Deglaze with red wine and reduce by half.",
     "type": "active",
-    "duration_minutes": 10.0,
+    "duration_minutes": 15.0,
     "draft": true
    },
    {
-    "name": "Return ribs bone-side up; add veal stock, thyme and bay to come ¾ up the ribs.",
+    "name": "Return ribs to the pans; add veal stock to come ¾ up the ribs, then tuck in whole sprigs of rosemary, thyme and sage plus the bay.",
+    "type": "active",
+    "duration_minutes": 10.0
+   },
+   {
+    "name": "Cover tightly and braise at 250°F for 6 hours, until spoon-tender.",
+    "type": "passive",
+    "duration_minutes": 360.0
+   },
+   {
+    "name": "Cool ribs in the liquid overnight so the fat sets.",
+    "type": "passive",
+    "duration_minutes": 480.0
+   },
+   {
+    "name": "Lift off fat, pull the herb stems and bay, and portion 4 oz (113 g) per order.",
+    "type": "active",
+    "duration_minutes": 30.0
+   },
+   {
+    "name": "Weigh the total cooked meat and count the portions; write both on the protein portion log.",
     "type": "active",
     "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
-    "name": "Cover tightly and braise at 250°F for 12 hours, until spoon-tender.",
-    "type": "passive",
-    "duration_minutes": 720.0,
-    "draft": true
-   },
-   {
-    "name": "Cool ribs in the liquid, then chill overnight so the fat sets.",
-    "type": "passive",
-    "duration_minutes": 120.0,
-    "draft": true
-   },
-   {
-    "name": "Lift off fat (reserve), remove bones and sinew, and portion 113 g per order.",
-    "type": "active",
-    "duration_minutes": 30.0,
     "draft": true
    },
    {
@@ -155,26 +180,24 @@
     "draft": true
    }
   ],
-  "yieldGrams": 2250,
+  "yieldGrams": 5600,
   "category": "Protein, Wagyu short rib",
-  "yieldText": "Approx. 2,250 g cooked boneless (5 kg bone-in)",
-  "portion": "113 g (4 oz) cooked per entrée",
+  "yieldText": "Approx. 5,600 g cooked from one 23 lb case (about 49 portions at 4 oz)",
+  "portion": "4 oz (113 g) cooked per entrée",
   "storage": "Cool in braising liquid; portion and hold covered at ≤41°F",
-  "shelfLife": "4 days refrigerated in braising liquid",
-  "portions": 20.0,
-  "shelfLifeDays": 4,
+  "shelfLife": "7 days refrigerated in braising liquid",
+  "portions": 49.0,
+  "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "DRAFT: the 12-hour braise was referenced but not in the workbook. This is a standard red-wine braise at 250°F; swap in your temperature, liquid and aromatics.\n\nYIELD: bone-in short rib usually gives about 45% as cooked boneless meat. 5 kg ≈ 2,250 g ≈ 20 portions at 113 g. Weigh the first batch.\n\nPICKUP: warm portions in the veal stock bath; see the entrée build.",
+  "plating": "",
   "drafts": [
    "allergens",
-   "portion",
-   "shelfLife",
    "storage",
    "yieldText"
   ],
   "source": {
    "sheet": "Wagyu_Short_Rib_Braise.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   }
  },
@@ -10098,7 +10121,7 @@
     "recipeRef": "12-hour-braised-wagyu-short-rib",
     "qty": 113.0,
     "unit": "g",
-    "note": "cooked; Confirmed 4 oz cooked portion; 12-hour braise."
+    "note": "cooked; Confirmed 4 oz cooked portion; 6-hour braise."
    },
    {
     "name": "House gnocchi",
