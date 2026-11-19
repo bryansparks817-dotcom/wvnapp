@@ -113,25 +113,6 @@
     ]
    },
    {
-    "id": "individual-salmon-wellington-make-ahead-assembly",
-    "name": "Individual salmon Wellington",
-    "pan": "1/3",
-    "panGrams": 4000,
-    "lowboySize": "qt",
-    "qtGrams": 950,
-    "lowboyPar": 1,
-    "shelfLifeDays": 3,
-    "recipeId": "individual-salmon-wellington-make-ahead-assembly",
-    "unconfirmed": [
-     "pan",
-     "lowboySize",
-     "qtGrams",
-     "lowboyPar",
-     "panGrams",
-     "shelfLifeDays"
-    ]
-   },
-   {
     "id": "pickled-yellow-mustard-seeds",
     "name": "Drained pickled mustard seeds",
     "pan": "1/9",

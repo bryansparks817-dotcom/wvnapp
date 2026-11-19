@@ -4464,7 +4464,7 @@
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
-   "garde-manger"
+   "grill"
   ],
   "ingredients": [
    {
@@ -4472,12 +4472,12 @@
     "qty": 113.0,
     "unit": "g",
     "note": "NZ King, belly meat included; skinless",
-    "draft": true
+    "qtyLabel": "4 oz (113 g)"
    },
    {
     "name": "Spinach & oyster mushroom duxelle",
     "recipeRef": "spinach-oyster-mushroom-duxelle",
-    "qty": 43.0,
+    "qty": 45.0,
     "unit": "g",
     "note": "Chilled, dry"
    },
@@ -4485,8 +4485,7 @@
     "name": "Puff pastry sheet",
     "qty": 1.0,
     "unit": "ea",
-    "note": "Pillsbury 5 × 5 in × 1/8 in (≈57 g)",
-    "draft": true
+    "note": "Pillsbury 5 × 5 in × 1/8 in (≈57 g)"
    },
    {
     "name": "Kosher salt",
@@ -4504,59 +4503,42 @@
     "name": "Egg wash",
     "qty": 0,
     "unit": "g",
-    "asNeeded": "Seams only",
-    "note": "At bake, not at assembly"
+    "asNeeded": "Seams",
+    "note": "Seal seams at assembly"
    }
   ],
   "steps": [
    {
-    "name": "Portion salmon to 113 g, pat dry and season lightly with salt and pepper.",
+    "name": "Portion salmon to 4 oz (113 g), pat dry and season lightly with salt and pepper.",
     "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
+    "duration_minutes": 3.0
    },
    {
-    "name": "Spread 43 g chilled duxelle evenly over the top of the salmon.",
+    "name": "Spread 45 g chilled duxelle evenly over the top of the salmon.",
     "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
+    "duration_minutes": 1.0
    },
    {
     "name": "Place on one 5 × 5-inch, 1/8-inch-thick puff pastry sheet (approximately 57 g).",
     "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
+    "duration_minutes": 1.0
    },
    {
-    "name": "Wrap and fully enclose the salmon and duxelle; seal seams. Do not egg-wash during make-ahead assembly.",
+    "name": "Wrap and fully enclose the salmon and duxelle with egg wash; seal seams.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
-    "name": "Hold assembled Wellingtons refrigerated, covered, for several hours or overnight.",
+    "name": "Hold assembled Wellingtons refrigerated, covered.",
     "type": "passive",
-    "duration_minutes": 0.0,
-    "draft": true
-   },
-   {
-    "name": "À la minute: apply egg wash to seams immediately before baking.",
-    "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
-   },
-   {
-    "name": "Bake at 425°F, high fan, approximately 12 minutes. Confirm doneness with a calibrated probe; time will vary with oven load and portion thickness.",
-    "type": "passive",
-    "duration_minutes": 12.0,
-    "draft": true
+    "duration_minutes": 0.0
    }
   ],
-  "yieldGrams": 213,
+  "yieldGrams": 215,
   "category": "Component, salmon Wellington entrée",
-  "yieldText": "1 Wellington (≈213 g assembled)",
+  "yieldText": "1 Wellington (≈215 g assembled)",
   "portion": "1 Wellington",
-  "storage": "Assembled, un-egg-washed; covered, ≤41°F",
+  "storage": "Assembled; covered, ≤41°F",
   "shelfLife": "Assemble same day or hold overnight",
   "portions": 1.0,
   "allergens": [
@@ -4565,14 +4547,11 @@
    "Wheat/Gluten",
    "Fish"
   ],
-  "plating": "PRODUCTION NOTES:\n• Salmon portion and pastry specification are confirmed.\n• Approximate assembled weight before egg wash: 213 g.\n• Keep filling cold and dry; prevent moisture from contacting pastry.\n• Use validated internal-temperature standards and local food-safety requirements.",
-  "drafts": [
-   "allergens",
-   "station"
-  ],
+  "plating": "",
+  "drafts": [],
   "source": {
    "sheet": "Salmon_Wellington_Individual.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   }
  },
