@@ -29,15 +29,14 @@
     "lowboySize": "qt",
     "qtGrams": 950,
     "lowboyPar": 1,
-    "shelfLifeDays": 3,
+    "shelfLifeDays": 10,
     "recipeId": "albondigas-sauce",
     "unconfirmed": [
      "pan",
      "lowboySize",
      "qtGrams",
      "lowboyPar",
-     "panGrams",
-     "shelfLifeDays"
+     "panGrams"
     ]
    },
    {

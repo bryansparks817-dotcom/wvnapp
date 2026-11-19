@@ -380,28 +380,27 @@
    {
     "name": "House-made tomato sauce",
     "recipeRef": "d-o-p-san-marzano-tomato-sauce",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
-    "note": "Use current house recipe; heirloom tomatoes in summer, D.O.P. San Marzano off-season; Linked to the D.O.P. San Marzano sauce for winter; the farm heirloom sauce is the summer version.",
-    "draft": true
+    "note": "Use current house recipe; heirloom tomatoes in summer, D.O.P. San Marzano off-season; Linked to the D.O.P. San Marzano sauce for winter; the farm heirloom sauce is the summer version."
    },
    {
     "name": "House-made mole",
     "recipeRef": "black-cherry-pepita-black-lime-mole",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
     "note": "Use established house mole recipe"
    },
    {
     "name": "Coconut milk",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
     "note": "Full-fat, unsweetened; shake/stir container thoroughly before weighing"
    }
   ],
   "steps": [
    {
-    "name": "Weigh equal quantities of house-made tomato sauce, house mole, and full-fat unsweetened coconut milk. For this batch, use 1,980 g of each component.",
+    "name": "Weigh equal quantities of house-made tomato sauce, house mole, and full-fat unsweetened coconut milk. For this batch, use 3,000 g of each component.",
     "type": "active",
     "duration_minutes": 5.0,
     "draft": true
@@ -425,29 +424,17 @@
     "draft": true
    },
    {
-    "name": "Taste and assess balance, salt, acidity, sweetness, spice, and viscosity. Any adjustment should be documented as a revision to the standardized 1:1:1 formula.",
-    "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
-   },
-   {
     "name": "For advance preparation, transfer to shallow pans or approved containers and cool rapidly using the restaurant's approved cooling procedure. Refrigerate at ≤40°F.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
-   },
-   {
-    "name": "For service, reheat only the quantity needed using the approved reheating procedure. Stir frequently and maintain the restaurant's approved hot-holding temperature. Portion 180 g sauce per order.",
-    "type": "active",
-    "duration_minutes": 0.0,
-    "draft": true
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "33 portions",
+  "yieldText": "9,000 g (50 portions)",
   "portion": "180 g finished sauce / order",
   "storage": "Refrigerated components; finish and hold per approved plan",
-  "portions": 33.0,
+  "portions": 50.0,
   "allergens": [
    "Sesame"
   ],
@@ -459,9 +446,12 @@
   ],
   "source": {
    "sheet": "Albondigas_Sauce.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": ""
-  }
+  },
+  "shelfLife": "10 days refrigerated",
+  "shelfLifeDays": 10,
+  "yieldGrams": 9000
  },
  {
   "id": "apple-cider-thyme-mignonette",
