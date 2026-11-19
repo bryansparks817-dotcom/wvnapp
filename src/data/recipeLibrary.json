@@ -806,12 +806,12 @@
     "duration_minutes": 5.0
    },
    {
-    "name": "bring to gentle simmer then reduxe to medium-low heat",
+    "name": "bring to gentle simmer then reduce to medium-low heat",
     "type": "active",
     "duration_minutes": 10.0
    },
    {
-    "name": "stir occasionally to check thickness and recude until final weigth is 1kg",
+    "name": "stir occasionally to check thickness and reduce until final weight is 1kg",
     "type": "passive",
     "duration_minutes": 60.0
    },
