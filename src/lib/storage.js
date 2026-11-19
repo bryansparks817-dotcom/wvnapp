@@ -1,4 +1,5 @@
 import priceSeed from "../data/ingredientPrices.json";
+import menuPriceSeed from "../data/menuPrices.json";
 
 // Bump when ingredientPrices.json is rebuilt from a newer inventory sheet.
 export const PRICE_SEED_REV = 1;
@@ -25,6 +26,7 @@ const HISTORY_KEY = "thePass.history.v1";
 const FLAG_LOG_KEY = "thePass.flagLog.v1";
 const PRICES_KEY = "thePass.prices.v1";
 const PRICE_SEED_KEY = "thePass.priceSeed.v1";
+const MENU_PRICES_KEY = "thePass.menuPrices.v1";
 const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 const LIBRARY_KEY = "thePass.recipeLibrary.v1";
 
@@ -347,4 +349,16 @@ export const priceSources = priceSeed.source;
 
 export function savePrices(prices) {
   save(PRICES_KEY, prices);
+}
+
+// Menu prices for full dish builds, dollars per plate, by recipe id. Only
+// the chef's changes are saved; anything not changed comes from the printed
+// menu (src/data/menuPrices.json). A price the chef clears is saved as null
+// so the menu price doesn't come back.
+export function loadMenuPrices() {
+  return { ...menuPriceSeed.prices, ...load(MENU_PRICES_KEY, {}) };
+}
+
+export function saveMenuPrice(id, price) {
+  save(MENU_PRICES_KEY, { ...load(MENU_PRICES_KEY, {}), [id]: price });
 }

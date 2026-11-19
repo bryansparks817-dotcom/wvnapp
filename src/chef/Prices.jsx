@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { loadPrices, priceSources, savePrices } from "../lib/storage";
-import { allIngredientNames, costIndex, houseRecipeNames } from "../lib/costing";
-import { groupRecipes } from "../lib/recipeCategories";
+import { loadMenuPrices, loadPrices, priceSources, saveMenuPrice, savePrices } from "../lib/storage";
+import { allIngredientNames, costIndex, foodCostPct, houseRecipeNames, plateCost } from "../lib/costing";
+import { groupRecipes, isDishBuild } from "../lib/recipeCategories";
 
 // Ingredient prices in $ per kg. They feed recipe cost, waste in dollars
 // and the theoretical food cost. Prices from the vendor order guides are loaded once
@@ -9,6 +9,12 @@ import { groupRecipes } from "../lib/recipeCategories";
 export default function Prices({ recipes, recipesById, ingredients }) {
   const [prices, setPrices] = useState(() => loadPrices());
   useEffect(() => { savePrices(prices); }, [prices]);
+  const [menuPrices, setMenuPrices] = useState(() => loadMenuPrices());
+  function setMenuPrice(id, raw) {
+    const value = raw === "" ? null : Number(raw);
+    setMenuPrices((m) => ({ ...m, [id]: value }));
+    saveMenuPrice(id, value);
+  }
   const names = useMemo(() => allIngredientNames(recipes, recipesById, ingredients), [recipes, recipesById, ingredients]);
   const costs = useMemo(() => costIndex(recipes, recipesById, ingredients, prices), [recipes, recipesById, ingredients, prices]);
   const priced = names.filter((n) => prices[n.name.toLowerCase()] != null).length;
@@ -61,19 +67,51 @@ export default function Prices({ recipes, recipesById, ingredients }) {
             <ul className="chef__table">
               {g.recipes.map((r) => {
                 const c = costs.get(r.id);
+                const dish = isDishBuild(r);
+                // Full builds are costed per plate, with food cost % against
+                // the menu price. Everything else stays $/kg.
+                const plate = dish ? plateCost(r, c, recipesById, ingredients) : null;
+                const menu = dish ? menuPrices[r.id] : null;
+                const pct = dish ? foodCostPct(plate, menu) : null;
+                // "+": some ingredients aren't priced yet, so the real number is higher.
+                const partial = c.missing.length ? "+" : "";
                 return (
                   <li key={r.id} className={focus?.id === r.id ? "chef__row--on" : undefined}>
                     <button type="button" className="chef__rowbtn" onClick={() => pick(r, c)} disabled={!c.missing.length} aria-pressed={focus?.id === r.id}>
                       <span>{r.name}</span>
-                      <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
-                      <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced ›` : "all priced"}</span>
+                      {dish ? (
+                        <span className="pass__mono pass__amber">
+                          {plate != null ? `$${plate.toFixed(2)}${partial}/ea` : "—"}
+                          {plate != null && <span className="chef__fcpct">{pct != null ? `${pct.toFixed(1)}%${partial}` : "no menu $"}</span>}
+                        </span>
+                      ) : (
+                        <span className="pass__mono pass__amber">{c.priced ? `$${(c.perGram * 1000).toFixed(2)}/kg` : "—"}</span>
+                      )}
+                      <span className="pass__mono pass__muted">{c.missing.length ? `${c.missing.length} unpriced ›` : c.total ? "all priced" : "no amounts"}</span>
                     </button>
+                    {dish && (
+                      <label className="chef__menuprice">
+                        <span>Menu price $</span>
+                        <input
+                          className="pass__input"
+                          type="number"
+                          inputMode="decimal"
+                          min="0"
+                          step="0.01"
+                          placeholder="—"
+                          aria-label={`${r.name} menu price`}
+                          value={menu ?? ""}
+                          onChange={(e) => setMenuPrice(r.id, e.target.value)}
+                        />
+                      </label>
+                    )}
                   </li>
                 );
               })}
             </ul>
           </div>
         ))}
+        <p className="pass__hint">Full dish builds show cost per plate and food cost % (plate cost ÷ menu price). A "+" means some ingredients aren't priced yet, so the real cost is higher. Tap the dish to see what's missing.</p>
       </section>
       <section className="chef__data">
         <div className="pass__sectionhead" ref={listRef}><h2>Ingredients</h2><span className="pass__countlabel">$ PER KG</span></div>

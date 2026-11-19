@@ -1,7 +1,112 @@
 [
-  { "name": "Whole eggs", "gramsPerEach": 50, "estimated": true },
-  { "name": "Phyllo dough", "gramsPerEach": 23, "estimated": true },
-  { "name": "Puff pastry sheet", "gramsPerEach": 245, "estimated": true },
-  { "name": "Round rice paper sheets", "gramsPerEach": 9, "estimated": true },
-  { "name": "Nori sheets", "gramsPerEach": 3, "estimated": true }
+  {
+    "name": "Whole eggs",
+    "gramsPerEach": 50,
+    "estimated": true
+  },
+  {
+    "name": "Phyllo dough",
+    "gramsPerEach": 23,
+    "estimated": true
+  },
+  {
+    "name": "Puff pastry sheet",
+    "gramsPerEach": 245,
+    "estimated": true
+  },
+  {
+    "name": "Round rice paper sheets",
+    "gramsPerEach": 9,
+    "estimated": true
+  },
+  {
+    "name": "Nori sheets",
+    "gramsPerEach": 3,
+    "estimated": true
+  },
+  {
+    "name": "U-15 sea scallops",
+    "gramsPerEach": 30,
+    "estimated": true
+  },
+  {
+    "name": "Burrata",
+    "gramsPerEach": 227,
+    "estimated": true
+  },
+  {
+    "name": "Challah crostini",
+    "gramsPerEach": 15,
+    "estimated": true
+  },
+  {
+    "name": "Micro red sorrel",
+    "gramsPerEach": 0.1,
+    "estimated": true
+  },
+  {
+    "name": "Broccolini",
+    "gramsPerEach": 15,
+    "estimated": true
+  },
+  {
+    "name": "Split quail",
+    "gramsPerEach": 55,
+    "estimated": true
+  },
+  {
+    "name": "Fennel frond",
+    "gramsPerEach": 1,
+    "estimated": true
+  },
+  {
+    "name": "Iceberg lettuce",
+    "gramsPerEach": 540,
+    "estimated": true
+  },
+  {
+    "name": "Oysters",
+    "gramsPerEach": 85,
+    "estimated": true
+  },
+  {
+    "name": "Butternut squash & feta tart",
+    "gramsPerEach": 158,
+    "estimated": true
+  },
+  {
+    "name": "Individual salmon Wellington",
+    "gramsPerEach": 213,
+    "estimated": true
+  },
+  {
+    "name": "Venison osso bucco",
+    "gramsPerEach": 1619,
+    "estimated": true
+  },
+  {
+    "name": "Poached figs",
+    "gramsPerEach": 42,
+    "estimated": true
+  },
+  {
+    "name": "Crispy sage leaves",
+    "gramsPerEach": 1,
+    "estimated": true
+  },
+  {
+    "name": "Quick-pickled shishito peppers",
+    "gramsPerEach": 6,
+    "estimated": true
+  },
+  {
+    "name": "Rice paper & nori chips",
+    "gramsPerEach": 3,
+    "estimated": true
+  },
+  {
+    "name": "Venison cross-cut osso bucco shanks",
+    "gramsPerEach": 450,
+    "estimated": true
+  }
 ]
