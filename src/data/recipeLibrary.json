@@ -2460,8 +2460,8 @@
   "ingredients": [
    {
     "name": "Dart Rohan duck breast",
-    "qty": 1.0,
-    "unit": "g",
+    "qty": 16.0,
+    "unit": "ea",
     "note": "skin-on; 7–8 oz average; 4/pack, 10 packs/case",
     "draft": true
    },
@@ -2470,14 +2470,14 @@
     "qty": 0,
     "unit": "g",
     "asNeeded": "As needed",
-    "note": "Season immediately before smoking"
+    "note": "Season 2 hours before smoking"
    },
    {
     "name": "Black pepper",
     "qty": 0,
     "unit": "g",
     "asNeeded": "As needed",
-    "note": "Season immediately before smoking"
+    "note": "Season 2 hours before smoking"
    },
    {
     "name": "Cherry wood",
@@ -2509,13 +2509,18 @@
     "draft": true
    },
    {
-    "name": "Season with salt and black pepper immediately before smoking.",
+    "name": "Season with salt and black pepper.",
     "type": "active",
     "duration_minutes": 2.0,
     "draft": true
    },
    {
-    "name": "Smoke with cherry wood until approximately 103°F internal temperature (user's approximate process target).",
+    "name": "Rest 2 hours with the salt and pepper on before smoking.",
+    "type": "passive",
+    "duration_minutes": 120.0
+   },
+   {
+    "name": "Smoke with cherry wood until approximately 103°F internal temperature.",
     "type": "passive",
     "duration_minutes": 60.0,
     "draft": true
@@ -2525,49 +2530,27 @@
     "type": "passive",
     "duration_minutes": 60.0,
     "draft": true
-   },
-   {
-    "name": "At pickup, hard-sear skin-side down to render and crisp the skin.",
-    "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
-    "name": "Use a little neutral oil as needed to regulate pan temperature; flip and baste with cold butter to finish.",
-    "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
-   },
-   {
-    "name": "Rest before slicing and plating.",
-    "type": "passive",
-    "duration_minutes": 5.0,
-    "draft": true
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "4 breasts (1 pack); 7–8 oz each",
+  "yieldText": "16 breasts (4 packs); 7–8 oz each",
   "portion": "1 breast per entrée; final portioning TBD",
   "storage": "Chill after smoking; refrigerated hold under approved procedures",
-  "shelfLife": "TBD / follow approved controls",
-  "portions": 4.0,
+  "shelfLife": "10 days refrigerated",
+  "portions": 16.0,
   "allergens": [
    "Dairy"
   ],
-  "plating": "Important: 103°F is the user's partial-smoke process endpoint, not a validated ready-to-eat temperature. Final cooking must meet the establishment's applicable food-safety standard. Chill promptly using approved cooling procedures; establish and document validated time/temperature controls. No cure or marinade is used.",
+  "plating": "",
   "drafts": [
-   "allergens",
-   "station",
-   "yieldText"
+   "station"
   ],
   "source": {
    "sheet": "Smoked_Duck_Breast.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   },
-  "needsReview": [
-   "Dart Rohan duck breast, skin-on: unit \"each\" not supported"
-  ]
+  "shelfLifeDays": 10
  },
  {
   "id": "cherry-smoked-grape-chutney",
@@ -9576,7 +9559,7 @@
     "name": "Cherry-smoked Dart Rohan duck breast",
     "recipeRef": "cherry-smoked-dart-rohan-duck-breast",
     "qty": 1.0,
-    "unit": "g",
+    "unit": "ea",
     "note": "7–8 oz raw; hard-sear and butter-baste at pickup"
    },
    {

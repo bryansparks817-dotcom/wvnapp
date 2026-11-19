@@ -108,5 +108,15 @@
     "name": "Venison cross-cut osso bucco shanks",
     "gramsPerEach": 450,
     "estimated": true
+  },
+  {
+    "name": "Dart Rohan duck breast",
+    "gramsPerEach": 213,
+    "estimated": true
+  },
+  {
+    "name": "Cherry-smoked Dart Rohan duck breast",
+    "gramsPerEach": 213,
+    "estimated": true
   }
 ]
