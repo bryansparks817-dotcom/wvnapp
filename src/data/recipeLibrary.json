@@ -7488,7 +7488,7 @@
     "draft": true
    },
    {
-    "name": "Brine for 6 hours for the initial production test. Evaluate seasoning and texture before extending toward 8 hours.",
+    "name": "Brine for 6 hours.",
     "type": "passive",
     "duration_minutes": 360.0,
     "draft": true
@@ -7499,9 +7499,14 @@
     "duration_minutes": 5.0
    },
    {
-    "name": "Arrange quail on racks and refrigerate uncovered for 1–2 hours before dredging.",
+    "name": "Arrange quail on racks and refrigerate uncovered for 2 hours before dredging.",
     "type": "passive",
-    "duration_minutes": 90.0
+    "duration_minutes": 120.0
+   },
+   {
+    "name": "Portion any quail not needed for today's service, cover, label and refrigerate. Shelf life 7 days.",
+    "type": "active",
+    "duration_minutes": 10.0
    }
   ],
   "yieldGrams": 2835,
@@ -7509,18 +7514,18 @@
   "yieldText": "2,835 g",
   "portion": "N/A - sub-recipe",
   "storage": "Refrigerated at or below 40°F / 4°C",
-  "shelfLife": "48 hours*",
+  "shelfLife": "48 hours (one use)",
   "shelfLifeDays": 2,
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Store prepared brine at or below 40°F / 4°C and use within 48 hours as a conservative quality recommendation. This is not a validated shelf-life guarantee. Once raw quail is added, keep refrigerated throughout brining and discard brine immediately after use. Keep raw poultry separate from ready-to-eat foods.\nService: Brine split quail for 6 hours for the initial test; assess before extending toward 8 hours. Drain thoroughly and rack uncovered under refrigeration for 1–2 hours before dredging. Target 90 split pieces for 30 orders; confirm that the brine fully covers the birds.",
+  "plating": "",
   "drafts": [
    "station"
   ],
   "source": {
    "sheet": "Spanish_Quail_Buttermilk_Brine.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   },
   "needsReview": [
