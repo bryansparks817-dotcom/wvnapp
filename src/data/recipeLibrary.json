@@ -8102,7 +8102,7 @@
  },
  {
   "id": "venison-osso-bucco-traditional-braise",
-  "name": "Venison Osso Bucco – Traditional Braise",
+  "name": "Venison Osso Bucco",
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
@@ -8111,9 +8111,9 @@
   "ingredients": [
    {
     "name": "Venison cross-cut osso bucco shanks",
-    "qty": 4.0,
+    "qty": 16.0,
     "unit": "ea",
-    "note": "4 pieces; pack total weight approx. 2.5–4 lb per product description"
+    "note": "4 packs of 4; each pack approx. 2.5–4 lb"
    },
    {
     "name": "Kosher salt",
@@ -8133,88 +8133,87 @@
    },
    {
     "name": "Neutral oil",
-    "qty": 80.0,
+    "qty": 320.0,
     "unit": "g",
     "note": "For searing"
    },
    {
     "name": "Yellow onion",
-    "qty": 400.0,
+    "qty": 1600.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Carrot",
-    "qty": 250.0,
+    "qty": 1000.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Celery",
-    "qty": 200.0,
+    "qty": 800.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Tomato paste",
-    "qty": 120.0,
+    "qty": 480.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Dry red wine",
-    "qty": 1500.0,
-    "unit": "g",
-    "note": "Development starting quantity"
+    "qty": 6000.0,
+    "unit": "g"
    },
    {
     "name": "Veal stock",
-    "qty": 1800.0,
+    "qty": 7200.0,
     "unit": "g",
-    "note": "Development starting quantity; enough to braise"
+    "note": "To come ¾ up the shanks; adjust as needed"
    },
    {
     "name": "Garlic",
-    "qty": 40.0,
+    "qty": 160.0,
     "unit": "g",
     "note": "crushed",
     "draft": true
    },
    {
     "name": "Dried porcini",
-    "qty": 12.0,
+    "qty": 48.0,
     "unit": "g",
     "note": "Keep subtle"
    },
    {
     "name": "Hot water for porcini",
-    "qty": 250.0,
+    "qty": 1000.0,
     "unit": "g",
     "note": "Steep; strain liquor carefully"
    },
    {
     "name": "Juniper berries",
-    "qty": 6.0,
+    "qty": 24.0,
     "unit": "g",
     "note": "lightly crushed; Use sparingly"
    },
    {
     "name": "Thyme",
-    "qty": 8.0,
+    "qty": 32.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Bay leaf",
-    "qty": 2.0,
+    "qty": 8.0,
     "unit": "ea"
    },
    {
     "name": "Orange peel",
-    "qty": 10.0,
+    "qty": 40.0,
     "unit": "g",
     "note": "broad strips; Avoid pith; remove before straining"
    }
@@ -8227,10 +8226,9 @@
     "draft": true
    },
    {
-    "name": "Sear shanks in neutral oil until deeply browned on all sides. Remove and reserve.",
+    "name": "Sear shanks in neutral oil until browned on all sides. Remove and reserve.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 45.0
    },
    {
     "name": "Sweat onion, carrot and celery in the braising vessel until softened and lightly caramelized.",
@@ -8251,21 +8249,19 @@
     "draft": true
    },
    {
-    "name": "Steep dried porcini in hot water; strain liquor through a fine filter to remove grit. Add measured liquor to braise.",
+    "name": "Steep dried porcini in hot water; strain the liquid through a fine filter to remove grit.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
-    "name": "Return shanks. Add veal stock, garlic, juniper, thyme, bay and orange peel. Liquid should come appropriately up the shanks; adjust with stock as needed.",
+    "name": "Return shanks. Add veal stock, the strained porcini liquid, garlic, juniper, thyme, bay and orange peel. Liquid should come ¾ up the shanks; adjust with stock as needed.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
-    "name": "Cover and braise gently at approximately 300°F until fork-tender but holding together. Check periodically; time will vary with shank size.",
+    "name": "Cover and braise gently at approximately 300°F for 4 to 6 hours, until fork-tender but holding together. Time will vary with shank size.",
     "type": "passive",
-    "duration_minutes": 180.0
+    "duration_minutes": 300.0
    },
    {
     "name": "Remove shanks carefully. Strain braising liquid; discard solids. Rapidly cool shanks and liquid separately using approved procedures.",
@@ -8279,7 +8275,7 @@
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "4 whole cross-cut shanks (development batch)",
+  "yieldText": "16 whole cross-cut shanks",
   "portion": "1 whole shank per entrée",
   "storage": "Cool promptly; refrigerate covered",
   "shelfLife": "4 days",
@@ -8294,9 +8290,10 @@
   ],
   "source": {
    "sheet": "Venison_Osso_Buco_Braise.xlsx",
-   "rev": "2026-11-16",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
-  }
+  },
+  "portions": 16.0
  },
  {
   "id": "wagyu-braising-reduction",
