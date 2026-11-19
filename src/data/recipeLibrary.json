@@ -357,7 +357,7 @@
    "Dairy",
    "Egg"
   ],
-  "plating": "PRODUCTION TARGET: Approximately 7,507 g mixture; portion 150 meatballs at 50 g each (30 orders × 5 meatballs). Actual yield will vary with bowl and handling loss; weigh finished mix and portion to 50 g rather than relying on theoretical count.\nMEAT RATIO: 3,720 g beef PSMO tenderloin trim + 2,480 g in-house ground pork shoulder = 6,200 g total meat, 60/40 by meat weight. Tenderloin trim is lean; pork shoulder fat level will affect final texture. Evaluate a cooked test portion before forming the full batch. If the pork shoulder grind is unusually lean, adjust fat content only after a test cook.\nPANade UPDATE: Panko has been replaced with 300 g plain instant oatmeal and 400 g cold milk. Hydrate for 10 minutes before mixing. Use certified gluten-free oatmeal and verify all other ingredients and the finished sauce components for gluten and cross-contact. Oats are naturally gluten-free but may be contaminated during processing.\nCOOKING: Brown in batches, then finish gently in the albondigas sauce until fully cooked. Confirm the applicable safe internal temperature with a calibrated thermometer and the restaurant's approved food-safety plan. Do not infer cooking time without meatball size, equipment, and batch conditions.\nHOLDING: Keep raw mixture ≤40°F; minimize time out of refrigeration. Use separate equipment and sanitation controls for raw meat. Refrigerate promptly and follow the restaurant's validated cooling, reheating, and hot-holding procedures. Conservative quality target: use same day or within 24 hours refrigerated for best texture; this is not a validated food-safety shelf life.",
+  "plating": "",
   "drafts": [
    "station",
    "sub"
@@ -451,7 +451,7 @@
   "allergens": [
    "Sesame"
   ],
-  "plating": "PRODUCTION TARGET: 33 portions at 180 g each = 5,940 g total finished sauce. 30 orders require 5,400 g; the additional 540 g provides approximately 10% reserve. Formula is 1:1:1 by weight: 1,980 g house tomato sauce + 1,980 g house mole + 1,980 g coconut milk.\nSERVICE: Plate 180 g finished sauce with five 50 g Albondigas meatballs. Confirm whether the sauce is pooled beneath the meatballs or spooned over them during plating in the final dish spec.\nTOMATO COMPONENT: Use the established house tomato sauce. Tomato selection is seasonal: heirloom tomatoes in summer; D.O.P. San Marzano tomatoes off-season. This component recipe does not replace or modify the separate house tomato sauce recipe.\nMOLE COMPONENT: Use the established house mole recipe without modification. Allergen status cannot be determined without reviewing that recipe and its supplier labels.\nPROCESS: Heat gently, stir frequently, avoid hard boiling and scorching. Coconut milk may separate under aggressive heat. Validate final seasoning and service viscosity with a test batch before locking the recipe.\nFOOD SAFETY: Follow approved cooling, refrigeration, reheating, and hot-holding procedures. Refrigerate at ≤40°F. This recipe does not establish a validated shelf life; use the shortest applicable shelf life among its components and the restaurant's food-safety plan.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -663,7 +663,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated; prepare and hold under kitchen food-safety procedures.\nService: Pipe cold. For a firmer garnish, whip cream slightly firmer before folding. Do not heat; heat diminishes horseradish pungency.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -862,8 +862,7 @@
   "shelfLife": "21 days",
   "shelfLifeDays": 21,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "portion"
@@ -981,8 +980,7 @@
   "shelfLife": "14 days",
   "shelfLifeDays": 14,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated at or below 40°F / 4°C. 14 days is a quality estimate for a refrigerated vinegar sauce, not a validated shelf life.\nService: Thin and vinegar-forward. Used as the pepper sauce in the house-made hot honey glaze.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -1168,7 +1166,7 @@
   "allergens": [
    "Sesame"
   ],
-  "plating": "BATCH TARGET: 1 US gallon (3.785 L) finished mole, measured after simmering and final texture adjustment. Formula is a 1.7× scale-up of the prior estimated 2.4–2.6 kg batch; actual finished volume depends on solids, reduction, and water additions. The multiplier is a starting production estimate, not a guaranteed volumetric yield.\nPROCESS WATER: Use hot water as needed for chile soaking, blending, and texture. Add gradually. Measure finished volume after simmering; adjust texture with hot water if below 1 gallon, or reduce gently if above 1 gallon. Record actual batch weight and volume for future scaling.\nAPPLICATION: Albondigas Sauce requires 1,980 g mole for 30 orders plus 10% reserve. Weigh actual finished mole and reserve required amount.\nGLUTEN-FREE: Use certified gluten-free masa harina and verify labels for dried chiles, cherries, tamarind, cacao, coffee, vinegar, and spices. Prevent cross-contact. Contains sesame and pumpkin seeds; declare sesame and verify supplier allergen statements.\nPROCESS CONTROL: Toast chiles only until fragrant and pliable; scorched chiles become bitter. Toast seeds separately. Char vegetables without excessive carbonization. Blend very smooth. Simmer gently and stir frequently because masa and seeds settle and scorch. Hot water is process water, not a fixed formula ingredient.\nFINISHING TARGET: Savory chile and toasted pepita first, dark cherry acidity, gentle smoke/cacao, subtle black lime. Not sweet, coffee-forward, or dessert-like. Test in finished Albondigas sauce before final seasoning.\nFOOD SAFETY: Rapidly cool using the restaurant's approved cooling procedure and refrigerate at ≤40°F. This recipe does not establish a validated shelf life; use the shortest applicable validated shelf life in the food-safety plan.\nSPICE FORMULA: All four dried chiles and every spice/seasoning are listed as individual ingredients in the expanded one-gallon ingredient list.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -1286,8 +1284,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -1427,7 +1424,7 @@
    "Dairy",
    "Wheat/Gluten"
   ],
-  "plating": "QUALITY / ADJUSTMENT:\nIf too sweet: add small increments of vinegar or lemon. If too tart: add demi-glace. If too thin: reduce gently before mounting. If too intense: loosen with demi-glace.\n\nPROPOSED SERVICE PORTION:\nStart at 30–40 g per entrée, applied as a restrained spoon or short pool alongside the scallops. Confirm at plating trial.\n\nDEVELOPMENT NOTES:",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -1537,7 +1534,7 @@
    "Dairy",
    "Tree nut"
   ],
-  "plating": "No cauliflower leaves. Fresh mint replaces the leaf garnish and is applied at expo. Preserved lemon liquor (from the preserved-lemon container) and sherry vinegar remain in separate squeeze bottles on the expo side. Quantities and roasting method are not yet finalized.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -1660,7 +1657,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Pickup component. Confirmed portions: 5 oz / 142 g gnocchi; 2.5 oz / 71 g raw cleaned Brussels leaves; 45–50 g concentrated braising reduction. Fresh aromatics: 4–5 g shallot and 2–3 g garlic per entrée. Midpoints shown for operational clarity. Keep leaves slightly al dente. Toss gnocchi and Brussels together in concentrated sauce.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -1776,7 +1773,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "PAN: Fat Daddio's PFT-1375 rectangular fluted tart pan, 13¾ × 4¼ × 1 inch, removable bottom.\nDEVELOPMENT: quantities are proposed starting targets. Check pan fill depth before baking; do not force quantities if filling crowds the phyllo.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -2001,7 +1998,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PROPOSED GARNISH / ONE-ORDER STARTING PORTIONS:\nCrème fraîche — 15 g; restrained swirl or small quenelle.\nMarcona almond praline — 8 g chopped almonds; lightly caramelize with a little honey, cayenne and salt; cool crisp.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — approximately 4 g, applied in a few small drops. Keep sweetness restrained.\n\nSERVICE / FOOD SAFETY:\nProposed soup portion: 8 oz / 227 g. Garnish only at pickup. Cool, store, reheat and hot-hold under the established house HACCP plan and applicable code.",
+  "plating": "",
   "drafts": [
    "allergens",
    "name",
@@ -2140,8 +2137,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -2277,8 +2273,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "FINISHED YIELD: Approximately 619 g starting ingredient weight before aeration; finished volume/weight depends on aeration and handling loss.\n\nPORTION GUIDANCE: Serve whipped and spreadable; portion according to menu application.\n\nSTORAGE / FOOD SAFETY: Keep refrigerated under kitchen food-safety procedures. Use clean utensils and avoid extended room-temperature holding.\n\nSERVICE: Whipped texture; butter should hold shape while remaining soft and spreadable. Bring to service temperature as needed.\n\nREVISION NOTES: Phase Two recipe. Scaled to 453.6 g (1 lb) butter. This is the whipped service version, replacing the earlier dense compound-butter method.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -2429,8 +2424,7 @@
    "Soy",
    "Sesame"
   ],
-  "plating": "SERVICE: 30 g per order of crispy calamari.\n\nFOOD SAFETY: Use pasteurized yolks. Keep at or below 40°F; 5-day shelf life is a quality target, not validated.\n\nTECHNIQUE: Caramelizing the miso dry in the oven gives deep, toffee-like flavor without burning. Pull it when it smells nutty and looks like dark peanut butter.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -2686,7 +2680,7 @@
   "portions": 37.0,
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Development formula. Cherry wood is proposed to echo the duck smoke; confirm desired smoke intensity. Keep some grapes intact for texture. Proposed portion 30–40 g per entrée is not yet confirmed. Contains no declared major allergens in the listed ingredients; verify supplier labels and cross-contact.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -2816,7 +2810,7 @@
   "allergens": [
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Dry blend quality target is 30 days when stored airtight in a cool, dry location and protected from moisture. This is a quality estimate, not a validated shelf life. Discard if damp, contaminated, or showing signs of spoilage.\nService: Use a single dredge per quail piece. Keep master batch separate from working dredge. Discard working dredge after contact with raw poultry; never return it to the master container.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -2965,8 +2959,7 @@
   "shelfLife": "4 days",
   "shelfLifeDays": 4,
   "allergens": [],
-  "plating": "Holding / food safety: Keep unsalted. Cool rapidly and store under kitchen HACCP procedures; refrigerate at 4°C/40°F or below or freeze according to kitchen policy.\nService: Base for the savory bacon-challah bread pudding and other sauces.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -3131,7 +3124,7 @@
    "Dairy",
    "Shellfish"
   ],
-  "plating": "Portion: Determine sauce portion for pasta dressing and dipping service.\nHolding / food safety: Hold and cool under kitchen HACCP procedures. Butter-mounted sauce is best prepared or finished close to service; reheat gently without boiling.\nService: For lobster pappardelle ripiene, use fluid and glossy to coat pasta. For dipping, reduce slightly further before mounting with butter.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -3333,7 +3326,7 @@
   "allergens": [
    "Wheat/Gluten"
   ],
-  "plating": "PRODUCTION NOTES:\n• Proposed development batch; actual yield depends on caper moisture loss and frying.\n• Keep all components fully dry before combining. Wet parsley will compromise crispness.\n• Broccolini portion size and cooking spec are not yet established.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -3427,7 +3420,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "QUALITY CONTROL:\nLeaves should be crisp, green to olive-green, not dark brown, and free of oily heaviness. Discard bitter, scorched leaves.\n\nSTORAGE / SERVICE:\nBest fried to order. If held, cool completely and store in a single layer or lightly layered in an airtight container with a food-safe desiccant, away from humidity. Do not refrigerate. Verify crispness before service.\n\nDEVELOPMENT NOTES:\nOil temperature and time are starting parameters; validate with the actual leaf size and fryer. Proposed garnish: 1–2 leaves per bowl, plus 3–5 g brown butter.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -3560,7 +3553,7 @@
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [],
-  "plating": "BATCH BASIS: Scaled from the original formula for two standard #10 cans. A standard #10 can is assumed to contain 6 lb 9 oz (2,977 g) net weight; two cans = 5,954 g tomatoes. Check the actual label and adjust all other ingredients proportionally if net weight differs.\nFORMULA: 5,954 g D.O.P. San Marzano tomatoes; 298 g EVOO; 595 g yellow onion; 60 g garlic; 60 g kosher salt (initial amount; adjust after reduction); 36 g fresh basil; 4.8 g dried oregano; 2.4 g crushed red pepper (optional).\nYIELD: Finished yield depends on tomato solids and reduction; weigh the cooled finished sauce. Use 1,980 g for the 30-order Albondigas sauce batch. This batch should yield ample reserve, but do not rely on an estimated yield for production allocation.\nSTYLE: Rustic, clean tomato flavor; onion and garlic should support rather than dominate. Keep reduction moderate so the sauce blends smoothly at 1:1:1 with mole and coconut milk.\nQUALITY CONTROL: Verify D.O.P. designation on packaging and retain lot details. Taste after reduction before final salt adjustment. If can net weight differs from 2,977 g, scale the entire formula by actual total tomato weight ÷ 5,954 g.\nFOOD SAFETY: Cool rapidly using the restaurant's approved cooling procedure, refrigerate at ≤40°F, and use the shortest applicable validated shelf life in the restaurant's food-safety plan. This recipe does not establish a validated shelf life or shelf stability.",
+  "plating": "",
   "drafts": [
    "station",
    "sub"
@@ -3690,7 +3683,7 @@
   "shelfLife": "Per validated HACCP plan",
   "portions": 52.0,
   "allergens": [],
-  "plating": "CRITICAL FOOD SAFETY / HACCP:\nThis is a formulation starting point, NOT a validated ready-to-eat charcuterie process. Dry-cured duck is a time/temperature-controlled, reduced-moisture meat process with pathogen hazards. Do not produce or serve under this sheet alone.\nBefore production, have the process reviewed and approved by the establishment's qualified food-safety authority/regulatory authority. Establish product-specific critical limits for cure formulation, curing temperature/time, drying temperature/RH/airflow, endpoint (including aw), monitoring, corrective actions, packaging and shelf life.\nDo not vacuum-package or otherwise oxygen-restrict the finished product unless that packaging step is specifically included in the validated process. Keep lot traceability and curing logs.\n\nCURE #2 REFERENCE: the common manufacturer label rate for Cure #2 is 0.25% of meat weight (2.5 g per kg). Your sheet intentionally leaves it blank until the HACCP plan sets it. Most health departments require a HACCP plan and variance for in-house dry curing; confirm with yours before serving.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -3827,7 +3820,7 @@
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [],
-  "plating": "BATCH BASIS: 5,954 g whole fresh farm heirloom tomatoes, matching the tomato starting weight used for the two-can D.O.P. San Marzano version. Select ripe, sound tomatoes with good flavor; mixed heirloom varieties are acceptable. Record whether the batch weight is taken before or after trimming and keep that standard consistent.\nFORMULA: 5,954 g fresh heirloom tomatoes; 298 g EVOO; 595 g yellow onion; 60 g garlic; 60 g kosher salt as an initial amount (start with approximately 80%, then adjust after reduction); 36 g fresh basil; 4.8 g dried oregano; 2.4 g crushed red pepper optional.\nYIELD: Do not assume equal finished yield to canned tomatoes. Fresh tomatoes vary widely in water content and trim loss. Expected finished yield is approximately 3.8–4.6 kg, but weigh actual yield. Albondigas Sauce production requires 1,980 g tomato sauce for 30 orders plus 10% reserve; weigh and reserve that amount after finishing.\nMETHOD / TEXTURE: Wash, core, and quarter. Sweat onion, add garlic, then tomatoes and aromatics. Simmer uncovered until collapsed and excess water has cooked off. Pass through a medium food mill to remove skins and seeds, then reduce to a rustic, spoonable consistency. For a deliberately rustic sauce with skins/seeds retained, crush by hand instead; choose one method and standardize it.\nQUALITY CONTROL: Taste the raw tomatoes before production; sweetness, acidity, and water content vary by farm and cultivar. Adjust final salt only after reduction. If fruit is notably acidic, do not automatically add sugar; evaluate the finished sauce in the 1:1:1 mole/coconut blend first. Keep the finished sauce bright and spoonable.\nFOOD SAFETY: Wash produce before cutting. Cool rapidly using the restaurant's approved cooling procedure, refrigerate at ≤40°F, and use the shortest applicable validated shelf life in the restaurant's food-safety plan. This recipe does not establish a validated shelf life.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -4112,7 +4105,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated at or below 40°F. Use within 3 days as a conservative refrigerated quality target; this is not a validated shelf life. Rapidly cool using the operation's approved cooling procedure. Freeze promptly for longer storage and thaw under refrigeration. Do not leave at room temperature during service beyond controlled brief portioning/tempering.\nService: Portion 25 g quenelles. Top each with a thin layer of drained pickled mustard seeds and a small fennel frond. The formula preserves a 2:1 butter-to-foie gras ratio by weight; cream and seasonings are additional.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -4214,7 +4207,7 @@
   "shelfLife": "Service batch only; approved procedures",
   "portions": 9.0,
   "allergens": [],
-  "plating": "User-approved method: warm approximately one pint at a time, add as separate expo garnish, held apart from braising sauce. Add a little stock, olive oil, salt; finish with fresh lemon zest and parsley. Portion 40–50 g drained beans. Do not repeatedly warm/cool same batch. Exact pint weight and liquid quantities not established. Follow approved hot-holding and time/temperature procedures.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -4331,7 +4324,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "DRAFT: your house gnocchi wasn't in the workbook, so this is a standard potato gnocchi built on AP flour and egg as you confirmed. Swap in your own ratios.\n\nAt pickup: sauté from blanched with the Brussels leaves and braising reduction (see Brussels Sprout & Gnocchi Pickup).",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -4447,7 +4440,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: For immediate service, hold under your approved hot-holding procedure and avoid prolonged warm holding. For advance preparation, rapidly cool using the approved cooling procedure and refrigerate at or below 40°F. Conservative 7-day refrigerated quality target is an estimate, not a validated shelf life; validate against the pepper sauce formulation and your food-safety plan. Reheat gently and do not repeatedly warm/cool.\nService: Brush 12–15 g per three-piece quail order immediately after frying. Keep glaze warm and fluid, not hot, to avoid softening the crust. Stir before use.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -4744,7 +4737,7 @@
    "Wheat/Gluten",
    "Shellfish"
   ],
-  "plating": "Portion: Determine filling weight per pasta shape during production testing.\nHolding / food safety: Cool rapidly in shallow pans under the kitchen's HACCP procedures; refrigerate at 4°C/40°F or below. Keep chilled during filling and production.\nService: Use as a cold, cohesive filling for pappardelle ripiene. Do not use the earlier plain base as a separate recipe entry.",
+  "plating": "",
   "drafts": [],
   "source": {
    "sheet": "Lobster_and_shrimp_bolognese.xlsx",
@@ -4904,7 +4897,7 @@
   "allergens": [
    "Shellfish"
   ],
-  "plating": "Holding / food safety: Keep unsalted. Cool rapidly and store under kitchen HACCP procedures; refrigerate at 4°C/40°F or below or freeze according to kitchen policy.\nService: Use as the lobster stock base for lobster-clam velouté and other seafood sauces.",
+  "plating": "",
   "drafts": [
    "allergens",
    "name"
@@ -5016,7 +5009,7 @@
    "Wheat/Gluten",
    "Shellfish"
   ],
-  "plating": "Portion: Approximately 4-5 g garnish per serving; at 5 g, estimated 136-144 portions using 680-720 g finished yield.\nHolding / food safety: Store airtight in a cool, dry place; protect from moisture.\nService: Use as a crisp lobster-forward garnish.",
+  "plating": "",
   "drafts": [
    "name"
   ],
@@ -5128,7 +5121,7 @@
   "allergens": [
    "Tree nut"
   ],
-  "plating": "USE / PORTION:\nProposed soup garnish: 8 g chopped praline per bowl. Confirm final portion during plating; keep pieces small enough to eat comfortably with a spoon.\n\nDEVELOPMENT NOTES:\nThis is a proposed honey-caramel almond praline, not a previously established house formula. The 150°C target creates a crisp coating; for a softer, stickier garnish, the cook temperature would need a separate trial.\nAllergen: tree nuts. Honey is not suitable for infants under 12 months. Use heat-resistant gloves and take care handling hot caramel.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -5209,7 +5202,7 @@
   "shelfLife": "Same day only",
   "portions": 42.0,
   "allergens": [],
-  "plating": "Fresh daily mise en place. No oil. Parsley-forward, lemon-heavy, garlic restrained. Portion 5–6 g directly over sliced short rib at expo. Scale batch to expected covers; do not carry over. 200 g parsley formula is a proposed starting point, not a fixed daily requirement.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -5316,7 +5309,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Wrap airtight during resting; follow kitchen procedures for fresh egg pasta storage.\nService: For filled pasta, sheet thinly while retaining enough strength to seal. Test cooking time based on sheet thickness and shape.",
+  "plating": "",
   "drafts": [
    "allergens",
    "yieldText"
@@ -5445,7 +5438,7 @@
   "shelfLife": "7 days refrigerated (quality estimate)",
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Holding / food safety: Refrigerate at or below 40°F and keep seeds covered with pickling liquid. Use a conservative 7-day refrigerated quality target; this is not a validated shelf life or a shelf-stable pickle. Rapidly chill using the operation's approved procedure and follow the food-safety plan.\nService: Drain lightly. Portion approximately 5 g over each 25 g foie gras butter quenelle, then finish with a small fennel frond, leaving the mustard seeds visible.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -5551,8 +5544,7 @@
   "portions": 30.0,
   "shelfLifeDays": 10,
   "allergens": [],
-  "plating": "SERVICE: 2 figs per salad; about 30 salads per batch. Halve or quarter at plating.\n\nLIQUID: champagne vinegar, white wine and agave base from your notes, balanced with a little salt, peppercorns and thyme. Keep the figs submerged.\n\nFIGS: dried white figs (Calimyrna or Turkish), about 16 g each. They are larger and firmer than Mission figs, so check the center for tenderness before pulling.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -5683,7 +5675,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "CHEF NOTES:\n• Use cold or softened compound butter to enrich the Rockefeller filling; do not use it as the sole cooking fat for sweating the vegetables.\n• For consistent service, portion into weighed plugs or sheets and label with production date and use-by date per house policy.\n• Keep preserved lemon restrained; the target is brightness and salinity, not a dominant lemon flavor.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -5815,7 +5807,7 @@
   "portion": "10 g",
   "portions": 95.0,
   "allergens": [],
-  "plating": "Portion: Use as a small, bright garnish with lobster pappardelle ripiene; determine portion during plating tests.\nHolding / food safety: Refrigerate promptly and hold under kitchen food-safety procedures. Prepare in small batches for best texture.\nService: Serve finely diced and lightly dressed, not as a wet vinaigrette. Taste before adding salt because preserved lemon is salty.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -5980,7 +5972,7 @@
    "Dairy",
    "Tree nut"
   ],
-  "plating": "PROVOLETA SERVICE: Use as the topping for a 12 oz portion of provoleta in a small cast-iron pan. Serve crostinis alongside, following the Albondigas presentation. Finish with fresh parsley leaves, dill fronds, shaved Parmesan, and shaved chestnuts. Topping weight per pan has not yet been established.\n\nTEXTURE: Cohesive, savory-sweet topping with distinct pieces of pumpkin, oyster mushroom, and chestnut; not a purée or loose sauce.\n\nHOLDING / FOOD SAFETY: Cool rapidly using the approved procedure and refrigerate at or below 40°F. Three days is a conservative quality estimate, not a validated food-safety shelf life. Verify supplier specifications and cross-contact controls. Contains dairy from butter.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6097,7 +6089,7 @@
   "portions": 30.0,
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "DEVELOPMENT FORMULA: This is a proposed refrigerated quick-pickle starting point, not a recovered house formula or shelf-stable canning process. Keep continuously refrigerated at or below 40°F; use a conservative 7-day quality target pending kitchen validation. Maintain peppers submerged with a clean food-safe weight. Do not store at room temperature. For service, drain well before frying and account for surface moisture to reduce oil splatter.",
+  "plating": "",
   "drafts": [
    "shelfLife"
   ],
@@ -6277,8 +6269,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -6365,8 +6356,7 @@
   "shelfLife": "7 days",
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -6474,7 +6464,7 @@
   "storage": "Fully dried before frying; store airtight and dry after frying",
   "shelfLife": "Airtight, dry; discard if soft",
   "allergens": [],
-  "plating": "DEVELOPMENT FORMULA: Proposed starting ratio is 2 rice-paper sheets to 1 nori sheet by count. The user’s established concept is to soak rice paper and nori together, then dry; this draft operationalizes that as nori adhered to briefly hydrated rice paper. Confirm whether the kitchen actually sandwiches, layers, or co-soaks the sheets before finalizing. Dry completely before frying. Any residual moisture can cause violent oil splatter. Keep finished chips dry and airtight; discard if they soften or become stale.",
+  "plating": "",
   "drafts": [
    "portion",
    "shelfLife",
@@ -6627,8 +6617,7 @@
   "portions": 28.0,
   "shelfLifeDays": 4,
   "allergens": [],
-  "plating": "FINISHED YIELD: Approximately 500-600 g estimated; weigh actual finished batch.\n\nPORTION GUIDANCE: 20 g per batch of Whipped Calabrian Chili Butter.\n\nSTORAGE / FOOD SAFETY: Because garlic is stored with oil, refrigerate promptly at 40°F/4°C or below and use within 4 days, or freeze promptly. Never store at room temperature. Follow validated kitchen HACCP procedures.\n\nSERVICE: Blend completely smooth; target a thick, spoonable purée with minimal added oil.\n\nREVISION NOTES: Phase Two recipe. Estimated yield only; actual yield depends on roasting moisture loss and oil retained.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6721,8 +6710,7 @@
   "portions": 25.0,
   "shelfLifeDays": 3,
   "allergens": [],
-  "plating": "SERVICE: 60 g per salad; about 25 salads per batch (pumpkin loses about 25% roasting).\n\nTEXTURE: just tender with light color, not mushy, so the dice hold shape on the plate.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6842,7 +6830,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PRODUCTION NOTES:\n• Cook whole and unpeeled; do not peel or dice before boiling.\n• Butter and milk are a development starting point. Adjust milk to a silky, spoonable texture.\n• Potato portion size has not yet been established.\n\nSERVICE: American-style divot, 0.5–1 oz clam chowder velouté, finish with chives.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -7031,7 +7019,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Contains dairy, egg, wheat, and pork. Keep refrigerated at or below 40°F / 4°C. Cool using the approved two-stage cooling procedure; do not leave at room temperature to cool. Conservative quality target: 3 days refrigerated, date-marked; follow the establishment’s validated food-safety plan and applicable code. Reheat for hot holding to 165°F / 74°C; hold at 135°F / 57°C or above.\nService: Cut into approximately 50 g cylindrical portions with round mold. Reheat and crisp exterior. Bacon should remain in distinct 6–8 mm pieces.\nProduction: Target 36 portions. Actual finished yield depends on challah moisture, pan depth, and bake loss; weigh finished batch and portion to 50 g.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -7129,7 +7117,7 @@
   "shelfLife": "2 days undressed",
   "shelfLifeDays": 2,
   "allergens": [],
-  "plating": "Keep shaved sprouts and cut apple refrigerated. Prefer cutting apple close to service. Dress only small quantities à la minute; do not hold dressed garnish overnight.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -7246,7 +7234,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Development formula. Steaming and thorough draining are important to avoid a watery purée. Proposed portion 60–75 g per entrée is not confirmed. Contains dairy. Do not over-blend after butter is incorporated; avoid a gluey texture.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -7641,7 +7629,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PRODUCTION NOTES:\n• Formula is a proposed development batch; adjust seasoning after tasting.\n• Duxelle must be dry and completely chilled before wrapping salmon.\n• Finished batch yield has not yet been measured.\n\nHOLDING: Keep refrigerated; prepare in small batches.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -7920,7 +7908,7 @@
    "Dairy",
    "Egg"
   ],
-  "plating": "Bake covered. Press while cooling under refrigeration; hold overnight. Portion cold. Keep raw egg/cream mixture refrigerated and follow approved cooling and reheating procedures. Reheat portions to applicable hot-holding/service temperature; do not rely on oven time alone.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8004,7 +7992,7 @@
   "allergens": [
    "Tree nut"
   ],
-  "plating": "Development recipe. Confirm allergen declaration and cross-contact controls: hazelnuts are a tree nut. Proposed portion 8–10 g per entrée is not confirmed. Chop shortly before service for best texture.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8088,7 +8076,7 @@
    "Wheat/Gluten",
    "Sesame"
   ],
-  "plating": "FORMULA BASIS: Togarashi is 10% of flour weight; cornstarch is 20%; salt is 1.5%. Total formula weight is approximately 11,929 g. Keep dry and protected from moisture. Discard working dredge after raw seafood contact; do not replenish a contaminated pan from the master batch. Check the specific togarashi blend label for sesame, wheat, soy, and other allergens.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8383,7 +8371,7 @@
   "portions": 10.0,
   "shelfLifeDays": 3,
   "allergens": [],
-  "plating": "Development ratio per 1,000 g starting liquid: 500 g veal stock, 350 g defatted braising liquid, 150 g dry red wine. Reduce wine by half before adding stock/liquid. Final reduction endpoint and finished yield not established; test against actual braising liquid. Sherry vinegar quantity left open for sensory adjustment. Rendered Wagyu fat reserved for crostini/grilled vegetables, not added back. Target rich, gelatinous, glossy, completely smooth, with brightness. Portion 45–50 g per entrée.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -8463,8 +8451,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -8577,7 +8564,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "CHEF NOTES:\n• This is a proposed service batch sized for 24 oysters; actual yield will vary with vegetable moisture loss and oyster size.\n• Keep the Brussels sprouts visible and lightly textured rather than cooking them down into a paste.\n• The butter formula is a separate batch; this filling uses 180 g of it, leaving the balance for other service or adjustment.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
