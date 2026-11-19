@@ -377,6 +377,9 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__table li:has(> .chef__rowbtn) { display: block; padding: 0; }
 .chef__rowbtn { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; width: 100%; padding: 7px 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .chef__rowbtn:disabled { cursor: default; }
+.chef__fcpct { margin-left: 8px; padding: 1px 5px; border-radius: 4px; border: 1px solid currentColor; font-size: 12px; }
+.chef__menuprice { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 0 7px; font-size: 12px; color: var(--steel); }
+.chef__menuprice .pass__input { width: 84px; min-height: 32px; padding: 4px 8px; font-size: 13px; }
 .chef__row--on .chef__rowbtn > span:first-child { color: var(--amber, #e8a33d); font-weight: 600; }
 .chef__group + .chef__group { margin-top: 14px; }
 .chef__grouphead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 4px; border-bottom: 1.5px solid var(--edge); }

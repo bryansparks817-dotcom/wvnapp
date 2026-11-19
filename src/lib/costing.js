@@ -70,3 +70,18 @@ export function allIngredientNames(recipes, recipesById, ingredients) {
   }
   return [...names.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
+
+// What one plate of a full dish build costs: the build's cost per gram times
+// its batch weight, split over the plates the build makes (most builds are
+// one plate; Rockefeller and albondigas are written for 8 and 30).
+export function plateCost(recipe, cost, recipesById, ingredients) {
+  if (!cost?.priced) return null;
+  const grams = batchGrams(recipe, recipesById, ingredients).grams;
+  if (!(grams > 0)) return null;
+  return (cost.perGram * grams) / (recipe.portions > 0 ? recipe.portions : 1);
+}
+
+// Plate cost ÷ menu price × 100.
+export function foodCostPct(plate, menuPrice) {
+  return plate != null && menuPrice > 0 ? (plate / menuPrice) * 100 : null;
+}
