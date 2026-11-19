@@ -940,7 +940,7 @@
     "draft": true
    },
    {
-    "name": "Cool rapidly, then transfer to labeled qt containers or squeeze bottles.",
+    "name": "Cool, then transfer to labeled qt containers or squeeze bottles.",
     "type": "passive",
     "duration_minutes": 45.0,
     "draft": true
@@ -951,8 +951,8 @@
   "yieldText": "1400 g",
   "portion": "12-15 g in hot honey glaze",
   "storage": "qt container / squeeze bottle",
-  "shelfLife": "14 days",
-  "shelfLifeDays": 14,
+  "shelfLife": "21 days",
+  "shelfLifeDays": 21,
   "allergens": [],
   "plating": "",
   "drafts": [
@@ -960,7 +960,6 @@
    "category",
    "name",
    "portion",
-   "shelfLife",
    "station",
    "storage",
    "sub",
@@ -968,7 +967,7 @@
   ],
   "source": {
    "sheet": "Beaver_Dam_Pepper_Sauce.xlsx",
-   "rev": "2026-11-14",
+   "rev": "2026-11-19",
    "createdBy": ""
   }
  },
