@@ -1026,15 +1026,13 @@
     "name": "Yellow onion",
     "qty": 250.0,
     "unit": "g",
-    "note": "Peeled, quartered",
-    "draft": true
+    "note": "Peeled, quartered"
    },
    {
     "name": "Garlic",
     "qty": 40.0,
     "unit": "g",
-    "note": "Peeled cloves",
-    "draft": true
+    "note": "Peeled cloves"
    },
    {
     "name": "Unsweetened cacao nibs",
@@ -1074,51 +1072,45 @@
   ],
   "steps": [
    {
-    "name": "Sort dried chiles; remove stems and seeds. Toast briefly in a dry pan or on a plancha over medium heat until fragrant and pliable. Do not blacken.",
+    "name": "Sort dried chiles; remove stems and seeds. Toast briefly in a dry pan over medium heat until fragrant and pliable. Do not blacken.",
     "type": "active",
     "duration_minutes": 12.0
    },
    {
     "name": "Cover toasted chiles with hot water and steep 20 minutes until fully pliable. Drain; discard soaking liquid if bitter.",
     "type": "passive",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
-    "name": "Toast pepitas until fragrant and lightly golden. Toast sesame separately. Toast cacao nibs briefly until aromatic and masa harina until lightly nutty. Do not scorch.",
-    "type": "active",
-    "duration_minutes": 12.0,
-    "draft": true
-   },
-   {
-    "name": "Char tomatoes, onion, and garlic on a plancha, under a broiler, or in a hot oven until softened with dark blistered spots. Avoid heavy carbonization. Roast or sear plantain until golden and soft.",
-    "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
-   },
-   {
-    "name": "Warm neutral oil in a heavy pot. Add oregano, coriander, cumin, cinnamon, allspice, and clove; bloom 20–30 seconds until fragrant. Do not burn.",
-    "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
-   },
-   {
-    "name": "Blend softened chiles with roasted vegetables, plantain, cherries, pepitas, sesame, cacao nibs, masa harina, tamarind, coffee, vinegar, black lime powder, bloomed spices, initial salt, and enough hot water to move the blender. Work in batches until very smooth.",
-    "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
-   },
-   {
-    "name": "Pass through a fine chinois for a refined texture. Transfer to the pot. Add remaining water gradually, scraping blender clean, until thick but pourable.",
+    "name": "Toast pepitas, sesame, cacao nibs and masa harina together on one sheet tray at 325°F, about 8–10 minutes, stirring halfway, until fragrant and the pepitas are lightly golden. Do not scorch.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
    },
    {
+    "name": "Char tomatoes, onion, and garlic on a plancha, under a broiler, or in a hot oven until softened with dark blistered spots. Avoid heavy carbonization. Roast or sear plantain until golden and soft.",
+    "type": "active",
+    "duration_minutes": 20.0
+   },
+   {
+    "name": "Warm neutral oil in a heavy pot. Add oregano, coriander, cumin, cinnamon, allspice, and clove; bloom 20–30 seconds until fragrant. Do not burn.",
+    "type": "active",
+    "duration_minutes": 1.0
+   },
+   {
+    "name": "Blend softened chiles with roasted vegetables, plantain, cherries, pepitas, sesame, cacao nibs, masa harina, tamarind, coffee, vinegar, black lime powder, bloomed spices, initial salt, and enough hot water to move the blender. Work in batches until very smooth.",
+    "type": "active",
+    "duration_minutes": 20.0
+   },
+   {
+    "name": "Pass through a fine chinois for a refined texture. Transfer to the pot. Add remaining water gradually, scraping blender clean, until thick but pourable.",
+    "type": "active",
+    "duration_minutes": 10.0
+   },
+   {
     "name": "Simmer gently 25–35 minutes, stirring frequently and scraping the bottom. Masa and seeds settle and scorch readily. Add water as needed to maintain a smooth, spoonable consistency.",
     "type": "passive",
-    "duration_minutes": 30.0,
-    "draft": true
+    "duration_minutes": 30.0
    },
    {
     "name": "Taste and adjust salt, vinegar, tamarind, and black lime carefully. Target savory dried chile and toasted pepita first, dark cherry acidity next, gentle smoke and cacao depth, with a subtle black-lime finish. It should not taste sweet, coffee-forward, or dessert-like.",
@@ -1134,21 +1126,22 @@
   "yieldGrams": 2500,
   "category": "Winter 26/27",
   "yieldText": "Approx. 2.4–2.6 kg finished; weigh actual yield",
-  "portion": "1,980 g required for Albondigas batch",
+  "portion": "3,000 g per albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [
    "Sesame"
   ],
   "plating": "",
   "drafts": [
-   "allergens",
-   "station"
+   "shelfLife"
   ],
   "source": {
    "sheet": "Black_Cherry_Pepita_Black_Lime_Mole_1_Gallon.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": ""
-  }
+  },
+  "shelfLife": "14 days refrigerated; freeze up to 3 months",
+  "shelfLifeDays": 14
  },
  {
   "id": "black-garlic-deviled-egg-filling",
