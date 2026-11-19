@@ -766,82 +766,69 @@
    {
     "name": "Balsamic vinegar",
     "qty": 1600.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Ruby port",
     "qty": 400.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Light brown sugar",
     "qty": 80.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Honey",
     "qty": 40.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
     "qty": 5.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Black peppercorns",
     "qty": 4.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Orange peel",
     "qty": 10.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    }
   ],
   "steps": [
    {
     "name": "combine everything into a double bottom stainless steel saucepan",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "bring to gentle simmer then reduxe to medium-low heat",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "stir occasionally to check thickness and recude until final weigth is 1kg",
     "type": "passive",
-    "duration_minutes": 60.0,
-    "draft": true
+    "duration_minutes": 60.0
    },
    {
     "name": "strain through fine chinois",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "cool completely then recheck and assure volume accuracy",
     "type": "passive",
-    "duration_minutes": 60.0,
-    "draft": true
+    "duration_minutes": 60.0
    },
    {
     "name": "target volume - 1 QT",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    }
   ],
   "yieldGrams": 1000,
@@ -853,10 +840,7 @@
   "shelfLifeDays": 21,
   "allergens": [],
   "plating": "",
-  "drafts": [
-   "allergens",
-   "portion"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Balsamic_Vinegar_reduction.xlsx",
    "rev": "2026-10-27",
