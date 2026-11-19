@@ -8278,13 +8278,12 @@
   "yieldText": "16 whole cross-cut shanks",
   "portion": "1 whole shank per entrée",
   "storage": "Cool promptly; refrigerate covered",
-  "shelfLife": "4 days",
-  "shelfLifeDays": 4,
+  "shelfLife": "6 days",
+  "shelfLifeDays": 6,
   "allergens": [],
-  "plating": "Cool shanks and braising liquid promptly under approved food-safety procedures. Refrigerate at 41°F / 5°C or below. Reheat gently in the same veal-stock bath used for Wagyu short rib, following approved reheating and hot-holding procedures. Braise tenderness and safe final temperature must be verified in production.",
+  "plating": "",
   "drafts": [
    "allergens",
-   "shelfLife",
    "station",
    "sub"
   ],
