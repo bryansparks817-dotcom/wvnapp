@@ -982,90 +982,90 @@
   "ingredients": [
    {
     "name": "Dried chile blend",
-    "qty": 232.0,
+    "qty": 278.0,
     "unit": "g",
-    "note": "90 g ancho + 70 g pasilla + 60 g guajillo + 12 g morita; stemmed and seeded. Hot water for soaking/blending is process water, added as needed."
+    "note": "108 g ancho + 84 g pasilla + 72 g guajillo + 14 g morita; stemmed and seeded. Hot water for soaking/blending is process water, added as needed."
    },
    {
     "name": "Dried tart cherries",
-    "qty": 180.0,
+    "qty": 216.0,
     "unit": "g",
     "note": "Unsweetened; verify gluten-free label"
    },
    {
     "name": "Raw pepitas",
-    "qty": 220.0,
+    "qty": 264.0,
     "unit": "g",
     "note": "Shelled pumpkin seeds"
    },
    {
     "name": "Sesame seeds",
-    "qty": 60.0,
+    "qty": 72.0,
     "unit": "g",
     "note": "White sesame; toasted"
    },
    {
     "name": "Certified gluten-free masa harina",
-    "qty": 60.0,
+    "qty": 72.0,
     "unit": "g",
     "note": "Corn masa; no wheat flour or bread"
    },
    {
     "name": "Ripe plantain",
-    "qty": 120.0,
+    "qty": 144.0,
     "unit": "g",
     "note": "Peeled weight"
    },
    {
     "name": "Ripe tomatoes",
-    "qty": 400.0,
+    "qty": 480.0,
     "unit": "g",
     "note": "Cored; roast/char"
    },
    {
     "name": "Yellow onion",
-    "qty": 250.0,
+    "qty": 300.0,
     "unit": "g",
     "note": "Peeled, quartered"
    },
    {
     "name": "Garlic",
-    "qty": 40.0,
+    "qty": 48.0,
     "unit": "g",
     "note": "Peeled cloves"
    },
    {
     "name": "Unsweetened cacao nibs",
-    "qty": 35.0,
+    "qty": 42.0,
     "unit": "g",
     "note": "Toast gently"
    },
    {
     "name": "Tamarind concentrate",
-    "qty": 80.0,
+    "qty": 96.0,
     "unit": "g",
     "note": "Pure tamarind; verify gluten-free label"
    },
    {
     "name": "Brewed strong coffee",
-    "qty": 100.0,
+    "qty": 120.0,
     "unit": "g",
     "note": "Unsweetened; cooled"
    },
    {
     "name": "Apple cider vinegar",
-    "qty": 60.0,
+    "qty": 72.0,
     "unit": "g"
    },
    {
     "name": "Neutral oil",
-    "qty": 100.0,
+    "qty": 120.0,
     "unit": "g",
     "note": "For toasting and sautéing"
    },
    {
     "name": "Black lime powder",
-    "qty": 8.0,
+    "qty": 10.0,
     "unit": "g",
     "note": "Food-grade dried black lime, finely ground"
    }
@@ -1123,24 +1123,22 @@
     "duration_minutes": 0.0
    }
   ],
-  "yieldGrams": 2500,
+  "yieldGrams": 3000,
   "category": "Winter 26/27",
-  "yieldText": "Approx. 2.4–2.6 kg finished; weigh actual yield",
+  "yieldText": "Approx. 3,000 g finished (one albondigas sauce batch); weigh actual yield",
   "portion": "3,000 g per albondigas sauce batch",
-  "storage": "Refrigerated ≤40°F; cool rapidly",
+  "storage": "Refrigerate ≤40°F up to 14 days, or freeze up to 3 months",
   "allergens": [
    "Sesame"
   ],
   "plating": "",
-  "drafts": [
-   "shelfLife"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Black_Cherry_Pepita_Black_Lime_Mole_1_Gallon.xlsx",
-   "rev": "2026-11-19",
+   "rev": "2026-11-20",
    "createdBy": ""
   },
-  "shelfLife": "14 days refrigerated; freeze up to 3 months",
+  "shelfLife": "14 days refrigerated, or 3 months frozen",
   "shelfLifeDays": 14
  },
  {
