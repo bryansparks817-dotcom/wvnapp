@@ -8,7 +8,7 @@ const ROWS = [
   { id: "prices", name: "Ingredient prices", sub: "$ per kg. Drives recipe cost, waste $ and food cost." },
   { id: "staff", name: "Staff & station access", sub: "Add people, set roles, stations and PINs." },
   { id: "plan", name: "Prep plan tool", sub: "Pick recipes and see a gather list and timeline." },
-  { id: null, name: "Stations, items & pars", sub: "Pans, line and lowboy pars per station. Coming." },
+  { id: "stations", name: "Stations, items & pars", sub: "Add stations and items. Pan size, line and lowboy pars, shelf life." },
   { id: null, name: "Storage zones", sub: "Walk-in and dry storage zones and their order. Coming." },
 ];
 

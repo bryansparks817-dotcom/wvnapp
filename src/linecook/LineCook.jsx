@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { STATIONS, stationsFor } from "../data/stations";
+import { getStations, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
@@ -155,8 +155,13 @@ export default function LineCook(props) {
   const today = localDateKey();
   const [cook, setCook] = useState(() => loadCook());
   const [staff, setStaff] = useState(() => loadStaff());
-  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.STAFF)) setStaff(loadStaff()); }), []);
-  const [stationId, setStationId] = useState(() => loadStation() ?? STATIONS[0].id);
+  // The chef's station setup can change on another phone: re-read it.
+  const [, setSetupVersion] = useState(0);
+  useEffect(() => onRemoteChange((keys) => {
+    if (keys.includes(KEYS.STAFF)) setStaff(loadStaff());
+    if (keys.includes(KEYS.STATIONS)) setSetupVersion((v) => v + 1);
+  }), []);
+  const [stationId, setStationId] = useState(() => loadStation() ?? getStations()[0].id);
   // Every sign-in starts on the opening shift page (confirm the count), even
   // when the shift is already underway.
   const [opening, setOpening] = useState(false);
@@ -228,7 +233,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   useEffect(() => { saveWaste(waste); }, [waste]);
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
-  const invItems = inventory?.items ?? emptyInventory(items);
+  // Items the chef added since the last count start empty.
+  const invItems = useMemo(() => ({ ...emptyInventory(items), ...(inventory?.items ?? {}) }), [inventory, items]);
   // Counts are taken at the end of every shift, not once a day. A shift runs
   // from confirming a count to the next close count; the close ends it, and
   // the next shift (same day or not) starts by confirming that count.

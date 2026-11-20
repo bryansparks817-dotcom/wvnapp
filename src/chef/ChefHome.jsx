@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { STATIONS } from "../data/stations";
+import { getStations } from "../data/stations";
 import {
   loadShift, loadInventory, loadCook, loadStaff, loadEightySix, saveEightySix, loadChefAlerts, saveChefAlerts,
   loadWaste, logFlag, loadChefSettings, saveChefSettings, loadCovers, saveCovers,
@@ -113,7 +113,7 @@ function CookList({ st, shift, plan, rows, recipes, by, onChanged }) {
 // The 86 / low picker for the chef: any item on any station.
 function AddFlags({ onAdd }) {
   const [open, setOpen] = useState(false);
-  const items = STATIONS.flatMap((st) => st.items.map((i) => ({ ...i, station: st.name })));
+  const items = getStations().flatMap((st) => st.items.map((i) => ({ ...i, station: st.name })));
   return (
     <>
       <button type="button" className="pass__flagbtn" aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -164,7 +164,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
   const serviceMs = todayAt(settings.serviceAt[service]);
 
   // One entry per station: its open shift (if any), prep plan and status.
-  const stations = useMemo(() => STATIONS.map((st) => {
+  const stations = useMemo(() => getStations().map((st) => {
     const shift = loadShift(st.id);
     const inventory = loadInventory(st.id);
     const open = Boolean(shift && !shift.closedAt && shift.date === today);

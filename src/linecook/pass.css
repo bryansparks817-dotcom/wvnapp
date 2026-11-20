@@ -469,3 +469,16 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__substep .pass__rowtext { flex: 1 1 calc(100% - 50px); }
 .pass__substep .pass__steptimer { margin: 0 0 0 46px; }
 .pass__nextline { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Setup → Stations, items & pars */
+.chef__pantoggle { grid-template-columns: repeat(5, 1fr); }
+.chef__servicetoggle[aria-label="Line par"] { grid-template-columns: repeat(3, 1fr); }
+.chef__draftfield .pass__input, .chef__draftfield.chef__servicetoggle { border-color: var(--draft) !important; box-shadow: inset 3px 0 0 var(--draft); }
+.chef__draftfield > .pass__countlabel { color: var(--draft); }
+.chef__itemrow { display: flex; align-items: stretch; gap: 6px; }
+.chef__itemrow .chef__setuprow { flex: 1; min-width: 0; }
+.chef__orderbtns { display: flex; flex-direction: column; gap: 4px; }
+.chef__orderbtns button { flex: 1; min-width: 40px; border: 1px solid var(--edge); border-radius: 6px; background: transparent; color: var(--steel) !important; font-size: 12px; }
+.chef__orderbtns button:disabled { opacity: 0.3; }
+.chef__draftdot { margin-left: 6px; }
+.chef__backlink { align-self: flex-start; }

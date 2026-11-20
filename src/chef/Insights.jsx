@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { STATIONS } from "../data/stations";
+import { getStations } from "../data/stations";
 import {
   loadWaste, loadFlagLog, loadHistory, loadChefAlerts, loadCovers, loadDailyNumbers, loadPrices, loadChefSettings, saveChefSettings, loadStaff,
 } from "../lib/storage";
@@ -74,7 +74,7 @@ export default function Insights({ today, recipes, recipesById, ingredients, onU
     }), []);
 
   const costs = useMemo(() => costIndex(recipes, recipesById, ingredients, data.prices), [recipes, recipesById, ingredients, data.prices]);
-  const items = STATIONS.flatMap((s) => s.items);
+  const items = getStations().flatMap((s) => s.items);
   const recipeOfItem = new Map(items.map((i) => [i.id, i.recipeId]));
   const costOfRecipe = (id) => {
     const c = costs.get(id);
