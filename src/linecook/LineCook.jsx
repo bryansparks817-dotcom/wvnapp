@@ -13,6 +13,7 @@ import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
 import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
+import LabelPrompt from "./LabelPrompt";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
@@ -219,6 +220,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   }), [st.id]);
   const [screen, setScreen] = useState("today");
   const [openPrepId, setOpenPrepId] = useState(null);
+  // Prep item just finished: offer its label, which the cook can skip.
+  const [labelPromptId, setLabelPromptId] = useState(null);
 
   useEffect(() => { if (inventory) saveInventory(inventory, st.id); }, [inventory, st.id]);
   useEffect(() => { if (shift) saveShift(shift, st.id); }, [shift, st.id]);
@@ -355,6 +358,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
       }
       setShift({ ...shift, stepsDone, done, meta: nextMeta });
       setWaste((w) => w.filter((e) => e.key !== `${today}:${row.id}`));
+      if (labelPromptId === row.id) setLabelPromptId(null);
       return;
     }
     const before = invItems[row.id];
@@ -379,7 +383,23 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     }
     setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: after } }));
     setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
+    if (labels?.length) setLabelPromptId(row.id);
   }
+
+  function printPrepLabel(id) {
+    const key = `p:${id}`;
+    printLabel({ item: itemsById.get(id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] });
+  }
+
+  const promptItem = labelPromptId && shiftIsToday && shift.done[`p:${labelPromptId}`] ? itemsById.get(labelPromptId) : null;
+  const labelSheet = promptItem ? (
+    <LabelPrompt
+      name={promptItem.name}
+      count={meta[`p:${labelPromptId}`]?.labels?.length ?? 0}
+      onPrint={() => { printPrepLabel(labelPromptId); setLabelPromptId(null); }}
+      onSkip={() => setLabelPromptId(null)}
+    />
+  ) : null;
 
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
@@ -438,10 +458,9 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
             onBack={() => setOpenPrepId(null)}
             onToggleDone={() => toggleDone("p", row)}
             onStartTimer={onStartTimer}
-            onPrintLabel={row.extra ? null : () =>
-              printLabel({ item: itemsById.get(row.id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] })
-            }
+            onPrintLabel={row.extra ? null : () => printPrepLabel(row.id)}
           />
+          {labelSheet}
         </>
       );
     }
@@ -531,6 +550,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         onToggle={toggleDone}
         onOpenPrep={setOpenPrepId}
       />
+      {labelSheet}
     </>
   );
 }

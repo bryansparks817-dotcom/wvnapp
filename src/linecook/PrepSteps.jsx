@@ -120,7 +120,7 @@ export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone
                   {!r.done && s.firstForItem && row?.toss?.length > 0 && (
                     <span className="pass__toss">TOSS {row.toss.map((t) => `${containerLabel(t)} (${t.where})`).join(", ")} first · last day</span>
                   )}
-                  {!r.done && s.lastForItem && <span className="pass__rowsub pass__vine">LAST STEP · ticking it restocks and labels</span>}
+                  {!r.done && s.lastForItem && <span className="pass__rowsub pass__vine">LAST STEP · ticking it restocks · label optional</span>}
                 </span>
               </button>
               {!r.done && first && (

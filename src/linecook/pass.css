@@ -449,3 +449,8 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__check { display: flex; align-items: center; gap: 8px; min-height: 58px; font-size: 14px; }
 .chef__check input { width: 22px; height: 22px; accent-color: var(--amber); }
 .chef__printlink { width: 100%; margin-bottom: 4px; }
+
+/* Label prompt after a prep item is done: print or skip */
+.pass.pass__labelsheet { position: fixed; inset: 0; z-index: 40; min-height: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: flex-end; justify-content: center; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; }
+.pass__labelcard { width: 100%; max-width: 480px; background: var(--card); border: 1.5px solid var(--amber); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+.pass__labeltitle { margin: 0; font-family: "Oswald", sans-serif; font-size: 22px; }
