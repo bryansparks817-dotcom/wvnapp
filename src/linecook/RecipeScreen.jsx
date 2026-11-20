@@ -83,6 +83,9 @@ export default function RecipeScreen({ row, recipe, scaled, doneMeta, timers, on
               PRINT LABEL
             </button>
           )}
+          {doneMeta && onPrintLabel && (
+            <p className="pass__hint">Label is optional. Skipped it? Print it here any time today.</p>
+          )}
         </section>
       </main>
     </div>

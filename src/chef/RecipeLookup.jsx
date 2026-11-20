@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { STATIONS } from "../data/stations";
+import { getStations } from "../data/stations";
 import { hasDrafts } from "../lib/recipeLibrary";
 
 // Quick recipe lookup for the chef: search or browse by station, then a
 // read-only recipe with everything from its recipe sheet. Light blue marks
 // what Claude drafted and Bryan hasn't confirmed yet. Editing still lives
 // under Setup → Recipes.
-const STATION_NAME = new Map(STATIONS.map((s) => [s.id, s.name]));
+const stationName = (id) => getStations().find((s) => s.id === id)?.name;
 const SERVICEWARE = [
   ["plate", "Plate / bowl"],
   ["liner", "Liner / underliner"],
@@ -24,7 +24,7 @@ function RecipeView({ recipe, recipes, onOpen, onClose, onConfirm }) {
   const [confirming, setConfirming] = useState(false);
   const drafts = new Set(recipe.drafts ?? []);
   const d = (field) => (drafts.has(field) ? " is-draft" : "");
-  const stationNames = (recipe.stations ?? []).map((id) => STATION_NAME.get(id) ?? id);
+  const stationNames = (recipe.stations ?? []).map((id) => stationName(id) ?? id);
   const unconfirmed = hasDrafts(recipe);
   const facts = [
     ["Yield", recipe.yieldText, "yieldText"],
@@ -155,7 +155,7 @@ export default function RecipeLookup({ recipes, onConfirm }) {
         .sort((a, b) => a.name.localeCompare(b.name))
         .slice(0, term && !filter ? 12 : undefined)
     : [];
-  const chips = [...STATIONS.map((s) => [s.id, s.name]), ["dish", "Dish builds"]];
+  const chips = [...getStations().map((s) => [s.id, s.name]), ["dish", "Dish builds"]];
 
   return (
     <section className="chef__lookup">

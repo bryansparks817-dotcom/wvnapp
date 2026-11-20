@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { STATIONS } from "../data/stations";
+import { getStations } from "../data/stations";
 import { loadShift, loadInventory, loadStaff, loadChefSettings } from "../lib/storage";
 import { activeStaff } from "../lib/staff";
 import { emptyInventory, formatG } from "../lib/inventory";
@@ -48,7 +48,7 @@ export default function PrintLists({ today, recipesById, ingredients, chef }) {
   }, []);
   const nameOf = (i) => people.find((p) => p.initials === i)?.name ?? i;
 
-  const stations = useMemo(() => STATIONS.filter((st) => st.items.length > 0).map((st) => {
+  const stations = useMemo(() => getStations().filter((st) => st.items.length > 0).map((st) => {
     const shift = loadShift(st.id);
     const open = Boolean(shift && !shift.closedAt && shift.date === today);
     return { st, shift: open ? shift : null, inventory: loadInventory(st.id) };

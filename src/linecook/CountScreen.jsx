@@ -16,7 +16,7 @@ export default function CountScreen({
   mode, station, screen, setScreen, onOpenChef,
   initials, onChangeCook,
   items, inventory, today, closedOnLabel, closedBy, unclosed, notes, lastNotes, onChangeNotes, onChangeItem, onSubmit,
-  underway, onRestart, firstCount = false,
+  underway, onRestart, firstCount = false, panFor = null,
 }) {
   const isClose = mode === "close";
   const startedAt = underway?.at ? new Date(underway.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : null;
@@ -47,6 +47,7 @@ export default function CountScreen({
             inv={inventory[item.id]}
             today={today}
             onChange={(next) => onChangeItem(item.id, next)}
+            pan={panFor ? panFor(item) : null}
           />
         ))}
         {isClose && (

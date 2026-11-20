@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { STATIONS, stationsFor } from "../data/stations";
+import { getStations, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
@@ -13,8 +13,10 @@ import { batchGrams, scaleRecipe } from "../lib/recipeScale";
 import { gatherForPrep } from "../lib/gatherList";
 import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
+import LabelPrompt from "./LabelPrompt";
+import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
-import { activeStaff, checkPin, hasChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
+import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
@@ -154,8 +156,13 @@ export default function LineCook(props) {
   const today = localDateKey();
   const [cook, setCook] = useState(() => loadCook());
   const [staff, setStaff] = useState(() => loadStaff());
-  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.STAFF)) setStaff(loadStaff()); }), []);
-  const [stationId, setStationId] = useState(() => loadStation() ?? STATIONS[0].id);
+  // The chef's station setup can change on another phone: re-read it.
+  const [, setSetupVersion] = useState(0);
+  useEffect(() => onRemoteChange((keys) => {
+    if (keys.includes(KEYS.STAFF)) setStaff(loadStaff());
+    if (keys.includes(KEYS.STATIONS)) setSetupVersion((v) => v + 1);
+  }), []);
+  const [stationId, setStationId] = useState(() => loadStation() ?? getStations()[0].id);
   // Every sign-in starts on the opening shift page (confirm the count), even
   // when the shift is already underway.
   const [opening, setOpening] = useState(false);
@@ -187,6 +194,7 @@ export default function LineCook(props) {
   }
 
   const tabs = <StationTabs stations={allowed} current={station.id} onPick={setStationId} />;
+  const chefOnLine = isChef(person);
   return (
     <StationLine
       key={station.id}
@@ -197,11 +205,13 @@ export default function LineCook(props) {
       opening={opening}
       onOpened={() => setOpening(false)}
       onChangeCook={() => setCook(null)}
+      isChef={chefOnLine}
+      onSetupChanged={() => setSetupVersion((v) => v + 1)}
     />
   );
 }
 
-function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
+function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer, isChef: chefHere = false, onSetupChanged }) {
   const today = localDateKey();
   const { items, linePar } = st;
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
@@ -217,15 +227,41 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     if (keys.includes(KEYS.WASTE)) setWaste(loadWaste());
     if (keys.includes(KEYS.EIGHTY_SIX)) setFlags(loadEightySix());
   }), [st.id]);
+  const [panReqs, setPanReqs] = useState(() => openRequests());
+  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.PAN_REQUESTS)) setPanReqs(openRequests()); }), []);
+  // Pan size: the chef changes it, a cook asks for it.
+  const panFor = (item) => ({
+    isChef: chefHere,
+    request: panReqs.find((r) => r.stationId === st.id && r.itemId === item.id) ?? null,
+    onPick: (pan) => {
+      if (chefHere) { setItemPan(st.id, item.id, pan); onSetupChanged?.(); }
+      else requestPan({ stationId: st.id, stationName: st.name, item, pan, by });
+      setPanReqs(openRequests());
+    },
+    onCancel: () => {
+      const r = panReqs.find((x) => x.stationId === st.id && x.itemId === item.id);
+      if (r) cancelRequest(r.id);
+      setPanReqs(openRequests());
+    },
+    onAnswer: (approve) => {
+      const r = panReqs.find((x) => x.stationId === st.id && x.itemId === item.id);
+      if (r) answerRequest(r, approve, by);
+      if (approve) onSetupChanged?.();
+      setPanReqs(openRequests());
+    },
+  });
   const [screen, setScreen] = useState("today");
   const [openPrepId, setOpenPrepId] = useState(null);
+  // Prep item just finished: offer its label, which the cook can skip.
+  const [labelPromptId, setLabelPromptId] = useState(null);
 
   useEffect(() => { if (inventory) saveInventory(inventory, st.id); }, [inventory, st.id]);
   useEffect(() => { if (shift) saveShift(shift, st.id); }, [shift, st.id]);
   useEffect(() => { saveWaste(waste); }, [waste]);
   useEffect(() => { saveEightySix(flags); }, [flags]);
 
-  const invItems = inventory?.items ?? emptyInventory(items);
+  // Items the chef added since the last count start empty.
+  const invItems = useMemo(() => ({ ...emptyInventory(items), ...(inventory?.items ?? {}) }), [inventory, items]);
   // Counts are taken at the end of every shift, not once a day. A shift runs
   // from confirming a count to the next close count; the close ends it, and
   // the next shift (same day or not) starts by confirming that count.
@@ -346,7 +382,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const item = itemsById.get(row.id);
     if (shift.done[key]) {
       const snapshot = shift.done[key];
-      setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: snapshot } }));
+      setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: snapshot } }));
       const done = { ...shift.done };
       const nextMeta = { ...meta };
       for (const k of [`c:${row.id}`, `p:${row.id}`]) {
@@ -355,6 +391,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
       }
       setShift({ ...shift, stepsDone, done, meta: nextMeta });
       setWaste((w) => w.filter((e) => e.key !== `${today}:${row.id}`));
+      if (labelPromptId === row.id) setLabelPromptId(null);
       return;
     }
     const before = invItems[row.id];
@@ -377,9 +414,25 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         ]);
       }
     }
-    setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: after } }));
+    setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: after } }));
     setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
+    if (labels?.length) setLabelPromptId(row.id);
   }
+
+  function printPrepLabel(id) {
+    const key = `p:${id}`;
+    printLabel({ item: itemsById.get(id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] });
+  }
+
+  const promptItem = labelPromptId && shiftIsToday && shift.done[`p:${labelPromptId}`] ? itemsById.get(labelPromptId) : null;
+  const labelSheet = promptItem ? (
+    <LabelPrompt
+      name={promptItem.name}
+      count={meta[`p:${labelPromptId}`]?.labels?.length ?? 0}
+      onPrint={() => { printPrepLabel(labelPromptId); setLabelPromptId(null); }}
+      onSkip={() => setLabelPromptId(null)}
+    />
+  ) : null;
 
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
@@ -438,10 +491,9 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
             onBack={() => setOpenPrepId(null)}
             onToggleDone={() => toggleDone("p", row)}
             onStartTimer={onStartTimer}
-            onPrintLabel={row.extra ? null : () =>
-              printLabel({ item: itemsById.get(row.id), madeOn: today, madeAt: meta[key]?.at, by: meta[key]?.by, containers: meta[key]?.labels ?? [] })
-            }
+            onPrintLabel={row.extra ? null : () => printPrepLabel(row.id)}
           />
+          {labelSheet}
         </>
       );
     }
@@ -462,6 +514,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         lastNotes={inventory?.notes}
         underway={{ by: shift.confirmedBy, at: shift.confirmedAt }}
         onChangeItem={changeItem}
+        panFor={panFor}
         onSubmit={onOpened}
         onRestart={confirmCount}
       />
@@ -489,6 +542,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
           lastNotes={inventory?.notes}
           onChangeNotes={changeNotes}
           onChangeItem={changeItem}
+          panFor={panFor}
           onSubmit={mode === "close" ? saveClose : confirmCount}
         />
       </>
@@ -531,6 +585,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         onToggle={toggleDone}
         onOpenPrep={setOpenPrepId}
       />
+      {labelSheet}
     </>
   );
 }

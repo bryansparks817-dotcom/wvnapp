@@ -10,6 +10,7 @@ import ChefSetup from "./chef/ChefSetup";
 import Insights from "./chef/Insights";
 import Prices from "./chef/Prices";
 import Staff from "./chef/Staff";
+import StationsSetup from "./chef/StationsSetup";
 import RecipeLookup from "./chef/RecipeLookup";
 import PrintLists from "./chef/PrintLists";
 import TimerBar from "./linecook/TimerBar";
@@ -237,7 +238,7 @@ export default function App() {
   const shell = {
     // Setup (and the recipes and prep plan tool under it) is off the daily
     // tabs: it's done once, then only for new menu items. It hangs off Home.
-    screen: ["setup", "form", "manage", "plan", "prices", "staff"].includes(screen) ? "home" : screen === "print" ? "crew" : screen,
+    screen: ["setup", "form", "manage", "plan", "prices", "staff", "stations"].includes(screen) ? "home" : screen === "print" ? "crew" : screen,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
@@ -322,6 +323,18 @@ export default function App() {
         {timerBar}
         <ChefShell title="Staff" lede="Who signs in, what they can open, and their PIN." {...shell}>
           <Staff />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (screen === "stations") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Stations & pars" lede="What each station counts and preps, and how much to keep on hand." {...shell}>
+          <button type="button" className="pass__ghost chef__backlink" onClick={() => setScreen("setup")}>← Setup</button>
+          <StationsSetup recipesById={recipesById} />
         </ChefShell>
       </>
     );

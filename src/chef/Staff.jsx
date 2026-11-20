@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { STATIONS } from "../data/stations";
+import { getStations } from "../data/stations";
 import { loadStaff, saveStaff } from "../lib/storage";
 import { activeStaff, hashPin, initialsFor, initialsProblem, isChef, normalizeName, validPin } from "../lib/staff";
 
 const ROLE_LABEL = { cook: "Cook", chef: "Chef" };
 
 function stationsLabel(p) {
-  if (!Array.isArray(p.stations) || p.stations.length === 0 || p.stations.length === STATIONS.length) return "All stations";
-  return STATIONS.filter((s) => p.stations.includes(s.id)).map((s) => s.name).join(", ");
+  if (!Array.isArray(p.stations) || p.stations.length === 0 || p.stations.length === getStations().length) return "All stations";
+  return getStations().filter((s) => p.stations.includes(s.id)).map((s) => s.name).join(", ");
 }
 
 // Add or edit one person.
@@ -16,7 +16,7 @@ function PersonForm({ person, roster, onSave, onCancel, onRemove, isLastChef }) 
   const [initials, setInitials] = useState(person?.initials ?? "");
   const [touchedInitials, setTouchedInitials] = useState(Boolean(person));
   const [role, setRole] = useState(person?.role ?? "cook");
-  const [stations, setStations] = useState(() => (Array.isArray(person?.stations) && person.stations.length ? person.stations : STATIONS.map((s) => s.id)));
+  const [stations, setStations] = useState(() => (Array.isArray(person?.stations) && person.stations.length ? person.stations : getStations().map((s) => s.id)));
   const [pin, setPin] = useState("");
 
   const others = roster.filter((p) => p !== person);
@@ -43,7 +43,7 @@ function PersonForm({ person, roster, onSave, onCancel, onRemove, isLastChef }) 
           name: normalizeName(name),
           initials: shownInitials.trim().toUpperCase(),
           role,
-          stations: stations.length === STATIONS.length ? undefined : stations,
+          stations: stations.length === getStations().length ? undefined : stations,
           active: true,
         };
         if (pin) next.pinHash = hashPin(pin);
@@ -84,7 +84,7 @@ function PersonForm({ person, roster, onSave, onCancel, onRemove, isLastChef }) 
 
       <span className="pass__countlabel">STATIONS THEY CAN OPEN</span>
       <div className="chef__stationpicks">
-        {STATIONS.map((s) => (
+        {getStations().map((s) => (
           <label key={s.id} className={`chef__stationpick ${stations.includes(s.id) ? "is-on" : ""}`}>
             <input type="checkbox" checked={stations.includes(s.id)} onChange={() => toggle(s.id)} />
             {s.name}

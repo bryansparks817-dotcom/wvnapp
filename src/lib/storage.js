@@ -29,12 +29,14 @@ const PRICE_SEED_KEY = "thePass.priceSeed.v1";
 const MENU_PRICES_KEY = "thePass.menuPrices.v1";
 const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 const LIBRARY_KEY = "thePass.recipeLibrary.v1";
+const STATIONS_KEY = "thePass.stations.v1";
+const PAN_REQUESTS_KEY = "thePass.panRequests.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
 export const DEVICE_KEYS = new Set([COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1"]);
 // Key names, for screens that reload when another phone changes them.
-export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY };
+export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY };
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -93,6 +95,8 @@ const ALL_KEYS = [
   PRICE_SEED_KEY,
   SEEDED_KEY,
   LIBRARY_KEY,
+  STATIONS_KEY,
+  PAN_REQUESTS_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -361,4 +365,25 @@ export function loadMenuPrices() {
 
 export function saveMenuPrice(id, price) {
   save(MENU_PRICES_KEY, { ...load(MENU_PRICES_KEY, {}), [id]: price });
+}
+
+// The chef's station setup (stations, their items, pans and pars). null until
+// the chef first saves a change; the built-in setup is used until then.
+export function loadStationSetup() {
+  return load(STATIONS_KEY, null);
+}
+
+export function saveStationSetup(stations) {
+  save(STATIONS_KEY, stations);
+}
+
+// Line cooks' requests for a different line pan size, for the chef to answer.
+export function loadPanRequests() {
+  return load(PAN_REQUESTS_KEY, []);
+}
+
+export function savePanRequests(list) {
+  // Keep answered requests for a week, then drop them.
+  const cutoff = Date.now() - 7 * 86400000;
+  save(PAN_REQUESTS_KEY, list.filter((r) => r.status === "open" || (r.doneAt ?? r.at) > cutoff));
 }
