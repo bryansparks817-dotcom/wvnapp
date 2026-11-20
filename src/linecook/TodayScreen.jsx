@@ -196,12 +196,14 @@ export default function TodayScreen({
 
         <section>
           <div className="pass__sectionhead">
-            <h2><span className="pass__amber">2</span> · PREP</h2>
+            <h2>
+              <span className="pass__amber">2</span> · PREP
+              {plan.totalMinutes > 0 && <span className="pass__timetag">{formatMinutes(plan.totalMinutes)} TOTAL</span>}
+            </h2>
             <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
           </div>
           <p className="pass__hint">
-            One step at a time, in order. The long hands-off recipe starts first and the rest fill its downtime. Tap a step for the scaled recipe.
-            {plan.totalMinutes > 0 && ` About ${formatMinutes(plan.totalMinutes)} start to finish.`}
+            Top to bottom. The long hands-off recipe starts first and the rest fill its downtime. Tap STEPS to see them, or QUICK FINISH when it’s made.
           </p>
           {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
           {cantMake.length > 0 && (

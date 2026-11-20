@@ -349,7 +349,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const item = itemsById.get(row.id);
     if (shift.done[key]) {
       const snapshot = shift.done[key];
-      setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: snapshot } }));
+      setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: snapshot } }));
       const done = { ...shift.done };
       const nextMeta = { ...meta };
       for (const k of [`c:${row.id}`, `p:${row.id}`]) {
@@ -381,7 +381,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         ]);
       }
     }
-    setInventory((inv) => ({ ...inv, items: { ...inv.items, [row.id]: after } }));
+    setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: after } }));
     setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
     if (labels?.length) setLabelPromptId(row.id);
   }
