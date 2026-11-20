@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { getStations } from "../data/stations";
 import { saveStationSetup } from "../lib/storage";
+import { PANS, PAN_GRAMS } from "../lib/panSize";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
 // container and par, and shelf life. Saved for every phone in the kitchen.
 
-const PANS = ["1/9", "1/6", "1/3", "1/2", "full"];
-// Typical full-pan weights, used when the chef picks a pan size.
-const PAN_GRAMS = { "1/9": 1000, "1/6": 2500, "1/3": 4000, "1/2": 6000, full: 12000 };
 const LINE_PARS = [50, 75, 100];
 const FIELD_LABEL = {
   pan: "line pan",

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getStations } from "../data/stations";
+import { answerRequest, openRequests } from "../lib/panSize";
 import {
   loadShift, loadInventory, loadCook, loadStaff, loadEightySix, saveEightySix, loadChefAlerts, saveChefAlerts,
   loadWaste, logFlag, loadChefSettings, saveChefSettings, loadCovers, saveCovers,
@@ -144,6 +145,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
   const [flags, setFlags] = useState(() => loadEightySix());
   const [alerts, setAlerts] = useState(() => loadChefAlerts());
   const [service, setService] = useState(() => currentServiceShift());
+  const [panReqs, setPanReqs] = useState(() => openRequests());
   const recipes = useMemo(() => [...recipesById.values()].sort((a, b) => a.name.localeCompare(b.name)), [recipesById]);
 
   // Re-read the line's data and tick the clock so the board stays current.
@@ -152,6 +154,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
       setNow(Date.now());
       setFlags(loadEightySix());
       setAlerts(loadChefAlerts());
+      setPanReqs(openRequests());
     }, 30000);
     return () => clearInterval(id);
   }, []);
@@ -390,6 +393,26 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
             ))}
           </div>
         )}
+      </section>
+      )}
+      {show.todos && panReqs.length > 0 && (
+      <section>
+        <div className="pass__sectionhead"><h2>Pan size requests</h2><span className="pass__countlabel">{panReqs.length} WAITING</span></div>
+        <ul className="pass__list">
+          {panReqs.map((r) => (
+            <li key={r.id} className="chef__panreq">
+              <span className="pass__rowtext">
+                <span className="pass__rowname">{r.itemName}</span>
+                <span className="pass__rowsub">{r.stationName} · {r.from} → <strong className="pass__amber">{r.to} pan</strong> · asked by {nameOf(r.by)}</span>
+              </span>
+              <span className="chef__itemacts">
+                <button type="button" onClick={() => { answerRequest(r, true, by); setPanReqs(openRequests()); }}>APPROVE</button>
+                <button type="button" onClick={() => { answerRequest(r, false, by); setPanReqs(openRequests()); }}>DECLINE</button>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="pass__hint">Approving changes the pan on every phone, and the pan weight scales with it. You can also change any pan under Setup → Stations, items &amp; pars.</p>
       </section>
       )}
       {show.todos && (

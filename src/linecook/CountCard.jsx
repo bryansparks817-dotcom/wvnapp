@@ -1,4 +1,5 @@
 import { LEVELS, containerLabel, shelfLabel, isLastDay } from "../lib/inventory";
+import { PANS } from "../lib/panSize";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function madeLabel(iso) {
@@ -24,9 +25,41 @@ function Levels({ value, onPick, label }) {
   );
 }
 
+// The line pan's size. The chef changes it outright; a cook's pick becomes a
+// request the chef approves or declines.
+function PanPick({ item, pan }) {
+  const req = pan.request;
+  return (
+    <span className="pass__panpick">
+      <span className="pass__countlabel">LINE ·</span>
+      <select
+        className="pass__pansel"
+        aria-label={`${item.name} line pan size`}
+        value={req && !pan.isChef ? req.to : item.pan}
+        onChange={(e) => pan.onPick(e.target.value)}
+      >
+        {PANS.map((p) => <option key={p} value={p}>{p.toUpperCase()} PAN</option>)}
+      </select>
+      {req && !pan.isChef && (
+        <span className="pass__panreq">
+          Asked chef for {req.to} (now {item.pan}) ·{" "}
+          <button type="button" className="pass__linkbtn" onClick={pan.onCancel}>cancel</button>
+        </span>
+      )}
+      {req && pan.isChef && (
+        <span className="pass__panreq">
+          {req.by} asked for {req.to} ·{" "}
+          <button type="button" className="pass__linkbtn" onClick={() => pan.onAnswer(true)}>approve</button>{" · "}
+          <button type="button" className="pass__linkbtn" onClick={() => pan.onAnswer(false)}>decline</button>
+        </span>
+      )}
+    </span>
+  );
+}
+
 // One item's count: the line pan, then each lowboy container. Walk-in is the
 // chef's count, shown read-only.
-export default function CountCard({ item, inv, today, onChange }) {
+export default function CountCard({ item, inv, today, onChange, pan = null }) {
   const setLine = (line) => onChange({ ...inv, line });
   const setLowboy = (i, fill) =>
     onChange({ ...inv, lowboy: inv.lowboy.map((c, j) => (j === i ? { ...c, fill } : c)) });
@@ -41,7 +74,7 @@ export default function CountCard({ item, inv, today, onChange }) {
       </legend>
 
       <div className="pass__countrow">
-        <span className="pass__countlabel">LINE · {item.pan} PAN</span>
+        {pan ? <PanPick item={item} pan={pan} /> : <span className="pass__countlabel">LINE · {item.pan} PAN</span>}
         <Levels value={inv.line} onPick={setLine} label={`${item.name} line pan`} />
       </div>
 

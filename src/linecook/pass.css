@@ -482,3 +482,11 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__orderbtns button:disabled { opacity: 0.3; }
 .chef__draftdot { margin-left: 6px; }
 .chef__backlink { align-self: flex-start; }
+
+/* Line pan size picker on the count */
+.pass__panpick { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pass__pansel { min-height: 32px; padding: 2px 8px; border-radius: 6px; border: 1.5px solid var(--edge); background: var(--char); color: var(--ticket); font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.04em; }
+.pass__panreq { flex: 1 1 100%; font-size: 12px; color: var(--amber); }
+.pass__linkbtn { border: 0; background: none; padding: 0; color: var(--vine) !important; text-decoration: underline; font-size: 12px; }
+.chef__panreq { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; background: var(--card); }
+.chef__panreq .pass__rowtext { flex: 1; min-width: 0; }

@@ -14,8 +14,9 @@ import { gatherForPrep } from "../lib/gatherList";
 import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import LabelPrompt from "./LabelPrompt";
+import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
-import { activeStaff, checkPin, hasChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
+import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
@@ -193,6 +194,7 @@ export default function LineCook(props) {
   }
 
   const tabs = <StationTabs stations={allowed} current={station.id} onPick={setStationId} />;
+  const chefOnLine = isChef(person);
   return (
     <StationLine
       key={station.id}
@@ -203,11 +205,13 @@ export default function LineCook(props) {
       opening={opening}
       onOpened={() => setOpening(false)}
       onChangeCook={() => setCook(null)}
+      isChef={chefOnLine}
+      onSetupChanged={() => setSetupVersion((v) => v + 1)}
     />
   );
 }
 
-function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer }) {
+function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer, isChef: chefHere = false, onSetupChanged }) {
   const today = localDateKey();
   const { items, linePar } = st;
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
@@ -223,6 +227,29 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     if (keys.includes(KEYS.WASTE)) setWaste(loadWaste());
     if (keys.includes(KEYS.EIGHTY_SIX)) setFlags(loadEightySix());
   }), [st.id]);
+  const [panReqs, setPanReqs] = useState(() => openRequests());
+  useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.PAN_REQUESTS)) setPanReqs(openRequests()); }), []);
+  // Pan size: the chef changes it, a cook asks for it.
+  const panFor = (item) => ({
+    isChef: chefHere,
+    request: panReqs.find((r) => r.stationId === st.id && r.itemId === item.id) ?? null,
+    onPick: (pan) => {
+      if (chefHere) { setItemPan(st.id, item.id, pan); onSetupChanged?.(); }
+      else requestPan({ stationId: st.id, stationName: st.name, item, pan, by });
+      setPanReqs(openRequests());
+    },
+    onCancel: () => {
+      const r = panReqs.find((x) => x.stationId === st.id && x.itemId === item.id);
+      if (r) cancelRequest(r.id);
+      setPanReqs(openRequests());
+    },
+    onAnswer: (approve) => {
+      const r = panReqs.find((x) => x.stationId === st.id && x.itemId === item.id);
+      if (r) answerRequest(r, approve, by);
+      if (approve) onSetupChanged?.();
+      setPanReqs(openRequests());
+    },
+  });
   const [screen, setScreen] = useState("today");
   const [openPrepId, setOpenPrepId] = useState(null);
   // Prep item just finished: offer its label, which the cook can skip.
@@ -487,6 +514,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         lastNotes={inventory?.notes}
         underway={{ by: shift.confirmedBy, at: shift.confirmedAt }}
         onChangeItem={changeItem}
+        panFor={panFor}
         onSubmit={onOpened}
         onRestart={confirmCount}
       />
@@ -514,6 +542,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
           lastNotes={inventory?.notes}
           onChangeNotes={changeNotes}
           onChangeItem={changeItem}
+          panFor={panFor}
           onSubmit={mode === "close" ? saveClose : confirmCount}
         />
       </>
