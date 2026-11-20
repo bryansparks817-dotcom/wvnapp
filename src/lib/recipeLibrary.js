@@ -17,7 +17,7 @@ import builtInV1 from "../data/builtInRecipesV1.json";
 import libraryIngredients from "../data/libraryIngredients.json";
 
 // Bump when recipeLibrary.json is rebuilt and unedited copies should refresh.
-export const LIBRARY_REV = 2;
+export const LIBRARY_REV = 3;
 
 const LIBRARY_IDS = new Set(library.map((r) => r.id));
 const V1_BY_ID = new Map(builtInV1.map((r) => [r.id, r]));

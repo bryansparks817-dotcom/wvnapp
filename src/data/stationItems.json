@@ -29,15 +29,14 @@
     "lowboySize": "qt",
     "qtGrams": 950,
     "lowboyPar": 1,
-    "shelfLifeDays": 3,
+    "shelfLifeDays": 10,
     "recipeId": "albondigas-sauce",
     "unconfirmed": [
      "pan",
      "lowboySize",
      "qtGrams",
      "lowboyPar",
-     "panGrams",
-     "shelfLifeDays"
+     "panGrams"
     ]
    },
    {
@@ -110,25 +109,6 @@
      "qtGrams",
      "lowboyPar",
      "panGrams"
-    ]
-   },
-   {
-    "id": "individual-salmon-wellington-make-ahead-assembly",
-    "name": "Individual salmon Wellington",
-    "pan": "1/3",
-    "panGrams": 4000,
-    "lowboySize": "qt",
-    "qtGrams": 950,
-    "lowboyPar": 1,
-    "shelfLifeDays": 3,
-    "recipeId": "individual-salmon-wellington-make-ahead-assembly",
-    "unconfirmed": [
-     "pan",
-     "lowboySize",
-     "qtGrams",
-     "lowboyPar",
-     "panGrams",
-     "shelfLifeDays"
     ]
    },
    {
@@ -582,7 +562,7 @@
     "lowboySize": "qt",
     "qtGrams": 950,
     "lowboyPar": 1,
-    "shelfLifeDays": 4,
+    "shelfLifeDays": 7,
     "recipeId": "12-hour-braised-wagyu-short-rib",
     "unconfirmed": [
      "pan",
@@ -713,15 +693,14 @@
     "lowboySize": "qt",
     "qtGrams": 950,
     "lowboyPar": 1,
-    "shelfLifeDays": 3,
+    "shelfLifeDays": 10,
     "recipeId": "cherry-smoked-dart-rohan-duck-breast",
     "unconfirmed": [
      "pan",
      "lowboySize",
      "qtGrams",
      "lowboyPar",
-     "panGrams",
-     "shelfLifeDays"
+     "panGrams"
     ]
    },
    {
@@ -954,7 +933,7 @@
     "lowboySize": "qt",
     "qtGrams": 950,
     "lowboyPar": 1,
-    "shelfLifeDays": 4,
+    "shelfLifeDays": 6,
     "recipeId": "venison-osso-bucco-traditional-braise",
     "unconfirmed": [
      "pan",

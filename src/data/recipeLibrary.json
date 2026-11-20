@@ -1,7 +1,7 @@
 [
  {
   "id": "12-hour-braised-wagyu-short-rib",
-  "name": "12-Hour Braised Wagyu Short Rib",
+  "name": "Braised Wagyu Short Rib",
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
@@ -9,107 +9,130 @@
   ],
   "ingredients": [
    {
-    "name": "Wagyu short ribs",
-    "qty": 5000.0,
+    "name": "Wagyu short rib, boneless",
+    "qty": 10433.0,
     "unit": "g",
-    "note": "bone-in; English cut",
-    "draft": true
+    "note": "1 case avg 23 lb (BEK Beef Chuck Short Rib BNLS Gold Grade); weigh and log each case"
    },
    {
     "name": "Kosher salt",
-    "qty": 50.0,
+    "qty": 104.0,
     "unit": "g",
     "note": "1% of meat weight",
     "draft": true
    },
    {
     "name": "Black pepper",
-    "qty": 10.0,
+    "qty": 21.0,
     "unit": "g",
     "note": "Cracked",
     "draft": true
    },
    {
     "name": "Neutral oil",
-    "qty": 60.0,
+    "qty": 125.0,
     "unit": "g",
     "note": "For searing",
     "draft": true
    },
    {
     "name": "Yellow onion",
-    "qty": 500.0,
+    "qty": 1045.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Carrot",
-    "qty": 250.0,
+    "qty": 520.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Celery",
-    "qty": 250.0,
+    "qty": 520.0,
     "unit": "g",
     "note": "Large dice",
     "draft": true
    },
    {
     "name": "Garlic",
-    "qty": 60.0,
+    "qty": 125.0,
     "unit": "g",
     "note": "Smashed",
     "draft": true
    },
    {
     "name": "Tomato paste",
-    "qty": 100.0,
+    "qty": 210.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Dry red wine",
-    "qty": 750.0,
+    "qty": 1500.0,
     "unit": "g",
-    "note": "One bottle",
+    "note": "Two bottles",
     "draft": true
    },
    {
     "name": "Veal stock",
-    "qty": 3000.0,
+    "qty": 6250.0,
     "unit": "g",
     "note": "To come ¾ up the ribs",
     "draft": true
    },
    {
+    "name": "Rosemary",
+    "qty": 15.0,
+    "unit": "g",
+    "note": "Whole sprigs; pull before portioning",
+    "draft": true
+   },
+   {
     "name": "Thyme",
+    "qty": 20.0,
+    "unit": "g",
+    "note": "Whole sprigs; pull before portioning",
+    "draft": true
+   },
+   {
+    "name": "Sage",
     "qty": 10.0,
     "unit": "g",
-    "note": "Sprigs",
+    "note": "Whole sprigs; pull before portioning",
     "draft": true
    },
    {
     "name": "Bay leaf",
-    "qty": 2.0,
+    "qty": 4.0,
     "unit": "g",
-    "note": "About 4 leaves",
+    "note": "About 8 leaves",
     "draft": true
    }
   ],
   "steps": [
    {
-    "name": "Season short ribs with salt and pepper; hold uncovered in the walk-in overnight if time allows.",
-    "type": "passive",
-    "duration_minutes": 0.0,
+    "name": "Weigh the full case and write the raw weight on the protein portion log.",
+    "type": "active",
+    "duration_minutes": 5.0
+   },
+   {
+    "name": "Trim excess fat cap and silver skin; weigh the trim and log it.",
+    "type": "active",
+    "duration_minutes": 30.0,
     "draft": true
    },
    {
-    "name": "Sear ribs hard on all sides in oil; remove.",
+    "name": "Season short ribs with salt and pepper; hold uncovered in the walk-in overnight.",
+    "type": "passive",
+    "duration_minutes": 0.0
+   },
+   {
+    "name": "Sear ribs hard on all sides in oil, in batches; remove.",
     "type": "active",
-    "duration_minutes": 30.0,
+    "duration_minutes": 45.0,
     "draft": true
    },
    {
@@ -121,31 +144,33 @@
    {
     "name": "Deglaze with red wine and reduce by half.",
     "type": "active",
-    "duration_minutes": 10.0,
+    "duration_minutes": 15.0,
     "draft": true
    },
    {
-    "name": "Return ribs bone-side up; add veal stock, thyme and bay to come ¾ up the ribs.",
+    "name": "Return ribs to the pans; add veal stock to come ¾ up the ribs, then tuck in whole sprigs of rosemary, thyme and sage plus the bay.",
+    "type": "active",
+    "duration_minutes": 10.0
+   },
+   {
+    "name": "Cover tightly and braise at 250°F for 6 hours, until spoon-tender.",
+    "type": "passive",
+    "duration_minutes": 360.0
+   },
+   {
+    "name": "Cool ribs in the liquid overnight so the fat sets.",
+    "type": "passive",
+    "duration_minutes": 480.0
+   },
+   {
+    "name": "Lift off fat, pull the herb stems and bay, and portion 4 oz (113 g) per order.",
+    "type": "active",
+    "duration_minutes": 30.0
+   },
+   {
+    "name": "Weigh the total cooked meat and count the portions; write both on the protein portion log.",
     "type": "active",
     "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
-    "name": "Cover tightly and braise at 250°F for 12 hours, until spoon-tender.",
-    "type": "passive",
-    "duration_minutes": 720.0,
-    "draft": true
-   },
-   {
-    "name": "Cool ribs in the liquid, then chill overnight so the fat sets.",
-    "type": "passive",
-    "duration_minutes": 120.0,
-    "draft": true
-   },
-   {
-    "name": "Lift off fat (reserve), remove bones and sinew, and portion 113 g per order.",
-    "type": "active",
-    "duration_minutes": 30.0,
     "draft": true
    },
    {
@@ -155,26 +180,24 @@
     "draft": true
    }
   ],
-  "yieldGrams": 2250,
+  "yieldGrams": 5600,
   "category": "Protein, Wagyu short rib",
-  "yieldText": "Approx. 2,250 g cooked boneless (5 kg bone-in)",
-  "portion": "113 g (4 oz) cooked per entrée",
+  "yieldText": "Approx. 5,600 g cooked from one 23 lb case (about 49 portions at 4 oz)",
+  "portion": "4 oz (113 g) cooked per entrée",
   "storage": "Cool in braising liquid; portion and hold covered at ≤41°F",
-  "shelfLife": "4 days refrigerated in braising liquid",
-  "portions": 20.0,
-  "shelfLifeDays": 4,
+  "shelfLife": "7 days refrigerated in braising liquid",
+  "portions": 49.0,
+  "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "DRAFT: the 12-hour braise was referenced but not in the workbook. This is a standard red-wine braise at 250°F; swap in your temperature, liquid and aromatics.\n\nYIELD: bone-in short rib usually gives about 45% as cooked boneless meat. 5 kg ≈ 2,250 g ≈ 20 portions at 113 g. Weigh the first batch.\n\nPICKUP: warm portions in the veal stock bath; see the entrée build.",
+  "plating": "",
   "drafts": [
    "allergens",
-   "portion",
-   "shelfLife",
    "storage",
    "yieldText"
   ],
   "source": {
    "sheet": "Wagyu_Short_Rib_Braise.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   }
  },
@@ -334,7 +357,7 @@
    "Dairy",
    "Egg"
   ],
-  "plating": "PRODUCTION TARGET: Approximately 7,507 g mixture; portion 150 meatballs at 50 g each (30 orders × 5 meatballs). Actual yield will vary with bowl and handling loss; weigh finished mix and portion to 50 g rather than relying on theoretical count.\nMEAT RATIO: 3,720 g beef PSMO tenderloin trim + 2,480 g in-house ground pork shoulder = 6,200 g total meat, 60/40 by meat weight. Tenderloin trim is lean; pork shoulder fat level will affect final texture. Evaluate a cooked test portion before forming the full batch. If the pork shoulder grind is unusually lean, adjust fat content only after a test cook.\nPANade UPDATE: Panko has been replaced with 300 g plain instant oatmeal and 400 g cold milk. Hydrate for 10 minutes before mixing. Use certified gluten-free oatmeal and verify all other ingredients and the finished sauce components for gluten and cross-contact. Oats are naturally gluten-free but may be contaminated during processing.\nCOOKING: Brown in batches, then finish gently in the albondigas sauce until fully cooked. Confirm the applicable safe internal temperature with a calibrated thermometer and the restaurant's approved food-safety plan. Do not infer cooking time without meatball size, equipment, and batch conditions.\nHOLDING: Keep raw mixture ≤40°F; minimize time out of refrigeration. Use separate equipment and sanitation controls for raw meat. Refrigerate promptly and follow the restaurant's validated cooling, reheating, and hot-holding procedures. Conservative quality target: use same day or within 24 hours refrigerated for best texture; this is not a validated food-safety shelf life.",
+  "plating": "",
   "drafts": [
    "station",
    "sub"
@@ -357,28 +380,27 @@
    {
     "name": "House-made tomato sauce",
     "recipeRef": "d-o-p-san-marzano-tomato-sauce",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
-    "note": "Use current house recipe; heirloom tomatoes in summer, D.O.P. San Marzano off-season; Linked to the D.O.P. San Marzano sauce for winter; the farm heirloom sauce is the summer version.",
-    "draft": true
+    "note": "Use current house recipe; heirloom tomatoes in summer, D.O.P. San Marzano off-season; Linked to the D.O.P. San Marzano sauce for winter; the farm heirloom sauce is the summer version."
    },
    {
     "name": "House-made mole",
     "recipeRef": "black-cherry-pepita-black-lime-mole",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
     "note": "Use established house mole recipe"
    },
    {
     "name": "Coconut milk",
-    "qty": 1980.0,
+    "qty": 3000.0,
     "unit": "g",
     "note": "Full-fat, unsweetened; shake/stir container thoroughly before weighing"
    }
   ],
   "steps": [
    {
-    "name": "Weigh equal quantities of house-made tomato sauce, house mole, and full-fat unsweetened coconut milk. For this batch, use 1,980 g of each component.",
+    "name": "Weigh equal quantities of house-made tomato sauce, house mole, and full-fat unsweetened coconut milk. For this batch, use 3,000 g of each component.",
     "type": "active",
     "duration_minutes": 5.0,
     "draft": true
@@ -402,33 +424,21 @@
     "draft": true
    },
    {
-    "name": "Taste and assess balance, salt, acidity, sweetness, spice, and viscosity. Any adjustment should be documented as a revision to the standardized 1:1:1 formula.",
-    "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
-   },
-   {
     "name": "For advance preparation, transfer to shallow pans or approved containers and cool rapidly using the restaurant's approved cooling procedure. Refrigerate at ≤40°F.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
-   },
-   {
-    "name": "For service, reheat only the quantity needed using the approved reheating procedure. Stir frequently and maintain the restaurant's approved hot-holding temperature. Portion 180 g sauce per order.",
-    "type": "active",
-    "duration_minutes": 0.0,
-    "draft": true
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "33 portions",
+  "yieldText": "9,000 g (50 portions)",
   "portion": "180 g finished sauce / order",
   "storage": "Refrigerated components; finish and hold per approved plan",
-  "portions": 33.0,
+  "portions": 50.0,
   "allergens": [
    "Sesame"
   ],
-  "plating": "PRODUCTION TARGET: 33 portions at 180 g each = 5,940 g total finished sauce. 30 orders require 5,400 g; the additional 540 g provides approximately 10% reserve. Formula is 1:1:1 by weight: 1,980 g house tomato sauce + 1,980 g house mole + 1,980 g coconut milk.\nSERVICE: Plate 180 g finished sauce with five 50 g Albondigas meatballs. Confirm whether the sauce is pooled beneath the meatballs or spooned over them during plating in the final dish spec.\nTOMATO COMPONENT: Use the established house tomato sauce. Tomato selection is seasonal: heirloom tomatoes in summer; D.O.P. San Marzano tomatoes off-season. This component recipe does not replace or modify the separate house tomato sauce recipe.\nMOLE COMPONENT: Use the established house mole recipe without modification. Allergen status cannot be determined without reviewing that recipe and its supplier labels.\nPROCESS: Heat gently, stir frequently, avoid hard boiling and scorching. Coconut milk may separate under aggressive heat. Validate final seasoning and service viscosity with a test batch before locking the recipe.\nFOOD SAFETY: Follow approved cooling, refrigeration, reheating, and hot-holding procedures. Refrigerate at ≤40°F. This recipe does not establish a validated shelf life; use the shortest applicable shelf life among its components and the restaurant's food-safety plan.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -436,9 +446,12 @@
   ],
   "source": {
    "sheet": "Albondigas_Sauce.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": ""
-  }
+  },
+  "shelfLife": "10 days refrigerated",
+  "shelfLifeDays": 10,
+  "yieldGrams": 9000
  },
  {
   "id": "apple-cider-thyme-mignonette",
@@ -640,7 +653,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated; prepare and hold under kitchen food-safety procedures.\nService: Pipe cold. For a firmer garnish, whip cream slightly firmer before folding. Do not heat; heat diminishes horseradish pungency.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -753,82 +766,69 @@
    {
     "name": "Balsamic vinegar",
     "qty": 1600.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Ruby port",
     "qty": 400.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Light brown sugar",
     "qty": 80.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Honey",
     "qty": 40.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
     "qty": 5.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Black peppercorns",
     "qty": 4.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Orange peel",
     "qty": 10.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    }
   ],
   "steps": [
    {
     "name": "combine everything into a double bottom stainless steel saucepan",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
-    "name": "bring to gentle simmer then reduxe to medium-low heat",
+    "name": "bring to gentle simmer then reduce to medium-low heat",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
-    "name": "stir occasionally to check thickness and recude until final weigth is 1kg",
+    "name": "stir occasionally to check thickness and reduce until final weight is 1kg",
     "type": "passive",
-    "duration_minutes": 60.0,
-    "draft": true
+    "duration_minutes": 60.0
    },
    {
     "name": "strain through fine chinois",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "cool completely then recheck and assure volume accuracy",
     "type": "passive",
-    "duration_minutes": 60.0,
-    "draft": true
+    "duration_minutes": 60.0
    },
    {
     "name": "target volume - 1 QT",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    }
   ],
   "yieldGrams": 1000,
@@ -839,12 +839,8 @@
   "shelfLife": "21 days",
   "shelfLifeDays": 21,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
-  "drafts": [
-   "allergens",
-   "portion"
-  ],
+  "plating": "",
+  "drafts": [],
   "source": {
    "sheet": "Balsamic_Vinegar_reduction.xlsx",
    "rev": "2026-10-27",
@@ -944,7 +940,7 @@
     "draft": true
    },
    {
-    "name": "Cool rapidly, then transfer to labeled qt containers or squeeze bottles.",
+    "name": "Cool, then transfer to labeled qt containers or squeeze bottles.",
     "type": "passive",
     "duration_minutes": 45.0,
     "draft": true
@@ -955,17 +951,15 @@
   "yieldText": "1400 g",
   "portion": "12-15 g in hot honey glaze",
   "storage": "qt container / squeeze bottle",
-  "shelfLife": "14 days",
-  "shelfLifeDays": 14,
+  "shelfLife": "21 days",
+  "shelfLifeDays": 21,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated at or below 40°F / 4°C. 14 days is a quality estimate for a refrigerated vinegar sauce, not a validated shelf life.\nService: Thin and vinegar-forward. Used as the pepper sauce in the house-made hot honey glaze.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
    "name",
    "portion",
-   "shelfLife",
    "station",
    "storage",
    "sub",
@@ -973,7 +967,7 @@
   ],
   "source": {
    "sheet": "Beaver_Dam_Pepper_Sauce.xlsx",
-   "rev": "2026-11-14",
+   "rev": "2026-11-19",
    "createdBy": ""
   }
  },
@@ -1032,15 +1026,13 @@
     "name": "Yellow onion",
     "qty": 250.0,
     "unit": "g",
-    "note": "Peeled, quartered",
-    "draft": true
+    "note": "Peeled, quartered"
    },
    {
     "name": "Garlic",
     "qty": 40.0,
     "unit": "g",
-    "note": "Peeled cloves",
-    "draft": true
+    "note": "Peeled cloves"
    },
    {
     "name": "Unsweetened cacao nibs",
@@ -1080,51 +1072,45 @@
   ],
   "steps": [
    {
-    "name": "Sort dried chiles; remove stems and seeds. Toast briefly in a dry pan or on a plancha over medium heat until fragrant and pliable. Do not blacken.",
+    "name": "Sort dried chiles; remove stems and seeds. Toast briefly in a dry pan over medium heat until fragrant and pliable. Do not blacken.",
     "type": "active",
     "duration_minutes": 12.0
    },
    {
     "name": "Cover toasted chiles with hot water and steep 20 minutes until fully pliable. Drain; discard soaking liquid if bitter.",
     "type": "passive",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
-    "name": "Toast pepitas until fragrant and lightly golden. Toast sesame separately. Toast cacao nibs briefly until aromatic and masa harina until lightly nutty. Do not scorch.",
-    "type": "active",
-    "duration_minutes": 12.0,
-    "draft": true
-   },
-   {
-    "name": "Char tomatoes, onion, and garlic on a plancha, under a broiler, or in a hot oven until softened with dark blistered spots. Avoid heavy carbonization. Roast or sear plantain until golden and soft.",
-    "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
-   },
-   {
-    "name": "Warm neutral oil in a heavy pot. Add oregano, coriander, cumin, cinnamon, allspice, and clove; bloom 20–30 seconds until fragrant. Do not burn.",
-    "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
-   },
-   {
-    "name": "Blend softened chiles with roasted vegetables, plantain, cherries, pepitas, sesame, cacao nibs, masa harina, tamarind, coffee, vinegar, black lime powder, bloomed spices, initial salt, and enough hot water to move the blender. Work in batches until very smooth.",
-    "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
-   },
-   {
-    "name": "Pass through a fine chinois for a refined texture. Transfer to the pot. Add remaining water gradually, scraping blender clean, until thick but pourable.",
+    "name": "Toast pepitas, sesame, cacao nibs and masa harina together on one sheet tray at 325°F, about 8–10 minutes, stirring halfway, until fragrant and the pepitas are lightly golden. Do not scorch.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
    },
    {
+    "name": "Char tomatoes, onion, and garlic on a plancha, under a broiler, or in a hot oven until softened with dark blistered spots. Avoid heavy carbonization. Roast or sear plantain until golden and soft.",
+    "type": "active",
+    "duration_minutes": 20.0
+   },
+   {
+    "name": "Warm neutral oil in a heavy pot. Add oregano, coriander, cumin, cinnamon, allspice, and clove; bloom 20–30 seconds until fragrant. Do not burn.",
+    "type": "active",
+    "duration_minutes": 1.0
+   },
+   {
+    "name": "Blend softened chiles with roasted vegetables, plantain, cherries, pepitas, sesame, cacao nibs, masa harina, tamarind, coffee, vinegar, black lime powder, bloomed spices, initial salt, and enough hot water to move the blender. Work in batches until very smooth.",
+    "type": "active",
+    "duration_minutes": 20.0
+   },
+   {
+    "name": "Pass through a fine chinois for a refined texture. Transfer to the pot. Add remaining water gradually, scraping blender clean, until thick but pourable.",
+    "type": "active",
+    "duration_minutes": 10.0
+   },
+   {
     "name": "Simmer gently 25–35 minutes, stirring frequently and scraping the bottom. Masa and seeds settle and scorch readily. Add water as needed to maintain a smooth, spoonable consistency.",
     "type": "passive",
-    "duration_minutes": 30.0,
-    "draft": true
+    "duration_minutes": 30.0
    },
    {
     "name": "Taste and adjust salt, vinegar, tamarind, and black lime carefully. Target savory dried chile and toasted pepita first, dark cherry acidity next, gentle smoke and cacao depth, with a subtle black-lime finish. It should not taste sweet, coffee-forward, or dessert-like.",
@@ -1140,21 +1126,22 @@
   "yieldGrams": 2500,
   "category": "Winter 26/27",
   "yieldText": "Approx. 2.4–2.6 kg finished; weigh actual yield",
-  "portion": "1,980 g required for Albondigas batch",
+  "portion": "3,000 g per albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [
    "Sesame"
   ],
-  "plating": "BATCH TARGET: 1 US gallon (3.785 L) finished mole, measured after simmering and final texture adjustment. Formula is a 1.7× scale-up of the prior estimated 2.4–2.6 kg batch; actual finished volume depends on solids, reduction, and water additions. The multiplier is a starting production estimate, not a guaranteed volumetric yield.\nPROCESS WATER: Use hot water as needed for chile soaking, blending, and texture. Add gradually. Measure finished volume after simmering; adjust texture with hot water if below 1 gallon, or reduce gently if above 1 gallon. Record actual batch weight and volume for future scaling.\nAPPLICATION: Albondigas Sauce requires 1,980 g mole for 30 orders plus 10% reserve. Weigh actual finished mole and reserve required amount.\nGLUTEN-FREE: Use certified gluten-free masa harina and verify labels for dried chiles, cherries, tamarind, cacao, coffee, vinegar, and spices. Prevent cross-contact. Contains sesame and pumpkin seeds; declare sesame and verify supplier allergen statements.\nPROCESS CONTROL: Toast chiles only until fragrant and pliable; scorched chiles become bitter. Toast seeds separately. Char vegetables without excessive carbonization. Blend very smooth. Simmer gently and stir frequently because masa and seeds settle and scorch. Hot water is process water, not a fixed formula ingredient.\nFINISHING TARGET: Savory chile and toasted pepita first, dark cherry acidity, gentle smoke/cacao, subtle black lime. Not sweet, coffee-forward, or dessert-like. Test in finished Albondigas sauce before final seasoning.\nFOOD SAFETY: Rapidly cool using the restaurant's approved cooling procedure and refrigerate at ≤40°F. This recipe does not establish a validated shelf life; use the shortest applicable validated shelf life in the food-safety plan.\nSPICE FORMULA: All four dried chiles and every spice/seasoning are listed as individual ingredients in the expanded one-gallon ingredient list.",
+  "plating": "",
   "drafts": [
-   "allergens",
-   "station"
+   "shelfLife"
   ],
   "source": {
    "sheet": "Black_Cherry_Pepita_Black_Lime_Mole_1_Gallon.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": ""
-  }
+  },
+  "shelfLife": "14 days refrigerated; freeze up to 3 months",
+  "shelfLifeDays": 14
  },
  {
   "id": "black-garlic-deviled-egg-filling",
@@ -1263,8 +1250,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -1404,7 +1390,7 @@
    "Dairy",
    "Wheat/Gluten"
   ],
-  "plating": "QUALITY / ADJUSTMENT:\nIf too sweet: add small increments of vinegar or lemon. If too tart: add demi-glace. If too thin: reduce gently before mounting. If too intense: loosen with demi-glace.\n\nPROPOSED SERVICE PORTION:\nStart at 30–40 g per entrée, applied as a restrained spoon or short pool alongside the scallops. Confirm at plating trial.\n\nDEVELOPMENT NOTES:",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -1514,7 +1500,7 @@
    "Dairy",
    "Tree nut"
   ],
-  "plating": "No cauliflower leaves. Fresh mint replaces the leaf garnish and is applied at expo. Preserved lemon liquor (from the preserved-lemon container) and sherry vinegar remain in separate squeeze bottles on the expo side. Quantities and roasting method are not yet finalized.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -1637,7 +1623,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Pickup component. Confirmed portions: 5 oz / 142 g gnocchi; 2.5 oz / 71 g raw cleaned Brussels leaves; 45–50 g concentrated braising reduction. Fresh aromatics: 4–5 g shallot and 2–3 g garlic per entrée. Midpoints shown for operational clarity. Keep leaves slightly al dente. Toss gnocchi and Brussels together in concentrated sauce.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -1753,7 +1739,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "PAN: Fat Daddio's PFT-1375 rectangular fluted tart pan, 13¾ × 4¼ × 1 inch, removable bottom.\nDEVELOPMENT: quantities are proposed starting targets. Check pan fill depth before baking; do not force quantities if filling crowds the phyllo.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -1978,7 +1964,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PROPOSED GARNISH / ONE-ORDER STARTING PORTIONS:\nCrème fraîche — 15 g; restrained swirl or small quenelle.\nMarcona almond praline — 8 g chopped almonds; lightly caramelize with a little honey, cayenne and salt; cool crisp.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — approximately 4 g, applied in a few small drops. Keep sweetness restrained.\n\nSERVICE / FOOD SAFETY:\nProposed soup portion: 8 oz / 227 g. Garnish only at pickup. Cool, store, reheat and hot-hold under the established house HACCP plan and applicable code.",
+  "plating": "",
   "drafts": [
    "allergens",
    "name",
@@ -2117,8 +2103,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -2254,8 +2239,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "FINISHED YIELD: Approximately 619 g starting ingredient weight before aeration; finished volume/weight depends on aeration and handling loss.\n\nPORTION GUIDANCE: Serve whipped and spreadable; portion according to menu application.\n\nSTORAGE / FOOD SAFETY: Keep refrigerated under kitchen food-safety procedures. Use clean utensils and avoid extended room-temperature holding.\n\nSERVICE: Whipped texture; butter should hold shape while remaining soft and spreadable. Bring to service temperature as needed.\n\nREVISION NOTES: Phase Two recipe. Scaled to 453.6 g (1 lb) butter. This is the whipped service version, replacing the earlier dense compound-butter method.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -2406,8 +2390,7 @@
    "Soy",
    "Sesame"
   ],
-  "plating": "SERVICE: 30 g per order of crispy calamari.\n\nFOOD SAFETY: Use pasteurized yolks. Keep at or below 40°F; 5-day shelf life is a quality target, not validated.\n\nTECHNIQUE: Caramelizing the miso dry in the oven gives deep, toffee-like flavor without burning. Pull it when it smells nutty and looks like dark peanut butter.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -2437,8 +2420,8 @@
   "ingredients": [
    {
     "name": "Dart Rohan duck breast",
-    "qty": 1.0,
-    "unit": "g",
+    "qty": 16.0,
+    "unit": "ea",
     "note": "skin-on; 7–8 oz average; 4/pack, 10 packs/case",
     "draft": true
    },
@@ -2447,14 +2430,14 @@
     "qty": 0,
     "unit": "g",
     "asNeeded": "As needed",
-    "note": "Season immediately before smoking"
+    "note": "Season 2 hours before smoking"
    },
    {
     "name": "Black pepper",
     "qty": 0,
     "unit": "g",
     "asNeeded": "As needed",
-    "note": "Season immediately before smoking"
+    "note": "Season 2 hours before smoking"
    },
    {
     "name": "Cherry wood",
@@ -2486,13 +2469,18 @@
     "draft": true
    },
    {
-    "name": "Season with salt and black pepper immediately before smoking.",
+    "name": "Season with salt and black pepper.",
     "type": "active",
     "duration_minutes": 2.0,
     "draft": true
    },
    {
-    "name": "Smoke with cherry wood until approximately 103°F internal temperature (user's approximate process target).",
+    "name": "Rest 2 hours with the salt and pepper on before smoking.",
+    "type": "passive",
+    "duration_minutes": 120.0
+   },
+   {
+    "name": "Smoke with cherry wood until approximately 103°F internal temperature.",
     "type": "passive",
     "duration_minutes": 60.0,
     "draft": true
@@ -2502,49 +2490,27 @@
     "type": "passive",
     "duration_minutes": 60.0,
     "draft": true
-   },
-   {
-    "name": "At pickup, hard-sear skin-side down to render and crisp the skin.",
-    "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
-    "name": "Use a little neutral oil as needed to regulate pan temperature; flip and baste with cold butter to finish.",
-    "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
-   },
-   {
-    "name": "Rest before slicing and plating.",
-    "type": "passive",
-    "duration_minutes": 5.0,
-    "draft": true
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "4 breasts (1 pack); 7–8 oz each",
+  "yieldText": "16 breasts (4 packs); 7–8 oz each",
   "portion": "1 breast per entrée; final portioning TBD",
   "storage": "Chill after smoking; refrigerated hold under approved procedures",
-  "shelfLife": "TBD / follow approved controls",
-  "portions": 4.0,
+  "shelfLife": "10 days refrigerated",
+  "portions": 16.0,
   "allergens": [
    "Dairy"
   ],
-  "plating": "Important: 103°F is the user's partial-smoke process endpoint, not a validated ready-to-eat temperature. Final cooking must meet the establishment's applicable food-safety standard. Chill promptly using approved cooling procedures; establish and document validated time/temperature controls. No cure or marinade is used.",
+  "plating": "",
   "drafts": [
-   "allergens",
-   "station",
-   "yieldText"
+   "station"
   ],
   "source": {
    "sheet": "Smoked_Duck_Breast.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   },
-  "needsReview": [
-   "Dart Rohan duck breast, skin-on: unit \"each\" not supported"
-  ]
+  "shelfLifeDays": 10
  },
  {
   "id": "cherry-smoked-grape-chutney",
@@ -2680,7 +2646,7 @@
   "portions": 37.0,
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Development formula. Cherry wood is proposed to echo the duck smoke; confirm desired smoke intensity. Keep some grapes intact for texture. Proposed portion 30–40 g per entrée is not yet confirmed. Contains no declared major allergens in the listed ingredients; verify supplier labels and cross-contact.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -2810,7 +2776,7 @@
   "allergens": [
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Dry blend quality target is 30 days when stored airtight in a cool, dry location and protected from moisture. This is a quality estimate, not a validated shelf life. Discard if damp, contaminated, or showing signs of spoilage.\nService: Use a single dredge per quail piece. Keep master batch separate from working dredge. Discard working dredge after contact with raw poultry; never return it to the master container.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -2959,8 +2925,7 @@
   "shelfLife": "4 days",
   "shelfLifeDays": 4,
   "allergens": [],
-  "plating": "Holding / food safety: Keep unsalted. Cool rapidly and store under kitchen HACCP procedures; refrigerate at 4°C/40°F or below or freeze according to kitchen policy.\nService: Base for the savory bacon-challah bread pudding and other sauces.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -3125,7 +3090,7 @@
    "Dairy",
    "Shellfish"
   ],
-  "plating": "Portion: Determine sauce portion for pasta dressing and dipping service.\nHolding / food safety: Hold and cool under kitchen HACCP procedures. Butter-mounted sauce is best prepared or finished close to service; reheat gently without boiling.\nService: For lobster pappardelle ripiene, use fluid and glossy to coat pasta. For dipping, reduce slightly further before mounting with butter.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -3327,7 +3292,7 @@
   "allergens": [
    "Wheat/Gluten"
   ],
-  "plating": "PRODUCTION NOTES:\n• Proposed development batch; actual yield depends on caper moisture loss and frying.\n• Keep all components fully dry before combining. Wet parsley will compromise crispness.\n• Broccolini portion size and cooking spec are not yet established.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -3421,7 +3386,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "QUALITY CONTROL:\nLeaves should be crisp, green to olive-green, not dark brown, and free of oily heaviness. Discard bitter, scorched leaves.\n\nSTORAGE / SERVICE:\nBest fried to order. If held, cool completely and store in a single layer or lightly layered in an airtight container with a food-safe desiccant, away from humidity. Do not refrigerate. Verify crispness before service.\n\nDEVELOPMENT NOTES:\nOil temperature and time are starting parameters; validate with the actual leaf size and fryer. Proposed garnish: 1–2 leaves per bowl, plus 3–5 g brown butter.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -3554,7 +3519,7 @@
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [],
-  "plating": "BATCH BASIS: Scaled from the original formula for two standard #10 cans. A standard #10 can is assumed to contain 6 lb 9 oz (2,977 g) net weight; two cans = 5,954 g tomatoes. Check the actual label and adjust all other ingredients proportionally if net weight differs.\nFORMULA: 5,954 g D.O.P. San Marzano tomatoes; 298 g EVOO; 595 g yellow onion; 60 g garlic; 60 g kosher salt (initial amount; adjust after reduction); 36 g fresh basil; 4.8 g dried oregano; 2.4 g crushed red pepper (optional).\nYIELD: Finished yield depends on tomato solids and reduction; weigh the cooled finished sauce. Use 1,980 g for the 30-order Albondigas sauce batch. This batch should yield ample reserve, but do not rely on an estimated yield for production allocation.\nSTYLE: Rustic, clean tomato flavor; onion and garlic should support rather than dominate. Keep reduction moderate so the sauce blends smoothly at 1:1:1 with mole and coconut milk.\nQUALITY CONTROL: Verify D.O.P. designation on packaging and retain lot details. Taste after reduction before final salt adjustment. If can net weight differs from 2,977 g, scale the entire formula by actual total tomato weight ÷ 5,954 g.\nFOOD SAFETY: Cool rapidly using the restaurant's approved cooling procedure, refrigerate at ≤40°F, and use the shortest applicable validated shelf life in the restaurant's food-safety plan. This recipe does not establish a validated shelf life or shelf stability.",
+  "plating": "",
   "drafts": [
    "station",
    "sub"
@@ -3684,7 +3649,7 @@
   "shelfLife": "Per validated HACCP plan",
   "portions": 52.0,
   "allergens": [],
-  "plating": "CRITICAL FOOD SAFETY / HACCP:\nThis is a formulation starting point, NOT a validated ready-to-eat charcuterie process. Dry-cured duck is a time/temperature-controlled, reduced-moisture meat process with pathogen hazards. Do not produce or serve under this sheet alone.\nBefore production, have the process reviewed and approved by the establishment's qualified food-safety authority/regulatory authority. Establish product-specific critical limits for cure formulation, curing temperature/time, drying temperature/RH/airflow, endpoint (including aw), monitoring, corrective actions, packaging and shelf life.\nDo not vacuum-package or otherwise oxygen-restrict the finished product unless that packaging step is specifically included in the validated process. Keep lot traceability and curing logs.\n\nCURE #2 REFERENCE: the common manufacturer label rate for Cure #2 is 0.25% of meat weight (2.5 g per kg). Your sheet intentionally leaves it blank until the HACCP plan sets it. Most health departments require a HACCP plan and variance for in-house dry curing; confirm with yours before serving.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -3821,7 +3786,7 @@
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [],
-  "plating": "BATCH BASIS: 5,954 g whole fresh farm heirloom tomatoes, matching the tomato starting weight used for the two-can D.O.P. San Marzano version. Select ripe, sound tomatoes with good flavor; mixed heirloom varieties are acceptable. Record whether the batch weight is taken before or after trimming and keep that standard consistent.\nFORMULA: 5,954 g fresh heirloom tomatoes; 298 g EVOO; 595 g yellow onion; 60 g garlic; 60 g kosher salt as an initial amount (start with approximately 80%, then adjust after reduction); 36 g fresh basil; 4.8 g dried oregano; 2.4 g crushed red pepper optional.\nYIELD: Do not assume equal finished yield to canned tomatoes. Fresh tomatoes vary widely in water content and trim loss. Expected finished yield is approximately 3.8–4.6 kg, but weigh actual yield. Albondigas Sauce production requires 1,980 g tomato sauce for 30 orders plus 10% reserve; weigh and reserve that amount after finishing.\nMETHOD / TEXTURE: Wash, core, and quarter. Sweat onion, add garlic, then tomatoes and aromatics. Simmer uncovered until collapsed and excess water has cooked off. Pass through a medium food mill to remove skins and seeds, then reduce to a rustic, spoonable consistency. For a deliberately rustic sauce with skins/seeds retained, crush by hand instead; choose one method and standardize it.\nQUALITY CONTROL: Taste the raw tomatoes before production; sweetness, acidity, and water content vary by farm and cultivar. Adjust final salt only after reduction. If fruit is notably acidic, do not automatically add sugar; evaluate the finished sauce in the 1:1:1 mole/coconut blend first. Keep the finished sauce bright and spoonable.\nFOOD SAFETY: Wash produce before cutting. Cool rapidly using the restaurant's approved cooling procedure, refrigerate at ≤40°F, and use the shortest applicable validated shelf life in the restaurant's food-safety plan. This recipe does not establish a validated shelf life.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -4106,7 +4071,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated at or below 40°F. Use within 3 days as a conservative refrigerated quality target; this is not a validated shelf life. Rapidly cool using the operation's approved cooling procedure. Freeze promptly for longer storage and thaw under refrigeration. Do not leave at room temperature during service beyond controlled brief portioning/tempering.\nService: Portion 25 g quenelles. Top each with a thin layer of drained pickled mustard seeds and a small fennel frond. The formula preserves a 2:1 butter-to-foie gras ratio by weight; cream and seasonings are additional.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -4208,7 +4173,7 @@
   "shelfLife": "Service batch only; approved procedures",
   "portions": 9.0,
   "allergens": [],
-  "plating": "User-approved method: warm approximately one pint at a time, add as separate expo garnish, held apart from braising sauce. Add a little stock, olive oil, salt; finish with fresh lemon zest and parsley. Portion 40–50 g drained beans. Do not repeatedly warm/cool same batch. Exact pint weight and liquid quantities not established. Follow approved hot-holding and time/temperature procedures.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -4325,7 +4290,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "DRAFT: your house gnocchi wasn't in the workbook, so this is a standard potato gnocchi built on AP flour and egg as you confirmed. Swap in your own ratios.\n\nAt pickup: sauté from blanched with the Brussels leaves and braising reduction (see Brussels Sprout & Gnocchi Pickup).",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -4441,7 +4406,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: For immediate service, hold under your approved hot-holding procedure and avoid prolonged warm holding. For advance preparation, rapidly cool using the approved cooling procedure and refrigerate at or below 40°F. Conservative 7-day refrigerated quality target is an estimate, not a validated shelf life; validate against the pepper sauce formulation and your food-safety plan. Reheat gently and do not repeatedly warm/cool.\nService: Brush 12–15 g per three-piece quail order immediately after frying. Keep glaze warm and fluid, not hot, to avoid softening the crust. Stir before use.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -4458,7 +4423,7 @@
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
-   "garde-manger"
+   "grill"
   ],
   "ingredients": [
    {
@@ -4466,12 +4431,12 @@
     "qty": 113.0,
     "unit": "g",
     "note": "NZ King, belly meat included; skinless",
-    "draft": true
+    "qtyLabel": "4 oz (113 g)"
    },
    {
     "name": "Spinach & oyster mushroom duxelle",
     "recipeRef": "spinach-oyster-mushroom-duxelle",
-    "qty": 43.0,
+    "qty": 45.0,
     "unit": "g",
     "note": "Chilled, dry"
    },
@@ -4479,8 +4444,7 @@
     "name": "Puff pastry sheet",
     "qty": 1.0,
     "unit": "ea",
-    "note": "Pillsbury 5 × 5 in × 1/8 in (≈57 g)",
-    "draft": true
+    "note": "Pillsbury 5 × 5 in × 1/8 in (≈57 g)"
    },
    {
     "name": "Kosher salt",
@@ -4498,59 +4462,42 @@
     "name": "Egg wash",
     "qty": 0,
     "unit": "g",
-    "asNeeded": "Seams only",
-    "note": "At bake, not at assembly"
+    "asNeeded": "Seams",
+    "note": "Seal seams at assembly"
    }
   ],
   "steps": [
    {
-    "name": "Portion salmon to 113 g, pat dry and season lightly with salt and pepper.",
+    "name": "Portion salmon to 4 oz (113 g), pat dry and season lightly with salt and pepper.",
     "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
+    "duration_minutes": 3.0
    },
    {
-    "name": "Spread 43 g chilled duxelle evenly over the top of the salmon.",
+    "name": "Spread 45 g chilled duxelle evenly over the top of the salmon.",
     "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
+    "duration_minutes": 1.0
    },
    {
     "name": "Place on one 5 × 5-inch, 1/8-inch-thick puff pastry sheet (approximately 57 g).",
     "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
+    "duration_minutes": 1.0
    },
    {
-    "name": "Wrap and fully enclose the salmon and duxelle; seal seams. Do not egg-wash during make-ahead assembly.",
+    "name": "Wrap and fully enclose the salmon and duxelle with egg wash; seal seams.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
-    "name": "Hold assembled Wellingtons refrigerated, covered, for several hours or overnight.",
+    "name": "Hold assembled Wellingtons refrigerated, covered.",
     "type": "passive",
-    "duration_minutes": 0.0,
-    "draft": true
-   },
-   {
-    "name": "À la minute: apply egg wash to seams immediately before baking.",
-    "type": "active",
-    "duration_minutes": 1.0,
-    "draft": true
-   },
-   {
-    "name": "Bake at 425°F, high fan, approximately 12 minutes. Confirm doneness with a calibrated probe; time will vary with oven load and portion thickness.",
-    "type": "passive",
-    "duration_minutes": 12.0,
-    "draft": true
+    "duration_minutes": 0.0
    }
   ],
-  "yieldGrams": 213,
+  "yieldGrams": 215,
   "category": "Component, salmon Wellington entrée",
-  "yieldText": "1 Wellington (≈213 g assembled)",
+  "yieldText": "1 Wellington (≈215 g assembled)",
   "portion": "1 Wellington",
-  "storage": "Assembled, un-egg-washed; covered, ≤41°F",
+  "storage": "Assembled; covered, ≤41°F",
   "shelfLife": "Assemble same day or hold overnight",
   "portions": 1.0,
   "allergens": [
@@ -4559,14 +4506,11 @@
    "Wheat/Gluten",
    "Fish"
   ],
-  "plating": "PRODUCTION NOTES:\n• Salmon portion and pastry specification are confirmed.\n• Approximate assembled weight before egg wash: 213 g.\n• Keep filling cold and dry; prevent moisture from contacting pastry.\n• Use validated internal-temperature standards and local food-safety requirements.",
-  "drafts": [
-   "allergens",
-   "station"
-  ],
+  "plating": "",
+  "drafts": [],
   "source": {
    "sheet": "Salmon_Wellington_Individual.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   }
  },
@@ -4759,7 +4703,7 @@
    "Wheat/Gluten",
    "Shellfish"
   ],
-  "plating": "Portion: Determine filling weight per pasta shape during production testing.\nHolding / food safety: Cool rapidly in shallow pans under the kitchen's HACCP procedures; refrigerate at 4°C/40°F or below. Keep chilled during filling and production.\nService: Use as a cold, cohesive filling for pappardelle ripiene. Do not use the earlier plain base as a separate recipe entry.",
+  "plating": "",
   "drafts": [],
   "source": {
    "sheet": "Lobster_and_shrimp_bolognese.xlsx",
@@ -4919,7 +4863,7 @@
   "allergens": [
    "Shellfish"
   ],
-  "plating": "Holding / food safety: Keep unsalted. Cool rapidly and store under kitchen HACCP procedures; refrigerate at 4°C/40°F or below or freeze according to kitchen policy.\nService: Use as the lobster stock base for lobster-clam velouté and other seafood sauces.",
+  "plating": "",
   "drafts": [
    "allergens",
    "name"
@@ -5031,7 +4975,7 @@
    "Wheat/Gluten",
    "Shellfish"
   ],
-  "plating": "Portion: Approximately 4-5 g garnish per serving; at 5 g, estimated 136-144 portions using 680-720 g finished yield.\nHolding / food safety: Store airtight in a cool, dry place; protect from moisture.\nService: Use as a crisp lobster-forward garnish.",
+  "plating": "",
   "drafts": [
    "name"
   ],
@@ -5143,7 +5087,7 @@
   "allergens": [
    "Tree nut"
   ],
-  "plating": "USE / PORTION:\nProposed soup garnish: 8 g chopped praline per bowl. Confirm final portion during plating; keep pieces small enough to eat comfortably with a spoon.\n\nDEVELOPMENT NOTES:\nThis is a proposed honey-caramel almond praline, not a previously established house formula. The 150°C target creates a crisp coating; for a softer, stickier garnish, the cook temperature would need a separate trial.\nAllergen: tree nuts. Honey is not suitable for infants under 12 months. Use heat-resistant gloves and take care handling hot caramel.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -5224,7 +5168,7 @@
   "shelfLife": "Same day only",
   "portions": 42.0,
   "allergens": [],
-  "plating": "Fresh daily mise en place. No oil. Parsley-forward, lemon-heavy, garlic restrained. Portion 5–6 g directly over sliced short rib at expo. Scale batch to expected covers; do not carry over. 200 g parsley formula is a proposed starting point, not a fixed daily requirement.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station"
@@ -5331,7 +5275,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Wrap airtight during resting; follow kitchen procedures for fresh egg pasta storage.\nService: For filled pasta, sheet thinly while retaining enough strength to seal. Test cooking time based on sheet thickness and shape.",
+  "plating": "",
   "drafts": [
    "allergens",
    "yieldText"
@@ -5460,7 +5404,7 @@
   "shelfLife": "7 days refrigerated (quality estimate)",
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Holding / food safety: Refrigerate at or below 40°F and keep seeds covered with pickling liquid. Use a conservative 7-day refrigerated quality target; this is not a validated shelf life or a shelf-stable pickle. Rapidly chill using the operation's approved procedure and follow the food-safety plan.\nService: Drain lightly. Portion approximately 5 g over each 25 g foie gras butter quenelle, then finish with a small fennel frond, leaving the mustard seeds visible.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -5566,8 +5510,7 @@
   "portions": 30.0,
   "shelfLifeDays": 10,
   "allergens": [],
-  "plating": "SERVICE: 2 figs per salad; about 30 salads per batch. Halve or quarter at plating.\n\nLIQUID: champagne vinegar, white wine and agave base from your notes, balanced with a little salt, peppercorns and thyme. Keep the figs submerged.\n\nFIGS: dried white figs (Calimyrna or Turkish), about 16 g each. They are larger and firmer than Mission figs, so check the center for tenderness before pulling.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -5698,7 +5641,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "CHEF NOTES:\n• Use cold or softened compound butter to enrich the Rockefeller filling; do not use it as the sole cooking fat for sweating the vegetables.\n• For consistent service, portion into weighed plugs or sheets and label with production date and use-by date per house policy.\n• Keep preserved lemon restrained; the target is brightness and salinity, not a dominant lemon flavor.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -5830,7 +5773,7 @@
   "portion": "10 g",
   "portions": 95.0,
   "allergens": [],
-  "plating": "Portion: Use as a small, bright garnish with lobster pappardelle ripiene; determine portion during plating tests.\nHolding / food safety: Refrigerate promptly and hold under kitchen food-safety procedures. Prepare in small batches for best texture.\nService: Serve finely diced and lightly dressed, not as a wet vinaigrette. Taste before adding salt because preserved lemon is salty.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -5995,7 +5938,7 @@
    "Dairy",
    "Tree nut"
   ],
-  "plating": "PROVOLETA SERVICE: Use as the topping for a 12 oz portion of provoleta in a small cast-iron pan. Serve crostinis alongside, following the Albondigas presentation. Finish with fresh parsley leaves, dill fronds, shaved Parmesan, and shaved chestnuts. Topping weight per pan has not yet been established.\n\nTEXTURE: Cohesive, savory-sweet topping with distinct pieces of pumpkin, oyster mushroom, and chestnut; not a purée or loose sauce.\n\nHOLDING / FOOD SAFETY: Cool rapidly using the approved procedure and refrigerate at or below 40°F. Three days is a conservative quality estimate, not a validated food-safety shelf life. Verify supplier specifications and cross-contact controls. Contains dairy from butter.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6112,7 +6055,7 @@
   "portions": 30.0,
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "DEVELOPMENT FORMULA: This is a proposed refrigerated quick-pickle starting point, not a recovered house formula or shelf-stable canning process. Keep continuously refrigerated at or below 40°F; use a conservative 7-day quality target pending kitchen validation. Maintain peppers submerged with a clean food-safe weight. Do not store at room temperature. For service, drain well before frying and account for surface moisture to reduce oil splatter.",
+  "plating": "",
   "drafts": [
    "shelfLife"
   ],
@@ -6292,8 +6235,7 @@
    "Egg",
    "Fish"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -6380,8 +6322,7 @@
   "shelfLife": "7 days",
   "shelfLifeDays": 7,
   "allergens": [],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -6489,7 +6430,7 @@
   "storage": "Fully dried before frying; store airtight and dry after frying",
   "shelfLife": "Airtight, dry; discard if soft",
   "allergens": [],
-  "plating": "DEVELOPMENT FORMULA: Proposed starting ratio is 2 rice-paper sheets to 1 nori sheet by count. The user’s established concept is to soak rice paper and nori together, then dry; this draft operationalizes that as nori adhered to briefly hydrated rice paper. Confirm whether the kitchen actually sandwiches, layers, or co-soaks the sheets before finalizing. Dry completely before frying. Any residual moisture can cause violent oil splatter. Keep finished chips dry and airtight; discard if they soften or become stale.",
+  "plating": "",
   "drafts": [
    "portion",
    "shelfLife",
@@ -6642,8 +6583,7 @@
   "portions": 28.0,
   "shelfLifeDays": 4,
   "allergens": [],
-  "plating": "FINISHED YIELD: Approximately 500-600 g estimated; weigh actual finished batch.\n\nPORTION GUIDANCE: 20 g per batch of Whipped Calabrian Chili Butter.\n\nSTORAGE / FOOD SAFETY: Because garlic is stored with oil, refrigerate promptly at 40°F/4°C or below and use within 4 days, or freeze promptly. Never store at room temperature. Follow validated kitchen HACCP procedures.\n\nSERVICE: Blend completely smooth; target a thick, spoonable purée with minimal added oil.\n\nREVISION NOTES: Phase Two recipe. Estimated yield only; actual yield depends on roasting moisture loss and oil retained.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6736,8 +6676,7 @@
   "portions": 25.0,
   "shelfLifeDays": 3,
   "allergens": [],
-  "plating": "SERVICE: 60 g per salad; about 25 salads per batch (pumpkin loses about 25% roasting).\n\nTEXTURE: just tender with light color, not mushy, so the dice hold shape on the plate.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -6857,7 +6796,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PRODUCTION NOTES:\n• Cook whole and unpeeled; do not peel or dice before boiling.\n• Butter and milk are a development starting point. Adjust milk to a silky, spoonable texture.\n• Potato portion size has not yet been established.\n\nSERVICE: American-style divot, 0.5–1 oz clam chowder velouté, finish with chives.",
+  "plating": "",
   "drafts": [
    "allergens",
    "portion",
@@ -7046,7 +6985,7 @@
    "Egg",
    "Wheat/Gluten"
   ],
-  "plating": "Holding / food safety: Contains dairy, egg, wheat, and pork. Keep refrigerated at or below 40°F / 4°C. Cool using the approved two-stage cooling procedure; do not leave at room temperature to cool. Conservative quality target: 3 days refrigerated, date-marked; follow the establishment’s validated food-safety plan and applicable code. Reheat for hot holding to 165°F / 74°C; hold at 135°F / 57°C or above.\nService: Cut into approximately 50 g cylindrical portions with round mold. Reheat and crisp exterior. Bacon should remain in distinct 6–8 mm pieces.\nProduction: Target 36 portions. Actual finished yield depends on challah moisture, pan depth, and bake loss; weigh finished batch and portion to 50 g.",
+  "plating": "",
   "drafts": [
    "station"
   ],
@@ -7144,7 +7083,7 @@
   "shelfLife": "2 days undressed",
   "shelfLifeDays": 2,
   "allergens": [],
-  "plating": "Keep shaved sprouts and cut apple refrigerated. Prefer cutting apple close to service. Dress only small quantities à la minute; do not hold dressed garnish overnight.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -7261,7 +7200,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Development formula. Steaming and thorough draining are important to avoid a watery purée. Proposed portion 60–75 g per entrée is not confirmed. Contains dairy. Do not over-blend after butter is incorporated; avoid a gluey texture.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -7503,7 +7442,7 @@
     "draft": true
    },
    {
-    "name": "Brine for 6 hours for the initial production test. Evaluate seasoning and texture before extending toward 8 hours.",
+    "name": "Brine for 6 hours.",
     "type": "passive",
     "duration_minutes": 360.0,
     "draft": true
@@ -7514,9 +7453,14 @@
     "duration_minutes": 5.0
    },
    {
-    "name": "Arrange quail on racks and refrigerate uncovered for 1–2 hours before dredging.",
+    "name": "Arrange quail on racks and refrigerate uncovered for 2 hours before dredging.",
     "type": "passive",
-    "duration_minutes": 90.0
+    "duration_minutes": 120.0
+   },
+   {
+    "name": "Portion any quail not needed for today's service into bags of 3 quail halves, cover, label and refrigerate. Shelf life 4 days.",
+    "type": "active",
+    "duration_minutes": 10.0
    }
   ],
   "yieldGrams": 2835,
@@ -7524,18 +7468,18 @@
   "yieldText": "2,835 g",
   "portion": "N/A - sub-recipe",
   "storage": "Refrigerated at or below 40°F / 4°C",
-  "shelfLife": "48 hours*",
+  "shelfLife": "48 hours (one use)",
   "shelfLifeDays": 2,
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Store prepared brine at or below 40°F / 4°C and use within 48 hours as a conservative quality recommendation. This is not a validated shelf-life guarantee. Once raw quail is added, keep refrigerated throughout brining and discard brine immediately after use. Keep raw poultry separate from ready-to-eat foods.\nService: Brine split quail for 6 hours for the initial test; assess before extending toward 8 hours. Drain thoroughly and rack uncovered under refrigeration for 1–2 hours before dredging. Target 90 split pieces for 30 orders; confirm that the brine fully covers the birds.",
+  "plating": "",
   "drafts": [
    "station"
   ],
   "source": {
    "sheet": "Spanish_Quail_Buttermilk_Brine.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
   },
   "needsReview": [
@@ -7651,7 +7595,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "PRODUCTION NOTES:\n• Formula is a proposed development batch; adjust seasoning after tasting.\n• Duxelle must be dry and completely chilled before wrapping salmon.\n• Finished batch yield has not yet been measured.\n\nHOLDING: Keep refrigerated; prepare in small batches.",
+  "plating": "",
   "drafts": [
    "allergens",
    "category",
@@ -7930,7 +7874,7 @@
    "Dairy",
    "Egg"
   ],
-  "plating": "Bake covered. Press while cooling under refrigeration; hold overnight. Portion cold. Keep raw egg/cream mixture refrigerated and follow approved cooling and reheating procedures. Reheat portions to applicable hot-holding/service temperature; do not rely on oven time alone.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8014,7 +7958,7 @@
   "allergens": [
    "Tree nut"
   ],
-  "plating": "Development recipe. Confirm allergen declaration and cross-contact controls: hazelnuts are a tree nut. Proposed portion 8–10 g per entrée is not confirmed. Chop shortly before service for best texture.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8098,7 +8042,7 @@
    "Wheat/Gluten",
    "Sesame"
   ],
-  "plating": "FORMULA BASIS: Togarashi is 10% of flour weight; cornstarch is 20%; salt is 1.5%. Total formula weight is approximately 11,929 g. Keep dry and protected from moisture. Discard working dredge after raw seafood contact; do not replenish a contaminated pan from the master batch. Check the specific togarashi blend label for sesame, wheat, soy, and other allergens.",
+  "plating": "",
   "drafts": [
    "allergens",
    "shelfLife",
@@ -8112,7 +8056,7 @@
  },
  {
   "id": "venison-osso-bucco-traditional-braise",
-  "name": "Venison Osso Bucco – Traditional Braise",
+  "name": "Venison Osso Bucco",
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
@@ -8121,9 +8065,9 @@
   "ingredients": [
    {
     "name": "Venison cross-cut osso bucco shanks",
-    "qty": 4.0,
+    "qty": 16.0,
     "unit": "ea",
-    "note": "4 pieces; pack total weight approx. 2.5–4 lb per product description"
+    "note": "4 packs of 4; each pack approx. 2.5–4 lb"
    },
    {
     "name": "Kosher salt",
@@ -8143,88 +8087,87 @@
    },
    {
     "name": "Neutral oil",
-    "qty": 80.0,
+    "qty": 320.0,
     "unit": "g",
     "note": "For searing"
    },
    {
     "name": "Yellow onion",
-    "qty": 400.0,
+    "qty": 1600.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Carrot",
-    "qty": 250.0,
+    "qty": 1000.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Celery",
-    "qty": 200.0,
+    "qty": 800.0,
     "unit": "g",
     "note": "medium dice; Mirepoix",
     "draft": true
    },
    {
     "name": "Tomato paste",
-    "qty": 120.0,
+    "qty": 480.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Dry red wine",
-    "qty": 1500.0,
-    "unit": "g",
-    "note": "Development starting quantity"
+    "qty": 6000.0,
+    "unit": "g"
    },
    {
     "name": "Veal stock",
-    "qty": 1800.0,
+    "qty": 7200.0,
     "unit": "g",
-    "note": "Development starting quantity; enough to braise"
+    "note": "To come ¾ up the shanks; adjust as needed"
    },
    {
     "name": "Garlic",
-    "qty": 40.0,
+    "qty": 160.0,
     "unit": "g",
     "note": "crushed",
     "draft": true
    },
    {
     "name": "Dried porcini",
-    "qty": 12.0,
+    "qty": 48.0,
     "unit": "g",
     "note": "Keep subtle"
    },
    {
     "name": "Hot water for porcini",
-    "qty": 250.0,
+    "qty": 1000.0,
     "unit": "g",
     "note": "Steep; strain liquor carefully"
    },
    {
     "name": "Juniper berries",
-    "qty": 6.0,
+    "qty": 24.0,
     "unit": "g",
     "note": "lightly crushed; Use sparingly"
    },
    {
     "name": "Thyme",
-    "qty": 8.0,
+    "qty": 32.0,
     "unit": "g",
     "draft": true
    },
    {
     "name": "Bay leaf",
-    "qty": 2.0,
+    "qty": 8.0,
     "unit": "ea"
    },
    {
     "name": "Orange peel",
-    "qty": 10.0,
+    "qty": 40.0,
     "unit": "g",
     "note": "broad strips; Avoid pith; remove before straining"
    }
@@ -8237,10 +8180,9 @@
     "draft": true
    },
    {
-    "name": "Sear shanks in neutral oil until deeply browned on all sides. Remove and reserve.",
+    "name": "Sear shanks in neutral oil until browned on all sides. Remove and reserve.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 45.0
    },
    {
     "name": "Sweat onion, carrot and celery in the braising vessel until softened and lightly caramelized.",
@@ -8261,21 +8203,19 @@
     "draft": true
    },
    {
-    "name": "Steep dried porcini in hot water; strain liquor through a fine filter to remove grit. Add measured liquor to braise.",
+    "name": "Steep dried porcini in hot water; strain the liquid through a fine filter to remove grit.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
-    "name": "Return shanks. Add veal stock, garlic, juniper, thyme, bay and orange peel. Liquid should come appropriately up the shanks; adjust with stock as needed.",
+    "name": "Return shanks. Add veal stock, the strained porcini liquid, garlic, juniper, thyme, bay and orange peel. Liquid should come ¾ up the shanks; adjust with stock as needed.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
-    "name": "Cover and braise gently at approximately 300°F until fork-tender but holding together. Check periodically; time will vary with shank size.",
+    "name": "Cover and braise gently at approximately 300°F for 4 to 6 hours, until fork-tender but holding together. Time will vary with shank size.",
     "type": "passive",
-    "duration_minutes": 180.0
+    "duration_minutes": 300.0
    },
    {
     "name": "Remove shanks carefully. Strain braising liquid; discard solids. Rapidly cool shanks and liquid separately using approved procedures.",
@@ -8289,24 +8229,24 @@
    }
   ],
   "category": "Winter 26/27",
-  "yieldText": "4 whole cross-cut shanks (development batch)",
+  "yieldText": "16 whole cross-cut shanks",
   "portion": "1 whole shank per entrée",
   "storage": "Cool promptly; refrigerate covered",
-  "shelfLife": "4 days",
-  "shelfLifeDays": 4,
+  "shelfLife": "6 days",
+  "shelfLifeDays": 6,
   "allergens": [],
-  "plating": "Cool shanks and braising liquid promptly under approved food-safety procedures. Refrigerate at 41°F / 5°C or below. Reheat gently in the same veal-stock bath used for Wagyu short rib, following approved reheating and hot-holding procedures. Braise tenderness and safe final temperature must be verified in production.",
+  "plating": "",
   "drafts": [
    "allergens",
-   "shelfLife",
    "station",
    "sub"
   ],
   "source": {
    "sheet": "Venison_Osso_Buco_Braise.xlsx",
-   "rev": "2026-11-16",
+   "rev": "2026-11-19",
    "createdBy": "BZ"
-  }
+  },
+  "portions": 16.0
  },
  {
   "id": "wagyu-braising-reduction",
@@ -8397,7 +8337,7 @@
   "portions": 10.0,
   "shelfLifeDays": 3,
   "allergens": [],
-  "plating": "Development ratio per 1,000 g starting liquid: 500 g veal stock, 350 g defatted braising liquid, 150 g dry red wine. Reduce wine by half before adding stock/liquid. Final reduction endpoint and finished yield not established; test against actual braising liquid. Sherry vinegar quantity left open for sensory adjustment. Rendered Wagyu fat reserved for crostini/grilled vegetables, not added back. Target rich, gelatinous, glossy, completely smooth, with brightness. Portion 45–50 g per entrée.",
+  "plating": "",
   "drafts": [
    "allergens",
    "station",
@@ -8477,8 +8417,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "Holding / food safety: Keep refrigerated and prepare in small batches under kitchen food-safety procedures.",
-  "platingDraft": true,
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -8591,7 +8530,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "CHEF NOTES:\n• This is a proposed service batch sized for 24 oysters; actual yield will vary with vegetable moisture loss and oyster size.\n• Keep the Brussels sprouts visible and lightly textured rather than cooking them down into a paste.\n• The butter formula is a separate batch; this filling uses 180 g of it, leaving the balance for other service or adjustment.",
+  "plating": "",
   "drafts": [
    "allergens"
   ],
@@ -9553,7 +9492,7 @@
     "name": "Cherry-smoked Dart Rohan duck breast",
     "recipeRef": "cherry-smoked-dart-rohan-duck-breast",
     "qty": 1.0,
-    "unit": "g",
+    "unit": "ea",
     "note": "7–8 oz raw; hard-sear and butter-baste at pickup"
    },
    {
@@ -10098,7 +10037,7 @@
     "recipeRef": "12-hour-braised-wagyu-short-rib",
     "qty": 113.0,
     "unit": "g",
-    "note": "cooked; Confirmed 4 oz cooked portion; 12-hour braise."
+    "note": "cooked; Confirmed 4 oz cooked portion; 6-hour braise."
    },
    {
     "name": "House gnocchi",
