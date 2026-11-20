@@ -20,18 +20,22 @@ const KEY = env.VITE_SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_PUBLISHABLE_KEY ?? e
 const TABLE = "kitchen_data";
 export const KITCHEN = "wandering-vine";
 const LOCAL_ONLY = "thePass.localOnly.v1";
+// Keys changed on this phone that the kitchen hasn't received yet (e.g. made
+// with no signal). Kept across reloads; never synced itself.
+const UNSYNCED = "thePass.unsynced.v1";
 
 export const supabase = URL && KEY ? createClient(URL, KEY) : null;
 export const syncConfigured = Boolean(supabase);
 
-const ours = (key) => (key.startsWith("thePass.") || key.startsWith("kitchenPrep.")) && !DEVICE_KEYS.has(key) && key !== LOCAL_ONLY;
+const ours = (key) => (key.startsWith("thePass.") || key.startsWith("kitchenPrep.")) && !DEVICE_KEYS.has(key) && key !== LOCAL_ONLY && key !== UNSYNCED;
 
 // What we last sent or received per key, so an echo isn't sent back.
 const lastSeen = new Map();
 const pending = new Map();
 let timer = null;
 let started = false;
-let status = { state: "off", error: null, lastSync: null };
+let retry = null;
+let status = { state: "off", error: null, lastSync: null, unsynced: 0, online: typeof navigator === "undefined" ? true : navigator.onLine !== false };
 const listeners = new Set();
 
 function setStatus(next) {
@@ -57,6 +61,34 @@ export function setLocalOnly(on) {
     else localStorage.removeItem(LOCAL_ONLY);
   } catch {
     // nothing to do
+  }
+}
+
+function loadUnsynced() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(UNSYNCED) ?? "[]"));
+  } catch {
+    return new Set();
+  }
+}
+const unsynced = loadUnsynced();
+function saveUnsynced() {
+  try {
+    if (unsynced.size) localStorage.setItem(UNSYNCED, JSON.stringify([...unsynced]));
+    else localStorage.removeItem(UNSYNCED);
+  } catch {
+    // storage blocked
+  }
+  if (status.unsynced !== unsynced.size) setStatus({ unsynced: unsynced.size });
+}
+status.unsynced = unsynced.size;
+
+function readLocal(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? null : JSON.parse(raw);
+  } catch {
+    return undefined;
   }
 }
 
@@ -89,13 +121,20 @@ async function flush() {
   if (!pending.size) return;
   const rows = [...pending].map(([key, value]) => ({ kitchen_id: KITCHEN, key, value, updated_at: new Date().toISOString() }));
   pending.clear();
-  const { error } = await supabase.from(TABLE).upsert(rows, { onConflict: "kitchen_id,key" });
+  let error;
+  try {
+    ({ error } = await supabase.from(TABLE).upsert(rows, { onConflict: "kitchen_id,key" }));
+  } catch (e) {
+    error = { message: e?.message ?? "No connection" };
+  }
   if (error) {
     // Put them back and try again shortly.
     for (const r of rows) if (!pending.has(r.key)) pending.set(r.key, r.value);
     setStatus({ state: "error", error: error.message });
     timer = setTimeout(flush, 5000);
   } else {
+    for (const r of rows) if (!pending.has(r.key)) unsynced.delete(r.key);
+    saveUnsynced();
     setStatus({ state: "live", error: null, lastSync: Date.now() });
   }
 }
@@ -105,43 +144,85 @@ function queue(key, value) {
   const text = JSON.stringify(value ?? null);
   if (lastSeen.get(key) === text) return;
   lastSeen.set(key, text);
+  // Remember it until the kitchen has it, even across a reload.
+  if (!unsynced.has(key)) {
+    unsynced.add(key);
+    saveUnsynced();
+  }
+  if (!started) return; // sent when sync (re)starts
   pending.set(key, value ?? null);
   if (!timer) timer = setTimeout(flush, 400);
+}
+
+// Record changes from the moment the app opens, signal or not.
+let watching = false;
+export function watchChanges() {
+  if (!supabase || watching || isLocalOnly()) return;
+  watching = true;
+  setSaveListener(queue);
+  window.addEventListener("online", () => {
+    setStatus({ online: true });
+    if (!started) startSync();
+    else if (pending.size && !timer) flush();
+  });
+  window.addEventListener("offline", () => setStatus({ online: false }));
 }
 
 // Pull everything, then listen. On the first phone to connect (an empty
 // table), this phone's data goes up so the others start from it.
 export async function startSync() {
   if (!supabase || started || isLocalOnly()) return;
-  const { data: session } = await supabase.auth.getSession();
+  watchChanges();
+  let session = { session: null };
+  try {
+    ({ data: session } = await supabase.auth.getSession());
+  } catch {
+    // no signal: tried again when it comes back
+  }
   if (!session.session) {
     setStatus({ state: "signedout" });
     return;
   }
   started = true;
   setStatus({ state: "connecting", error: null });
-  const { data, error } = await supabase.from(TABLE).select("key, value").eq("kitchen_id", KITCHEN);
+  let data;
+  let error;
+  try {
+    ({ data, error } = await supabase.from(TABLE).select("key, value").eq("kitchen_id", KITCHEN));
+  } catch (e) {
+    error = { message: e?.message ?? "No connection" };
+  }
   if (error) {
+    // No signal (or the database is down): keep working on this phone and
+    // try again when the connection comes back.
     started = false;
-    setStatus({ state: "error", error: error.message });
+    setStatus({ state: "error", error: navigator.onLine === false ? "No signal. Saved on this phone." : error.message });
+    if (!retry) retry = setTimeout(() => { retry = null; startSync(); }, 30000);
     return;
   }
   if (data.length === 0) {
     for (const k of localKeys()) {
-      try {
-        queue(k, JSON.parse(localStorage.getItem(k)));
-      } catch {
-        // skip unreadable entries
-      }
+      const v = readLocal(k);
+      if (v === undefined) continue;
+      pending.set(k, v);
+      lastSeen.set(k, JSON.stringify(v));
     }
+    if (pending.size && !timer) timer = setTimeout(flush, 0);
   } else {
     const remote = new Set(data.map((r) => r.key));
-    for (const r of data) writeLocal(r.key, r.value);
-    // Shared data this phone has that the kitchen doesn't (e.g. a new key) goes up.
-    for (const k of localKeys()) if (!remote.has(k)) queue(k, JSON.parse(localStorage.getItem(k)));
-    announce(data.map((r) => r.key));
+    // What this phone changed while offline wins over the kitchen's older copy.
+    const fresh = data.filter((r) => !unsynced.has(r.key));
+    for (const r of fresh) writeLocal(r.key, r.value);
+    for (const k of localKeys()) {
+      if (remote.has(k) && !unsynced.has(k)) continue;
+      const v = readLocal(k);
+      if (v === undefined) continue;
+      pending.set(k, v);
+      lastSeen.set(k, JSON.stringify(v));
+    }
+    if (pending.size && !timer) timer = setTimeout(flush, 0);
+    announce(fresh.map((r) => r.key));
   }
-  setSaveListener(queue);
   supabase
     .channel("kitchen")
     .on("postgres_changes", { event: "*", schema: "public", table: TABLE, filter: `kitchen_id=eq.${KITCHEN}` }, (msg) => {
@@ -172,10 +253,30 @@ export async function signOutKitchen() {
   window.location.reload();
 }
 
+// A saved kitchen login on this phone, even if it can't be checked right now.
+function savedSession() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("sb-") && k.endsWith("-auth-token") && localStorage.getItem(k)) return true;
+    }
+  } catch {
+    // storage blocked
+  }
+  return false;
+}
+
 export async function hasKitchenSession() {
   if (!supabase) return false;
-  const { data } = await supabase.auth.getSession();
-  return Boolean(data.session);
+  // No signal: a phone that has joined the kitchen before goes straight in.
+  if (navigator.onLine === false) return savedSession();
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (data.session) return true;
+    return error ? savedSession() : false;
+  } catch {
+    return savedSession();
+  }
 }
 
 // Screens call this to reload when another phone changed one of their keys.

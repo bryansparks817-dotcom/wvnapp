@@ -62,8 +62,12 @@ export function setSaveListener(fn) {
 }
 
 function save(key, value) {
+  const text = JSON.stringify(value);
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    // Screens re-save what they loaded when they open: that's not a change,
+    // so it isn't sent to the other phones (or marked as made offline).
+    if (localStorage.getItem(key) === text) return;
+    localStorage.setItem(key, text);
   } catch {
     // storage unavailable (e.g. private browsing) — edits just won't persist
   }

@@ -490,3 +490,9 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__linkbtn { border: 0; background: none; padding: 0; color: var(--vine) !important; text-decoration: underline; font-size: 12px; }
 .chef__panreq { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; background: var(--card); }
 .chef__panreq .pass__rowtext { flex: 1; min-width: 0; }
+
+/* No-signal note, above everything */
+.pass__offline { padding: 6px 16px; background: #3a2f1a; color: #f3eee4; font-family: "DM Mono", monospace; font-size: 12px; line-height: 1.4; border-bottom: 1px solid #e39b2d; }
+.pass__offline strong { color: #e39b2d; letter-spacing: 0.06em; }
+.pass__offline.is-syncing { background: #1f2a22; border-bottom-color: #6fa07f; }
+.pass__offline.is-syncing strong { color: #6fa07f; }

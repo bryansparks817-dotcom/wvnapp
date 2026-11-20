@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PassHeader } from "./Chrome";
-import { hasKitchenSession, isLocalOnly, setLocalOnly, signInKitchen, startSync, syncConfigured } from "../lib/sync";
+import { hasKitchenSession, isLocalOnly, setLocalOnly, signInKitchen, startSync, syncConfigured, watchChanges } from "../lib/sync";
 import "./pass.css";
 
 // Before anyone signs in, the phone itself joins the kitchen: one shared
@@ -55,7 +55,10 @@ export default function SyncGate({ children }) {
   useEffect(() => {
     if (state !== "checking") return;
     hasKitchenSession().then((yes) => {
-      if (yes) startSync();
+      if (yes) {
+        watchChanges();
+        startSync();
+      }
       setState(yes ? "ok" : "connect");
     });
   }, [state]);
