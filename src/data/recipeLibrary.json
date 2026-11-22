@@ -3439,12 +3439,6 @@
   ],
   "steps": [
    {
-    "name": "Open and inspect both D.O.P. San Marzano #10 cans. Confirm the D.O.P. mark and record supplier lot details. Verify actual net weight on the cans; formula assumes 2,977 g per can.",
-    "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
     "name": "Crush tomatoes by hand or pass through a food mill to the desired texture. Reserve all packing juice.",
     "type": "active",
     "duration_minutes": 5.0,
@@ -3504,7 +3498,7 @@
   ],
   "source": {
    "sheet": "DOP_San_Marzano_Tomato_Sauce_2x10_Cans.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-22",
    "createdBy": ""
   }
  },
