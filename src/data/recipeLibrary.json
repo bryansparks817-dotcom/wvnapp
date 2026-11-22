@@ -1962,7 +1962,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "",
+  "plating": "GARNISH (per order):\nCrème fraîche — 15 g; restrained swirl.\nMarcona almond praline — 8 g.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — approximately 4 g, applied in a few small drops.",
   "drafts": [
    "allergens",
    "name",
@@ -8688,14 +8688,14 @@
     "name": "Crème fraîche",
     "qty": 15.0,
     "unit": "g",
-    "note": "Proposed garnish portion; restrained swirl"
+    "note": "Restrained swirl"
    },
    {
     "name": "Marcona almond praline",
     "recipeRef": "marcona-almond-praline-honey-caramel",
     "qty": 8.0,
     "unit": "g",
-    "note": "Proposed garnish portion; chopped for spoonable texture"
+    "note": "8 g"
    },
    {
     "name": "Crispy sage leaves",
@@ -8728,7 +8728,7 @@
     "draft": true
    },
    {
-    "name": "Add approximately 15 g crème fraîche as a restrained swirl or small quenelle.",
+    "name": "Add approximately 15 g crème fraîche as a restrained swirl.",
     "type": "active",
     "duration_minutes": 1.0,
     "draft": true
@@ -8781,7 +8781,7 @@
   ],
   "source": {
    "sheet": "Butternut_Soup_Build.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   }
  },
