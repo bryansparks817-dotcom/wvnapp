@@ -2945,7 +2945,7 @@
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
-   "garde-manger"
+   "prep"
   ],
   "ingredients": [
    {
