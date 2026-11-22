@@ -98,12 +98,20 @@ export function buildShift(items, inventory, linePar, today) {
     const walkInLeft = usable.filter((b) => b.where === "walk-in");
     const toLowboy = takeFrom(item, walkInLeft, Math.max(0, lowboyParG - lowboyLeft));
 
-    if (toLine.takes.length || toLowboy.takes.length) {
-      collect.push({ id: item.id, item, toLine: toLine.takes, toLowboy: toLowboy.takes });
+    // 3. Whatever is still short of line par + lowboy par gets made from scratch,
+    // unless another station makes it (item.madeAt): then this station only
+    // collects, and the shortfall shows on the Collect row for the cook to ask for.
+    const makeG = Math.ceil((toLine.short + toLowboy.short) / 50) * 50;
+    const elsewhere = Boolean(item.madeAt);
+
+    if (toLine.takes.length || toLowboy.takes.length || (elsewhere && makeG > 0)) {
+      collect.push({ id: item.id, item, toLine: toLine.takes, toLowboy: toLowboy.takes, ...(elsewhere && makeG > 0 ? { shortG: makeG, madeAt: item.madeAt } : {}) });
+    }
+    if (elsewhere) {
+      if (toss.length) prep.push({ id: item.id, item, recipeId: item.recipeId, name: item.name, makeG: 0, toss: toss.map((b) => ({ where: b.where, size: b.size, fill: b.fill, madeOn: b.madeOn })) });
+      continue;
     }
 
-    // 3. Whatever is still short of line par + lowboy par gets made from scratch.
-    const makeG = Math.ceil((toLine.short + toLowboy.short) / 50) * 50;
     if (makeG > 0 || toss.length) {
       prep.push({
         id: item.id,

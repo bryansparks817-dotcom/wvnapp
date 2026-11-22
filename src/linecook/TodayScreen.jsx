@@ -5,6 +5,7 @@ import { formatMinutes } from "../lib/format";
 import { containerLabel, formatG, shelfLabel } from "../lib/inventory";
 import PrepSteps from "./PrepSteps";
 import GatherList from "./GatherList";
+import { madeAtName } from "../data/stations";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -184,6 +185,11 @@ export default function TodayScreen({
                         <span className="pass__takes">
                           <span className="pass__takehead">TO LOWBOY</span>
                           {row.toLowboy.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
+                        </span>
+                      )}
+                      {!isDone && row.shortG > 0 && (
+                        <span className="pass__rowsub pass__amber">
+                          SHORT {formatG(row.shortG)} · {madeAtName(row)} makes this. Ask them for it.
                         </span>
                       )}
                     </span>

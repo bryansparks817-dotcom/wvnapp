@@ -76,25 +76,6 @@
       ]
     },
     {
-      "id": "clam-chowder-veloute",
-      "name": "Clam chowder veloute",
-      "pan": "1/6",
-      "panGrams": 2500,
-      "lowboySize": "qt",
-      "qtGrams": 950,
-      "lowboyPar": 2,
-      "shelfLifeDays": 4,
-      "recipeId": "clam-chowder-veloute",
-      "unconfirmed": [
-        "pan",
-        "panGrams",
-        "lowboySize",
-        "qtGrams",
-        "lowboyPar",
-        "shelfLifeDays"
-      ]
-    },
-    {
       "id": "lobster-and-shrimp-bolognese",
       "name": "Lobster & shrimp bolognese",
       "pan": "1/6",

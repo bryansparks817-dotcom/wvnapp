@@ -31,6 +31,7 @@ const SEEDED_KEY = "kitchenPrep.seededRecipeIds.v1";
 const LIBRARY_KEY = "thePass.recipeLibrary.v1";
 const STATIONS_KEY = "thePass.stations.v1";
 const PAN_REQUESTS_KEY = "thePass.panRequests.v1";
+const STATION_FIXES_KEY = "thePass.stationFixes.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
@@ -101,6 +102,7 @@ const ALL_KEYS = [
   LIBRARY_KEY,
   STATIONS_KEY,
   PAN_REQUESTS_KEY,
+  STATION_FIXES_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -379,6 +381,16 @@ export function loadStationSetup() {
 
 export function saveStationSetup(stations) {
   save(STATIONS_KEY, stations);
+}
+
+// Ids of the one-time station fixes already applied to the saved setup.
+export function loadStationFixes() {
+  const done = load(STATION_FIXES_KEY, []);
+  return Array.isArray(done) ? done : [];
+}
+
+export function saveStationFixes(ids) {
+  save(STATION_FIXES_KEY, ids);
 }
 
 // Line cooks' requests for a different line pan size, for the chef to answer.

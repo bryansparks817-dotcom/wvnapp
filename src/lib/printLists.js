@@ -11,6 +11,7 @@
 import { loadShift, saveShift } from "./storage";
 import { buildShift, containerLabel, formatG } from "./inventory";
 import { applyShortages } from "./shortage";
+import { madeAtName } from "../data/stations";
 import { buildPrepSteps } from "./lineList";
 import { withPace, paceFor } from "./pace";
 import { batchGrams, scaleRecipe } from "./recipeScale";
@@ -75,7 +76,7 @@ export function buildCookSheet(initials, openStations, recipesById, ingredients)
     const mine = (id) => cookFor(shift, id) === initials;
     const rows = applyShortages(shift.prep.filter((p) => !shift.skip?.[p.id]), shift.short);
     const nameOf = (id) => st.items.find((i) => i.id === id)?.name ?? id;
-    const c = shift.collect.filter((r) => mine(r.id)).map((r) => ({ ...r, name: nameOf(r.id), station: st.name }));
+    const c = shift.collect.filter((r) => mine(r.id)).map((r) => ({ ...r, name: nameOf(r.id), station: st.name, madeAtName: madeAtName(r) }));
     const p = rows.filter((r) => mine(r.id)).map((r) => ({ ...r, station: st.name }));
     if (c.length || p.length) stations.push({ id: st.id, name: st.name });
     collect.push(...c);
@@ -165,6 +166,7 @@ function sheetHtml(sheet, { name, today, startMin, serviceLabel, chefName, withR
   <table>${sheet.collect.map((c) => `<tr><td class="cb">${box}</td><td><b>${esc(c.name)}</b> <span class="mut">${esc(c.station)}</span></td><td>${[
     c.toLine?.length ? `<div>To the line: ${esc(pulls(c.toLine))}</div>` : "",
     c.toLowboy?.length ? `<div>To the lowboy: ${esc(pulls(c.toLowboy))}</div>` : "",
+    c.shortG > 0 ? `<div>Short ${esc(formatG(c.shortG))}: ${esc(c.madeAtName ?? "another station")} makes this, ask them.</div>` : "",
   ].join("")}</td></tr>`).join("")}</table>
 </section>` : "";
 
