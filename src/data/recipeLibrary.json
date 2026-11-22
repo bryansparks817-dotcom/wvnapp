@@ -1962,7 +1962,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "GARNISH (per order):\nCrème fraîche — 15 g; restrained swirl.\nMarcona almond praline — 8 g.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — approximately 4 g, applied in a few small drops.",
+  "plating": "GARNISH (per order):\nCrème fraîche — 8 g; restrained swirl.\nMarcona almond praline — 8 g.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — 8 g, applied in a few small drops.",
   "drafts": [
    "allergens",
    "name",
@@ -8686,7 +8686,7 @@
    },
    {
     "name": "Crème fraîche",
-    "qty": 15.0,
+    "qty": 8.0,
     "unit": "g",
     "note": "Restrained swirl"
    },
@@ -8714,10 +8714,9 @@
    {
     "name": "House balsamic reduction",
     "recipeRef": "balsamic-reduction",
-    "qty": 4.0,
+    "qty": 8.0,
     "unit": "g",
-    "note": "Proposed amount; a few small drops, not a heavy drizzle",
-    "draft": true
+    "note": "Proposed amount; a few small drops, not a heavy drizzle"
    }
   ],
   "steps": [
@@ -8728,7 +8727,7 @@
     "draft": true
    },
    {
-    "name": "Add approximately 15 g crème fraîche as a restrained swirl.",
+    "name": "Add 8 g crème fraîche as a restrained swirl.",
     "type": "active",
     "duration_minutes": 1.0,
     "draft": true
@@ -8752,7 +8751,7 @@
     "draft": true
    },
    {
-    "name": "Add approximately 4 g house balsamic reduction in a few small drops. Serve immediately.",
+    "name": "Add 8 g house balsamic reduction in a few small drops. Serve immediately.",
     "type": "active",
     "duration_minutes": 0.0,
     "draft": true
