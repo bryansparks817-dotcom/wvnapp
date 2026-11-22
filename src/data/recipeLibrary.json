@@ -3718,7 +3718,7 @@
     "draft": true
    },
    {
-    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off. Expect approximately 90 minutes of cook time.",
+    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off.",
     "type": "passive",
     "duration_minutes": 90.0
    },
@@ -3729,7 +3729,7 @@
     "draft": true
    },
    {
-    "name": "Pass the cooked sauce through a food mill using a medium plate to remove skins and seeds while retaining body. If a more rustic texture is desired, crush by hand and leave skins/seeds in; use one method consistently for each batch.",
+    "name": "Pass the cooked sauce through a food mill using a medium plate to remove skins and seeds while retaining body.",
     "type": "active",
     "duration_minutes": 15.0,
     "draft": true
