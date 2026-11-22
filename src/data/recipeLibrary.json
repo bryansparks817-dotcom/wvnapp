@@ -3439,7 +3439,7 @@
   ],
   "steps": [
    {
-    "name": "Crush tomatoes by hand or pass through a food mill to the desired texture. Reserve all packing juice.",
+    "name": "Crush tomatoes by hand or pass through a ricer. Reserve all packing juice.",
     "type": "active",
     "duration_minutes": 5.0,
     "draft": true
