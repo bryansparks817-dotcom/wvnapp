@@ -59,7 +59,11 @@ function PanPick({ item, pan }) {
 
 // One item's count: the line pan, then each lowboy container. Walk-in is the
 // chef's count, shown read-only.
-export default function CountCard({ item, inv, today, onChange, pan = null }) {
+// mode "backup": a backup station (Prep) counts every container of the item,
+//   wherever it sits, against its prep par. No line pan.
+// mode "line": a collect-only item on a line station: just the line pan,
+//   since the backup is the making station's to count.
+export default function CountCard({ item, inv, today, onChange, pan = null, mode = "full" }) {
   const setLine = (line) => onChange({ ...inv, line });
   const setLowboy = (i, fill) =>
     onChange({ ...inv, lowboy: inv.lowboy.map((c, j) => (j === i ? { ...c, fill } : c)) });
@@ -73,14 +77,19 @@ export default function CountCard({ item, inv, today, onChange, pan = null }) {
         <span className="pass__rowname">{item.name}</span>
       </legend>
 
-      <div className="pass__countrow">
+      {mode !== "backup" && <div className="pass__countrow">
         {pan ? <PanPick item={item} pan={pan} /> : <span className="pass__countlabel">LINE · {item.pan} PAN</span>}
         <Levels value={inv.line} onPick={setLine} label={`${item.name} line pan`} />
-      </div>
+      </div>}
 
+      {mode === "line" ? (
+        <p className="pass__walkin">BACKUP: Prep counts it. Collect pulls from Prep’s stock.</p>
+      ) : <>
       <div className="pass__countrow">
-        <span className="pass__countlabel">LOWBOY · par {item.lowboyPar} {item.lowboySize}</span>
-        {inv.lowboy.length === 0 && <span className="pass__none">Nothing in the lowboy.</span>}
+        <span className={`pass__countlabel${mode === "backup" && item.unconfirmed?.includes("lowboyPar") ? " chef__draftfield" : ""}`}>
+          {mode === "backup" ? `ALL BACKUP (walk-in + lowboys) · prep par ${item.lowboyPar} ${item.lowboySize}${item.unconfirmed?.includes("lowboyPar") ? " · DRAFT" : ""}` : `LOWBOY · par ${item.lowboyPar} ${item.lowboySize}`}
+        </span>
+        {inv.lowboy.length === 0 && <span className="pass__none">{mode === "backup" ? "None on hand." : "Nothing in the lowboy."}</span>}
         {inv.lowboy.map((c, i) => (
           <div key={i} className="pass__container">
             <span className={`pass__containerinfo${isLastDay(item, c.madeOn, today) ? " is-expiring" : ""}`}>
@@ -95,12 +104,13 @@ export default function CountCard({ item, inv, today, onChange, pan = null }) {
         </div>
       </div>
 
-      <p className="pass__walkin">
+      {mode === "full" && <p className="pass__walkin">
         WALK-IN (chef):{" "}
         {walkIn.length === 0
           ? "none"
           : walkIn.map((c) => `${containerLabel(c)} · ${shelfLabel(item, c.madeOn, today)}`).join(", ")}
-      </p>
+      </p>}
+      </>}
     </fieldset>
   );
 }

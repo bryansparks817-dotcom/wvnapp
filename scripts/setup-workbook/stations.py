@@ -47,6 +47,13 @@ for rid, homes in ONLY_ON.items():
     for sid in homes:
         if src and not any(i['id'] == rid for i in res[sid]):
             res[sid].append(dict(src, unconfirmed=list(src.get('unconfirmed', []))))
+# Prep holds the backup for what it makes: its par is the prep par, a draft
+# (light blue) until the chef confirms it.
+PREP_PAR = {'clam-chowder-veloute': 4}
+for i in res['prep']:
+    if i['id'] in PREP_PAR:
+        i['lowboyPar'] = PREP_PAR[i['id']]
+        if 'lowboyPar' not in i['unconfirmed']: i['unconfirmed'].append('lowboyPar')
 for (sid, rid), home in MADE_AT.items():
     for i in res[sid]:
         if i['id'] == rid: i['madeAt'] = home

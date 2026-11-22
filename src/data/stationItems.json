@@ -914,7 +914,7 @@
     "panGrams": 2500,
     "lowboySize": "qt",
     "qtGrams": 950,
-    "lowboyPar": 1,
+    "lowboyPar": 4,
     "shelfLifeDays": 7,
     "recipeId": "clam-chowder-veloute",
     "unconfirmed": [

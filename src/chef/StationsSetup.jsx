@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getStations } from "../data/stations";
+import { getStations, setupFlags } from "../data/stations";
 import { saveStationSetup } from "../lib/storage";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 
@@ -59,6 +59,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
   const drafts = new Set(item?.unconfirmed ?? []);
   const num = (v) => Number(v);
   const target = stations.find((s) => s.id === f.stationId);
+  const backup = Boolean(target.holdsBackup);
   const dupName = target.items.some((i) => i !== item && i.name.toLowerCase() === f.name.trim().toLowerCase());
   const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1;
 
@@ -113,6 +114,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       </Field>
       {dupName && <p className="pass__hint chef__late">Already on {target.name}.</p>}
 
+      {!backup && <>
       <span className="pass__countlabel">LINE PAN{drafts.has("pan") ? " · DRAFT" : ""}</span>
       <div className={`chef__servicetoggle chef__pantoggle${drafts.has("pan") ? " chef__draftfield" : ""}`} role="group" aria-label="Line pan">
         {PANS.map((p) => (
@@ -124,19 +126,22 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         <Field label="FULL PAN (G)" draft={drafts.has("panGrams")}>
           <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.panGrams} onChange={(e) => set("panGrams", e.target.value)} />
         </Field>
+      </div>
+      </>}
+      <div className="chef__staffrow">
         <Field label="SHELF LIFE (DAYS)" draft={drafts.has("shelfLifeDays")}>
           <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.shelfLifeDays} onChange={(e) => set("shelfLifeDays", e.target.value)} />
         </Field>
       </div>
 
-      <span className="pass__countlabel">LOWBOY BACKUP{drafts.has("lowboySize") ? " · DRAFT" : ""}</span>
+      <span className="pass__countlabel">{backup ? "BACKUP CONTAINERS" : "LOWBOY BACKUP"}{drafts.has("lowboySize") ? " · DRAFT" : ""}</span>
       <div className={`chef__servicetoggle${drafts.has("lowboySize") ? " chef__draftfield" : ""}`} role="group" aria-label="Lowboy container">
         {[["qt", "QUARTS"], ["pt", "PINTS"]].map(([v, l]) => (
           <button key={v} type="button" className={f.lowboySize === v ? "is-on" : ""} aria-pressed={f.lowboySize === v} onClick={() => set("lowboySize", v)}>{l}</button>
         ))}
       </div>
       <div className="chef__staffrow">
-        <Field label={`PAR (${f.lowboySize === "pt" ? "PINTS" : "QUARTS"})`} draft={drafts.has("lowboyPar")}>
+        <Field label={`${backup ? "PREP PAR" : "PAR"} (${f.lowboySize === "pt" ? "PINTS" : "QUARTS"})`} draft={drafts.has("lowboyPar")}>
           <input className="pass__input" type="number" inputMode="decimal" min="0" step="0.5" value={f.lowboyPar} onChange={(e) => set("lowboyPar", e.target.value)} />
         </Field>
         <Field label="1 QUART WEIGHS (G)" draft={drafts.has("qtGrams")}>
@@ -144,7 +149,11 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         </Field>
       </div>
       <p className="pass__hint">
-        Line par is how full the pan should be at open. Lowboy par is the backup to keep on hand. Anything under par goes on the prep list.
+        {backup
+          ? `${target.name} counts all the backup for this item, walk-in and lowboys, until a line station pulls it to the line. Prep par is how much to keep on hand. Under par, plus whatever the line stations ask for, goes on the prep list.`
+          : f.madeAt
+            ? "Collect only: this station counts just its line pan. The backup and its par belong to the station that makes it."
+            : "Line par is how full the pan should be at open. Lowboy par is the backup to keep on hand. Anything under par goes on the prep list."}
       </p>
 
       {stations.length > 1 && (
@@ -203,12 +212,21 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
         {dup && <p className="pass__hint chef__late">There’s already a station called that.</p>}
         {changed && <button type="button" className="pass__ghostbtn" onClick={() => onSave({ ...station, name: name.trim() })}>SAVE NAME</button>}
 
+        <span className="pass__countlabel">WHAT THIS STATION DOES</span>
+        <div className="chef__servicetoggle" role="group" aria-label="Station kind">
+          <button type="button" className={!station.holdsBackup ? "is-on" : ""} aria-pressed={!station.holdsBackup} onClick={() => onSave({ ...station, holdsBackup: false, linePar: station.linePar || 100 })}>LINE (SERVICE)</button>
+          <button type="button" className={station.holdsBackup ? "is-on" : ""} aria-pressed={Boolean(station.holdsBackup)} onClick={() => onSave({ ...station, holdsBackup: true, linePar: 0 })}>PREP (HOLDS BACKUP)</button>
+        </div>
+        {station.holdsBackup ? (
+          <p className="pass__hint">No line pans. It counts all the backup for its items against each item’s prep par, and line stations collect from it.</p>
+        ) : <>
         <span className="pass__countlabel">LINE PANS FILLED TO AT OPEN</span>
         <div className="chef__servicetoggle" role="group" aria-label="Line par">
           {LINE_PARS.map((p) => (
             <button key={p} type="button" className={station.linePar === p ? "is-on" : ""} aria-pressed={station.linePar === p} onClick={() => onSave({ ...station, linePar: p })}>{p}%</button>
           ))}
         </div>
+        </>}
       </div>
 
       <div className="pass__sectionhead">
@@ -227,7 +245,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.pan} pan · par {item.lowboyPar} {item.lowboySize} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
+                  {station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>
@@ -321,12 +339,24 @@ export default function StationsSetup({ recipesById }) {
   }
 
   const dupNew = stations.some((s) => s.name.toLowerCase() === newName.trim().toLowerCase());
+  const flags = setupFlags(stations);
   return (
     <section className="chef__data">
       <div className="pass__sectionhead">
         <h2>Stations</h2>
         <span className="pass__countlabel">{stations.length} STATIONS</span>
       </div>
+      {flags.length > 0 && (
+        <div className="pass__note">
+          <span className="pass__countlabel">TO SET UP</span>
+          {flags.map((fl) => (
+            <p key={`${fl.stationId}:${fl.itemId}:${fl.text}`}>
+              {fl.draft && <span className="chef__draftswatch" />}{" "}
+              <button type="button" className="pass__linkbtn" onClick={() => setView({ kind: "item", stationId: fl.stationId, itemId: fl.itemId })}>{fl.text}</button>
+            </p>
+          ))}
+        </div>
+      )}
       <ul className="chef__setup">
         {stations.map((s, i) => {
           const drafts = s.items.filter((it) => it.unconfirmed?.length).length;

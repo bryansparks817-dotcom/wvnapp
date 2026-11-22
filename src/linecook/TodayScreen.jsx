@@ -85,7 +85,7 @@ function ChefCard({ notes, onAck }) {
   );
 }
 
-const WHERE = { lowboy: "LOWBOY", "walk-in": "WALK-IN" };
+const WHERE = { lowboy: "LOWBOY", "walk-in": "WALK-IN", prep: "PREP BACKUP" };
 
 function TakeLine({ item, take, today }) {
   return (
@@ -100,6 +100,7 @@ export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
   collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
+  lineRequests = [], asked = {}, onAddRequest, madeToday = () => false,
 }) {
   const header = { station, initials, onChangeCook };
   const hasGather = gather.items.length > 0 || gather.missing.length > 0;
@@ -157,6 +158,22 @@ export default function TodayScreen({
           </button>
         )}
 
+        {lineRequests.length > 0 && (
+          <div className="pass__note">
+            <span className="pass__countlabel">LINE STATIONS NEED FROM YOU</span>
+            {lineRequests.map((q, i) => (
+              <p key={i}>
+                {q.station}: {formatG(q.grams)} {q.name}
+                {(asked[`${q.stationId}:${q.itemId}`] ?? 0) >= q.grams
+                  ? " · on your prep list"
+                  : madeToday(q.itemId)
+                    ? " · already made today, send them what you made."
+                    : <>{" · "}<button type="button" className="pass__linkbtn" onClick={() => onAddRequest(q)}>ADD TO MY LIST</button></>}
+              </p>
+            ))}
+          </div>
+        )}
+
         <section>
           <div className="pass__sectionhead">
             <h2><span className="pass__vine">1</span> · COLLECT</h2>
@@ -189,7 +206,7 @@ export default function TodayScreen({
                       )}
                       {!isDone && row.shortG > 0 && (
                         <span className="pass__rowsub pass__amber">
-                          SHORT {formatG(row.shortG)} · {madeAtName(row)} makes this. Ask them for it.
+                          SHORT {formatG(row.shortG)} · {row.from ? `${madeAtName(row)} has been asked to make it.` : `${madeAtName(row)} makes this. Ask them for it.`}
                         </span>
                       )}
                     </span>

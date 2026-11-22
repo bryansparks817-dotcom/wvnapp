@@ -74,19 +74,56 @@ function takeFrom(item, batches, gramsNeeded) {
   return { takes, short: Math.max(0, remaining) };
 }
 
+const tossRows = (toss) => toss.map((b) => ({ where: b.where, size: b.size, fill: b.fill, madeOn: b.madeOn }));
+
 // Builds the shift's Collect and Prep lists from confirmed inventory.
-export function buildShift(items, inventory, linePar, today) {
+// opts.holdsBackup: a backup station (Prep). It has no line pans: it counts all
+//   the backup for its items, wherever it sits, against each item's prep par,
+//   and makes what's under par plus what line stations asked for (opts.requests,
+//   grams by item id).
+// opts.backupFor(item): for an item another station makes (item.madeAt), that
+//   station's stock { itemId, item, inv }. The line pan is topped up from it;
+//   whatever it can't cover is the shortfall that station is asked to make.
+export function buildShift(items, inventory, linePar, today, opts = {}) {
+  const { holdsBackup = false, backupFor = null, requests = {} } = opts;
   const collect = [];
   const prep = [];
 
   for (const item of items) {
     const inv = inventory[item.id] ?? { line: 0, lowboy: [], walkIn: [] };
+    const fromStock = item.madeAt && backupFor ? backupFor(item) : null;
+    if (fromStock) {
+      const src = fromStock.inv ?? { line: 0, lowboy: [], walkIn: [] };
+      const stock = [
+        ...src.lowboy.map((c, index) => ({ ...c, where: "prep", list: "lowboy", index })),
+        ...src.walkIn.map((c, index) => ({ ...c, where: "prep", list: "walkIn", index })),
+      ].filter((b) => b.fill > 0 && !isLastDay(fromStock.item, b.madeOn, today)).sort((a, b) => a.madeOn.localeCompare(b.madeOn));
+      const lineNeed = (Math.max(0, linePar - inv.line) / 100) * item.panGrams;
+      const toLine = takeFrom(fromStock.item, stock, lineNeed);
+      const shortG = Math.ceil(toLine.short / 50) * 50;
+      if (toLine.takes.length || shortG > 0) {
+        collect.push({ id: item.id, item, toLine: toLine.takes, toLowboy: [], from: item.madeAt, fromItemId: fromStock.itemId, ...(shortG > 0 ? { shortG, madeAt: item.madeAt } : {}) });
+      }
+      continue;
+    }
+
     const tagged = [
       ...inv.lowboy.map((c, index) => ({ ...c, where: "lowboy", index })),
       ...inv.walkIn.map((c, index) => ({ ...c, where: "walk-in", index })),
     ];
     const toss = tagged.filter((b) => b.fill > 0 && isLastDay(item, b.madeOn, today));
     const usable = tagged.filter((b) => b.fill > 0 && !isLastDay(item, b.madeOn, today)).sort(byOldest);
+
+    if (holdsBackup) {
+      const parG = item.lowboyPar * containerGrams(item, item.lowboySize);
+      const haveG = usable.reduce((sum, b) => sum + gramsIn(item, b), 0);
+      const askedG = requests[item.id] ?? 0;
+      const makeG = Math.ceil(Math.max(0, parG - haveG + askedG) / 50) * 50;
+      if (makeG > 0 || toss.length) {
+        prep.push({ id: item.id, item, recipeId: item.recipeId, name: item.name, makeG, toss: tossRows(toss), ...(askedG > 0 ? { askedG } : {}) });
+      }
+      continue;
+    }
 
     // 1. Top up the line, from lowboy and walk-in together, oldest first.
     const lineNeed = (Math.max(0, linePar - inv.line) / 100) * item.panGrams;
@@ -108,7 +145,7 @@ export function buildShift(items, inventory, linePar, today) {
       collect.push({ id: item.id, item, toLine: toLine.takes, toLowboy: toLowboy.takes, ...(elsewhere && makeG > 0 ? { shortG: makeG, madeAt: item.madeAt } : {}) });
     }
     if (elsewhere) {
-      if (toss.length) prep.push({ id: item.id, item, recipeId: item.recipeId, name: item.name, makeG: 0, toss: toss.map((b) => ({ where: b.where, size: b.size, fill: b.fill, madeOn: b.madeOn })) });
+      if (toss.length) prep.push({ id: item.id, item, recipeId: item.recipeId, name: item.name, makeG: 0, toss: tossRows(toss) });
       continue;
     }
 
@@ -127,8 +164,24 @@ export function buildShift(items, inventory, linePar, today) {
   return { collect, prep };
 }
 
+// Takes a Collect row's pulls out of the making station's stock, or puts them
+// back when the row is unticked.
+export function takeFromStock(inv, takes, putBack = false) {
+  const next = { line: inv.line, lowboy: inv.lowboy.map((c) => ({ ...c })), walkIn: inv.walkIn.map((c) => ({ ...c })) };
+  for (const t of takes) {
+    const list = next[t.list ?? "lowboy"];
+    const c = list[t.index];
+    if (c && c.madeOn === t.madeOn && c.size === t.size) c.fill = Math.max(0, Math.min(100, c.fill + (putBack ? t.fill : -t.fill)));
+    else if (putBack) list.push({ size: t.size, fill: t.fill, madeOn: t.madeOn });
+  }
+  // Emptied containers stay (at 0%) until the next count, so an undo still lines up.
+  return next;
+}
+
 // Applies a finished Collect row to inventory.
 export function applyCollect(inv, row, linePar) {
+  // Pulled from another station's stock: only the line pan changes here.
+  if (row.from) return { ...inv, line: row.toLine.length ? linePar : inv.line };
   const next = { line: inv.line, lowboy: inv.lowboy.map((c) => ({ ...c })), walkIn: inv.walkIn.map((c) => ({ ...c })) };
   const take = (t) => {
     const list = t.where === "lowboy" ? next.lowboy : next.walkIn;

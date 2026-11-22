@@ -21,6 +21,7 @@ import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
 import { PassHeader, StationTabs, TabBar } from "./Chrome";
+import { backupFor, holdsBackup, lineRequests, linePar as stationLinePar, moveStock, shiftOptions } from "../lib/backupStock";
 import "./pass.css";
 
 function localDateKey(d = new Date()) {
@@ -213,7 +214,9 @@ export default function LineCook(props) {
 
 function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer, isChef: chefHere = false, onSetupChanged }) {
   const today = localDateKey();
-  const { items, linePar } = st;
+  const { items } = st;
+  const linePar = stationLinePar(st);
+  const isBackup = holdsBackup(st);
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const [inventory, setInventory] = useState(() => loadInventory(st.id));
   const [shift, setShift] = useState(() => loadShift(st.id));
@@ -227,6 +230,14 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     if (keys.includes(KEYS.WASTE)) setWaste(loadWaste());
     if (keys.includes(KEYS.EIGHTY_SIX)) setFlags(loadEightySix());
   }), [st.id]);
+  // Prep: what line stations still need from its stock today. Re-read when
+  // any station's shift changes.
+  const [reqVersion, setReqVersion] = useState(0);
+  useEffect(() => (isBackup ? onRemoteChange((keys) => { if (keys.some((k) => k.startsWith("thePass.shift.v1"))) setReqVersion((v) => v + 1); }) : undefined), [isBackup]);
+  const requests = useMemo(() => (isBackup && reqVersion >= 0 ? lineRequests(st, getStations(), today).list : []), [isBackup, st, today, reqVersion]);
+  // How each item is counted: Prep counts backup only; a line station's
+  // collect-only item is just its line pan (Prep counts the backup).
+  const cardMode = (item) => (isBackup ? "backup" : item.madeAt && backupFor(getStations())(item) ? "line" : "full");
   const [panReqs, setPanReqs] = useState(() => openRequests());
   useEffect(() => onRemoteChange((keys) => { if (keys.includes(KEYS.PAN_REQUESTS)) setPanReqs(openRequests()); }), []);
   // Pan size: the chef changes it, a cook asks for it.
@@ -355,9 +366,12 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   }
 
   function confirmCount() {
-    const { collect, prep } = buildShift(items, invItems, linePar, today);
+    const { collect, prep } = buildShift(items, invItems, linePar, today, shiftOptions(st, getStations(), today));
     const strip = (rows) => rows.map(({ item: _item, ...rest }) => rest);
-    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {}, confirmedBy: by, confirmedAt: Date.now() });
+    // Prep: the line requests this list already covers.
+    const asked = isBackup ? Object.fromEntries(lineRequests(st, getStations(), today).list.map((q) => [`${q.stationId}:${q.itemId}`, q.grams])) : undefined;
+    setShift({ date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {}, confirmedBy: by, confirmedAt: Date.now(), ...(asked ? { asked } : {}) });
+    setReqVersion((v) => v + 1);
     setScreen("today");
     onOpened();
   }
@@ -382,6 +396,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const item = itemsById.get(row.id);
     if (shift.done[key]) {
       const snapshot = shift.done[key];
+      if (kind === "c" && row.from) moveStock({ ...row, toLine: meta[key]?.pulled ?? row.toLine }, true);
       setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: snapshot } }));
       const done = { ...shift.done };
       const nextMeta = { ...meta };
@@ -397,9 +412,22 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const before = invItems[row.id];
     const at = Date.now();
     let labels = null;
+    let pulled;
+    let shortAfter;
     let after;
     if (kind === "c") {
-      after = applyCollect(before, row, linePar);
+      if (row.from) {
+        // Pull from Prep's stock as it is now: Prep may have made more since
+        // this list was built.
+        const live = buildShift([item], { [row.id]: before }, linePar, today, { backupFor: backupFor(getStations()) }).collect[0];
+        pulled = live?.toLine ?? [];
+        shortAfter = live?.shortG ?? 0;
+        const liveRow = { ...row, toLine: pulled };
+        after = applyCollect(before, liveRow, linePar);
+        moveStock(liveRow);
+      } else {
+        after = applyCollect(before, row, linePar);
+      }
     } else {
       after = applyPrep(item, before, row, linePar, today);
       const kept = before.lowboy.filter((c) => c.fill > 0 && !isLastDay(item, c.madeOn, today)).length;
@@ -415,8 +443,22 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
       }
     }
     setInventory((inv) => ({ ...(inv ?? {}), items: { ...(inv?.items ?? emptyInventory(items)), [row.id]: after } }));
-    setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels } } });
+    setShift({ ...shift, stepsDone, done: { ...shift.done, [key]: before }, meta: { ...meta, [key]: { by, at, labels, ...(pulled ? { pulled, shortAfter } : {}) } } });
     if (labels?.length) setLabelPromptId(row.id);
+  }
+
+  // Prep: a line station asked for more after the list was built. Add it to
+  // that item's batch (or a new row) without rebuilding the list.
+  function addRequest(q) {
+    const key = `${q.stationId}:${q.itemId}`;
+    const extraG = Math.max(0, q.grams - (shift.asked?.[key] ?? 0));
+    if (!extraG) return;
+    const item = itemsById.get(q.itemId);
+    const has = shift.prep.find((p) => p.id === q.itemId);
+    const prep = has
+      ? shift.prep.map((p) => (p.id === q.itemId ? { ...p, makeG: p.makeG + extraG, askedG: (p.askedG ?? 0) + extraG } : p))
+      : [...shift.prep, { id: item.id, recipeId: item.recipeId, name: item.name, makeG: extraG, toss: [], askedG: extraG }];
+    setShift({ ...shift, prep, asked: { ...(shift.asked ?? {}), [key]: q.grams } });
   }
 
   function printPrepLabel(id) {
@@ -515,6 +557,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         underway={{ by: shift.confirmedBy, at: shift.confirmedAt }}
         onChangeItem={changeItem}
         panFor={panFor}
+        cardMode={cardMode}
         onSubmit={onOpened}
         onRestart={confirmCount}
       />
@@ -543,6 +586,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
           onChangeNotes={changeNotes}
           onChangeItem={changeItem}
           panFor={panFor}
+          cardMode={cardMode}
           onSubmit={mode === "close" ? saveClose : confirmCount}
         />
       </>
@@ -584,6 +628,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         wasteToday={waste.filter((w) => w.date === today)}
         onToggle={toggleDone}
         onOpenPrep={setOpenPrepId}
+        lineRequests={requests}
+        asked={shiftIsToday ? shift.asked ?? {} : {}}
+        onAddRequest={(q) => addRequest(q)}
+        madeToday={(id) => Boolean(shiftIsToday && shift.done[`p:${id}`])}
       />
       {labelSheet}
     </>

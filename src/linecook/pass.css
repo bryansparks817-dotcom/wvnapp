@@ -475,6 +475,7 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__servicetoggle[aria-label="Line par"] { grid-template-columns: repeat(3, 1fr); }
 .chef__draftfield .pass__input, .chef__draftfield.chef__servicetoggle { border-color: var(--draft) !important; box-shadow: inset 3px 0 0 var(--draft); }
 .chef__draftfield > .pass__countlabel { color: var(--draft); }
+.pass__countlabel.chef__draftfield { color: var(--draft); }
 .chef__itemrow { display: flex; align-items: stretch; gap: 6px; }
 .chef__itemrow .chef__setuprow { flex: 1; min-width: 0; }
 .chef__orderbtns { display: flex; flex-direction: column; gap: 4px; }
