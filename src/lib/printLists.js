@@ -11,7 +11,8 @@
 import { loadShift, saveShift } from "./storage";
 import { buildShift, containerLabel, formatG } from "./inventory";
 import { applyShortages } from "./shortage";
-import { madeAtName } from "../data/stations";
+import { getStations, madeAtName } from "../data/stations";
+import { linePar as stationLinePar, shiftOptions } from "./backupStock";
 import { buildPrepSteps } from "./lineList";
 import { withPace, paceFor } from "./pace";
 import { batchGrams, scaleRecipe } from "./recipeScale";
@@ -32,7 +33,7 @@ export function cookFor(shift, itemId) {
 // No one confirmed a count on a phone today: the chef starts the shift from
 // the last close count, the same way the cook's CONFIRM would.
 export function startShiftFromCount(st, inventoryItems, today, cook, chef) {
-  const { collect, prep } = buildShift(st.items, inventoryItems, st.linePar, today);
+  const { collect, prep } = buildShift(st.items, inventoryItems, stationLinePar(st), today, shiftOptions(st, getStations(), today));
   const strip = (rows) => rows.map(({ item: _item, ...rest }) => rest);
   const shift = {
     date: today, collect: strip(collect), prep: strip(prep), done: {}, meta: {},
@@ -166,7 +167,7 @@ function sheetHtml(sheet, { name, today, startMin, serviceLabel, chefName, withR
   <table>${sheet.collect.map((c) => `<tr><td class="cb">${box}</td><td><b>${esc(c.name)}</b> <span class="mut">${esc(c.station)}</span></td><td>${[
     c.toLine?.length ? `<div>To the line: ${esc(pulls(c.toLine))}</div>` : "",
     c.toLowboy?.length ? `<div>To the lowboy: ${esc(pulls(c.toLowboy))}</div>` : "",
-    c.shortG > 0 ? `<div>Short ${esc(formatG(c.shortG))}: ${esc(c.madeAtName ?? "another station")} makes this, ask them.</div>` : "",
+    c.shortG > 0 ? `<div>Short ${esc(formatG(c.shortG))}: ${esc(c.madeAtName ?? "another station")} ${c.from ? "has been asked to make it" : "makes this, ask them"}.</div>` : "",
   ].join("")}</td></tr>`).join("")}</table>
 </section>` : "";
 

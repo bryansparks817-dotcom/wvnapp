@@ -16,7 +16,8 @@ export const DEFAULT_STATIONS = [
   { id: "grill", name: "Grill", linePar: 100, items: extra("grill") },
   { id: "saute", name: "Sauté", linePar: 100, items: extra("saute") },
   { id: "pastry", name: "Pastry", linePar: 100, items: extra("pastry") },
-  { id: "prep", name: "Prep", linePar: 100, items: extra("prep") },
+  // Prep holds the backup: no line pans, every item counted against its prep par.
+  { id: "prep", name: "Prep", linePar: 0, holdsBackup: true, items: extra("prep") },
 ];
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
@@ -47,6 +48,17 @@ const STATION_FIXES = [
     next = onlyOn(next, "robuchon-style-yukon-gold-pommes-puree", ["grill"]);
     return onlyOn(next, "winter-rockefeller-filling", ["garde-manger"]);
   }],
+  // Bryan, 2026-11-22: Prep owns the backup for what it makes, up until a line
+  // station pulls it to the line. Its par is the prep par.
+  ["prep-holds-backup-2026-11-22", (st) => st.map((s) => {
+    if (s.id !== "prep") return s;
+    return {
+      ...s,
+      holdsBackup: true,
+      linePar: 0,
+      items: s.items.map((i) => (i.id === "clam-chowder-veloute" && i.unconfirmed?.includes("lowboyPar") && i.lowboyPar < 4 ? { ...i, lowboyPar: 4 } : i)),
+    };
+  })],
 ];
 
 // The kitchen's stations: the chef's saved setup, or the built-in one.
@@ -64,6 +76,25 @@ export function getStations() {
   saveStationSetup(fixed);
   saveStationFixes([...done, ...todo.map(([id]) => id)]);
   return fixed;
+}
+
+// Setup problems to flag: items on a backup station with no prep par, and
+// collect-only items whose making station doesn't stock them.
+export function setupFlags(stations = getStations()) {
+  const flags = [];
+  for (const s of stations) {
+    for (const i of s.items) {
+      if (s.holdsBackup && !(i.lowboyPar > 0)) flags.push({ stationId: s.id, itemId: i.id, text: `${i.name} on ${s.name} has no prep par.` });
+      else if (s.holdsBackup && i.unconfirmed?.includes("lowboyPar")) flags.push({ stationId: s.id, itemId: i.id, draft: true, text: `${i.name} on ${s.name}: prep par of ${i.lowboyPar} ${i.lowboySize} is a draft to confirm.` });
+      if (i.madeAt) {
+        const maker = stations.find((m) => m.id === i.madeAt);
+        const stocked = maker?.items.some((m) => m.id === i.id || (i.recipeId && m.recipeId === i.recipeId));
+        if (!maker || !stocked) flags.push({ stationId: s.id, itemId: i.id, text: `${i.name} on ${s.name} is collect only, but ${maker?.name ?? "the making station"} doesn't have it as an item yet.` });
+        else if (!maker.holdsBackup) flags.push({ stationId: s.id, itemId: i.id, text: `${i.name} on ${s.name} is collect only, but ${maker.name} isn't set to hold backup.` });
+      }
+    }
+  }
+  return flags;
 }
 
 // Which station makes an item another station only collects.
