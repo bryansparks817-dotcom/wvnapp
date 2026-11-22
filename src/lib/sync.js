@@ -163,9 +163,34 @@ export function watchChanges() {
   window.addEventListener("online", () => {
     setStatus({ online: true });
     if (!started) startSync();
-    else if (pending.size && !timer) flush();
+    else {
+      // Send everything this phone changed while offline, right away.
+      for (const k of unsynced) {
+        const v = readLocal(k);
+        if (v !== undefined) pending.set(k, v);
+      }
+      if (timer) clearTimeout(timer);
+      timer = null;
+      if (pending.size) flush();
+      catchUp();
+    }
   });
   window.addEventListener("offline", () => setStatus({ online: false }));
+}
+
+// Back online after a gap: fetch what other phones changed meanwhile (live
+// updates were missed), keeping this phone's own unsent changes.
+async function catchUp() {
+  let data;
+  try {
+    ({ data } = await supabase.from(TABLE).select("key, value").eq("kitchen_id", KITCHEN));
+  } catch {
+    return;
+  }
+  if (!data) return;
+  const changed = data.filter((r) => ours(r.key) && !unsynced.has(r.key) && lastSeen.get(r.key) !== JSON.stringify(r.value) && localStorage.getItem(r.key) !== JSON.stringify(r.value));
+  for (const r of changed) writeLocal(r.key, r.value);
+  announce(changed.map((r) => r.key));
 }
 
 // Pull everything, then listen. On the first phone to connect (an empty
@@ -192,7 +217,8 @@ export async function startSync() {
   } catch (e) {
     error = { message: e?.message ?? "No connection" };
   }
-  if (error) {
+  if (error || !Array.isArray(data)) {
+    error = error ?? { message: "No connection" };
     // No signal (or the database is down): keep working on this phone and
     // try again when the connection comes back.
     started = false;
@@ -230,6 +256,8 @@ export async function startSync() {
       if (!row?.key || !ours(row.key)) return;
       const value = msg.eventType === "DELETE" ? null : msg.new.value;
       if (lastSeen.get(row.key) === JSON.stringify(value)) return;
+      // This phone has its own newer change on the way: keep it.
+      if (unsynced.has(row.key)) return;
       writeLocal(row.key, value);
       announce([row.key]);
     })
@@ -284,4 +312,11 @@ export function onRemoteChange(fn) {
   const h = (e) => fn(e.detail.keys);
   window.addEventListener("thepass:remote", h);
   return () => window.removeEventListener("thepass:remote", h);
+}
+
+// Send anything still waiting right now (the chef's "Sync now").
+export function syncNow() {
+  if (!started) return startSync();
+  if (pending.size && !timer) return flush();
+  return null;
 }

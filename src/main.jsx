@@ -20,7 +20,15 @@ createRoot(document.getElementById('root')).render(
 
 // Keep a copy of the app on the phone so it opens with no signal.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  // A newer version took over: offer a reload (OfflineBar shows it).
+  const hadController = Boolean(navigator.serviceWorker.controller)
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController) window.dispatchEvent(new Event('thepass:update'))
+  })
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {})
   })
 }
+
+// Ask the browser not to clear this phone's saved kitchen data to free space.
+navigator.storage?.persist?.().catch(() => {})

@@ -45,7 +45,7 @@ export default function InstallHint() {
         </button>
       ) : (
         <p className="pass__hint">
-          {ios ? "In Safari, tap Share, then Add to Home Screen." : "In your browser menu, tap Add to Home screen or Install app."} It opens full screen, like an app.
+          {ios ? "In Safari, tap Share, then Add to Home Screen." : "In your browser menu, tap Add to Home screen or Install app."} It opens full screen, like an app, and works with no signal once it’s been opened with signal.
         </p>
       )}
       <button type="button" className="pass__ghost" onClick={close}>Not now</button>
