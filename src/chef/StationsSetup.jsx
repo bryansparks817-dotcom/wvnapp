@@ -52,6 +52,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     lowboyPar: String(item?.lowboyPar ?? 1),
     shelfLifeDays: String(item?.shelfLifeDays ?? 5),
     stationId: station.id,
+    madeAt: item?.madeAt ?? "",
   }));
   const [askRemove, setAskRemove] = useState(false);
   const set = (k, v) => setF((x) => ({ ...x, [k]: v }));
@@ -82,7 +83,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, ...rest } = f;
+        const { stationId, madeAt, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -94,6 +95,8 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
           shelfLifeDays: num(f.shelfLifeDays),
         };
         if (!next.recipeId) delete next.recipeId;
+        if (madeAt && madeAt !== stationId) next.madeAt = madeAt;
+        else delete next.madeAt;
         // Saving means the chef has checked the numbers: no more drafts.
         delete next.unconfirmed;
         onSave(next, stationId);
@@ -143,6 +146,18 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       <p className="pass__hint">
         Line par is how full the pan should be at open. Lowboy par is the backup to keep on hand. Anything under par goes on the prep list.
       </p>
+
+      {stations.length > 1 && (
+        <>
+          <Field label="WHO MAKES IT">
+            <select className="pass__input" value={f.madeAt === f.stationId ? "" : f.madeAt} onChange={(e) => set("madeAt", e.target.value)}>
+              <option value="">{target.name} makes it (goes on its prep list)</option>
+              {stations.filter((s) => s.id !== f.stationId).map((s) => <option key={s.id} value={s.id}>{s.name} makes it, {target.name} only collects</option>)}
+            </select>
+          </Field>
+          <p className="pass__hint">When another station makes it, this station only restocks from backup. If backup runs short, the cook is told to ask that station.</p>
+        </>
+      )}
 
       {item && stations.length > 1 && (
         <Field label="STATION">
@@ -212,7 +227,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.pan} pan · par {item.lowboyPar} {item.lowboySize} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId ? "" : " · no recipe"}
+                  {item.pan} pan · par {item.lowboyPar} {item.lowboySize} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>

@@ -33,6 +33,23 @@ for row in ws.iter_rows(min_row=3, values_only=True):
     if not (shelf or r.get('shelfLifeDays')): unconf.append('shelfLifeDays')
     item['unconfirmed'] = unconf
     res[sid].append(item)
+# Bryan, 2026-11-22: each of these lives on one station only. The velouté is
+# made on Prep and Sauté only collects it from backup (madeAt). Keep in step
+# with STATION_FIXES in src/data/stations.js.
+ONLY_ON = {'robuchon-style-yukon-gold-pommes-puree': ['grill'], 'winter-rockefeller-filling': ['garde-manger'],
+           'clam-chowder-veloute': ['prep', 'saute']}
+MADE_AT = {('saute', 'clam-chowder-veloute'): 'prep'}
+velo = next((i for v in res.values() for i in v if i['id'] == 'clam-chowder-veloute'), None)
+for sid in res:
+    res[sid] = [i for i in res[sid] if i['id'] not in ONLY_ON or sid in ONLY_ON[i['id']]]
+for rid, homes in ONLY_ON.items():
+    src = velo if rid == 'clam-chowder-veloute' else None
+    for sid in homes:
+        if src and not any(i['id'] == rid for i in res[sid]):
+            res[sid].append(dict(src, unconfirmed=list(src.get('unconfirmed', []))))
+for (sid, rid), home in MADE_AT.items():
+    for i in res[sid]:
+        if i['id'] == rid: i['madeAt'] = home
 json.dump({'_note': "Built from the kitchen setup workbook by scripts/setup-workbook/stations.py. Fields in an item's 'unconfirmed' are Claude's defaults for the chef to check.",
            'stations': {k: v for k, v in res.items() if v}}, open(out, 'w'), indent=1, ensure_ascii=False)
 print({k: len(v) for k, v in res.items()}, 'skipped:', skipped)
