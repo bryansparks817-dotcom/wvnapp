@@ -2951,53 +2951,46 @@
    {
     "name": "Lobster stock",
     "recipeRef": "lobster-stock",
-    "qty": 1000.0,
-    "unit": "g",
-    "draft": true
+    "qty": 750.0,
+    "unit": "g"
    },
    {
     "name": "Clam juice",
-    "qty": 500.0,
+    "qty": 750.0,
     "unit": "g"
    },
    {
     "name": "White wine",
     "qty": 300.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Shallot",
     "qty": 120.0,
     "unit": "g",
-    "note": "minced",
-    "draft": true
+    "note": "minced"
    },
    {
     "name": "Fennel bulb",
     "qty": 80.0,
     "unit": "g",
-    "note": "fine dice",
-    "draft": true
+    "note": "fine dice"
    },
    {
     "name": "Garlic",
     "qty": 10.0,
     "unit": "g",
-    "note": "minced",
-    "draft": true
+    "note": "minced"
    },
    {
     "name": "Butter",
     "qty": 180.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
     "qty": 3.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Bay leaf",
@@ -3012,14 +3005,12 @@
    {
     "name": "Lemon juice",
     "qty": 20.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Mustard powder",
     "qty": 1.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Old bay",
@@ -3032,50 +3023,42 @@
    {
     "name": "Melt 30 g butter and sweat shallot and fennel gently for 6-8 minutes without browning.",
     "type": "active",
-    "duration_minutes": 8.0,
-    "draft": true
+    "duration_minutes": 8.0
    },
    {
     "name": "Add garlic and thyme.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
     "name": "Add white wine and reduce to approximately 75 g.",
     "type": "active",
-    "duration_minutes": 8.0,
-    "draft": true
+    "duration_minutes": 8.0
    },
    {
     "name": "Add lobster stock, clam juice, and bay leaf; simmer gently and reduce by approximately half, or until shellfish flavor is concentrated.",
     "type": "passive",
-    "duration_minutes": 40.0,
-    "draft": true
+    "duration_minutes": 40.0
    },
    {
     "name": "Strain through a fine chinois.",
     "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
+    "duration_minutes": 3.0
    },
    {
     "name": "Return liquid to pan, add cream, and reduce until it lightly coats a spoon.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Remove from heat and gradually whisk in 150 g cold butter to form a glossy emulsion.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Season with lemon juice, white pepper, and salt. Do not boil after mounting.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    }
   ],
   "yieldGrams": 1000,
@@ -3088,12 +3071,10 @@
    "Shellfish"
   ],
   "plating": "",
-  "drafts": [
-   "allergens"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Clam_Chowder_Veloute.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   },
   "needsReview": [
