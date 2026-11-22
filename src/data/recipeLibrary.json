@@ -3695,10 +3695,9 @@
   ],
   "steps": [
    {
-    "name": "Sort tomatoes; discard any moldy, fermented, or damaged fruit. Wash thoroughly under running potable water. Remove cores and any bruised areas; cut large tomatoes into quarters. Weigh 5,954 g after washing and before trimming only if your production standard defines the batch that way; record actual usable weight.",
+    "name": "Sort tomatoes; discard any moldy or damaged fruit. Wash thoroughly under cold water. Remove cores and bruised areas; cut large tomatoes into quarters. Weigh 6,000 g after washing and before trimming.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "In a heavy-bottomed pot or steam-jacketed kettle, warm olive oil over medium-low heat. Add diced onion and sweat slowly until soft and translucent, without browning.",
@@ -3751,7 +3750,7 @@
   "category": "Summer 2026 / seasonal",
   "yieldText": "Approx. 3.8–4.6 kg finished; weigh actual yield",
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
-  "storage": "Refrigerated ≤40°F; cool rapidly",
+  "storage": "22 qt container",
   "allergens": [],
   "plating": "",
   "drafts": [
@@ -3760,14 +3759,16 @@
    "name",
    "portion",
    "station",
-   "storage",
-   "yieldText"
+   "yieldText",
+   "shelfLife"
   ],
   "source": {
    "sheet": "Farm_Heirloom_Tomato_Sauce_5954g.xlsx",
-   "rev": "",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
-  }
+  },
+  "shelfLife": "10 days refrigerated, or 45 days frozen",
+  "shelfLifeDays": 10
  },
  {
   "id": "feta-custard-tart-layer",
