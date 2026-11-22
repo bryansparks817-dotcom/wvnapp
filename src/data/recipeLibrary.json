@@ -1956,7 +1956,7 @@
   "category": "Soup",
   "yieldText": "Approx. 8.4 kg (9.4 kg raw)",
   "portion": "6 oz / 170 g",
-  "storage": "Silky, fully emulsified soup; fine-strained. Garnish to order.",
+  "storage": "6 qt container",
   "shelfLife": "Hot hold per house HACCP plan",
   "portions": 49.0,
   "allergens": [
@@ -1973,7 +1973,7 @@
   ],
   "source": {
    "sheet": "Butternut_Squash_Soup.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   }
  },
