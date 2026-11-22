@@ -3735,14 +3735,9 @@
     "draft": true
    },
    {
-    "name": "Return riced sauce to the pot if needed and reduce gently to a cohesive, spoonable consistency. Taste and adjust salt after reduction. Keep it brighter and looser than a dense pizza sauce. Weigh finished sauce and record actual yield.",
-    "type": "active",
-    "duration_minutes": 10.0
-   },
-   {
-    "name": "For advance preparation, transfer to shallow pans or approved containers and cool rapidly under the restaurant's approved cooling procedure. Refrigerate at ≤40°F.",
-    "type": "active",
-    "duration_minutes": 0.0
+    "name": "Return riced sauce to the pot and reduce gently for 15–20 minutes. Adjust salt if necessary.",
+    "type": "passive",
+    "duration_minutes": 20.0
    }
   ],
   "yieldGrams": 4200,
