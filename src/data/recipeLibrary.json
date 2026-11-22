@@ -3718,10 +3718,9 @@
     "draft": true
    },
    {
-    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off. Expect approximately 75–120 minutes depending on variety, ripeness, pot geometry, and water content.",
+    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off. Expect approximately 90 minutes of cook time.",
     "type": "passive",
-    "duration_minutes": 95.0,
-    "draft": true
+    "duration_minutes": 90.0
    },
    {
     "name": "Add basil during the final 10 minutes. Remove basil stems or large leaves.",
