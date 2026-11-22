@@ -2,7 +2,7 @@ import priceSeed from "../data/ingredientPrices.json";
 import menuPriceSeed from "../data/menuPrices.json";
 
 // Bump when ingredientPrices.json is rebuilt from a newer inventory sheet.
-export const PRICE_SEED_REV = 1;
+export const PRICE_SEED_REV = 2;
 
 const RECIPES_KEY = "kitchenPrep.recipes.v1";
 const INGREDIENTS_KEY = "kitchenPrep.ingredients.v1";
