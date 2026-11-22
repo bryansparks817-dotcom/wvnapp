@@ -3724,7 +3724,7 @@
     "draft": true
    },
    {
-    "name": "Add basil during the final 10 minutes. Remove basil stems or large leaves if used whole.",
+    "name": "Add basil during the final 10 minutes. Remove basil stems or large leaves.",
     "type": "active",
     "duration_minutes": 2.0,
     "draft": true
