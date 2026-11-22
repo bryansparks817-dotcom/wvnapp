@@ -2794,7 +2794,7 @@
   ],
   "ingredients": [
    {
-    "name": "Chicken backs and necks",
+    "name": "Chicken bones",
     "qty": 9000.0,
     "unit": "g",
     "note": "rinsed",
@@ -2868,7 +2868,7 @@
   ],
   "steps": [
    {
-    "name": "Rinse backs, necks and feet under cold water.",
+    "name": "Rinse bones and feet under cold water.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
@@ -2936,7 +2936,7 @@
   ],
   "source": {
    "sheet": "Chicken_Stock.xlsx",
-   "rev": "2026-11-14",
+   "rev": "2026-11-22",
    "createdBy": ""
   }
  },
