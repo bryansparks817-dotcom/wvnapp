@@ -3671,7 +3671,7 @@
     "name": "Kosher salt",
     "qty": 60.0,
     "unit": "g",
-    "note": "Initial amount; adjust after reduction and milling",
+    "note": "Initial amount; adjust after reduction and ricing",
     "draft": true
    },
    {
@@ -3729,13 +3729,13 @@
     "draft": true
    },
    {
-    "name": "Pass the cooked sauce through a food mill using a medium plate to remove skins and seeds while retaining body.",
+    "name": "Pass the cooked sauce through a ricer to remove skins and seeds while retaining body.",
     "type": "active",
     "duration_minutes": 15.0,
     "draft": true
    },
    {
-    "name": "Return milled sauce to the pot if needed and reduce gently to a cohesive, spoonable consistency. Taste and adjust salt after reduction. Keep it brighter and looser than a dense pizza sauce. Weigh finished sauce and record actual yield.",
+    "name": "Return riced sauce to the pot if needed and reduce gently to a cohesive, spoonable consistency. Taste and adjust salt after reduction. Keep it brighter and looser than a dense pizza sauce. Weigh finished sauce and record actual yield.",
     "type": "active",
     "duration_minutes": 10.0
    },
