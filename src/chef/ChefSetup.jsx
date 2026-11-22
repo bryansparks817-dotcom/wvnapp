@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isLocalOnly, onSyncStatus, setLocalOnly, signOutKitchen, syncConfigured } from "../lib/sync";
+import { isLocalOnly, onSyncStatus, setLocalOnly, signOutKitchen, syncConfigured, syncNow } from "../lib/sync";
 
 // Setup: the things a chef configures now and then, kept out of the daily
 // oversight tabs. Recipes live here instead of having their own tab.
@@ -18,6 +18,8 @@ function SyncRow() {
   if (!syncConfigured) return <p className="pass__hint">Shared data isn’t set up for this build yet, so everything stays on this phone.</p>;
   const label = isLocalOnly()
     ? "This phone is on its own: nothing is shared."
+    : navigator.onLine === false ? `No signal: working on this phone${st.unsynced ? `, ${st.unsynced} change${st.unsynced === 1 ? "" : "s"} waiting to sync` : ""}.`
+    : st.unsynced > 0 ? `${st.unsynced} change${st.unsynced === 1 ? "" : "s"} from this phone waiting to sync.`
     : st.state === "live" ? "Connected: this phone shares data with the kitchen."
     : st.state === "error" ? `Not syncing: ${st.error}`
     : st.state === "connecting" ? "Connecting…" : "Not connected.";
@@ -27,7 +29,10 @@ function SyncRow() {
       {isLocalOnly() ? (
         <button type="button" className="pass__ghost" onClick={() => { setLocalOnly(false); window.location.reload(); }}>Connect to the kitchen</button>
       ) : (
-        <button type="button" className="pass__ghost" onClick={signOutKitchen}>Disconnect this phone</button>
+        <>
+          {st.unsynced > 0 && <button type="button" className="pass__ghost" onClick={syncNow}>Sync now</button>}
+          <button type="button" className="pass__ghost" onClick={signOutKitchen}>Disconnect this phone</button>
+        </>
       )}
     </div>
   );

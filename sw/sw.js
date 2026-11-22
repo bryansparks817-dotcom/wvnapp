@@ -8,9 +8,31 @@ const PRECACHE = __PRECACHE__;
 const CACHE = `the-pass-${BUILD}`;
 const FONTS = "the-pass-fonts";
 
+const FONT_CSS = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&family=Oswald:wght@500;600&display=swap";
+
+// The app's fonts, so it looks the same offline. Best effort: the app still
+// works with the phone's own fonts if this fails.
+async function saveFonts() {
+  try {
+    const cache = await caches.open(FONTS);
+    if (await cache.match(FONT_CSS)) return;
+    const css = await fetch(FONT_CSS);
+    if (!css.ok) return;
+    const text = await css.clone().text();
+    await cache.put(FONT_CSS, css);
+    const files = [...text.matchAll(/url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g)].map((m) => m[1]);
+    await Promise.all(files.map(async (url) => {
+      const res = await fetch(url, { mode: "cors" });
+      if (res.ok) await cache.put(url, res);
+    }));
+  } catch {
+    // offline or blocked: the fonts get saved on a later visit
+  }
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(["/", ...PRECACHE])).then(() => self.skipWaiting())
+    Promise.all([caches.open(CACHE).then((cache) => cache.addAll(["/", ...PRECACHE])), saveFonts()]).then(() => self.skipWaiting())
   );
 });
 
@@ -34,14 +56,14 @@ async function page(request) {
     if (response.ok) cache.put("/", response.clone());
     return response;
   } catch {
-    return (await cache.match("/")) ?? Response.error();
+    return (await cache.match("/", { ignoreVary: true })) ?? Response.error();
   }
 }
 
 // Saved copy first for build files and fonts (their names never change).
 async function saved(request, cacheName) {
   const cache = await caches.open(cacheName);
-  const hit = await cache.match(request);
+  const hit = await cache.match(request, { ignoreVary: true, ignoreSearch: false });
   if (hit) return hit;
   const response = await fetch(request);
   if (response.ok || response.type === "opaque") cache.put(request, response.clone());

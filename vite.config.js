@@ -10,7 +10,7 @@ function offlineCopy() {
     apply: 'build',
     generateBundle(_, bundle) {
       const files = Object.keys(bundle).filter((f) => f !== 'index.html' && !f.endsWith('.map')).map((f) => `/${f}`)
-      const extras = ['/favicon.svg']
+      const extras = ['/icon.svg', '/apple-touch-icon.png', '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/manifest.webmanifest']
       const source = readFileSync(new URL('./sw/sw.js', import.meta.url), 'utf8')
         .replace('__BUILD__', Date.now().toString(36))
         .replace('__PRECACHE__', JSON.stringify([...files, ...extras]))
