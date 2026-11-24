@@ -4756,7 +4756,7 @@
     "draft": true
    },
    {
-    "name": "Roast or sauté onion, fennel, celery, carrot, and garlic until lightly caramelized.",
+    "name": "Sauté onion, fennel, celery, carrot, and garlic until lightly caramelized.",
     "type": "active",
     "duration_minutes": 20.0,
     "draft": true
@@ -4819,7 +4819,7 @@
   ],
   "source": {
    "sheet": "Lobster_Stock.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-24",
    "createdBy": "BZ"
   }
  },
