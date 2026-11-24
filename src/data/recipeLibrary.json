@@ -4746,62 +4746,52 @@
    {
     "name": "Preheat convection oven to 200°C/400°F.",
     "type": "passive",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Toss lobster bodies with some olive oil and roast 25-35 minutes until deeply aromatic and lightly browned, avoiding scorching.",
     "type": "passive",
-    "duration_minutes": 35.0,
-    "draft": true
+    "duration_minutes": 35.0
    },
    {
     "name": "Sauté onion, fennel, celery, carrot, and garlic until lightly caramelized.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
     "name": "Transfer shells and vegetables to a large rondeau.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Add tomato paste and cook 3-5 minutes until brick red.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Add white wine, scrape fond, and reduce by approximately half.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Add cold water, thyme, bay leaves, and peppercorns.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Bring slowly to a gentle simmer and cook uncovered 45-60 minutes, skimming as needed; avoid a rolling boil.",
     "type": "passive",
-    "duration_minutes": 90.0,
-    "draft": true
+    "duration_minutes": 90.0
    },
    {
     "name": "Strain through a fine chinois without pressing solids.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
     "name": "Optionally reduce strained stock to desired concentration.",
     "type": "passive",
-    "duration_minutes": 30.0,
-    "draft": true
+    "duration_minutes": 30.0
    }
   ],
   "yieldGrams": 23625,
@@ -4813,10 +4803,7 @@
    "Shellfish"
   ],
   "plating": "",
-  "drafts": [
-   "allergens",
-   "name"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Lobster_Stock.xlsx",
    "rev": "2026-11-24",
