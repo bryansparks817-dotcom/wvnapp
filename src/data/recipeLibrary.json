@@ -4539,8 +4539,7 @@
     "name": "Lobster stock",
     "recipeRef": "lobster-stock",
     "qty": 1000.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
@@ -4587,68 +4586,57 @@
    {
     "name": "Sweat onion, fennel, and celery in 75 g butter and olive oil for 12-15 minutes without browning.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Add garlic and thyme.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
     "name": "Add finely chopped shrimp and cook until just opaque.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Deglaze with white wine and reduce nearly dry. Transfer to a hotel pan and set aside while making the béchamel.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Separately, melt 125 g butter, whisk in flour, and cook 2-3 minutes without browning.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Gradually whisk in milk and seafood stock; simmer gently until thick and smooth.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Fold béchamel into shrimp mixture gradually and cook until dense and cohesive. Remove bay leaf.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Fold in diced cooked lobster, Parmesan, lemon zest, parsley, and nutmeg.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Chill completely.",
     "type": "passive",
-    "duration_minutes": 120.0,
-    "draft": true
+    "duration_minutes": 120.0
    },
    {
     "name": "Weigh the finished base, then fold in an equal weight of mascarpone (50/50 by weight).",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Keep chilled for pasta production.",
     "type": "passive",
-    "duration_minutes": 0,
-    "draft": true
+    "duration_minutes": 0
    }
   ],
   "yieldGrams": 4500,
