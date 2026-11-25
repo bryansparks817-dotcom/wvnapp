@@ -3483,7 +3483,7 @@
   "yieldGrams": 5750,
   "category": "Winter 26/27",
   "yieldText": "Approx. 5.5–6.0 kg finished",
-  "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
+  "portion": "Use 3,000 g (about one #10 can) in 30-order Albondigas sauce batch",
   "storage": "Refrigerated ≤40°F; cool rapidly",
   "allergens": [],
   "plating": "",
@@ -3493,7 +3493,7 @@
   ],
   "source": {
    "sheet": "DOP_San_Marzano_Tomato_Sauce_2x10_Cans.xlsx",
-   "rev": "2026-11-22",
+   "rev": "2026-11-25",
    "createdBy": ""
   }
  },
@@ -3643,9 +3643,9 @@
   "ingredients": [
    {
     "name": "Fresh farm heirloom tomatoes",
-    "qty": 5954.0,
+    "qty": 6000.0,
     "unit": "g",
-    "note": "Whole weight before trimming; ripe, sound fruit; assorted varieties acceptable"
+    "note": "Weighed after washing, before trimming; trimmed weight varies with the fruit. Ripe, sound fruit; assorted varieties acceptable"
    },
    {
     "name": "Extra virgin olive oil",
@@ -3743,7 +3743,7 @@
   "yieldGrams": 4200,
   "category": "Summer 2026 / seasonal",
   "yieldText": "Approx. 3.8–4.6 kg finished; weigh actual yield",
-  "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
+  "portion": "Use 3,000 g in 30-order Albondigas sauce batch",
   "storage": "22 qt container",
   "allergens": [],
   "plating": "",
@@ -3757,7 +3757,7 @@
   ],
   "source": {
    "sheet": "Farm_Heirloom_Tomato_Sauce_5954g.xlsx",
-   "rev": "2026-11-22",
+   "rev": "2026-11-25",
    "createdBy": "BZ"
   },
   "shelfLife": "10 days refrigerated, or 45 days frozen",
