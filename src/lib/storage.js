@@ -32,12 +32,14 @@ const LIBRARY_KEY = "thePass.recipeLibrary.v1";
 const STATIONS_KEY = "thePass.stations.v1";
 const PAN_REQUESTS_KEY = "thePass.panRequests.v1";
 const STATION_FIXES_KEY = "thePass.stationFixes.v1";
+const KITCHEN_MODE_KEY = "thePass.kitchenMode.v1";
+const EVENTS_KEY = "thePass.events.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
 export const DEVICE_KEYS = new Set([COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1", "thePass.installHint.v1"]);
 // Key names, for screens that reload when another phone changes them.
-export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY };
+export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY, KITCHEN_MODE: KITCHEN_MODE_KEY, EVENTS: EVENTS_KEY };
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -103,6 +105,8 @@ const ALL_KEYS = [
   STATIONS_KEY,
   PAN_REQUESTS_KEY,
   STATION_FIXES_KEY,
+  KITCHEN_MODE_KEY,
+  EVENTS_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -402,4 +406,25 @@ export function savePanRequests(list) {
   // Keep answered requests for a week, then drop them.
   const cutoff = Date.now() - 7 * 86400000;
   save(PAN_REQUESTS_KEY, list.filter((r) => r.status === "open" || (r.doneAt ?? r.at) > cutoff));
+}
+
+// Kitchen type, picked in Setup: "restaurant" (stations, counts, pans) or
+// "private" (private chef & catering: events from a BEO). Shared by every
+// phone in the kitchen.
+export function loadKitchenMode() {
+  return load(KITCHEN_MODE_KEY, "restaurant") === "private" ? "private" : "restaurant";
+}
+
+export function saveKitchenMode(mode) {
+  save(KITCHEN_MODE_KEY, mode);
+}
+
+// Private chef & catering events (see lib/events.js), newest first.
+export function loadEvents() {
+  const list = load(EVENTS_KEY, []);
+  return Array.isArray(list) ? list : [];
+}
+
+export function saveEvents(list) {
+  save(EVENTS_KEY, list);
 }

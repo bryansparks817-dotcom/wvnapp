@@ -14,3 +14,12 @@ export const CHEF_TABS = [
   { id: "line", label: "Line", path: "M3 12h18M3 6h18M3 18h18" },
 ];
 
+
+const CHEF_TABS_SETUP_PATH = TABS[2].path;
+
+// Private chef & catering mode: events instead of stations, no line view.
+export const PRIVATE_CHEF_TABS = [
+  { id: "events", label: "Events", path: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" },
+  { id: "home", label: "Recipes", path: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" },
+  { id: "setup", label: "Setup", path: CHEF_TABS_SETUP_PATH },
+];
