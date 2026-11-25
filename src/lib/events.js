@@ -242,7 +242,7 @@ export function printHtml(html) {
 // working; most items still need their own recipes in The Pass.
 // Bump when castleItems() changes, so a phone with the older test event can
 // update it.
-export const CASTLE_SAMPLE_REV = 3;
+export const CASTLE_SAMPLE_REV = 4;
 
 // The menu, linked to the Castle Catering Recipe & Production Book
 // (src/data/cateringLibrary.json) in grams per piece, from each item's build
@@ -259,7 +259,7 @@ export function castleItems() {
     ], "Brush warm with honey butter, flaky salt", "castle-ham-cheddar-scone-build"),
     item("Steak tartare crostini", 50, "passed", "cold", [], [
       crostini, rc("castle-smoked-mussel-aioli", 5), rc("castle-beef-tartare", 20), rc("castle-fine-mirepoix", 2.5),
-    ], "BEO lists this slot as Kansas City strip on crostini with horseradish", "castle-steak-tartare-crostini-build"),
+    ], "Replaces the BEO's Kansas City strip crostini (Bryan)", "castle-steak-tartare-crostini-build"),
     item("Mini New England lobster roll", 50, "dessert", "cold", ["SHELLFISH"], [
       rc("castle-japanese-milk-bread", 127.5), rc("castle-new-england-lobster-salad", 60), ing("Unsalted butter", 3, true),
     ], "Moved from passed to a station (hand note on the BEO)", "castle-mini-lobster-roll-build"),

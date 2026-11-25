@@ -283,7 +283,7 @@ R.append(build("steak-tartare-crostini", "Steak Tartare Crostini", 50, [
     need("Fresh dill", note="1 small frond"),
 ], "Crostini, then aioli, then tartare, then mirepoix, then a small frond of fresh dill.",
     allergens=["Gluten", "Shellfish (mussel)", "Egg", "Mustard", "Fish (Worcestershire)", "Celery"],
-    review=["The BEO lists this slot as Kansas City strip on crostini with horseradish (50 pieces)."]))
+))
 
 R.append(build("mini-lobster-roll", "Mini New England Lobster Roll", 50, [
     g("Japanese milk bun", 127.5, ref=ref("japanese-milk-bread"), note="1 side-split bun (dough weight)", draft=True),
