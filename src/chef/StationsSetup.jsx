@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getStations, setupFlags } from "../data/stations";
 import { saveStationSetup } from "../lib/storage";
+import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
@@ -274,7 +275,7 @@ export default function StationsSetup({ recipesById }) {
   const [view, setView] = useState({ kind: "list" }); // list | station | item
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
-  const recipes = [...(recipesById?.values() ?? [])].filter((r) => r.kind !== "dish").sort((a, b) => a.name.localeCompare(b.name));
+  const recipes = [...(recipesById?.values() ?? [])].filter((r) => r.kind !== "dish" && !isCateringRecipe(r)).sort((a, b) => a.name.localeCompare(b.name));
 
   function commit(next) {
     setStations(next);

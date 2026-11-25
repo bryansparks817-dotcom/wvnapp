@@ -3,7 +3,7 @@ import { loadEvents, loadPrices, saveEvents } from "../lib/storage";
 import { costIndex } from "../lib/costing";
 import { formatGrams } from "../lib/format";
 import {
-  PACK_GROUPS, TAGS, TEMPS, blankEvent, blankItem, castleSampleEvent, eventCost, labelsHtml, newId,
+  CASTLE_SAMPLE_REV, PACK_GROUPS, TAGS, TEMPS, blankEvent, blankItem, castleItems, castleSampleEvent, eventCost, labelsHtml, newId,
   piecesToMake, prepForEvent, printHtml, shoppingForEvent,
 } from "../lib/events";
 
@@ -52,7 +52,9 @@ export default function Events({ recipes, recipesById, ingredients }) {
     );
   }
 
-  const hasCastle = events.some((e) => e.venue === "The Castle" && e.name === "Holiday mix & mingle");
+  const isCastle = (e) => e.venue === "The Castle" && e.name === "Holiday mix & mingle";
+  const hasCastle = events.some(isCastle);
+  const oldCastle = events.find((e) => isCastle(e) && (e.sampleRev ?? 1) < CASTLE_SAMPLE_REV);
   const add = (ev) => { setEvents((list) => [ev, ...list]); setOpenId(ev.id); };
   return (
     <section className="chef__data">
@@ -79,6 +81,11 @@ export default function Events({ recipes, recipesById, ingredients }) {
         })}
       </ul>
       <button type="button" className="pass__cta" onClick={() => add(blankEvent())}>+ NEW EVENT</button>
+      {oldCastle && (
+        <button type="button" className="pass__ghost" onClick={() => update(oldCastle.id, (e) => ({ ...e, items: castleItems(), foodPacked: [], sampleRev: CASTLE_SAMPLE_REV }))}>
+          Update the Castle test event with the new recipe book (replaces its menu)
+        </button>
+      )}
       {!hasCastle && (
         <button type="button" className="pass__ghost" onClick={() => add(castleSampleEvent())}>Load the test event: holiday party at the Castle, 60 guests</button>
       )}
@@ -216,7 +223,15 @@ function ItemForm({ item, event, ctx, row, onSave, onCancel, onRemove }) {
   const [askRemove, setAskRemove] = useState(false);
   const set = (k, v) => setF((x) => ({ ...x, [k]: v }));
   const setComp = (i, patch) => setF((x) => ({ ...x, components: x.components.map((c, j) => (j === i ? { ...c, ...patch, draft: false } : c)) }));
-  const recipes = useMemo(() => [...ctx.recipes].sort((a, b) => a.name.localeCompare(b.name)), [ctx.recipes]);
+  // Catering book recipes first, then the restaurant's.
+  const recipes = useMemo(() => {
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    const prepOnly = ctx.recipes.filter((r) => r.kind !== "dish");
+    return [
+      ["Catering book", prepOnly.filter((r) => r.book === "catering").sort(byName)],
+      ["Wandering Vine", prepOnly.filter((r) => r.book !== "catering").sort(byName)],
+    ];
+  }, [ctx.recipes]);
   const priceNames = useMemo(() => Object.keys(ctx.prices).sort(), [ctx.prices]);
   const toggleTag = (t) => set("tags", f.tags.includes(t) ? f.tags.filter((x) => x !== t) : [...f.tags, t]);
   const save = () => onSave({
@@ -257,6 +272,9 @@ function ItemForm({ item, event, ctx, row, onSave, onCancel, onRemove }) {
         {TAGS.map((t) => <button key={t} type="button" className={f.tags.includes(t) ? "is-on" : undefined} aria-pressed={f.tags.includes(t)} onClick={() => toggleTag(t)}>{t}</button>)}
       </div>
 
+      {item.buildId && ctx.recipesById.get(item.buildId) && (
+        <p className="pass__hint"><b>Build:</b> {ctx.recipesById.get(item.buildId).plating.split("\n")[0]} Full build guide under Recipes.</p>
+      )}
       <span className="pass__countlabel">WHAT’S IN ONE PIECE (GRAMS)</span>
       {f.components.length === 0 && <p className="pass__hint">Add the house recipes and raw ingredients in one piece, in grams. That’s what gives the cost per piece and the shopping list.</p>}
       <ul className="ev__comps">
@@ -269,7 +287,9 @@ function ItemForm({ item, event, ctx, row, onSave, onCancel, onRemove }) {
             {c.kind === "recipe" ? (
               <select className="pass__input" aria-label="Recipe" value={c.ref} onChange={(e) => setComp(i, { ref: e.target.value })}>
                 <option value="">Pick a recipe…</option>
-                {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                {recipes.map(([label, list]) => (
+                  <optgroup key={label} label={label}>{list.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</optgroup>
+                ))}
               </select>
             ) : (
               <input className="pass__input" aria-label="Ingredient" list="ev-ingredients" placeholder="Ingredient" value={c.ref} onChange={(e) => setComp(i, { ref: e.target.value })} />

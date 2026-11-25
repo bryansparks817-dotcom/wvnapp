@@ -141,13 +141,17 @@ function RecipeView({ recipe, recipes, onOpen, onClose, onConfirm }) {
   );
 }
 
-export default function RecipeLookup({ recipes, onConfirm }) {
+// `catering`: the private chef side, where recipes have no stations, so it
+// browses by recipes and build guides instead. `allRecipes` lets a build open
+// a restaurant recipe it uses (e.g. caramelized miso aioli).
+export default function RecipeLookup({ recipes, onConfirm, catering = false, allRecipes = recipes }) {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState(null); // station id, "dish", or null
   const [openId, setOpenId] = useState(null);
-  const open = recipes.find((r) => r.id === openId);
+  const open = allRecipes.find((r) => r.id === openId);
   const term = q.trim().toLowerCase();
-  const inFilter = (r) => !filter || (filter === "dish" ? r.kind === "dish" : (r.stations ?? []).includes(filter));
+  const inChip = (r, id) => (id === "dish" ? r.kind === "dish" : id === "prep" ? r.kind !== "dish" : (r.stations ?? []).includes(id));
+  const inFilter = (r) => !filter || inChip(r, filter);
   const browsing = Boolean(term || filter);
   const matches = browsing
     ? recipes
@@ -155,7 +159,7 @@ export default function RecipeLookup({ recipes, onConfirm }) {
         .sort((a, b) => a.name.localeCompare(b.name))
         .slice(0, term && !filter ? 12 : undefined)
     : [];
-  const chips = [...getStations().map((s) => [s.id, s.name]), ["dish", "Dish builds"]];
+  const chips = catering ? [["prep", "Recipes"], ["dish", "Build guides"]] : [...getStations().map((s) => [s.id, s.name]), ["dish", "Dish builds"]];
 
   return (
     <section className="chef__lookup">
@@ -177,7 +181,7 @@ export default function RecipeLookup({ recipes, onConfirm }) {
               aria-pressed={filter === id}
               onClick={() => setFilter(filter === id ? null : id)}
             >
-              {label} <span className="pass__muted">{recipes.filter((r) => (id === "dish" ? r.kind === "dish" : (r.stations ?? []).includes(id))).length}</span>
+              {label} <span className="pass__muted">{recipes.filter((r) => inChip(r, id)).length}</span>
             </button>
           ))}
         </div>
@@ -198,7 +202,7 @@ export default function RecipeLookup({ recipes, onConfirm }) {
         </ul>
       )}
       {browsing && !open && matches.length === 0 && <p className="pass__empty">{term ? "No recipe called that." : "No recipes here yet."}</p>}
-      {open && <RecipeView key={open.id} recipe={open} recipes={recipes} onOpen={setOpenId} onConfirm={onConfirm} onClose={() => { setOpenId(null); setQ(""); }} />}
+      {open && <RecipeView key={open.id} recipe={open} recipes={allRecipes} onOpen={setOpenId} onConfirm={onConfirm} onClose={() => { setOpenId(null); setQ(""); }} />}
     </section>
   );
 }

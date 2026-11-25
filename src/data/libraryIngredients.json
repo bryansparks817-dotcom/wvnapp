@@ -118,5 +118,20 @@
     "name": "Cherry-smoked Dart Rohan duck breast",
     "gramsPerEach": 213,
     "estimated": true
+  },
+  {
+    "name": "Baguette",
+    "gramsPerEach": 250,
+    "estimated": true
+  },
+  {
+    "name": "U-10 sea scallops",
+    "gramsPerEach": 45,
+    "estimated": true
+  },
+  {
+    "name": "Mini slider bun",
+    "gramsPerEach": 35,
+    "estimated": true
   }
 ]

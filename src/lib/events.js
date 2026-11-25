@@ -240,12 +240,52 @@ export function printHtml(html) {
 // stations and times are from the sheet. The recipe and ingredient links
 // (grams per piece) are Claude's drafts, marked `draft`, to show the costing
 // working; most items still need their own recipes in The Pass.
+// Bump when castleItems() changes, so a phone with the older test event can
+// update it.
+export const CASTLE_SAMPLE_REV = 2;
+
+// The menu, linked to the Castle Catering Recipe & Production Book
+// (src/data/cateringLibrary.json) in grams per piece, from each item's build
+// guide. Links to Claude's own guesses (no book recipe yet) are drafts.
+export function castleItems() {
+  const rc = (ref, grams, draft = false) => ({ kind: "recipe", ref, grams, draft });
+  const ing = (ref, grams, draft = false) => ({ kind: "ingredient", ref, grams, draft });
+  const item = (name, pieces, service, temp, tags = [], components = [], notes = "", build = null) =>
+    ({ ...blankItem(service), name, pieces, temp, tags, components, notes, ...(build ? { buildId: build } : {}) });
+  const crostini = rc("castle-baguette-crostini", 5.5);
+  return [
+    item("Country ham & aged cheddar scone", 60, "passed", "room", [], [
+      rc("castle-ham-cheddar-scone-dough", 45), rc("castle-whipped-cultured-honey-butter", 4),
+    ], "Brush warm with honey butter, flaky salt", "castle-ham-cheddar-scone-build"),
+    item("Steak tartare crostini", 50, "passed", "cold", [], [
+      crostini, rc("castle-smoked-mussel-aioli", 5), rc("castle-beef-tartare", 20), rc("castle-fine-mirepoix", 2.5),
+    ], "BEO lists this slot as Kansas City strip on crostini with horseradish", "castle-steak-tartare-crostini-build"),
+    item("Mini New England lobster roll", 50, "dessert", "cold", ["SHELLFISH"], [
+      rc("castle-japanese-milk-bread", 127.5), rc("castle-new-england-lobster-salad", 60), ing("Unsalted butter", 3, true),
+    ], "Moved from passed to a station (hand note on the BEO)", "castle-mini-lobster-roll-build"),
+    item("Spinach, artichoke & cheese stuffed mushrooms", 75, "passed", "hot", ["GF", "V"]),
+    item("Bacon-wrapped scallop crostini", 60, "passed", "hot", ["SHELLFISH"], [
+      crostini, rc("caramelized-miso-aioli", 9), rc("castle-bacon-wrapped-scallop-halves", 32.5), ing("sage", 0.5, true),
+    ], "GF option: on a cracker", "castle-bacon-scallop-crostini-build"),
+    item("Mini flank steak slider, pickled red onion", 60, "passed", "hot", [], [
+      ing("Mini slider bun", 35, true), rc("castle-grilled-flank-steak", 47.5), ing("Pickled red onion", 9), rc("castle-lemon-dijon-arugula", 5),
+    ], "GF option: on a cracker", "castle-flank-steak-slider-build"),
+    item("Mini lump crab cake", 75, "passed", "hot", ["SHELLFISH"], [
+      rc("castle-celery-root-remoulade", 11), rc("castle-mini-lump-crab-cake", 50), rc("castle-preserved-lemon-gel", 4),
+    ], "BEO sold 75; the production book targets 60", "castle-mini-crab-cake-build"),
+    item("Hot honey chicken pizzetta", 75, "warm", "hot", [], [rc("house-made-hot-honey-glaze", 5, true)]),
+    item("Coconut shrimp lollipop", 75, "warm", "hot", ["SHELLFISH"], [ing("p/d shrimp", 25, true)]),
+    item("Fresh fruit skewers", 60, "dessert", "cold", ["GF", "VG"]),
+    item("Hummus-stuffed snacking peppers", 60, "dessert", "cold", ["GF", "V"]),
+    item("Chocolate decadence bites", 60, "dessert", "room"),
+    item("Cappuccino cream in phyllo cup", 60, "dessert", "cold"),
+    item("Pumpkin cheesecake bites", 60, "dessert", "cold"),
+    item("White chocolate madeleines", 60, "dessert", "room"),
+  ];
+}
+
 export function castleSampleEvent() {
   const ev = blankEvent();
-  const rc = (ref, grams) => ({ kind: "recipe", ref, grams, draft: true });
-  const ing = (ref, grams) => ({ kind: "ingredient", ref, grams, draft: true });
-  const item = (name, pieces, service, temp, tags = [], components = [], notes = "") =>
-    ({ ...blankItem(service), name, pieces, temp, tags, components, notes });
   return {
     ...ev,
     name: "Holiday mix & mingle",
@@ -265,23 +305,8 @@ export function castleSampleEvent() {
       { id: "warm", name: "Warm station", where: "Next to the steps" },
       { id: "dessert", name: "Cold & dessert station", where: "Between the fireplaces" },
     ],
-    items: [
-      item("Country ham & cheddar scones", 60, "passed", "room"),
-      item("Kansas City strip on crostini with horseradish", 50, "passed", "room", [], [rc("atomic-whipped-horseradish-cream", 8)], "GF option: on a cracker"),
-      item("Mini lobster roll", 50, "dessert", "cold", ["SHELLFISH"], [], "Moved from passed to a station (hand note on the BEO)"),
-      item("Spinach, artichoke & cheese stuffed mushrooms", 75, "passed", "hot", ["GF", "V"]),
-      item("Bacon-wrapped scallop on crostini", 60, "passed", "hot", ["SHELLFISH"], [ing("smoked bacon", 10)], "GF option: on a cracker"),
-      item("Mini flank steak slider, pickled red onion", 60, "passed", "hot", [], [], "GF option: on a cracker"),
-      item("Mini crabcake", 75, "passed", "hot", ["SHELLFISH"]),
-      item("Hot honey chicken pizzetta", 75, "warm", "hot", [], [rc("house-made-hot-honey-glaze", 5)]),
-      item("Coconut shrimp lollipop", 75, "warm", "hot", ["SHELLFISH"], [ing("p/d shrimp", 25)]),
-      item("Fresh fruit skewers", 60, "dessert", "cold", ["GF", "VG"]),
-      item("Hummus-stuffed snacking peppers", 60, "dessert", "cold", ["GF", "V"]),
-      item("Chocolate decadence bites", 60, "dessert", "room"),
-      item("Cappuccino cream in phyllo cup", 60, "dessert", "cold"),
-      item("Pumpkin cheesecake bites", 60, "dessert", "cold"),
-      item("White chocolate madeleines", 60, "dessert", "room"),
-    ],
+    items: castleItems(),
+    sampleRev: CASTLE_SAMPLE_REV,
     pack: [
       ...defaultPack(),
       { id: newId("pk"), group: "Service & display", name: "Champagne brocade tablecloths (special order)", done: false },

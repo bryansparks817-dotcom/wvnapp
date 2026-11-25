@@ -28,6 +28,7 @@ import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
 import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
 import { parseRecipeWorkbook } from "./lib/recipeSheetImport";
+import { isCateringRecipe } from "./lib/recipeLibrary";
 import "./App.css";
 
 function localDateKey(d = new Date()) {
@@ -178,6 +179,9 @@ export default function App() {
   }
 
   const recipesById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+  // The catering book's recipes show on the private chef side only, and the
+  // restaurant's on the restaurant side. Costing and events still see all.
+  const shownRecipes = useMemo(() => recipes.filter((r) => isCateringRecipe(r) === privateChef), [recipes, privateChef]);
 
   const selectedRecipes = useMemo(
     () => recipes.filter((r) => selectedIds.has(r.id)),
@@ -271,8 +275,8 @@ export default function App() {
     return (
       <>
         {timerBar}
-        <ChefShell title="Recipes" lede="Look up any recipe. Add or import them under Setup → Recipes." {...shell}>
-          <RecipeLookup recipes={recipes} onConfirm={confirmRecipe} />
+        <ChefShell title="Recipes" lede="The catering book: recipes and per-piece build guides. Add or import more under Setup → Recipes." {...shell}>
+          <RecipeLookup recipes={shownRecipes} allRecipes={recipes} onConfirm={confirmRecipe} catering />
         </ChefShell>
       </>
     );
@@ -285,7 +289,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
-          <RecipeLookup recipes={recipes} onConfirm={confirmRecipe} />
+          <RecipeLookup recipes={shownRecipes} onConfirm={confirmRecipe} />
           <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
           <button type="button" className="chef__setuplink" onClick={() => setScreen("setup")}>
             Setup &amp; new menu items ›
@@ -329,7 +333,7 @@ export default function App() {
         <ChefShell title="Data" lede="What the line’s logs say: waste, pars, prep per cover, cooks, recipe times, shortages, food cost." {...shell}>
           <Insights
             today={today}
-            recipes={recipes}
+            recipes={shownRecipes}
             recipesById={recipesById}
             ingredients={ingredients}
             onUpdateRecipe={updateRecipe}
@@ -345,7 +349,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title="Prices" lede="Ingredient prices, $ per kg." {...shell}>
-          <Prices recipes={recipes} recipesById={recipesById} ingredients={ingredients} />
+          <Prices recipes={shownRecipes} recipesById={recipesById} ingredients={ingredients} />
         </ChefShell>
       </>
     );
@@ -412,7 +416,7 @@ export default function App() {
       {timerBar}
       <ChefShell title="Recipes" lede="Add, edit or import recipe sheets." {...shell}>
         <RecipeList
-          recipes={recipes}
+          recipes={shownRecipes}
           onDelete={handleDeleteRecipe}
           onAdd={openAddForm}
           onEdit={openEditForm}
@@ -442,7 +446,7 @@ export default function App() {
             Manage recipes →
           </button>
         </div>
-        <RecipeSelector recipes={recipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
+        <RecipeSelector recipes={shownRecipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
         <button
           className="generate-button"
           onClick={() => generate(selectedRecipes)}
