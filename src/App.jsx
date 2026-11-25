@@ -18,7 +18,7 @@ import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
 import { CHEF_TABS, PRIVATE_CHEF_TABS } from "./linecook/tabs";
 import "./linecook/pass.css";
-import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff, loadKitchenMode, saveKitchenMode, KEYS } from "./lib/storage";
+import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff, loadKitchenMode, saveKitchenMode } from "./lib/storage";
 import { activeStaff, hasChef, hashPin, isChef, signIn } from "./lib/staff";
 import { onRemoteChange } from "./lib/sync";
 import { useRecipes } from "./hooks/useRecipes";
@@ -74,9 +74,6 @@ export default function App() {
   // Private chef mode has no line view: it opens on the chef's events.
   const [kitchenMode, setKitchenMode] = useState(() => loadKitchenMode());
   const privateChef = kitchenMode === "private";
-  useEffect(() => onRemoteChange((keys) => {
-    if (!keys || keys.includes(KEYS.KITCHEN_MODE)) setKitchenMode(loadKitchenMode());
-  }), []);
   // "line" = the line cook screens (default); "chef" = recipe and prep tools.
   const [mode, setMode] = useState(() => (loadKitchenMode() === "private" ? "chef" : "line"));
   // Prep timers live here so the timer strip shows on every screen, line or chef.

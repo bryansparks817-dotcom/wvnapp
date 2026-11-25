@@ -37,7 +37,9 @@ const EVENTS_KEY = "thePass.events.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
-export const DEVICE_KEYS = new Set([COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1", "thePass.installHint.v1"]);
+// The kitchen type is per phone for now, so trying private chef mode on one
+// phone doesn't switch the restaurant's line phones over.
+export const DEVICE_KEYS = new Set([KITCHEN_MODE_KEY, COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1", "thePass.installHint.v1"]);
 // Key names, for screens that reload when another phone changes them.
 export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY, KITCHEN_MODE: KITCHEN_MODE_KEY, EVENTS: EVENTS_KEY };
 
@@ -409,8 +411,8 @@ export function savePanRequests(list) {
 }
 
 // Kitchen type, picked in Setup: "restaurant" (stations, counts, pans) or
-// "private" (private chef & catering: events from a BEO). Shared by every
-// phone in the kitchen.
+// "private" (private chef & catering: events from a BEO). Kept on this
+// phone only (see DEVICE_KEYS).
 export function loadKitchenMode() {
   return load(KITCHEN_MODE_KEY, "restaurant") === "private" ? "private" : "restaurant";
 }

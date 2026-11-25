@@ -39,8 +39,7 @@ function SyncRow() {
   );
 }
 
-// Restaurant line or private chef & catering. Picked once; every phone in
-// the kitchen follows it.
+// Restaurant line or private chef & catering, for this phone.
 function ModeRow({ mode, onMode }) {
   const current = KITCHEN_MODES.find((m) => m.id === mode);
   return (
@@ -53,7 +52,7 @@ function ModeRow({ mode, onMode }) {
           </button>
         ))}
       </div>
-      <p className="pass__hint">{current?.name}: {current?.sub}</p>
+      <p className="pass__hint">{current?.name}: {current?.sub} Only this phone switches; events are shared.</p>
     </div>
   );
 }
