@@ -1956,13 +1956,13 @@
   "category": "Soup",
   "yieldText": "Approx. 8.4 kg (9.4 kg raw)",
   "portion": "6 oz / 170 g",
-  "storage": "Silky, fully emulsified soup; fine-strained. Garnish to order.",
+  "storage": "6 qt container",
   "shelfLife": "Hot hold per house HACCP plan",
   "portions": 49.0,
   "allergens": [
    "Dairy"
   ],
-  "plating": "",
+  "plating": "GARNISH (per order):\nCrème fraîche — 8 g; restrained swirl.\nMarcona almond praline — 8 g.\nCrispy sage — 1–2 leaves fried in brown butter; finish with approximately 5 g brown butter.\nBalsamic gastrique — 8 g, applied in a few small drops.",
   "drafts": [
    "allergens",
    "name",
@@ -1973,7 +1973,7 @@
   ],
   "source": {
    "sheet": "Butternut_Squash_Soup.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   }
  },
@@ -2794,7 +2794,7 @@
   ],
   "ingredients": [
    {
-    "name": "Chicken backs and necks",
+    "name": "Chicken bones",
     "qty": 9000.0,
     "unit": "g",
     "note": "rinsed",
@@ -2868,7 +2868,7 @@
   ],
   "steps": [
    {
-    "name": "Rinse backs, necks and feet under cold water.",
+    "name": "Rinse bones and feet under cold water.",
     "type": "active",
     "duration_minutes": 10.0,
     "draft": true
@@ -2920,15 +2920,14 @@
   "category": "winter 26/27",
   "yieldText": "8 QT - 7560 g",
   "storage": "qt containers / 22 qt cambro",
-  "shelfLife": "4 days",
-  "shelfLifeDays": 4,
+  "shelfLife": "10 days refrigerated, or 45 days frozen",
+  "shelfLifeDays": 10,
   "allergens": [],
   "plating": "",
   "drafts": [
    "allergens",
    "category",
    "name",
-   "shelfLife",
    "station",
    "storage",
    "sub",
@@ -2936,7 +2935,7 @@
   ],
   "source": {
    "sheet": "Chicken_Stock.xlsx",
-   "rev": "2026-11-14",
+   "rev": "2026-11-22",
    "createdBy": ""
   }
  },
@@ -2946,59 +2945,52 @@
   "isSubRecipe": true,
   "kind": "prep",
   "stations": [
-   "garde-manger"
+   "prep"
   ],
   "ingredients": [
    {
     "name": "Lobster stock",
     "recipeRef": "lobster-stock",
-    "qty": 1000.0,
-    "unit": "g",
-    "draft": true
+    "qty": 750.0,
+    "unit": "g"
    },
    {
     "name": "Clam juice",
-    "qty": 500.0,
+    "qty": 750.0,
     "unit": "g"
    },
    {
     "name": "White wine",
     "qty": 300.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Shallot",
     "qty": 120.0,
     "unit": "g",
-    "note": "minced",
-    "draft": true
+    "note": "minced"
    },
    {
     "name": "Fennel bulb",
     "qty": 80.0,
     "unit": "g",
-    "note": "fine dice",
-    "draft": true
+    "note": "fine dice"
    },
    {
     "name": "Garlic",
     "qty": 10.0,
     "unit": "g",
-    "note": "minced",
-    "draft": true
+    "note": "minced"
    },
    {
     "name": "Butter",
     "qty": 180.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
     "qty": 3.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Bay leaf",
@@ -3013,70 +3005,60 @@
    {
     "name": "Lemon juice",
     "qty": 20.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Mustard powder",
     "qty": 1.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Old bay",
     "qty": 0,
     "unit": "g",
-    "asNeeded": "Amount not set"
+    "asNeeded": "To taste"
    }
   ],
   "steps": [
    {
     "name": "Melt 30 g butter and sweat shallot and fennel gently for 6-8 minutes without browning.",
     "type": "active",
-    "duration_minutes": 8.0,
-    "draft": true
+    "duration_minutes": 8.0
    },
    {
     "name": "Add garlic and thyme.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
     "name": "Add white wine and reduce to approximately 75 g.",
     "type": "active",
-    "duration_minutes": 8.0,
-    "draft": true
+    "duration_minutes": 8.0
    },
    {
     "name": "Add lobster stock, clam juice, and bay leaf; simmer gently and reduce by approximately half, or until shellfish flavor is concentrated.",
     "type": "passive",
-    "duration_minutes": 40.0,
-    "draft": true
+    "duration_minutes": 40.0
    },
    {
     "name": "Strain through a fine chinois.",
     "type": "active",
-    "duration_minutes": 3.0,
-    "draft": true
+    "duration_minutes": 3.0
    },
    {
     "name": "Return liquid to pan, add cream, and reduce until it lightly coats a spoon.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Remove from heat and gradually whisk in 150 g cold butter to form a glossy emulsion.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Season with lemon juice, white pepper, and salt. Do not boil after mounting.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    }
   ],
   "yieldGrams": 1000,
@@ -3089,12 +3071,10 @@
    "Shellfish"
   ],
   "plating": "",
-  "drafts": [
-   "allergens"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Clam_Chowder_Veloute.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   },
   "needsReview": [
@@ -3459,13 +3439,7 @@
   ],
   "steps": [
    {
-    "name": "Open and inspect both D.O.P. San Marzano #10 cans. Confirm the D.O.P. mark and record supplier lot details. Verify actual net weight on the cans; formula assumes 2,977 g per can.",
-    "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
-   },
-   {
-    "name": "Crush tomatoes by hand or pass through a food mill to the desired texture. Reserve all packing juice.",
+    "name": "Crush tomatoes by hand or pass through a ricer. Reserve all packing juice.",
     "type": "active",
     "duration_minutes": 5.0,
     "draft": true
@@ -3504,11 +3478,6 @@
     "name": "Taste and adjust salt only after reduction. Keep the sauce rustic and spoonable; do not reduce to a dense pizza sauce. Weigh finished sauce and record actual yield.",
     "type": "active",
     "duration_minutes": 3.0
-   },
-   {
-    "name": "For advance prep, transfer to shallow pans or approved containers and cool rapidly under the restaurant's approved cooling procedure. Refrigerate at ≤40°F.",
-    "type": "active",
-    "duration_minutes": 0.0
    }
   ],
   "yieldGrams": 5750,
@@ -3524,7 +3493,7 @@
   ],
   "source": {
    "sheet": "DOP_San_Marzano_Tomato_Sauce_2x10_Cans.xlsx",
-   "rev": "Draft 1",
+   "rev": "2026-11-22",
    "createdBy": ""
   }
  },
@@ -3702,7 +3671,7 @@
     "name": "Kosher salt",
     "qty": 60.0,
     "unit": "g",
-    "note": "Initial amount; adjust after reduction and milling",
+    "note": "Initial amount; adjust after reduction and ricing",
     "draft": true
    },
    {
@@ -3726,13 +3695,12 @@
   ],
   "steps": [
    {
-    "name": "Sort tomatoes; discard any moldy, fermented, or damaged fruit. Wash thoroughly under running potable water. Remove cores and any bruised areas; cut large tomatoes into quarters. Weigh 5,954 g after washing and before trimming only if your production standard defines the batch that way; record actual usable weight.",
+    "name": "Sort tomatoes; discard any moldy or damaged fruit. Wash thoroughly under cold water. Remove cores and bruised areas; cut large tomatoes into quarters. Weigh 6,000 g after washing and before trimming.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
-    "name": "In a heavy-bottomed pot or steam-jacketed kettle, warm olive oil over medium-low heat. Add diced onion and sweat slowly until soft and translucent, without browning.",
+    "name": "In a heavy-bottomed pot, warm olive oil over medium-low heat. Add diced onion and sweat slowly until soft and translucent, without browning.",
     "type": "active",
     "duration_minutes": 20.0,
     "draft": true
@@ -3750,39 +3718,33 @@
     "draft": true
    },
    {
-    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off. Expect approximately 75–120 minutes depending on variety, ripeness, pot geometry, and water content.",
+    "name": "Bring to a gentle simmer. Cook uncovered over low heat, stirring and scraping the bottom regularly, until tomatoes collapse completely and excess water cooks off.",
     "type": "passive",
-    "duration_minutes": 95.0,
-    "draft": true
+    "duration_minutes": 90.0
    },
    {
-    "name": "Add basil during the final 10 minutes. Remove basil stems or large leaves if used whole.",
+    "name": "Add basil during the final 10 minutes. Remove basil stems or large leaves.",
     "type": "active",
     "duration_minutes": 2.0,
     "draft": true
    },
    {
-    "name": "Pass the cooked sauce through a food mill using a medium plate to remove skins and seeds while retaining body. If a more rustic texture is desired, crush by hand and leave skins/seeds in; use one method consistently for each batch.",
+    "name": "Pass the cooked sauce through a ricer to remove skins and seeds while retaining body.",
     "type": "active",
     "duration_minutes": 15.0,
     "draft": true
    },
    {
-    "name": "Return milled sauce to the pot if needed and reduce gently to a cohesive, spoonable consistency. Taste and adjust salt after reduction. Keep it brighter and looser than a dense pizza sauce. Weigh finished sauce and record actual yield.",
-    "type": "active",
-    "duration_minutes": 10.0
-   },
-   {
-    "name": "For advance preparation, transfer to shallow pans or approved containers and cool rapidly under the restaurant's approved cooling procedure. Refrigerate at ≤40°F.",
-    "type": "active",
-    "duration_minutes": 0.0
+    "name": "Return riced sauce to the pot and reduce gently for 15–20 minutes. Adjust salt if necessary.",
+    "type": "passive",
+    "duration_minutes": 20.0
    }
   ],
   "yieldGrams": 4200,
   "category": "Summer 2026 / seasonal",
   "yieldText": "Approx. 3.8–4.6 kg finished; weigh actual yield",
   "portion": "Use 1,980 g in 30-order Albondigas sauce batch",
-  "storage": "Refrigerated ≤40°F; cool rapidly",
+  "storage": "22 qt container",
   "allergens": [],
   "plating": "",
   "drafts": [
@@ -3791,14 +3753,15 @@
    "name",
    "portion",
    "station",
-   "storage",
    "yieldText"
   ],
   "source": {
    "sheet": "Farm_Heirloom_Tomato_Sauce_5954g.xlsx",
-   "rev": "",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
-  }
+  },
+  "shelfLife": "10 days refrigerated, or 45 days frozen",
+  "shelfLifeDays": 10
  },
  {
   "id": "feta-custard-tart-layer",
@@ -4576,8 +4539,7 @@
     "name": "Lobster stock",
     "recipeRef": "lobster-stock",
     "qty": 1000.0,
-    "unit": "g",
-    "draft": true
+    "unit": "g"
    },
    {
     "name": "Thyme",
@@ -4624,68 +4586,57 @@
    {
     "name": "Sweat onion, fennel, and celery in 75 g butter and olive oil for 12-15 minutes without browning.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Add garlic and thyme.",
     "type": "active",
-    "duration_minutes": 2.0,
-    "draft": true
+    "duration_minutes": 2.0
    },
    {
     "name": "Add finely chopped shrimp and cook until just opaque.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
-    "name": "Deglaze with white wine and reduce nearly dry.",
+    "name": "Deglaze with white wine and reduce nearly dry. Transfer to a hotel pan and set aside while making the béchamel.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Separately, melt 125 g butter, whisk in flour, and cook 2-3 minutes without browning.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Gradually whisk in milk and seafood stock; simmer gently until thick and smooth.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Fold béchamel into shrimp mixture gradually and cook until dense and cohesive. Remove bay leaf.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
-    "name": "Cook remaining shrimp separately until fully cooked; fold in with diced cooked lobster, Parmesan, lemon zest, parsley, and nutmeg.",
+    "name": "Fold in diced cooked lobster, Parmesan, lemon zest, parsley, and nutmeg.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Chill completely.",
     "type": "passive",
-    "duration_minutes": 120.0,
-    "draft": true
+    "duration_minutes": 120.0
    },
    {
     "name": "Weigh the finished base, then fold in an equal weight of mascarpone (50/50 by weight).",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Keep chilled for pasta production.",
     "type": "passive",
-    "duration_minutes": 0,
-    "draft": true
+    "duration_minutes": 0
    }
   ],
   "yieldGrams": 4500,
@@ -4705,7 +4656,7 @@
   "drafts": [],
   "source": {
    "sheet": "Lobster_and_shrimp_bolognese.xlsx",
-   "rev": "2026-10-22",
+   "rev": "2026-11-24",
    "createdBy": "BZ"
   },
   "needsReview": [
@@ -4795,62 +4746,52 @@
    {
     "name": "Preheat convection oven to 200°C/400°F.",
     "type": "passive",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Toss lobster bodies with some olive oil and roast 25-35 minutes until deeply aromatic and lightly browned, avoiding scorching.",
     "type": "passive",
-    "duration_minutes": 35.0,
-    "draft": true
+    "duration_minutes": 35.0
    },
    {
-    "name": "Roast or sauté onion, fennel, celery, carrot, and garlic until lightly caramelized.",
+    "name": "Sauté onion, fennel, celery, carrot, and garlic until lightly caramelized.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
-    "name": "Transfer shells and vegetables to a large stockpot.",
+    "name": "Transfer shells and vegetables to a large rondeau.",
     "type": "active",
-    "duration_minutes": 10.0,
-    "draft": true
+    "duration_minutes": 10.0
    },
    {
     "name": "Add tomato paste and cook 3-5 minutes until brick red.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Add white wine, scrape fond, and reduce by approximately half.",
     "type": "active",
-    "duration_minutes": 15.0,
-    "draft": true
+    "duration_minutes": 15.0
    },
    {
     "name": "Add cold water, thyme, bay leaves, and peppercorns.",
     "type": "active",
-    "duration_minutes": 5.0,
-    "draft": true
+    "duration_minutes": 5.0
    },
    {
     "name": "Bring slowly to a gentle simmer and cook uncovered 45-60 minutes, skimming as needed; avoid a rolling boil.",
     "type": "passive",
-    "duration_minutes": 90.0,
-    "draft": true
+    "duration_minutes": 90.0
    },
    {
     "name": "Strain through a fine chinois without pressing solids.",
     "type": "active",
-    "duration_minutes": 20.0,
-    "draft": true
+    "duration_minutes": 20.0
    },
    {
     "name": "Optionally reduce strained stock to desired concentration.",
     "type": "passive",
-    "duration_minutes": 30.0,
-    "draft": true
+    "duration_minutes": 30.0
    }
   ],
   "yieldGrams": 23625,
@@ -4862,13 +4803,10 @@
    "Shellfish"
   ],
   "plating": "",
-  "drafts": [
-   "allergens",
-   "name"
-  ],
+  "drafts": [],
   "source": {
    "sheet": "Lobster_Stock.xlsx",
-   "rev": "2026-10-27",
+   "rev": "2026-11-24",
    "createdBy": "BZ"
   }
  },
@@ -8686,16 +8624,16 @@
    },
    {
     "name": "Crème fraîche",
-    "qty": 15.0,
+    "qty": 8.0,
     "unit": "g",
-    "note": "Proposed garnish portion; restrained swirl"
+    "note": "Restrained swirl"
    },
    {
     "name": "Marcona almond praline",
     "recipeRef": "marcona-almond-praline-honey-caramel",
     "qty": 8.0,
     "unit": "g",
-    "note": "Proposed garnish portion; chopped for spoonable texture"
+    "note": "8 g"
    },
    {
     "name": "Crispy sage leaves",
@@ -8714,10 +8652,9 @@
    {
     "name": "House balsamic reduction",
     "recipeRef": "balsamic-reduction",
-    "qty": 4.0,
+    "qty": 8.0,
     "unit": "g",
-    "note": "Proposed amount; a few small drops, not a heavy drizzle",
-    "draft": true
+    "note": "Proposed amount; a few small drops, not a heavy drizzle"
    }
   ],
   "steps": [
@@ -8728,7 +8665,7 @@
     "draft": true
    },
    {
-    "name": "Add approximately 15 g crème fraîche as a restrained swirl or small quenelle.",
+    "name": "Add 8 g crème fraîche as a restrained swirl.",
     "type": "active",
     "duration_minutes": 1.0,
     "draft": true
@@ -8752,7 +8689,7 @@
     "draft": true
    },
    {
-    "name": "Add approximately 4 g house balsamic reduction in a few small drops. Serve immediately.",
+    "name": "Add 8 g house balsamic reduction in a few small drops. Serve immediately.",
     "type": "active",
     "duration_minutes": 0.0,
     "draft": true
@@ -8781,7 +8718,7 @@
   ],
   "source": {
    "sheet": "Butternut_Soup_Build.xlsx",
-   "rev": "Winter 26/27",
+   "rev": "2026-11-22",
    "createdBy": "BZ"
   }
  },
