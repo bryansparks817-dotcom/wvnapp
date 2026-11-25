@@ -242,7 +242,7 @@ export function printHtml(html) {
 // working; most items still need their own recipes in The Pass.
 // Bump when castleItems() changes, so a phone with the older test event can
 // update it.
-export const CASTLE_SAMPLE_REV = 2;
+export const CASTLE_SAMPLE_REV = 3;
 
 // The menu, linked to the Castle Catering Recipe & Production Book
 // (src/data/cateringLibrary.json) in grams per piece, from each item's build
@@ -270,9 +270,9 @@ export function castleItems() {
     item("Mini flank steak slider, pickled red onion", 60, "passed", "hot", [], [
       ing("Mini slider bun", 35, true), rc("castle-grilled-flank-steak", 47.5), ing("Pickled red onion", 9), rc("castle-lemon-dijon-arugula", 5),
     ], "GF option: on a cracker", "castle-flank-steak-slider-build"),
-    item("Mini lump crab cake", 75, "passed", "hot", ["SHELLFISH"], [
+    item("Mini lump crab cake", 60, "passed", "hot", ["SHELLFISH"], [
       rc("castle-celery-root-remoulade", 11), rc("castle-mini-lump-crab-cake", 50), rc("castle-preserved-lemon-gel", 4),
-    ], "BEO sold 75; the production book targets 60", "castle-mini-crab-cake-build"),
+    ], "", "castle-mini-crab-cake-build"),
     item("Hot honey chicken pizzetta", 75, "warm", "hot", [], [rc("house-made-hot-honey-glaze", 5, true)]),
     item("Coconut shrimp lollipop", 75, "warm", "hot", ["SHELLFISH"], [ing("p/d shrimp", 25, true)]),
     item("Fresh fruit skewers", 60, "dessert", "cold", ["GF", "VG"]),

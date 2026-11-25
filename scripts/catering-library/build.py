@@ -320,7 +320,7 @@ R.append(build("mini-crab-cake", "Mini Lump Crab Cake", 60, [
 ], "Remoulade as a small foundation or swipe, crab cake as the centerpiece, lemon gel in precise accents, herbs arranged organically around and above the cake.",
     allergens=["Shellfish (crab)", "Celery", "Egg", "Dairy", "Mustard", "Fish (Worcestershire)"],
     menu="Mini Lump Crab Cake | Celery Root Remoulade | Preserved Lemon Gel | Coastal Herb Garden",
-    review=["The BEO sold 75 mini crab cakes; this book targets 60. Which is right?", "Crab cake formula pending."]))
+    review=["Crab cake formula pending."]))
 
 out = ROOT / "src/data/cateringLibrary.json"
 out.write_text(json.dumps(R, indent=1, ensure_ascii=False) + "\n")
