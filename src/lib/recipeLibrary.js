@@ -12,12 +12,20 @@
 //     newer sheet version only if nobody has changed it in the app;
 //   - a library recipe from an older library revision is refreshed the same
 //     way, unless it was edited in the app.
-import library from "../data/recipeLibrary.json";
+import restaurantLibrary from "../data/recipeLibrary.json";
+// The private chef & catering book (The Castle), built by
+// scripts/catering-library/build.py. Each recipe has book: "catering", which
+// keeps it off the restaurant's screens (see isCateringRecipe).
+import cateringLibrary from "../data/cateringLibrary.json";
 import builtInV1 from "../data/builtInRecipesV1.json";
 import libraryIngredients from "../data/libraryIngredients.json";
 
 // Bump when recipeLibrary.json is rebuilt and unedited copies should refresh.
 export const LIBRARY_REV = 3;
+
+const library = [...restaurantLibrary, ...cateringLibrary];
+
+export const isCateringRecipe = (r) => r?.book === "catering";
 
 const LIBRARY_IDS = new Set(library.map((r) => r.id));
 const V1_BY_ID = new Map(builtInV1.map((r) => [r.id, r]));

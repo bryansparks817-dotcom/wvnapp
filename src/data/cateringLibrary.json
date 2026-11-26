@@ -1,0 +1,1931 @@
+[
+ {
+  "id": "castle-ham-cheddar-scone-dough",
+  "name": "Country Ham & Aged Cheddar Scone Dough",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "All-purpose flour",
+    "qty": 1100,
+    "unit": "g"
+   },
+   {
+    "name": "Baking powder",
+    "qty": 44,
+    "unit": "g"
+   },
+   {
+    "name": "Granulated sugar",
+    "qty": 28,
+    "unit": "g"
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 11,
+    "unit": "g"
+   },
+   {
+    "name": "Cracked black pepper",
+    "qty": 4,
+    "unit": "g"
+   },
+   {
+    "name": "Unsalted butter",
+    "qty": 275,
+    "unit": "g",
+    "note": "Cold"
+   },
+   {
+    "name": "Aged white cheddar",
+    "qty": 330,
+    "unit": "g",
+    "note": "Grated"
+   },
+   {
+    "name": "Country ham",
+    "qty": 275,
+    "unit": "g",
+    "note": "Finely diced; sautéed to render, drained and chilled"
+   },
+   {
+    "name": "Fresh chives",
+    "qty": 22,
+    "unit": "g"
+   },
+   {
+    "name": "Buttermilk",
+    "qty": 500,
+    "unit": "g"
+   },
+   {
+    "name": "Whole eggs",
+    "qty": 80,
+    "unit": "g"
+   },
+   {
+    "name": "Whole eggs",
+    "qty": 2,
+    "unit": "ea",
+    "note": "Egg wash"
+   },
+   {
+    "name": "Heavy cream",
+    "qty": 30,
+    "unit": "g",
+    "note": "Egg wash"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Briefly sauté diced country ham to render and develop color. Drain and chill.",
+    "type": "active",
+    "duration_minutes": 10
+   },
+   {
+    "name": "Combine flour, baking powder, sugar, salt and pepper.",
+    "type": "active",
+    "duration_minutes": 3
+   },
+   {
+    "name": "Cut cold butter into the dry ingredients until pea-sized pieces remain.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Fold in cheddar, ham and chives.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Combine buttermilk and egg; add to the dry mixture.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Mix just until incorporated.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Press into an approximately 1-inch slab.",
+    "type": "active",
+    "duration_minutes": 3
+   },
+   {
+    "name": "Chill 30–45 minutes.",
+    "type": "passive",
+    "duration_minutes": 40
+   },
+   {
+    "name": "Portion into 60 pieces.",
+    "type": "active",
+    "duration_minutes": 8
+   },
+   {
+    "name": "Apply egg wash (2 eggs + 30 g heavy cream).",
+    "type": "active",
+    "duration_minutes": 4
+   },
+   {
+    "name": "Bake at 375°F convection for approximately 14–18 minutes. Validate with the production oven.",
+    "type": "passive",
+    "duration_minutes": 16
+   }
+  ],
+  "allergens": [
+   "Gluten",
+   "Dairy",
+   "Egg"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Development recipe.",
+   "Evaluate dough salt after tasting: country ham saltiness varies.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "60 scones, about 45 g raw dough each",
+  "portion": "45 g raw dough",
+  "portions": 60,
+  "storage": "Raw slab chilled until portioning; bake day of"
+ },
+ {
+  "id": "castle-whipped-cultured-honey-butter",
+  "name": "Whipped Cultured Honey Butter",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Unsalted cultured butter",
+    "qty": 250,
+    "unit": "g"
+   },
+   {
+    "name": "Honey",
+    "qty": 45,
+    "unit": "g"
+   },
+   {
+    "name": "Flaky sea salt",
+    "qty": 3,
+    "unit": "g"
+   },
+   {
+    "name": "Apple cider vinegar",
+    "qty": 5,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Whip until light and aerated.",
+    "type": "active",
+    "duration_minutes": 6
+   }
+  ],
+  "allergens": [
+   "Dairy"
+  ],
+  "drafts": [
+   "allergens",
+   "portion"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Service: brush warm scones right after baking, then finish with flaky salt.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "303 g",
+  "yieldGrams": 303,
+  "portion": "Light brush per warm scone (about 4 g)"
+ },
+ {
+  "id": "castle-beef-tartare",
+  "name": "Beef Tartare",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Beef tenderloin",
+    "qty": 1100,
+    "unit": "g",
+    "note": "Or center-cut striploin; trimmed weight"
+   },
+   {
+    "name": "Dijon mustard",
+    "qty": 25,
+    "unit": "g"
+   },
+   {
+    "name": "Worcestershire sauce",
+    "qty": 12,
+    "unit": "g"
+   },
+   {
+    "name": "Capers",
+    "qty": 25,
+    "unit": "g",
+    "note": "Minced"
+   },
+   {
+    "name": "Shallot",
+    "qty": 25,
+    "unit": "g",
+    "note": "Minced"
+   },
+   {
+    "name": "Cornichons",
+    "qty": 30,
+    "unit": "g",
+    "note": "Minced"
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 25,
+    "unit": "g"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 12,
+    "unit": "g"
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 8,
+    "unit": "g"
+   },
+   {
+    "name": "Black pepper",
+    "qty": 3,
+    "unit": "g"
+   },
+   {
+    "name": "Chives",
+    "qty": 12,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Trim beef and keep it refrigerated.",
+    "type": "active",
+    "duration_minutes": 15
+   },
+   {
+    "name": "Hand-cut into approximately ⅛-inch dice.",
+    "type": "active",
+    "duration_minutes": 30
+   },
+   {
+    "name": "Prepare the seasoning separately.",
+    "type": "active",
+    "duration_minutes": 10
+   },
+   {
+    "name": "Combine shortly before service.",
+    "type": "active",
+    "duration_minutes": 3
+   },
+   {
+    "name": "Portion 20 g per crostini.",
+    "type": "active",
+    "duration_minutes": 10
+   }
+  ],
+  "allergens": [
+   "Mustard",
+   "Fish (Worcestershire)"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "1,277 g",
+  "portion": "20 g per crostini",
+  "portions": 63,
+  "storage": "Raw beef held at 41°F or below; combine shortly before service"
+ },
+ {
+  "id": "castle-smoked-mussel-aioli",
+  "name": "House-Smoked Mussel Aioli",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "House-smoked mussel meat",
+    "qty": 75,
+    "unit": "g"
+   },
+   {
+    "name": "Smoked mussel liquor",
+    "qty": 30,
+    "unit": "g",
+    "note": "Reserved from smoking"
+   },
+   {
+    "name": "Pasteurized egg yolks",
+    "qty": 36,
+    "unit": "g"
+   },
+   {
+    "name": "Dijon mustard",
+    "qty": 10,
+    "unit": "g"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 15,
+    "unit": "g"
+   },
+   {
+    "name": "Sherry vinegar",
+    "qty": 5,
+    "unit": "g"
+   },
+   {
+    "name": "Garlic",
+    "qty": 2,
+    "unit": "g"
+   },
+   {
+    "name": "Neutral oil",
+    "qty": 220,
+    "unit": "g"
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 20,
+    "unit": "g"
+   },
+   {
+    "name": "White pepper",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "To taste"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Blend mussel meat and liquor until smooth.",
+    "type": "active",
+    "duration_minutes": 3
+   },
+   {
+    "name": "Add egg yolks, Dijon, garlic, lemon juice and vinegar.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Slowly emulsify with the neutral oil.",
+    "type": "active",
+    "duration_minutes": 6
+   },
+   {
+    "name": "Finish with olive oil.",
+    "type": "active",
+    "duration_minutes": 1
+   },
+   {
+    "name": "Adjust consistency and pass through a fine chinois if desired.",
+    "type": "active",
+    "duration_minutes": 4
+   }
+  ],
+  "allergens": [
+   "Shellfish (mussel)",
+   "Egg",
+   "Mustard"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Do not add smoked paprika.",
+   "Evaluate salt before seasoning: mussel liquor can be salty.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "413 g",
+  "portion": "5 g per crostini"
+ },
+ {
+  "id": "castle-fine-mirepoix",
+  "name": "Fine Mirepoix (carrot, celery root, green apple)",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Carrot",
+    "qty": 50,
+    "unit": "g",
+    "note": "Fine brunoise, 1–2 mm",
+    "draft": true
+   },
+   {
+    "name": "Celery root",
+    "qty": 50,
+    "unit": "g",
+    "note": "Fine brunoise, 1–2 mm",
+    "draft": true
+   },
+   {
+    "name": "Green apple",
+    "qty": 50,
+    "unit": "g",
+    "note": "Fine brunoise, 1–2 mm",
+    "draft": true
+   },
+   {
+    "name": "Champagne vinegar",
+    "qty": 5,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 5,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 1,
+    "unit": "g",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Cut carrot, celery root and green apple into 1–2 mm brunoise.",
+    "type": "active",
+    "duration_minutes": 25
+   },
+   {
+    "name": "Lightly dress with champagne vinegar, olive oil and salt.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Drain before assembly.",
+    "type": "active",
+    "duration_minutes": 2
+   }
+  ],
+  "allergens": [
+   "Celery"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "The book gives no amounts; Claude drafted ~160 g, enough for 50 pieces at 2–3 g.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "About 160 g",
+  "portion": "2–3 g per crostini"
+ },
+ {
+  "id": "castle-baguette-crostini",
+  "name": "Baguette Crostini",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Baguette",
+    "qty": 2,
+    "unit": "ea",
+    "note": "About 250 g per loaf (estimate)",
+    "draft": true
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 50,
+    "unit": "g"
+   },
+   {
+    "name": "Salt",
+    "qty": 3,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Cut baguette into ¼-inch bias slices.",
+    "type": "active",
+    "duration_minutes": 15
+   },
+   {
+    "name": "Brush lightly with oil and season.",
+    "type": "active",
+    "duration_minutes": 8
+   },
+   {
+    "name": "Bake at 325°F until golden.",
+    "type": "passive",
+    "duration_minutes": 15
+   },
+   {
+    "name": "Cool and store dry.",
+    "type": "passive",
+    "duration_minutes": 20
+   }
+  ],
+  "allergens": [
+   "Gluten"
+  ],
+  "drafts": [
+   "allergens",
+   "yieldText",
+   "portion"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Slices per loaf is Claude's estimate; count one production run.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "About 100 slices from 2 loaves",
+  "portion": "1 slice (about 5.5 g)",
+  "portions": 100,
+  "storage": "Airtight, dry"
+ },
+ {
+  "id": "castle-tangzhong",
+  "name": "Tangzhong",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Bread flour",
+    "qty": 250,
+    "unit": "g"
+   },
+   {
+    "name": "Whole milk",
+    "qty": 1250,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Whisk together and cook over medium-low heat, stirring continuously, until thickened.",
+    "type": "active",
+    "duration_minutes": 10
+   },
+   {
+    "name": "Cool completely.",
+    "type": "passive",
+    "duration_minutes": 45
+   }
+  ],
+  "allergens": [
+   "Gluten",
+   "Dairy"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "1,500 g",
+  "yieldGrams": 1500
+ },
+ {
+  "id": "castle-japanese-milk-bread",
+  "name": "Japanese Milk Bread Buns (Tangzhong)",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Bread flour",
+    "qty": 4200,
+    "unit": "g"
+   },
+   {
+    "name": "Whole milk",
+    "qty": 1250,
+    "unit": "g"
+   },
+   {
+    "name": "Whole eggs",
+    "qty": 500,
+    "unit": "g"
+   },
+   {
+    "name": "Granulated sugar",
+    "qty": 400,
+    "unit": "g"
+   },
+   {
+    "name": "Unsalted butter",
+    "qty": 500,
+    "unit": "g",
+    "note": "Softened"
+   },
+   {
+    "name": "Instant yeast",
+    "qty": 65,
+    "unit": "g"
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 85,
+    "unit": "g"
+   },
+   {
+    "subRecipeId": "castle-tangzhong",
+    "qty": 1,
+    "name": "Prepared tangzhong",
+    "note": "1 batch (1,500 g), cooled"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Combine flour, sugar, yeast, milk, eggs and cooled tangzhong.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Mix until cohesive.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Add salt.",
+    "type": "active",
+    "duration_minutes": 1
+   },
+   {
+    "name": "Incorporate softened butter gradually.",
+    "type": "active",
+    "duration_minutes": 8
+   },
+   {
+    "name": "Mix to a strong windowpane.",
+    "type": "active",
+    "duration_minutes": 10
+   },
+   {
+    "name": "Bulk ferment until approximately doubled.",
+    "type": "passive",
+    "duration_minutes": 75
+   },
+   {
+    "name": "Divide and shape into elongated side-split rolls, half the length of a standard bun.",
+    "type": "active",
+    "duration_minutes": 30
+   },
+   {
+    "name": "Proof until expanded and airy.",
+    "type": "passive",
+    "duration_minutes": 50
+   },
+   {
+    "name": "Bake at approximately 350°F until golden and fully baked.",
+    "type": "passive",
+    "duration_minutes": 18
+   },
+   {
+    "name": "Cool completely.",
+    "type": "passive",
+    "duration_minutes": 45
+   }
+  ],
+  "allergens": [
+   "Gluten",
+   "Dairy",
+   "Egg"
+  ],
+  "drafts": [
+   "allergens",
+   "yieldText",
+   "portions"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Development formula: dough portion (125–130 g) not yet reconciled with the 113 g baked target. Test 6–8 buns, measure bake loss and size, then recalculate the batch.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "8,500 g dough; about 66 buns at 127.5 g",
+  "portion": "125–130 g dough per bun; 113 g baked target",
+  "portions": 66
+ },
+ {
+  "id": "castle-new-england-lobster-salad",
+  "name": "New England Lobster Salad",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Cooked lobster meat",
+    "qty": 2600,
+    "unit": "g",
+    "note": "Chilled, picked and drained"
+   },
+   {
+    "name": "House mayonnaise",
+    "qty": 200,
+    "unit": "g",
+    "note": "House recipe not in this book yet"
+   },
+   {
+    "name": "Crème fraîche",
+    "qty": 100,
+    "unit": "g"
+   },
+   {
+    "name": "Celery",
+    "qty": 100,
+    "unit": "g",
+    "note": "Fine brunoise"
+   },
+   {
+    "name": "Fresh lemon juice",
+    "qty": 35,
+    "unit": "g"
+   },
+   {
+    "name": "Lemon zest",
+    "qty": 5,
+    "unit": "g"
+   },
+   {
+    "name": "Dijon mustard",
+    "qty": 15,
+    "unit": "g"
+   },
+   {
+    "name": "Worcestershire sauce",
+    "qty": 5,
+    "unit": "g"
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 8,
+    "unit": "g"
+   },
+   {
+    "name": "White pepper",
+    "qty": 1,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Cook lobster using the established kitchen procedure.",
+    "type": "active",
+    "duration_minutes": 30
+   },
+   {
+    "name": "Chill thoroughly and pick carefully for shell fragments and cartilage.",
+    "type": "active",
+    "duration_minutes": 45
+   },
+   {
+    "name": "Drain thoroughly and weigh.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Cut into generous bite-size pieces, keeping larger pieces where possible.",
+    "type": "active",
+    "duration_minutes": 20
+   },
+   {
+    "name": "Combine mayonnaise, crème fraîche, Dijon, Worcestershire, lemon juice, zest, salt and white pepper.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Fold in celery.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Gently fold the dressing into the lobster.",
+    "type": "active",
+    "duration_minutes": 3
+   },
+   {
+    "name": "Refrigerate until service.",
+    "type": "passive",
+    "duration_minutes": 30
+   }
+  ],
+  "allergens": [
+   "Shellfish",
+   "Egg",
+   "Dairy",
+   "Mustard",
+   "Fish (Worcestershire)"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Chives (25 g) removed from the salad in favor of celery leaf as a separate garnish.",
+   "Open decision: reserve tail meat for the visible top layer and use claw/knuckle in the salad?",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "3,069 g",
+  "yieldGrams": 3069,
+  "portion": "60 g per roll",
+  "portions": 51,
+  "storage": "Refrigerated until service"
+ },
+ {
+  "id": "castle-dressed-celery-leaf",
+  "name": "Dressed Celery Leaf Garnish",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Celery leaves",
+    "qty": 0,
+    "unit": "g",
+    "note": "Whole, attractive leaves",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Smoked sea salt",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "To finish"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Lightly dress celery leaves with lemon juice and olive oil; finish with smoked sea salt. Dress immediately before service.",
+    "type": "active",
+    "duration_minutes": 3
+   }
+  ],
+  "allergens": [
+   "Celery"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "portion": "Small garnish per roll"
+ },
+ {
+  "id": "castle-bacon-wrapped-scallop-halves",
+  "name": "Bacon-Wrapped Scallop Halves",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "U-10 sea scallops",
+    "qty": 30,
+    "unit": "ea",
+    "note": "Large; about 45 g each (estimate)",
+    "draft": true
+   },
+   {
+    "name": "Thin-cut bacon",
+    "qty": 600,
+    "unit": "g",
+    "note": "60 wrapping portions; about 10 g each (estimate)",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Cut each large sea scallop horizontally in half before cooking.",
+    "type": "active",
+    "duration_minutes": 10
+   },
+   {
+    "name": "Wrap each half individually with thin-cut bacon. Secure with a toothpick if needed.",
+    "type": "active",
+    "duration_minutes": 25
+   },
+   {
+    "name": "Cook until the bacon is crisp and the scallop is just cooked, without drying out.",
+    "type": "active",
+    "duration_minutes": 15
+   }
+  ],
+  "allergens": [
+   "Shellfish (scallop)",
+   "Pork"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Scallop size and bacon per wrap are Claude's estimates.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "60 scallop halves",
+  "portion": "1 half",
+  "portions": 60
+ },
+ {
+  "id": "castle-grilled-flank-steak",
+  "name": "Grilled Flank Steak (sliced)",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Flank steak",
+    "qty": 3800,
+    "unit": "g",
+    "note": "Raw; about 75% cooked yield (estimate)",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Grill flank steak whole.",
+    "type": "active",
+    "duration_minutes": 15
+   },
+   {
+    "name": "Rest appropriately.",
+    "type": "passive",
+    "duration_minutes": 15
+   },
+   {
+    "name": "Identify grain direction and slice thinly against the grain.",
+    "type": "active",
+    "duration_minutes": 20
+   },
+   {
+    "name": "Portion by cooked weight, 45–50 g per slider.",
+    "type": "active",
+    "duration_minutes": 10
+   }
+  ],
+  "allergens": [],
+  "drafts": [
+   "allergens",
+   "yieldGrams",
+   "yieldText"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Raw purchase weight and cooked yield are estimates until the real cooking yield is measured.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "About 2,850 g cooked",
+  "yieldGrams": 2850,
+  "portion": "45–50 g cooked per slider",
+  "portions": 60
+ },
+ {
+  "id": "castle-lemon-dijon-arugula",
+  "name": "Lemon-Dijon Dressed Arugula",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Arugula",
+    "qty": 300,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 15,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Dijon mustard",
+    "qty": 5,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 25,
+    "unit": "g",
+    "draft": true
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 1,
+    "unit": "g",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Whisk lemon, Dijon and olive oil. Toss arugula to a light coat, not wet, just before service.",
+    "type": "active",
+    "duration_minutes": 4
+   }
+  ],
+  "allergens": [
+   "Mustard"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Working dressing direction only (lemon, Dijon, olive oil); amounts are Claude's drafts.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "About 346 g",
+  "portion": "Small tuft per slider (about 5 g)"
+ },
+ {
+  "id": "castle-mini-lump-crab-cake",
+  "name": "Mini Lump Crab Cake",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Jumbo lump crab meat",
+    "qty": 3000,
+    "unit": "g",
+    "note": "Formula pending; costed as all crab until it's set",
+    "draft": true
+   }
+  ],
+  "steps": [
+   {
+    "name": "Mix with minimal binder, keeping lumps whole (formula pending).",
+    "type": "active",
+    "duration_minutes": 20
+   },
+   {
+    "name": "Portion 50 g raw cakes.",
+    "type": "active",
+    "duration_minutes": 20
+   },
+   {
+    "name": "Pan-sear or griddle to a delicate golden crust.",
+    "type": "active",
+    "duration_minutes": 20
+   }
+  ],
+  "allergens": [
+   "Shellfish (crab)"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Crab cake formula is still pending: jumbo lump dominant, minimal binder, delicate crust, golden sear, standalone presentation.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "3,000 g raw mixture; 60 cakes",
+  "portion": "50 g raw",
+  "portions": 60
+ },
+ {
+  "id": "castle-celery-root-remoulade",
+  "name": "Celery Root Remoulade",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Celery root",
+    "qty": 400,
+    "unit": "g",
+    "note": "Peeled, fine 1–2 mm julienne"
+   },
+   {
+    "name": "House mayonnaise",
+    "qty": 220,
+    "unit": "g",
+    "note": "House recipe not in this book yet"
+   },
+   {
+    "name": "Dijon mustard",
+    "qty": 30,
+    "unit": "g"
+   },
+   {
+    "name": "Whole-grain mustard",
+    "qty": 20,
+    "unit": "g"
+   },
+   {
+    "name": "Crème fraîche",
+    "qty": 50,
+    "unit": "g"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 25,
+    "unit": "g"
+   },
+   {
+    "name": "Champagne vinegar",
+    "qty": 15,
+    "unit": "g"
+   },
+   {
+    "name": "Worcestershire sauce",
+    "qty": 4,
+    "unit": "g"
+   },
+   {
+    "name": "Prepared horseradish",
+    "qty": 8,
+    "unit": "g"
+   },
+   {
+    "name": "Fine sea salt",
+    "qty": 5,
+    "unit": "g"
+   },
+   {
+    "name": "White pepper",
+    "qty": 1,
+    "unit": "g"
+   },
+   {
+    "name": "Fresh parsley",
+    "qty": 5,
+    "unit": "g",
+    "note": "Finely minced"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Peel celery root and cut into fine 1–2 mm julienne.",
+    "type": "active",
+    "duration_minutes": 25
+   },
+   {
+    "name": "Combine mayonnaise, both mustards, crème fraîche, lemon juice, champagne vinegar, Worcestershire and horseradish.",
+    "type": "active",
+    "duration_minutes": 4
+   },
+   {
+    "name": "Season with salt and white pepper.",
+    "type": "active",
+    "duration_minutes": 1
+   },
+   {
+    "name": "Fold in celery root and parsley.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Refrigerate at least 30 minutes.",
+    "type": "passive",
+    "duration_minutes": 30
+   },
+   {
+    "name": "Adjust acidity and consistency before service.",
+    "type": "active",
+    "duration_minutes": 3
+   }
+  ],
+  "allergens": [
+   "Celery",
+   "Egg",
+   "Dairy",
+   "Mustard",
+   "Fish (Worcestershire)"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Texture: creamy but structured, crisp celery root; holds a small quenelle or sits neatly under the cake.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "783 g",
+  "yieldGrams": 783,
+  "portion": "10–12 g per cake"
+ },
+ {
+  "id": "castle-preserved-lemon-gel",
+  "name": "Preserved Lemon Gel",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Preserved lemon liquid",
+    "qty": 150,
+    "unit": "g"
+   },
+   {
+    "name": "Water",
+    "qty": 100,
+    "unit": "g"
+   },
+   {
+    "name": "Fresh lemon juice",
+    "qty": 25,
+    "unit": "g"
+   },
+   {
+    "name": "Granulated sugar",
+    "qty": 10,
+    "unit": "g"
+   },
+   {
+    "name": "Agar-agar",
+    "qty": 2.5,
+    "unit": "g"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Combine preserved lemon liquid, water, lemon juice and sugar.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Thoroughly disperse the agar-agar.",
+    "type": "active",
+    "duration_minutes": 2
+   },
+   {
+    "name": "Bring to a full boil while stirring; hold the boil 60–90 seconds.",
+    "type": "active",
+    "duration_minutes": 5
+   },
+   {
+    "name": "Pour into a shallow container and refrigerate until fully set.",
+    "type": "passive",
+    "duration_minutes": 60
+   },
+   {
+    "name": "Break into pieces and blend until smooth.",
+    "type": "active",
+    "duration_minutes": 4
+   },
+   {
+    "name": "Pass through a fine chinois and transfer to squeeze bottles.",
+    "type": "active",
+    "duration_minutes": 5
+   }
+  ],
+  "allergens": [],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Adjust water and acidity after tasting the preserved lemon liquid. Too firm: blend in a little water. Too loose: raise agar next batch.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "yieldText": "About 287.5 g before blending adjustments",
+  "yieldGrams": 287.5,
+  "portion": "3–5 g per cake"
+ },
+ {
+  "id": "castle-coastal-herb-garnish",
+  "name": "Coastal Herb Garden Garnish",
+  "isSubRecipe": true,
+  "kind": "prep",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering · The Castle",
+  "ingredients": [
+   {
+    "name": "Dill fronds",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Fennel fronds",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Flat-leaf parsley leaves",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Celery leaves",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Chive sticks",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Micro basil",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Red sorrel",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Extra virgin olive oil",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Lemon juice",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "As needed"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Lightly dress herbs with olive oil and lemon immediately before plating.",
+    "type": "active",
+    "duration_minutes": 3
+   }
+  ],
+  "allergens": [
+   "Celery"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "",
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Dill and fennel for height, parsley and celery for volume, chive sticks for direction, micro basil for sweetness, red sorrel for color and acidity.",
+   "Step times are Claude's estimates for scheduling; confirm."
+  ],
+  "portion": "Small composed arrangement per cake"
+ },
+ {
+  "id": "castle-ham-cheddar-scone-build",
+  "name": "Country Ham & Aged Cheddar Scone · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Ham & cheddar scone",
+    "qty": 45,
+    "unit": "g",
+    "recipeRef": "castle-ham-cheddar-scone-dough",
+    "note": "45 g raw dough, baked"
+   },
+   {
+    "name": "Whipped cultured honey butter",
+    "qty": 4,
+    "unit": "g",
+    "recipeRef": "castle-whipped-cultured-honey-butter",
+    "note": "Light brush while warm",
+    "draft": true
+   },
+   {
+    "name": "Flaky sea salt",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "To finish"
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 60 pieces",
+  "portions": 1,
+  "allergens": [
+   "Gluten",
+   "Dairy",
+   "Egg"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Lightly brush warm scones with whipped cultured honey butter immediately after baking. Finish with flaky salt.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": []
+ },
+ {
+  "id": "castle-steak-tartare-crostini-build",
+  "name": "Steak Tartare Crostini · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Baguette crostini",
+    "qty": 5.5,
+    "unit": "g",
+    "recipeRef": "castle-baguette-crostini",
+    "note": "1 slice",
+    "draft": true
+   },
+   {
+    "name": "House-smoked mussel aioli",
+    "qty": 5,
+    "unit": "g",
+    "recipeRef": "castle-smoked-mussel-aioli"
+   },
+   {
+    "name": "Beef tartare",
+    "qty": 20,
+    "unit": "g",
+    "recipeRef": "castle-beef-tartare"
+   },
+   {
+    "name": "Fine mirepoix",
+    "qty": 2.5,
+    "unit": "g",
+    "recipeRef": "castle-fine-mirepoix",
+    "note": "2–3 g"
+   },
+   {
+    "name": "Fresh dill",
+    "qty": 0,
+    "unit": "g",
+    "note": "1 small frond",
+    "asNeeded": "As needed"
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 50 pieces",
+  "portions": 1,
+  "allergens": [
+   "Gluten",
+   "Shellfish (mussel)",
+   "Egg",
+   "Mustard",
+   "Fish (Worcestershire)",
+   "Celery"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Crostini, then aioli, then tartare, then mirepoix, then a small frond of fresh dill.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": []
+ },
+ {
+  "id": "castle-mini-lobster-roll-build",
+  "name": "Mini New England Lobster Roll · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Japanese milk bun",
+    "qty": 127.5,
+    "unit": "g",
+    "recipeRef": "castle-japanese-milk-bread",
+    "note": "1 side-split bun (dough weight)",
+    "draft": true
+   },
+   {
+    "name": "New England lobster salad",
+    "qty": 60,
+    "unit": "g",
+    "recipeRef": "castle-new-england-lobster-salad"
+   },
+   {
+    "name": "Unsalted butter",
+    "qty": 3,
+    "unit": "g",
+    "note": "For toasting; as needed",
+    "draft": true
+   },
+   {
+    "name": "Dressed celery leaf",
+    "qty": 0,
+    "unit": "g",
+    "note": "Small garnish",
+    "asNeeded": "As needed"
+   },
+   {
+    "name": "Smoked sea salt",
+    "qty": 0,
+    "unit": "g",
+    "asNeeded": "To finish"
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 50 pieces",
+  "portions": 1,
+  "allergens": [
+   "Gluten",
+   "Dairy",
+   "Egg",
+   "Shellfish",
+   "Mustard",
+   "Fish (Worcestershire)",
+   "Celery"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Butter-toast the outside of the side-split bun. Fill with lobster salad. Arrange whole dressed celery leaves on top and finish with smoked sea salt.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Open decision: tail meat on top, claw/knuckle in the salad?"
+  ]
+ },
+ {
+  "id": "castle-bacon-scallop-crostini-build",
+  "name": "Bacon-Wrapped Scallop Crostini · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Baguette crostini",
+    "qty": 5.5,
+    "unit": "g",
+    "recipeRef": "castle-baguette-crostini",
+    "note": "1 slice",
+    "draft": true
+   },
+   {
+    "name": "Caramelized miso aioli",
+    "qty": 9,
+    "unit": "g",
+    "recipeRef": "caramelized-miso-aioli",
+    "note": "8–10 g; Wandering Vine recipe"
+   },
+   {
+    "name": "Bacon-wrapped scallop half",
+    "qty": 32.5,
+    "unit": "g",
+    "recipeRef": "castle-bacon-wrapped-scallop-halves",
+    "note": "1 half",
+    "draft": true
+   },
+   {
+    "name": "Crispy sage leaf",
+    "qty": 1,
+    "unit": "g",
+    "recipeRef": "crispy-sage-leaves-brown-butter-finish",
+    "note": "1 leaf, fried in clarified butter",
+    "draft": true
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 60 pieces",
+  "portions": 1,
+  "allergens": [
+   "Gluten",
+   "Shellfish (scallop)",
+   "Pork",
+   "Egg",
+   "Soy",
+   "Sesame"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Crostini, caramelized miso aioli, cooked bacon-wrapped scallop half, one crispy sage leaf. Fry sage gently in clarified butter until crisp, drain well and add right before service.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Sage here is fried in clarified butter; the linked Wandering Vine sage recipe finishes in brown butter."
+  ]
+ },
+ {
+  "id": "castle-flank-steak-slider-build",
+  "name": "Mini Flank Steak Slider · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Mini slider bun",
+    "qty": 1,
+    "unit": "ea",
+    "note": "About 35 g (estimate); lightly toasted",
+    "draft": true
+   },
+   {
+    "name": "Grilled flank steak",
+    "qty": 47.5,
+    "unit": "g",
+    "recipeRef": "castle-grilled-flank-steak",
+    "note": "45–50 g cooked, sliced against the grain"
+   },
+   {
+    "name": "Pickled red onion",
+    "qty": 9,
+    "unit": "g",
+    "note": "8–10 g, drained; recipe not in this book yet"
+   },
+   {
+    "name": "Lemon-Dijon dressed arugula",
+    "qty": 5,
+    "unit": "g",
+    "recipeRef": "castle-lemon-dijon-arugula",
+    "note": "Small tuft",
+    "draft": true
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 60 pieces",
+  "portions": 1,
+  "allergens": [
+   "Gluten",
+   "Mustard"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Lightly toast the bun. Layer sliced flank steak, then drained pickled red onion, then lightly dressed arugula. Close with the top bun.",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": []
+ },
+ {
+  "id": "castle-mini-crab-cake-build",
+  "name": "Mini Lump Crab Cake · Build",
+  "isSubRecipe": false,
+  "kind": "dish",
+  "book": "catering",
+  "stations": [],
+  "category": "Catering build · The Castle",
+  "ingredients": [
+   {
+    "name": "Celery root remoulade",
+    "qty": 11,
+    "unit": "g",
+    "recipeRef": "castle-celery-root-remoulade",
+    "note": "10–12 g, small foundation or swipe"
+   },
+   {
+    "name": "Mini lump crab cake",
+    "qty": 50,
+    "unit": "g",
+    "recipeRef": "castle-mini-lump-crab-cake",
+    "note": "1 × 50 g raw"
+   },
+   {
+    "name": "Preserved lemon gel",
+    "qty": 4,
+    "unit": "g",
+    "recipeRef": "castle-preserved-lemon-gel",
+    "note": "3–5 g in precise accents"
+   },
+   {
+    "name": "Coastal herb garden garnish",
+    "qty": 0,
+    "unit": "g",
+    "note": "Small composed arrangement",
+    "asNeeded": "As needed"
+   }
+  ],
+  "steps": [],
+  "yieldText": "One piece",
+  "portion": "Production target 60 pieces",
+  "portions": 1,
+  "allergens": [
+   "Shellfish (crab)",
+   "Celery",
+   "Egg",
+   "Dairy",
+   "Mustard",
+   "Fish (Worcestershire)"
+  ],
+  "drafts": [
+   "allergens"
+  ],
+  "plating": "Remoulade as a small foundation or swipe, crab cake as the centerpiece, lemon gel in precise accents, herbs arranged organically around and above the cake.\n\nMenu: Mini Lump Crab Cake | Celery Root Remoulade | Preserved Lemon Gel | Coastal Herb Garden",
+  "serviceware": {
+   "plate": "",
+   "liner": "",
+   "vessels": "",
+   "utensils": ""
+  },
+  "source": {
+   "sheet": "The Castle Catering Recipe & Production Book",
+   "rev": "Working edition 2026-11-25",
+   "createdBy": "BS"
+  },
+  "needsReview": [
+   "Crab cake formula pending."
+  ]
+ }
+]

@@ -13,11 +13,12 @@ import Staff from "./chef/Staff";
 import StationsSetup from "./chef/StationsSetup";
 import RecipeLookup from "./chef/RecipeLookup";
 import PrintLists from "./chef/PrintLists";
+import Events from "./chef/Events";
 import TimerBar from "./linecook/TimerBar";
 import { PassHeader, TabBar } from "./linecook/Chrome";
-import { CHEF_TABS } from "./linecook/tabs";
+import { CHEF_TABS, PRIVATE_CHEF_TABS } from "./linecook/tabs";
 import "./linecook/pass.css";
-import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff } from "./lib/storage";
+import { loadTimers, saveTimers, loadChef, saveChef, loadStaff, saveStaff, loadKitchenMode, saveKitchenMode } from "./lib/storage";
 import { activeStaff, hasChef, hashPin, isChef, signIn } from "./lib/staff";
 import { onRemoteChange } from "./lib/sync";
 import { useRecipes } from "./hooks/useRecipes";
@@ -27,6 +28,7 @@ import { buildTracks } from "./lib/recipeComposition";
 import { buildTimeline } from "./lib/scheduler";
 import { loadSelectedRecipeIds, saveSelectedRecipeIds, clearAllLocalData } from "./lib/storage";
 import { parseRecipeWorkbook } from "./lib/recipeSheetImport";
+import { isCateringRecipe } from "./lib/recipeLibrary";
 import "./App.css";
 
 function localDateKey(d = new Date()) {
@@ -51,17 +53,17 @@ function useRemoteVersion() {
   return version;
 }
 
-function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, children }) {
+function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, tabs = CHEF_TABS, children }) {
   const version = useRemoteVersion();
   return (
     <div className="pass pass--chef">
-      <PassHeader station="Chef" initials={initials} onChangeCook={onSignOut}>
+      <PassHeader station={tabs === PRIVATE_CHEF_TABS ? "Private chef" : "Chef"} initials={initials} onChangeCook={onSignOut}>
         <span className="pass__date">CHEF</span>
         <h1 className="pass__title">{title}</h1>
         {lede && <p className="pass__lede">{lede}</p>}
       </PassHeader>
       <main key={version} className="pass__main chef">{children}</main>
-      <TabBar screen={screen} setScreen={setScreen} tabs={CHEF_TABS} />
+      <TabBar screen={screen} setScreen={setScreen} tabs={tabs} />
     </div>
   );
 }
@@ -69,8 +71,12 @@ function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, childr
 export default function App() {
   const { recipes, addRecipe, updateRecipe, confirmRecipe, deleteRecipe, importRecipes } = useRecipes();
   const { ingredients, findIngredient, upsertIngredient } = useIngredients();
+  // Restaurant line or private chef & catering (Setup → Kitchen type).
+  // Private chef mode has no line view: it opens on the chef's events.
+  const [kitchenMode, setKitchenMode] = useState(() => loadKitchenMode());
+  const privateChef = kitchenMode === "private";
   // "line" = the line cook screens (default); "chef" = recipe and prep tools.
-  const [mode, setMode] = useState("line");
+  const [mode, setMode] = useState(() => (loadKitchenMode() === "private" ? "chef" : "line"));
   // Prep timers live here so the timer strip shows on every screen, line or chef.
   const [timers, setTimers] = useState(() => loadTimers());
   useEffect(() => {
@@ -79,7 +85,11 @@ export default function App() {
   const startTimer = (label, minutes) =>
     setTimers((t) => [...t, { id: `${Date.now()}`, label, endsAt: Date.now() + minutes * 60000 }]);
   const timerBar = <TimerBar timers={timers} onDismiss={(id) => setTimers((t) => t.filter((x) => x.id !== id))} />;
-  const [screen, setScreen] = useState("home");
+  const [screen, setScreen] = useState(() => (loadKitchenMode() === "private" ? "events" : "home"));
+  function changeKitchenMode(next) {
+    saveKitchenMode(next);
+    setKitchenMode(next);
+  }
   const today = localDateKey();
   const [chef, setChef] = useState(() => loadChef());
   useEffect(() => { saveChef(chef); }, [chef]);
@@ -169,6 +179,9 @@ export default function App() {
   }
 
   const recipesById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+  // The catering book's recipes show on the private chef side only, and the
+  // restaurant's on the restaurant side. Costing and events still see all.
+  const shownRecipes = useMemo(() => recipes.filter((r) => isCateringRecipe(r) === privateChef), [recipes, privateChef]);
 
   const selectedRecipes = useMemo(
     () => recipes.filter((r) => selectedIds.has(r.id)),
@@ -194,7 +207,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (mode === "line") {
+  if (mode === "line" && !privateChef) {
     return (
       <>
         {timerBar}
@@ -227,9 +240,9 @@ export default function App() {
             const first = !hasChef(roster);
             saveStaff(first ? roster.map((p) => (p === person || p.initials === person.initials ? { ...p, role: "chef", active: true, ...(pin ? { pinHash: hashPin(pin) } : {}) } : p)) : roster);
             setChef({ date: today, name: person.name, initials: person.initials });
-            setScreen("home");
+            setScreen(privateChef ? "events" : "home");
           }}
-          extra={<button type="button" className="pass__ghost" onClick={() => setMode("line")}>← Back to the line view</button>}
+          extra={privateChef ? null : <button type="button" className="pass__ghost" onClick={() => setMode("line")}>← Back to the line view</button>}
         />
       </>
     );
@@ -238,11 +251,36 @@ export default function App() {
   const shell = {
     // Setup (and the recipes and prep plan tool under it) is off the daily
     // tabs: it's done once, then only for new menu items. It hangs off Home.
-    screen: ["setup", "form", "manage", "plan", "prices", "staff", "stations"].includes(screen) ? "home" : screen === "print" ? "crew" : screen,
+    screen: privateChef
+      ? (["setup", "form", "manage", "prices", "staff"].includes(screen) ? "setup" : screen)
+      : ["setup", "form", "manage", "plan", "prices", "staff", "stations"].includes(screen) ? "home" : screen === "print" ? "crew" : screen,
+    tabs: privateChef ? PRIVATE_CHEF_TABS : CHEF_TABS,
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
   };
+
+  if (privateChef && screen === "events") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Events" lede="Each event from its BEO: menu by pieces, food cost, shopping, prep and pack lists." {...shell}>
+          <Events recipes={recipes} recipesById={recipesById} ingredients={ingredients} />
+        </ChefShell>
+      </>
+    );
+  }
+
+  if (privateChef && screen === "home") {
+    return (
+      <>
+        {timerBar}
+        <ChefShell title="Recipes" lede="The catering book: recipes and per-piece build guides. Add or import more under Setup → Recipes." {...shell}>
+          <RecipeLookup recipes={shownRecipes} allRecipes={recipes} onConfirm={confirmRecipe} catering />
+        </ChefShell>
+      </>
+    );
+  }
 
   if (screen === "home") {
     const d = new Date();
@@ -251,7 +289,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title={`${hello}, ${chefOn.name.split(" ")[0]}`} {...shell}>
-          <RecipeLookup recipes={recipes} onConfirm={confirmRecipe} />
+          <RecipeLookup recipes={shownRecipes} onConfirm={confirmRecipe} />
           <ChefHome today={today} recipesById={recipesById} onOpenRecipes={() => setScreen("manage")} by={chefOn.initials} />
           <button type="button" className="chef__setuplink" onClick={() => setScreen("setup")}>
             Setup &amp; new menu items ›
@@ -295,7 +333,7 @@ export default function App() {
         <ChefShell title="Data" lede="What the line’s logs say: waste, pars, prep per cover, cooks, recipe times, shortages, food cost." {...shell}>
           <Insights
             today={today}
-            recipes={recipes}
+            recipes={shownRecipes}
             recipesById={recipesById}
             ingredients={ingredients}
             onUpdateRecipe={updateRecipe}
@@ -311,7 +349,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title="Prices" lede="Ingredient prices, $ per kg." {...shell}>
-          <Prices recipes={recipes} recipesById={recipesById} ingredients={ingredients} />
+          <Prices recipes={shownRecipes} recipesById={recipesById} ingredients={ingredients} />
         </ChefShell>
       </>
     );
@@ -345,7 +383,7 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title="Setup" lede="Done once, then for new menu items: recipes, stations, staff and storage." {...shell}>
-          <ChefSetup onOpen={setScreen} />
+          <ChefSetup onOpen={setScreen} mode={kitchenMode} onMode={changeKitchenMode} />
         </ChefShell>
       </>
     );
@@ -378,7 +416,7 @@ export default function App() {
       {timerBar}
       <ChefShell title="Recipes" lede="Add, edit or import recipe sheets." {...shell}>
         <RecipeList
-          recipes={recipes}
+          recipes={shownRecipes}
           onDelete={handleDeleteRecipe}
           onAdd={openAddForm}
           onEdit={openEditForm}
@@ -408,7 +446,7 @@ export default function App() {
             Manage recipes →
           </button>
         </div>
-        <RecipeSelector recipes={recipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
+        <RecipeSelector recipes={shownRecipes} selectedIds={selectedIds} onToggle={toggleRecipe} />
         <button
           className="generate-button"
           onClick={() => generate(selectedRecipes)}

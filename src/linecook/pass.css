@@ -502,3 +502,54 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__install { margin-top: 24px; padding: 12px 14px 4px; border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; gap: 6px; }
 .pass__install .pass__ghost { align-self: flex-start; padding: 0; }
 .pass__installbtn { min-height: 44px; border: 1.5px solid var(--amber); border-radius: 8px; background: transparent; color: var(--amber) !important; font-weight: 600; font-size: 15px !important; }
+
+/* Private chef & catering: events */
+.ev__list, .ev__items, .ev__comps, .ev__checks, .ev__rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ev__head { display: flex; flex-direction: column; gap: 8px; padding-bottom: 4px; }
+.ev__budget { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; background: var(--card); border-radius: 10px; padding: 12px; }
+.ev__budget > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ev__big { font-family: "Oswald", sans-serif; font-weight: 600; font-size: 28px; line-height: 1.1; }
+.ev__mid { font-family: "Oswald", sans-serif; font-weight: 500; font-size: 20px; line-height: 1.3; }
+.ev__views { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1.5px solid var(--edge); border-radius: 8px; overflow: hidden; margin: 4px 0 8px; }
+.ev__views button { min-height: 40px; border: 0; background: transparent; color: var(--steel) !important; font-family: "Oswald", sans-serif !important; font-weight: 600; letter-spacing: 0.06em; font-size: 13px !important; padding: 0 2px; }
+.ev__views button.is-on { background: var(--amber); color: var(--char) !important; }
+.ev__item { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 0; border-radius: 8px; background: var(--card); text-align: left; }
+.ev__item .pass__rowtext { min-width: 0; }
+.ev__cost { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; white-space: nowrap; }
+.ev__add { align-self: flex-start; }
+.ev__form { background: var(--card); border-radius: 10px; padding: 12px; }
+.ev__two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ev__two > * { min-width: 0; }
+.chef__servicetoggle.ev__three { grid-template-columns: repeat(3, 1fr); }
+.ev__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ev__tags button { min-height: 36px; padding: 0 12px; border-radius: 18px; border: 1.5px solid var(--edge); background: transparent; color: var(--steel) !important; font-family: "DM Mono", monospace !important; font-size: 13px !important; }
+.ev__tags button.is-on { border-color: var(--vine); color: var(--ticket) !important; background: rgba(111, 160, 127, 0.25); }
+.ev__comps li { display: grid; grid-template-columns: minmax(0, 1fr) 76px 32px; grid-template-areas: "ref ref ref" "kind grams x" "note note note"; gap: 6px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.ev__comps li > :nth-child(1) { grid-area: kind; }
+.ev__comps li > :nth-child(2) { grid-area: ref; }
+.ev__comps li > :nth-child(3) { grid-area: grams; }
+.ev__comps li > :nth-child(4) { grid-area: x; }
+.ev__comps li > :nth-child(5) { grid-area: note; }
+.ev__comps li.chef__draftfield .pass__input { border-color: var(--draft) !important; }
+.ev__comps .pass__input { padding: 8px; font-size: 14px; min-width: 0; }
+.ev__draftlabel { color: var(--draft); }
+.ev__compadd { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ev__compadd .pass__mono { margin-left: auto; }
+.ev__x { width: 32px; height: 32px; border: 0; border-radius: 6px; background: transparent; color: var(--steel) !important; font-size: 20px !important; line-height: 1; }
+.ev__x:disabled { opacity: 0.3; }
+.ev__actions { display: flex; flex-direction: column; gap: 4px; }
+.chef__table.ev__shop li { grid-template-columns: minmax(0, 1fr) auto 72px; }
+.chef__table.ev__shop .pass__amber { text-align: right; }
+.chef__table.ev__prep li { grid-template-columns: minmax(0, 1fr) auto; }
+.ev__checks li { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); }
+.ev__checks label { display: flex; align-items: center; gap: 10px; min-height: 44px; flex: 1; font-size: 15px; }
+.ev__checks input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--vine); flex: none; }
+.ev__checks label:has(input:checked) > span { color: var(--steel); text-decoration: line-through; }
+.ev__addrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.ev__addrow .pass__input { padding: 8px 10px; font-size: 14px; }
+.ev__rows li { display: grid; grid-template-columns: 1fr 1fr 32px; gap: 6px; align-items: center; }
+.ev__rows li:has(.ev__time) { grid-template-columns: 116px 1fr 32px; }
+.ev__rows .pass__input { padding: 8px; font-size: 14px; min-width: 0; }
+.ev__danger { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; border-top: 1px solid var(--line); padding-top: 8px; font-size: 14px; }
+.chef__mode { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.chef__mode .chef__servicetoggle button { min-height: 48px; }

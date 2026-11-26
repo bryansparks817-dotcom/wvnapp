@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { KITCHEN_MODES } from "../lib/events";
 import { isLocalOnly, onSyncStatus, setLocalOnly, signOutKitchen, syncConfigured, syncNow } from "../lib/sync";
 
 // Setup: the things a chef configures now and then, kept out of the daily
@@ -38,12 +39,33 @@ function SyncRow() {
   );
 }
 
-export default function ChefSetup({ onOpen }) {
+// Restaurant line or private chef & catering, for this phone.
+function ModeRow({ mode, onMode }) {
+  const current = KITCHEN_MODES.find((m) => m.id === mode);
+  return (
+    <div className="chef__mode">
+      <span className="pass__countlabel">KITCHEN TYPE</span>
+      <div className="chef__servicetoggle" role="group" aria-label="Kitchen type">
+        {KITCHEN_MODES.map((m) => (
+          <button key={m.id} type="button" className={mode === m.id ? "is-on" : undefined} aria-pressed={mode === m.id} onClick={() => onMode(m.id)}>
+            {m.id === "private" ? "PRIVATE CHEF" : "RESTAURANT"}
+          </button>
+        ))}
+      </div>
+      <p className="pass__hint">{current?.name}: {current?.sub} Only this phone switches; events are shared.</p>
+    </div>
+  );
+}
+
+export default function ChefSetup({ onOpen, mode = "restaurant", onMode }) {
+  // Private chef mode has no stations, pans or line counts.
+  const rows = mode === "private" ? ROWS.filter((r) => !["stations", "plan"].includes(r.id) && r.name !== "Storage zones") : ROWS;
   return (
     <>
+    {onMode && <ModeRow mode={mode} onMode={onMode} />}
     <SyncRow />
     <ul className="chef__setup">
-      {ROWS.map((r) => (
+      {rows.map((r) => (
         <li key={r.name}>
           <button type="button" className="chef__setuprow" disabled={!r.id} onClick={() => r.id && onOpen(r.id)}>
             <span className="pass__rowtext">
