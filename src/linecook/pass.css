@@ -409,6 +409,10 @@ body:has(.pass) { background: #1b1e1c; }
 .chef__stationpicks { display: flex; flex-wrap: wrap; gap: 6px; }
 .chef__stationpick { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid var(--line); font-size: 14px; }
 .chef__stationpick.is-on { border-color: var(--amber); color: var(--amber); }
+.chef__accesstoggle { flex: 1; justify-content: space-between; background: none; color: inherit; font: inherit; cursor: pointer; min-height: 48px; }
+.chef__accessname { font-size: 16px; font-weight: 600; }
+.chef__accessrow { flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+.chef__accesssub { flex-basis: 100%; }
 .chef__stationpick input { accent-color: var(--amber); }
 .chef__syncrow { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 12px; font-size: 13px; }
 
