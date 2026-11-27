@@ -123,3 +123,44 @@ export const thawing = (state, now = Date.now()) => state.items
   .sort((a, b) => a.readyAt - b.readyAt);
 
 export { loadFreezer, saveFreezer, addDays };
+
+// Precut frozen line items (KC strip, pork chop: item.frozenEach) that a line
+// station closed under par. needs: [{ key, stationId, station, item, each }].
+// Each becomes a pull row, using the freezer count's matching item for its
+// thaw time when there is one.
+export function linePullRows(needs, state, { nextDay, startAt, now = Date.now() }) {
+  const rows = [];
+  for (const n of needs) {
+    const key = `${n.key}@${nextDay}`;
+    if (state.linePulls?.[key] || state.notNeeded?.[key]) continue;
+    const match = state.items.find((it) => it.inFreezer && namesMatch(it.name, n.item.name));
+    const kind = match?.kind ?? n.item.freezerKind ?? "portions";
+    const thawItem = match ?? { kind, qty: 1, unit: "ea", packSize: n.item.eachGrams ? Math.round((n.item.eachGrams / 453.6) * 10) / 10 : null };
+    const hours = thawHours(thawItem);
+    const needAt = startAt(nextDay);
+    const pullAt = needAt - hours * 3600000;
+    rows.push({
+      key, line: true, day: nextDay, auto: true, forRecipes: [], item: { id: key, name: n.item.name, qty: n.each, unit: "ea" },
+      need: n, match, hours, needAt, pullAt, late: pullAt <= now, tooLate: now + hours * 3600000 > needAt, cold: coldWaterHours(thawItem),
+      short: match && match.unit === "ea" && Number(match.qty) < n.each ? Number(match.qty) : null,
+    });
+  }
+  return rows;
+}
+
+// Marks a line pull done and takes the pieces out of the freezer count.
+export function pullForLine(state, row, by) {
+  const items = row.match && row.match.unit === "ea"
+    ? state.items.map((it) => (it.id !== row.match.id ? it : { ...it, qty: Math.max(0, Number(it.qty) - row.item.qty), inFreezer: Number(it.qty) - row.item.qty > 0 }))
+    : state.items;
+  return { ...state, items, linePulls: { ...state.linePulls, [row.key]: { at: Date.now(), by, each: row.item.qty, name: row.item.name, station: row.need.station, hours: row.hours, matchId: row.match?.id ?? null } } };
+}
+
+export function undoLinePull(state, key) {
+  const p = state.linePulls?.[key];
+  if (!p) return state;
+  const items = p.matchId ? state.items.map((it) => (it.id !== p.matchId || it.unit !== "ea" ? it : { ...it, qty: Number(it.qty) + p.each, inFreezer: true })) : state.items;
+  const linePulls = { ...state.linePulls };
+  delete linePulls[key];
+  return { ...state, items, linePulls };
+}

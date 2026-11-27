@@ -18,6 +18,8 @@ const FIELD_LABEL = {
   qtGrams: "quart weight",
   lowboyPar: "lowboy par",
   shelfLifeDays: "shelf life",
+  eachGrams: "portion weight",
+  parEach: "par",
 };
 
 const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
@@ -56,6 +58,9 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     shelfLifeDays: String(item?.shelfLifeDays ?? 5),
     stationId: station.id,
     madeAt: item?.madeAt ?? "",
+    frozenEach: Boolean(item?.frozenEach),
+    eachGrams: String(item?.eachGrams ?? 397),
+    parEach: String(item?.parEach ?? 10),
   }));
   const [askRemove, setAskRemove] = useState(false);
   const set = (k, v) => setF((x) => ({ ...x, [k]: v }));
@@ -64,7 +69,8 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
   const target = stations.find((s) => s.id === f.stationId);
   const backup = Boolean(target.holdsBackup);
   const dupName = target.items.some((i) => i !== item && i.name.toLowerCase() === f.name.trim().toLowerCase());
-  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1;
+  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1 && (!f.frozenEach || (num(f.eachGrams) > 0 && num(f.parEach) >= 0));
+  const frozen = f.frozenEach && !backup;
 
   function pickRecipe(id) {
     const r = recipes.find((x) => x.id === id);
@@ -87,7 +93,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, madeAt, ...rest } = f;
+        const { stationId, madeAt, frozenEach, eachGrams, parEach, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -99,7 +105,10 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
           shelfLifeDays: num(f.shelfLifeDays),
         };
         if (!next.recipeId) delete next.recipeId;
-        if (madeAt && madeAt !== stationId) next.madeAt = madeAt;
+        if (frozenEach) Object.assign(next, { frozenEach: true, freezerKind: next.freezerKind ?? "portions", eachGrams: num(eachGrams), parEach: num(parEach) });
+        else delete next.frozenEach;
+        if (frozenEach) delete next.madeAt;
+        else if (madeAt && madeAt !== stationId) next.madeAt = madeAt;
         else delete next.madeAt;
         // Saving means the chef has checked the numbers: no more drafts.
         delete next.unconfirmed;
@@ -116,6 +125,31 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         <input className="pass__input" value={f.name} placeholder="e.g. Lobster stock" onChange={(e) => set("name", e.target.value)} />
       </Field>
       {dupName && <p className="pass__hint chef__late">Already on {target.name}.</p>}
+
+      {!backup && <>
+        <span className="pass__countlabel">HOW IT COMES IN</span>
+        <div className="chef__servicetoggle" role="group" aria-label="How it comes in">
+          <button type="button" className={!f.frozenEach ? "is-on" : ""} aria-pressed={!f.frozenEach} onClick={() => set("frozenEach", false)}>MADE IN HOUSE</button>
+          <button type="button" className={f.frozenEach ? "is-on" : ""} aria-pressed={f.frozenEach} onClick={() => set("frozenEach", true)}>PRECUT, FROZEN</button>
+        </div>
+      </>}
+      {frozen && <>
+        <div className="chef__staffrow">
+          <Field label="PAR (EACH)" draft={drafts.has("parEach")}>
+            <input className="pass__input" type="number" inputMode="numeric" min="0" value={f.parEach} onChange={(e) => set("parEach", e.target.value)} />
+          </Field>
+          <Field label="ONE PORTION (G)" draft={drafts.has("eachGrams")}>
+            <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.eachGrams} onChange={(e) => set("eachGrams", e.target.value)} />
+          </Field>
+        </div>
+        <div className="chef__staffrow">
+          <Field label="SHELF LIFE, THAWED (DAYS)" draft={drafts.has("shelfLifeDays")}>
+            <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.shelfLifeDays} onChange={(e) => set("shelfLifeDays", e.target.value)} />
+          </Field>
+        </div>
+        <p className="pass__hint">Counted each at close. Under par goes on the chef’s freezer pull list, and the cook collects it thawed from the walk-in. Never prepped.</p>
+      </>}
+      {!frozen && <>
 
       {!backup && <>
       <span className="pass__countlabel">LINE PAN{drafts.has("pan") ? " · DRAFT" : ""}</span>
@@ -159,7 +193,9 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
             : "Line par is how full the pan should be at open. Lowboy par is the backup to keep on hand. Anything under par goes on the prep list."}
       </p>
 
-      {stations.length > 1 && (
+      </>}
+
+      {!frozen && stations.length > 1 && (
         <>
           <Field label="WHO MAKES IT">
             <select className="pass__input" value={f.madeAt === f.stationId ? "" : f.madeAt} onChange={(e) => set("madeAt", e.target.value)}>
@@ -248,7 +284,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
+                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>

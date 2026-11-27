@@ -91,6 +91,15 @@ export function buildShift(items, inventory, linePar, today, opts = {}) {
 
   for (const item of items) {
     const inv = inventory[item.id] ?? { line: 0, lowboy: [], walkIn: [] };
+    // Precut and frozen (KC strip, pork chop): counted each, never prepped.
+    // Whatever's under par is collected from the walk-in, thawed: the chef
+    // pulls it from the freezer the day before (Chef › Stock pull list).
+    if (item.frozenEach) {
+      if (holdsBackup) continue;
+      const pullEach = Math.max(0, Math.ceil((item.parEach ?? 0) - (inv.count ?? 0)));
+      if (pullEach > 0) collect.push({ id: item.id, item, toLine: [], toLowboy: [], pullEach });
+      continue;
+    }
     const fromStock = item.madeAt && backupFor ? backupFor(item) : null;
     if (fromStock) {
       const src = fromStock.inv ?? { line: 0, lowboy: [], walkIn: [] };
@@ -180,6 +189,7 @@ export function takeFromStock(inv, takes, putBack = false) {
 
 // Applies a finished Collect row to inventory.
 export function applyCollect(inv, row, linePar) {
+  if (row.pullEach) return { ...inv, count: (inv.count ?? 0) + row.pullEach };
   // Pulled from another station's stock: only the line pan changes here.
   if (row.from) return { ...inv, line: row.toLine.length ? linePar : inv.line };
   const next = { line: inv.line, lowboy: inv.lowboy.map((c) => ({ ...c })), walkIn: inv.walkIn.map((c) => ({ ...c })) };

@@ -71,6 +71,27 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
     onChange({ ...inv, lowboy: [...inv.lowboy, { size, fill: 100, madeOn: today }] });
   const walkIn = inv.walkIn.filter((c) => c.fill > 0);
 
+  if (item.frozenEach) {
+    const count = inv.count ?? 0;
+    const setCount = (n) => onChange({ ...inv, count: Math.max(0, n) });
+    return (
+      <fieldset className="pass__card">
+        <legend className="pass__cardhead">
+          <span className="pass__rowname">{item.name}</span>
+        </legend>
+        <div className="pass__countrow">
+          <span className={`pass__countlabel${item.unconfirmed?.includes("parEach") ? " chef__draftfield" : ""}`}>ON HAND, THAWED · par {item.parEach} each</span>
+          <div className="pass__eachrow">
+            <button type="button" className="pass__add" aria-label={`One less ${item.name}`} onClick={() => setCount(count - 1)}>−</button>
+            <input className="pass__input pass__eachnum" type="number" inputMode="numeric" min="0" aria-label={`${item.name} count`} value={count} onChange={(e) => setCount(Number(e.target.value) || 0)} />
+            <button type="button" className="pass__add" aria-label={`One more ${item.name}`} onClick={() => setCount(count + 1)}>+</button>
+          </div>
+        </div>
+        <p className="pass__walkin">PRECUT, FROZEN · no prep. The chef pulls what’s short from the freezer; you collect it thawed from the walk-in.</p>
+      </fieldset>
+    );
+  }
+
   return (
     <fieldset className="pass__card">
       <legend className="pass__cardhead">
