@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { installBackTrap, useBack } from "./lib/backNav";
 import RecipeSelector from "./components/RecipeSelector";
 import GatherList from "./components/GatherList";
 import TimelineList from "./components/TimelineList";
@@ -53,7 +54,7 @@ function useRemoteVersion() {
   return version;
 }
 
-function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, tabs = CHEF_TABS, children }) {
+function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, tabs = CHEF_TABS, back, children }) {
   const version = useRemoteVersion();
   return (
     <div className="pass pass--chef">
@@ -62,7 +63,10 @@ function ChefShell({ title, lede, screen, setScreen, initials, onSignOut, tabs =
         <h1 className="pass__title">{title}</h1>
         {lede && <p className="pass__lede">{lede}</p>}
       </PassHeader>
-      <main key={version} className="pass__main chef">{children}</main>
+      <main key={version} className="pass__main chef">
+        {back && <button type="button" className="pass__ghost chef__backlink" onClick={back.go}>← {back.label}</button>}
+        {children}
+      </main>
       <TabBar screen={screen} setScreen={setScreen} tabs={tabs} />
     </div>
   );
@@ -207,6 +211,31 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Where back goes from each chef screen. Tab screens go back to Home, and
+  // Home goes back to the line view.
+  const SCREEN_NAME = { setup: "Setup", manage: "Recipes", crew: "Crew", home: privateChef ? "Recipes" : "Home", events: "Events" };
+  const parentOf = (id) => {
+    if (privateChef) return id === "events" ? null : id === "form" ? "manage" : ["manage", "prices", "staff"].includes(id) ? "setup" : "events";
+    if (id === "form") return "manage";
+    if (["manage", "prices", "staff", "stations", "plan"].includes(id)) return "setup";
+    if (id === "print") return "crew";
+    return id === "home" ? null : "home";
+  };
+  useEffect(() => { installBackTrap(); }, []);
+  useBack(() => {
+    if (mode !== "chef") return false;
+    if (!chefOn || (!parentOf(screen) && !privateChef)) {
+      if (privateChef) return false;
+      setMode("line");
+      return true;
+    }
+    const up = parentOf(screen);
+    if (!up) return false;
+    if (screen === "manage") setImportReport(null);
+    setScreen(up);
+    return true;
+  }, 0);
+
   if (mode === "line" && !privateChef) {
     return (
       <>
@@ -258,6 +287,13 @@ export default function App() {
     setScreen: (id) => (id === "line" ? setMode("line") : setScreen(id)),
     initials: chefOn.initials,
     onSignOut: () => setChef(null),
+    // An on-screen back button off the tab screens (Recipes has its own).
+    back: (() => {
+      const up = parentOf(screen);
+      const tabIds = (privateChef ? PRIVATE_CHEF_TABS : CHEF_TABS).map((t) => t.id);
+      if (!up || tabIds.includes(screen) || ["manage", "form"].includes(screen)) return null;
+      return { label: SCREEN_NAME[up] ?? "Back", go: () => setScreen(up) };
+    })(),
   };
 
   if (privateChef && screen === "events") {
@@ -319,7 +355,6 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title="Print lists" lede="Hand out each station’s work and print one page per cook, so the crew can work off paper." {...shell}>
-          <button type="button" className="pass__ghost" onClick={() => setScreen("crew")}>← Back to Crew</button>
           <PrintLists today={today} recipesById={recipesById} ingredients={ingredients} chef={chefOn} />
         </ChefShell>
       </>
@@ -371,7 +406,6 @@ export default function App() {
       <>
         {timerBar}
         <ChefShell title="Stations & pars" lede="What each station counts and preps, and how much to keep on hand." {...shell}>
-          <button type="button" className="pass__ghost chef__backlink" onClick={() => setScreen("setup")}>← Setup</button>
           <StationsSetup recipesById={recipesById} />
         </ChefShell>
       </>

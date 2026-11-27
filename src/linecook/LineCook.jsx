@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useBack } from "../lib/backNav";
 import InstallHint from "./InstallHint";
 import { getStations, stationsFor } from "../data/stations";
 import {
@@ -83,6 +84,7 @@ export function WhoScreen({
   const [name, setName] = useState("");
   const [newPin, setNewPin] = useState("");
   const [picked, setPicked] = useState(null);
+  useBack(() => (picked ? (setPicked(null), true) : false), 3);
   const initials = previewInitials(name, roster);
   const known = roster.find((p) => p.name.toLowerCase() === normalizeName(name).toLowerCase());
   const ok = (normalizeName(name).split(" ").length >= 2 || Boolean(known)) && (!newNeedsPin || known || validPin(newPin));
@@ -267,6 +269,12 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   const [openPrepId, setOpenPrepId] = useState(null);
   // Prep item just finished: offer its label, which the cook can skip.
   const [labelPromptId, setLabelPromptId] = useState(null);
+  // Phone back: close an open recipe, then go back to Today.
+  useBack(() => {
+    if (openPrepId) { setOpenPrepId(null); return true; }
+    if (screen !== "today") { setScreen("today"); return true; }
+    return false;
+  }, 2);
 
   useEffect(() => { if (inventory) saveInventory(inventory, st.id); }, [inventory, st.id]);
   useEffect(() => { if (shift) saveShift(shift, st.id); }, [shift, st.id]);
