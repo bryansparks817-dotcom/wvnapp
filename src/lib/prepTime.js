@@ -73,7 +73,10 @@ export function prepForecast(time, { startAt = null, now = Date.now(), prepDueAt
   const lag = time.nextAt != null ? Math.max(0, elapsed - time.nextAt) : 0;
   const at = (min) => start + (min + lag) * 60000;
   const open = (time.items ?? []).filter((t) => t.open);
-  const doneAt = open.length ? Math.max(...open.map((t) => at(t.end))) : null;
+  // Items whose steps are all ticked may still be simmering or braising.
+  const running = (time.items ?? []).filter((t) => !t.open && start + t.end * 60000 > now);
+  const ends = [...open.map((t) => at(t.end)), ...running.map((t) => start + t.end * 60000)];
+  const doneAt = ends.length ? Math.max(...ends) : null;
   const late = open
     .filter((t) => at(t.end) > prepDueAt)
     .sort((a, b) => b.end - a.end)
