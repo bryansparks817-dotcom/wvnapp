@@ -651,16 +651,27 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     />
   ) : null;
 
-  // Prep's shift start (Bryan, 2026-11-27): START PREP on the time box, or
-  // the cook's first tick if they skip it. The done-time math counts from it.
+  // Prep's shift start (Bryan, 2026-11-27): START PREP on the time box, or,
+  // if they skip it, the cook's first check-off, backdated to when that task
+  // would have started (the tick minus its hands-on time; for a QUICK FINISH,
+  // the item's whole hands-on time). The done-time math counts from it.
   useEffect(() => {
     if (!isBackup || !shiftIsToday || shift.startedAt) return;
-    const ticks = [
-      ...Object.values(shift.stepsDone ?? {}).filter((n) => typeof n === "number"),
-      ...Object.keys(shift.done ?? {}).map((k) => shift.meta?.[k]?.at).filter(Boolean),
-    ];
-    if (ticks.length) setShift({ ...shift, startedAt: Math.min(...ticks), startedBy: by });
-  }, [shift, isBackup, shiftIsToday, by]);
+    const minutesBefore = [];
+    for (const [part, at] of Object.entries(shift.stepsDone ?? {})) {
+      if (typeof at !== "number") continue;
+      const step = plan.steps.find((s) => s.parts?.includes(part));
+      minutesBefore.push(at - (step?.handsOn ?? 0) * 60000);
+    }
+    for (const k of Object.keys(shift.done ?? {})) {
+      const at = shift.meta?.[k]?.at;
+      if (!at || !k.startsWith("p:")) continue;
+      const id = k.slice(2);
+      const handsOn = plan.steps.filter((s) => s.item?.id === id && !s.parts?.some((p) => shift.stepsDone?.[p])).reduce((sum, s) => sum + (s.handsOn ?? 0), 0);
+      minutesBefore.push(at - handsOn * 60000);
+    }
+    if (minutesBefore.length) setShift({ ...shift, startedAt: Math.round(Math.min(...minutesBefore)), startedBy: by, startedFrom: "first check-off" });
+  }, [shift, isBackup, shiftIsToday, by, plan]);
 
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
@@ -836,6 +847,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         timeWith={(picked) => timeOf(withAdded({ prep: prepRows }, picked).prep)}
         prepTime={isBackup ? timeOf(prepRows, shiftIsToday ? { done: shift.done ?? {}, stepsDone: shift.stepsDone ?? {} } : null) : null}
         prepStartAt={shiftIsToday ? shift.startedAt ?? null : null}
+        prepStartNote={shiftIsToday && shift.startedFrom ? "backdated from first check-off" : null}
         onStartPrep={isBackup && shiftIsToday && !shift.startedAt ? () => setShift({ ...shift, startedAt: Date.now(), startedBy: by }) : null}
         isPrep={isBackup}
       />
