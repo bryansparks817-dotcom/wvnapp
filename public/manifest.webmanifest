@@ -2,7 +2,6 @@
   "name": "The Pass",
   "short_name": "The Pass",
   "description": "Prep lists, counts and the crew board for the line.",
-  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { KITCHEN_MODES } from "../lib/events";
-import { isLocalOnly, onSyncStatus, setLocalOnly, signOutKitchen, syncConfigured, syncNow } from "../lib/sync";
+import { isLocalOnly, makeJoinLink, onSyncStatus, setLocalOnly, signOutKitchen, syncConfigured, syncNow } from "../lib/sync";
 
 // Setup: the things a chef configures now and then, kept out of the daily
 // oversight tabs. Recipes live here instead of having their own tab.
@@ -39,6 +39,44 @@ function SyncRow() {
   );
 }
 
+// A link the chef texts to a new phone so it joins the kitchen without
+// typing the kitchen email and password.
+function JoinLink() {
+  const [open, setOpen] = useState(false);
+  const [pw, setPw] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [res, setRes] = useState(null);
+  const [copied, setCopied] = useState(false);
+  if (!open) return <button type="button" className="pass__ghost" onClick={() => setOpen(true)}>Add a phone: make a join link</button>;
+  async function share() {
+    try {
+      if (navigator.share) await navigator.share({ title: "The Pass", text: "Open this to set up The Pass on your phone:", url: res.link });
+      else { await navigator.clipboard.writeText(res.link); setCopied(true); }
+    } catch {
+      // share sheet closed
+    }
+  }
+  return (
+    <div className="chef__staffform">
+      {!res?.link ? (
+        <form onSubmit={async (e) => { e.preventDefault(); setBusy(true); setRes(await makeJoinLink(pw)); setBusy(false); }}>
+          <label className="pass__countlabel" htmlFor="join-pw">KITCHEN PASSWORD (ONCE, TO MAKE THE LINK)</label>
+          <input id="join-pw" className="pass__input" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+          {res?.error && <p className="pass__hint chef__late">{res.error}</p>}
+          <button type="submit" className="pass__cta" disabled={busy || !pw}>{busy ? "CHECKING…" : "MAKE JOIN LINK"}</button>
+        </form>
+      ) : (
+        <>
+          <button type="button" className="pass__cta" onClick={share}>{navigator.share ? "TEXT OR SHARE THE LINK" : copied ? "COPIED ✓" : "COPY THE LINK"}</button>
+          {!navigator.share && <input className="pass__input" readOnly value={res.link} onFocus={(e) => e.target.select()} />}
+        </>
+      )}
+      <p className="pass__hint">The cook opens the link and lands on the name and PIN screen. Anyone with the link joins your kitchen, so send it only to staff. If it gets out, change the kitchen password in Supabase and make a new one.</p>
+      <button type="button" className="pass__ghost" onClick={() => { setOpen(false); setRes(null); setPw(""); }}>Close</button>
+    </div>
+  );
+}
+
 // Restaurant line or private chef & catering, for this phone.
 function ModeRow({ mode, onMode }) {
   const current = KITCHEN_MODES.find((m) => m.id === mode);
@@ -64,6 +102,7 @@ export default function ChefSetup({ onOpen, mode = "restaurant", onMode }) {
     <>
     {onMode && <ModeRow mode={mode} onMode={onMode} />}
     <SyncRow />
+    {syncConfigured && !isLocalOnly() && <JoinLink />}
     <ul className="chef__setup">
       {rows.map((r) => (
         <li key={r.name}>

@@ -276,6 +276,40 @@ export async function signInKitchen(email, password) {
   return null;
 }
 
+// Join link: the chef texts a link that carries the kitchen login, so a new
+// phone connects by opening it (no email or password to type). It sits in the
+// link's query so a phone that adds the page to its home screen keeps it, and
+// is only used when the phone has no kitchen login yet.
+const JOIN_PARAM = "join";
+const b64 = (str) => btoa(unescape(encodeURIComponent(str))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const unb64 = (str) => decodeURIComponent(escape(atob(str.replace(/-/g, "+").replace(/_/g, "/"))));
+
+export async function kitchenEmail() {
+  if (!supabase) return null;
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user?.email ?? null;
+}
+
+// Checks the password, then builds the link.
+export async function makeJoinLink(password) {
+  const email = await kitchenEmail();
+  if (!email) return { error: "This phone isn’t connected to the kitchen." };
+  const err = await signInKitchen(email, password);
+  if (err) return { error: err === "Invalid login credentials" ? "That isn’t the kitchen password." : err };
+  return { link: `${window.location.origin}/?${JOIN_PARAM}=${b64(JSON.stringify({ e: email, p: password }))}` };
+}
+
+export function joinFromLink() {
+  try {
+    const raw = new URLSearchParams(window.location.search).get(JOIN_PARAM);
+    if (!raw) return null;
+    const { e, p } = JSON.parse(unb64(raw));
+    return e && p ? { email: e, password: p } : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function signOutKitchen() {
   await supabase?.auth.signOut();
   window.location.reload();
