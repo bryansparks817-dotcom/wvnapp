@@ -12,6 +12,7 @@ import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/cre
 import { formatG } from "../lib/inventory";
 import Numbers from "./Numbers";
 import Freezer from "./Freezer";
+import OrderList from "./OrderList";
 import { withTaskRecipes } from "../lib/prepTasks";
 import { addItem, bumpItem, skipItem } from "../lib/chefActions";
 
@@ -391,6 +392,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
       </section>
       )}
       {show.stock && <Freezer recipesById={recipesById} by={by} />}
+      {show.stock && <OrderList today={today} />}
       {show.close && (
       <section>
         <div className="pass__sectionhead"><h2>Last close</h2></div>

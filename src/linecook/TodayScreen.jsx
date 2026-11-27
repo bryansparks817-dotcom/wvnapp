@@ -238,6 +238,9 @@ export default function TodayScreen({
                           {row.toLowboy.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
                         </span>
                       )}
+                      {!isDone && row.pullG > 0 && (
+                        <span className="pass__rowsub">Pull {formatG(row.pullG)} from the walk-in or dry storage{item.caseLabel ? ` (comes in a ${item.caseLabel})` : ""}. Bought in, no prep.</span>
+                      )}
                       {!isDone && row.pullEach > 0 && (
                         <span className="pass__rowsub">Collect {row.pullEach} from the walk-in, thawed (the chef pulled {row.pullEach === 1 ? "it" : "them"} from the freezer). No prep.</span>
                       )}
