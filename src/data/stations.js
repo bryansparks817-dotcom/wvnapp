@@ -24,9 +24,9 @@ const BASE_STATIONS = [
 
 // Bryan, 2026-11-27: steaks and chops come in precut and frozen. Grill counts
 // them each and collects them thawed; the chef pulls them from the freezer.
-// No prep, never on Prep's list. Portion weight, par and thawed shelf life
-// are drafts (light blue) to confirm.
-const FROZEN_EACH = { frozenEach: true, freezerKind: "portions", pan: "1/6", panGrams: 2500, lowboySize: "qt", qtGrams: 950, lowboyPar: 0, shelfLifeDays: 3, unconfirmed: ["eachGrams", "parEach", "shelfLifeDays"] };
+// No prep, never on Prep's list. 4 days once thawed (Bryan). Portion weight
+// and par are drafts (light blue) to confirm.
+const FROZEN_EACH = { frozenEach: true, freezerKind: "portions", pan: "1/6", panGrams: 2500, lowboySize: "qt", qtGrams: 950, lowboyPar: 0, shelfLifeDays: 4, unconfirmed: ["eachGrams", "parEach"] };
 const GRILL_FROZEN = [
   { ...FROZEN_EACH, id: "kc-strip", name: "KC strip", eachGrams: 397, parEach: 12 },
   { ...FROZEN_EACH, id: "dry-aged-pork-chop", name: "Dry-aged pork chop", eachGrams: 454, parEach: 10 },
@@ -82,6 +82,13 @@ const STATION_FIXES = [
   })],
   ["every-recipe-on-prep-2026-11-27", everyRecipeOnPrep],
   ["grill-frozen-steaks-2026-11-27", addGrillFrozen],
+  // Bryan, 2026-11-27: 4 days once thawed, confirmed.
+  ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({
+    ...s,
+    items: s.items.map((i) => (GRILL_FROZEN.some((g) => g.id === i.id)
+      ? { ...i, shelfLifeDays: 4, unconfirmed: (i.unconfirmed ?? []).filter((u) => u !== "shelfLifeDays") }
+      : i)),
+  }))],
 ];
 
 // The kitchen's stations: the chef's saved setup, or the built-in one.
