@@ -476,7 +476,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
 
   // Prep: the optimized prep time (start to finish, hands-off overlapping)
   // and the hands-on part, for a list.
-  const timeOf = (rows) => prepTime(rows, pacedRecipes);
+  const timeOf = (rows, progress = null) => prepTime(rows, pacedRecipes, progress);
   const previewTime = (picked) => {
     const byItem = { ...(needs?.byItem ?? {}) };
     for (const q of requests) if (!(needs?.list ?? []).some((r) => r.stationId === q.stationId && r.itemId === q.itemId)) byItem[q.itemId] = (byItem[q.itemId] ?? 0) + q.grams;
@@ -785,7 +785,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         addable={isBackup && shiftIsToday ? items : null}
         onAddRecipe={addRecipes}
         timeWith={(picked) => timeOf(withAdded({ prep: prepRows }, picked).prep)}
-        prepTime={isBackup ? timeOf(prepRows) : null}
+        prepTime={isBackup ? timeOf(prepRows, shiftIsToday ? { done: shift.done ?? {}, stepsDone: shift.stepsDone ?? {} } : null) : null}
         prepStartAt={shiftIsToday ? shift.gatherDoneAt ?? null : null}
         isPrep={isBackup}
       />

@@ -8,12 +8,17 @@ import { buildPrepSteps } from "./lineList";
 const OVERNIGHT_MIN = 480;
 const isOvernight = (h) => h.minutes >= OVERNIGHT_MIN || /overnight/i.test(h.step ?? "");
 
-export function prepTime(rows, recipesById) {
+// progress (optional): { done, stepsDone } from the shift. handsOnLeft is the
+// hands-on time still to do today: steps not ticked, on items not finished.
+export function prepTime(rows, recipesById, progress = null) {
+  const { done = {}, stepsDone = {} } = progress ?? {};
+  const stepDone = (st) => Boolean(st.item && done[`p:${st.item.id}`]) || (st.parts ?? []).every((p) => stepsDone[p]);
   const made = rows.filter((r) => r.makeG > 0);
   const plan = buildPrepSteps(made, recipesById);
   const tomorrow = new Map(); // item id → { name, handsOn }
   const span = {};
   let handsOn = 0;
+  let left = 0;
   let end = 0;
   for (const st of plan.steps) {
     if (st.kind === "wait") continue;
@@ -31,6 +36,7 @@ export function prepTime(rows, recipesById) {
       stepEnd += h.minutes;
     }
     handsOn += st.handsOn ?? 0;
+    if (!stepDone(st)) left += st.handsOn ?? 0;
     end = Math.max(end, stepEnd);
     if (id) {
       const cur = span[id] ?? { name: st.item.name, start: st.at, end: stepEnd };
@@ -41,6 +47,7 @@ export function prepTime(rows, recipesById) {
   return {
     total: Math.round(end),
     handsOn: Math.round(handsOn),
+    handsOnLeft: Math.round(left),
     count: made.length,
     longest: last ? { name: last.name, minutes: Math.round(last.end - last.start) } : null,
     tomorrow: [...tomorrow.values()].map((t) => ({ name: t.name, handsOn: Math.round(t.handsOn) })),
