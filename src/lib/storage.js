@@ -290,7 +290,8 @@ export function saveChef(chef) {
 
 // Chef settings: how far behind a cook can run before going red, and when
 // service starts for each shift ("HH:MM").
-export const DEFAULT_CHEF_SETTINGS = { marginMin: 15, serviceAt: { lunch: "11:30", dinner: "17:00" } };
+// prepDueAt: every prep recipe done. readyAt: every station set for service.
+export const DEFAULT_CHEF_SETTINGS = { marginMin: 15, serviceAt: { lunch: "11:30", dinner: "17:00" }, prepDueAt: "16:30", readyAt: "16:45" };
 
 export function loadChefSettings() {
   const s = load(CHEF_SETTINGS_KEY, {});
