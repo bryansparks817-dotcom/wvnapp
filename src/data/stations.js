@@ -33,13 +33,25 @@ const GRILL_FROZEN = [
 ];
 const addGrillFrozen = (stations) => stations.map((s) => (s.id !== "grill" ? s : { ...s, items: [...s.items, ...GRILL_FROZEN.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
+// Bryan, 2026-11-27: Sauté's prep tasks that aren't recipes. Pan, weight,
+// hands-on minutes and shelf life are drafts (light blue) to confirm.
+const TASK = { task: true, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, unconfirmed: ["pan", "panGrams", "taskMinutes", "shelfLifeDays"] };
+const SAUTE_TASKS = [
+  { ...TASK, id: "shaved-garlic", name: "Shaved garlic", pan: "1/9", panGrams: 450, taskMinutes: 20, shelfLifeDays: 2 },
+  { ...TASK, id: "shaved-shallots", name: "Shaved shallots", pan: "1/9", panGrams: 450, taskMinutes: 15, shelfLifeDays: 2 },
+  { ...TASK, id: "diced-cold-butter", name: "Diced cold butter", pan: "1/9", panGrams: 900, taskMinutes: 10, shelfLifeDays: 5 },
+  { ...TASK, id: "cored-peeled-brussels-sprouts", name: "Cored & peeled Brussels sprouts", pan: "1/3", panGrams: 1500, taskMinutes: 30, shelfLifeDays: 3 },
+  { ...TASK, id: "cleaned-oyster-mushrooms", name: "Cleaned oyster mushrooms", pan: "1/3", panGrams: 1000, taskMinutes: 20, shelfLifeDays: 3 },
+].map((t) => ({ ...t, recipeId: `task:${t.id}` }));
+const addSauteTasks = (stations) => stations.map((s) => (s.id !== "saute" ? s : { ...s, items: [...s.items, ...SAUTE_TASKS.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
 // Prep, with light-blue starting prep pars to confirm. Line stations keep
 // their items as they were (switch one to collect only under WHO MAKES IT).
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS));
+export const DEFAULT_STATIONS = addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -82,6 +94,7 @@ const STATION_FIXES = [
   })],
   ["every-recipe-on-prep-2026-11-27", everyRecipeOnPrep],
   ["grill-frozen-steaks-2026-11-27", addGrillFrozen],
+  ["saute-prep-tasks-2026-11-27", addSauteTasks],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({
     ...s,

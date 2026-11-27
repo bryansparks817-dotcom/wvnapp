@@ -5,6 +5,7 @@ import { saveStationSetup } from "../lib/storage";
 import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
+import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -20,6 +21,7 @@ const FIELD_LABEL = {
   shelfLifeDays: "shelf life",
   eachGrams: "portion weight",
   parEach: "par",
+  taskMinutes: "hands-on minutes",
 };
 
 const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
@@ -59,6 +61,9 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     stationId: station.id,
     madeAt: item?.madeAt ?? "",
     frozenEach: Boolean(item?.frozenEach),
+    task: Boolean(item?.task),
+    taskMinutes: String(item?.taskMinutes ?? 15),
+    taskNote: item?.taskNote ?? "",
     eachGrams: String(item?.eachGrams ?? 397),
     parEach: String(item?.parEach ?? 10),
   }));
@@ -69,7 +74,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
   const target = stations.find((s) => s.id === f.stationId);
   const backup = Boolean(target.holdsBackup);
   const dupName = target.items.some((i) => i !== item && i.name.toLowerCase() === f.name.trim().toLowerCase());
-  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1 && (!f.frozenEach || (num(f.eachGrams) > 0 && num(f.parEach) >= 0));
+  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1 && (!f.frozenEach || (num(f.eachGrams) > 0 && num(f.parEach) >= 0)) && (!f.task || num(f.taskMinutes) > 0);
   const frozen = f.frozenEach && !backup;
 
   function pickRecipe(id) {
@@ -93,7 +98,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, madeAt, frozenEach, eachGrams, parEach, ...rest } = f;
+        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -107,7 +112,10 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         if (!next.recipeId) delete next.recipeId;
         if (frozenEach) Object.assign(next, { frozenEach: true, freezerKind: next.freezerKind ?? "portions", eachGrams: num(eachGrams), parEach: num(parEach) });
         else delete next.frozenEach;
-        if (frozenEach) delete next.madeAt;
+        if (task && !frozenEach) Object.assign(next, { task: true, taskMinutes: num(taskMinutes), taskNote: taskNote.trim() || undefined });
+        else { delete next.task; delete next.taskMinutes; delete next.taskNote; if (isTaskRecipe(next.recipeId)) delete next.recipeId; }
+        if (!next.taskNote) delete next.taskNote;
+        if (frozenEach || task) delete next.madeAt;
         else if (madeAt && madeAt !== stationId) next.madeAt = madeAt;
         else delete next.madeAt;
         // Saving means the chef has checked the numbers: no more drafts.
@@ -115,12 +123,14 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         onSave(next, stationId);
       }}
     >
+      {!f.task && !f.frozenEach && (
       <Field label="RECIPE">
-        <select className="pass__input" value={f.recipeId} onChange={(e) => pickRecipe(e.target.value)}>
-          <option value="">No recipe yet</option>
-          {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-        </select>
-      </Field>
+          <select className="pass__input" value={f.recipeId} onChange={(e) => pickRecipe(e.target.value)}>
+            <option value="">No recipe yet</option>
+            {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </Field>
+      )}
       <Field label="NAME ON THE COUNT">
         <input className="pass__input" value={f.name} placeholder="e.g. Lobster stock" onChange={(e) => set("name", e.target.value)} />
       </Field>
@@ -128,10 +138,22 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
 
       {!backup && <>
         <span className="pass__countlabel">HOW IT COMES IN</span>
-        <div className="chef__servicetoggle" role="group" aria-label="How it comes in">
-          <button type="button" className={!f.frozenEach ? "is-on" : ""} aria-pressed={!f.frozenEach} onClick={() => set("frozenEach", false)}>MADE IN HOUSE</button>
-          <button type="button" className={f.frozenEach ? "is-on" : ""} aria-pressed={f.frozenEach} onClick={() => set("frozenEach", true)}>PRECUT, FROZEN</button>
+        <div className="chef__servicetoggle chef__toggle3" role="group" aria-label="How it comes in">
+          <button type="button" className={!f.frozenEach && !f.task ? "is-on" : ""} aria-pressed={!f.frozenEach && !f.task} onClick={() => setF((x) => ({ ...x, frozenEach: false, task: false }))}>RECIPE</button>
+          <button type="button" className={f.task ? "is-on" : ""} aria-pressed={f.task} onClick={() => setF((x) => ({ ...x, frozenEach: false, task: true }))}>PREP TASK</button>
+          <button type="button" className={f.frozenEach ? "is-on" : ""} aria-pressed={f.frozenEach} onClick={() => setF((x) => ({ ...x, frozenEach: true, task: false }))}>PRECUT, FROZEN</button>
         </div>
+      </>}
+      {f.task && !backup && <>
+        <div className="chef__staffrow">
+          <Field label="HANDS-ON MINUTES (TO FILL THE PAN)" draft={drafts.has("taskMinutes")}>
+            <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.taskMinutes} onChange={(e) => set("taskMinutes", e.target.value)} />
+          </Field>
+        </div>
+        <Field label="WHAT TO DO (OPTIONAL)">
+          <input className="pass__input" value={f.taskNote} placeholder="e.g. Shave on the mandoline, cover with oil" onChange={(e) => set("taskNote", e.target.value)} />
+        </Field>
+        <p className="pass__hint">No recipe: counted like any item, and when it’s short it goes on the prep list as one hands-on step, fitted around the long recipes.</p>
       </>}
       {frozen && <>
         <div className="chef__staffrow">
@@ -284,7 +306,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
+                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${item.pan} pan · ${item.taskMinutes} min hands-on` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>
@@ -445,6 +467,7 @@ export default function StationsSetup({ recipesById }) {
               const base = item ? item.id : slug(next.name);
               saved = { ...next, id: taken.has(base) ? uniqueId(slug(next.name), taken) : base };
             }
+            if (saved.task) saved = { ...saved, recipeId: taskRecipeId(saved.id) };
             commit(stations.map((s) => {
               if (s.id === station.id && s.id === toId) return { ...s, items: item ? s.items.map((i) => (i === item ? saved : i)) : [...s.items, saved] };
               if (s.id === station.id) return { ...s, items: s.items.filter((i) => i !== item) };

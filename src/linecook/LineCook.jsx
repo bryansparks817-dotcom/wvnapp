@@ -20,6 +20,7 @@ import RecipePicker from "./RecipePicker";
 import PrepTime from "./PrepTime";
 import { prepTime } from "../lib/prepTime";
 import { askCheck, prepItemFor, prepStation } from "../lib/prepAsk";
+import { withTaskRecipes } from "../lib/prepTasks";
 import { todayAt } from "../lib/crew";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
@@ -289,8 +290,10 @@ export default function LineCook(props) {
   );
 }
 
-function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById, ingredients, onOpenChef, timers, onStartTimer, isChef: chefHere = false, onSetupChanged }) {
+function StationLine({ station: st, stationTabs, by, opening, onOpened, onChangeCook, recipesById: libraryById, ingredients, onOpenChef, timers, onStartTimer, isChef: chefHere = false, onSetupChanged }) {
   const today = localDateKey();
+  // Prep tasks (shaved garlic…) get one-step stand-in recipes (lib/prepTasks.js).
+  const recipesById = useMemo(() => withTaskRecipes(libraryById, getStations()), [libraryById, st]);
   const { items } = st;
   const linePar = stationLinePar(st);
   const isBackup = holdsBackup(st);
