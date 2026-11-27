@@ -257,8 +257,26 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
               onChange={(e) => e.target.value && setSettings({ ...settings, serviceAt: { ...settings.serviceAt, [service]: e.target.value } })}
             />
           </label>
+          <label className="chef__coverfield">
+            <span className="pass__countlabel">PREP DONE BY</span>
+            <input
+              className="pass__input chef__servicetime"
+              type="time"
+              value={settings.prepDueAt}
+              onChange={(e) => e.target.value && setSettings({ ...settings, prepDueAt: e.target.value })}
+            />
+          </label>
+          <label className="chef__coverfield">
+            <span className="pass__countlabel">STATIONS READY BY</span>
+            <input
+              className="pass__input chef__servicetime"
+              type="time"
+              value={settings.readyAt}
+              onChange={(e) => e.target.value && setSettings({ ...settings, readyAt: e.target.value })}
+            />
+          </label>
         </div>
-        <p className="pass__hint">{DAY_NAMES[d.getDay()]} · {MONTHS[d.getMonth()]} {d.getDate()}. Type covers in from OpenTable until it’s connected.</p>
+        <p className="pass__hint">{DAY_NAMES[d.getDay()]} · {MONTHS[d.getMonth()]} {d.getDate()}. Type covers in from OpenTable until it’s connected. Prep’s list warns anything that won’t be done by PREP DONE BY.</p>
       </section>
       )}
       {show.lists && onOpenPrint && (

@@ -20,6 +20,7 @@ export function prepTime(rows, recipesById, progress = null) {
   let handsOn = 0;
   let left = 0;
   let end = 0;
+  let nextAt = null; // plan minute of the first step not yet ticked
   for (const st of plan.steps) {
     if (st.kind === "wait") continue;
     const id = st.item?.id;
@@ -36,20 +37,53 @@ export function prepTime(rows, recipesById, progress = null) {
       stepEnd += h.minutes;
     }
     handsOn += st.handsOn ?? 0;
-    if (!stepDone(st)) left += st.handsOn ?? 0;
+    const open = !stepDone(st);
+    if (open) {
+      left += st.handsOn ?? 0;
+      if (nextAt == null || st.at < nextAt) nextAt = st.at;
+    }
     end = Math.max(end, stepEnd);
     if (id) {
-      const cur = span[id] ?? { name: st.item.name, start: st.at, end: stepEnd };
-      span[id] = { ...cur, start: Math.min(cur.start, st.at), end: Math.max(cur.end, stepEnd) };
+      const cur = span[id] ?? { id, name: st.item.name, start: st.at, end: stepEnd, open: false };
+      span[id] = { ...cur, start: Math.min(cur.start, st.at), end: Math.max(cur.end, stepEnd), open: cur.open || open };
     }
   }
   const last = Object.values(span).sort((a, b) => b.end - a.end)[0];
   return {
     total: Math.round(end),
     handsOn: Math.round(handsOn),
-    handsOnLeft: Math.round(left),
+    handsOnLeft: progress ? Math.round(left) : null,
     count: made.length,
     longest: last ? { name: last.name, minutes: Math.round(last.end - last.start) } : null,
+    nextAt,
+    items: Object.values(span).map((t) => ({ ...t, overnight: tomorrow.has(t.id) })),
     tomorrow: [...tomorrow.values()].map((t) => ({ name: t.name, handsOn: Math.round(t.handsOn) })),
   };
+}
+
+// When the list will really be done, and what won't make the prep deadline.
+// The plan's minutes count from startAt (when the cook finished gathering, or
+// now if they haven't started). If the cook is behind the plan, the work still
+// to do slides by that much. An item that can't finish by the deadline even if
+// it were started right now holds over to tomorrow; one that could, if moved
+// up, is marked "start next".
+export function prepForecast(time, { startAt = null, now = Date.now(), prepDueAt }) {
+  const start = startAt ?? now;
+  const elapsed = Math.max(0, (now - start) / 60000);
+  const lag = time.nextAt != null ? Math.max(0, elapsed - time.nextAt) : 0;
+  const at = (min) => start + (min + lag) * 60000;
+  const open = (time.items ?? []).filter((t) => t.open);
+  const doneAt = open.length ? Math.max(...open.map((t) => at(t.end))) : null;
+  const late = open
+    .filter((t) => at(t.end) > prepDueAt)
+    .sort((a, b) => b.end - a.end)
+    .map((t) => {
+      const fits = now + (t.end - t.start) * 60000 <= prepDueAt;
+      return { id: t.id, name: t.name, endsAt: at(t.end), holdsOver: !fits, first: t.start <= 0, minutes: Math.round(t.end - t.start) };
+    });
+  // More hands-on work left than minutes before the deadline: something has
+  // to hold over, and which is the chef's call.
+  const minutesLeft = Math.max(0, Math.round((prepDueAt - now) / 60000));
+  const overloaded = (time.handsOnLeft ?? time.handsOn) > minutesLeft;
+  return { doneAt, late, overloaded, minutesLeft, behindMin: Math.round(lag), overByMin: doneAt ? Math.round((doneAt - prepDueAt) / 60000) : 0 };
 }
