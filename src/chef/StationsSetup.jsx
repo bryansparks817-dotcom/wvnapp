@@ -270,9 +270,122 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
   );
 }
 
+
+// Tap a recipe, switch each station on or off. On adds the recipe to that
+// station's count with starting numbers (light blue drafts, copied from
+// another station that already has it when there is one). Off takes it off
+// that station's count.
+const hasRecipe = (st, rid) => st.items.some((i) => i.recipeId === rid || i.id === rid);
+const DRAFT_FIELDS = ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar"];
+
+function addRecipeTo(stations, stationId, recipe) {
+  const target = stations.find((s) => s.id === stationId);
+  if (!target || hasRecipe(target, recipe.id)) return stations;
+  const copy = stations.flatMap((s) => s.items).find((i) => i.recipeId === recipe.id || i.id === recipe.id);
+  const maker = stations.find((s) => s.id !== stationId && s.holdsBackup && hasRecipe(s, recipe.id));
+  const taken = new Set(target.items.map((i) => i.id));
+  const base = copy
+    ? (({ madeAt: _m, ...rest }) => rest)(copy)
+    : { name: recipe.name, pan: "1/6", panGrams: PAN_GRAMS["1/6"], lowboySize: "qt", qtGrams: 950, lowboyPar: 1, shelfLifeDays: recipe.shelfLifeDays || 5 };
+  const item = {
+    ...base,
+    id: taken.has(recipe.id) ? uniqueId(recipe.id, taken) : recipe.id,
+    recipeId: recipe.id,
+    unconfirmed: [...new Set([...(copy?.unconfirmed ?? []), ...DRAFT_FIELDS, ...(recipe.shelfLifeDays || copy ? [] : ["shelfLifeDays"])])],
+  };
+  // A line station collects from Prep when Prep already makes it; turning on
+  // a Prep (backup) station makes the line stations that have it collect only.
+  if (!target.holdsBackup && maker) item.madeAt = maker.id;
+  return stations.map((s) => {
+    if (s.id === stationId) return { ...s, items: [...s.items, item] };
+    if (target.holdsBackup && !s.holdsBackup) {
+      return { ...s, items: s.items.map((i) => ((i.recipeId === recipe.id || i.id === recipe.id) && !i.madeAt ? { ...i, madeAt: stationId } : i)) };
+    }
+    return s;
+  });
+}
+
+function removeRecipeFrom(stations, stationId, recipeId) {
+  return stations.map((s) => {
+    if (s.id === stationId) return { ...s, items: s.items.filter((i) => !(i.recipeId === recipeId || i.id === recipeId)) };
+    // Nobody makes it there any more, so the line copies make it themselves again.
+    return { ...s, items: s.items.map((i) => ((i.recipeId === recipeId || i.id === recipeId) && i.madeAt === stationId ? (({ madeAt: _m, ...rest }) => rest)(i) : i)) };
+  });
+}
+
+function RecipeAccess({ recipe, stations, onChange, onBack, onEditItem }) {
+  return (
+    <section className="chef__data">
+      <button type="button" className="pass__ghost chef__backlink" onClick={onBack}>← All recipes</button>
+      <div className="pass__sectionhead">
+        <h2>{recipe.name}</h2>
+      </div>
+      <span className="pass__countlabel">STATIONS THAT HAVE IT</span>
+      <ul className="chef__setup">
+        {stations.map((s) => {
+          const item = s.items.find((i) => i.recipeId === recipe.id || i.id === recipe.id);
+          const on = Boolean(item);
+          return (
+            <li key={s.id} className="chef__itemrow chef__accessrow">
+              <button
+                type="button"
+                className={`chef__stationpick chef__accesstoggle ${on ? "is-on" : ""}`}
+                aria-pressed={on}
+                onClick={() => onChange(on ? removeRecipeFrom(stations, s.id, recipe.id) : addRecipeTo(stations, s.id, recipe))}
+              >
+                <span className="chef__accessname">{s.name}</span>
+                <span className="pass__mono">{on ? "ON" : "OFF"}</span>
+              </button>
+              {on && (
+                <button type="button" className="pass__ghost" onClick={() => onEditItem(s.id, item.id)}>
+                  {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" />} PARS ›
+                </button>
+              )}
+              {on && item.madeAt && <span className="pass__rowsub chef__accesssub">collect only, {stations.find((m) => m.id === item.madeAt)?.name ?? "another station"} makes it</span>}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="pass__hint">
+        ON puts it on that station’s count and prep list, with light-blue starting numbers to check under PARS. OFF takes it off that station.
+        When a Prep station has it, line stations that have it collect it from Prep.
+      </p>
+    </section>
+  );
+}
+
+function RecipeList({ recipes, stations, onPick }) {
+  const [q, setQ] = useState("");
+  const term = q.trim().toLowerCase();
+  const shown = term ? recipes.filter((r) => r.name.toLowerCase().includes(term)) : recipes;
+  return (
+    <>
+      <input className="pass__input" type="search" placeholder={`Find a recipe… (${recipes.length})`} aria-label="Find a recipe" value={q} onChange={(e) => setQ(e.target.value)} />
+      <ul className="chef__setup">
+        {shown.map((r) => {
+          const on = stations.filter((s) => hasRecipe(s, r.id)).map((s) => s.name);
+          return (
+            <li key={r.id}>
+              <button type="button" className="chef__setuprow" onClick={() => onPick(r.id)}>
+                <span className="pass__rowtext">
+                  <span className="pass__rowname">{r.name}</span>
+                  <span className="pass__rowsub">{on.length ? on.join(" · ") : "Not on any station"}</span>
+                </span>
+                <span className="pass__open">STATIONS ›</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {shown.length === 0 && <p className="pass__empty">No recipe matches “{q}”.</p>}
+    </>
+  );
+}
+
 export default function StationsSetup({ recipesById }) {
   const [stations, setStations] = useState(() => getStations());
-  const [view, setView] = useState({ kind: "list" }); // list | station | item
+  const [view, setView] = useState({ kind: "list" }); // list | station | item | recipe
+  const [tab, setTab] = useState("stations"); // stations | recipes
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
   const recipes = [...(recipesById?.values() ?? [])].filter((r) => r.kind !== "dish" && !isCateringRecipe(r)).sort((a, b) => a.name.localeCompare(b.name));
@@ -285,8 +398,24 @@ export default function StationsSetup({ recipesById }) {
 
   const station = view.stationId ? stations.find((s) => s.id === view.stationId) : null;
 
+  if (view.kind === "recipe") {
+    const recipe = recipes.find((r) => r.id === view.recipeId);
+    if (recipe) {
+      return (
+        <RecipeAccess
+          recipe={recipe}
+          stations={stations}
+          onChange={commit}
+          onBack={() => setView({ kind: "list" })}
+          onEditItem={(stationId, itemId) => setView({ kind: "item", stationId, itemId, back: { kind: "recipe", recipeId: recipe.id } })}
+        />
+      );
+    }
+  }
+
   if (view.kind === "item" && station) {
     const item = view.itemId ? station.items.find((i) => i.id === view.itemId) : null;
+    const back = view.back ?? { kind: "station", stationId: station.id };
     return (
       <section className="chef__data">
         <div className="pass__sectionhead">
@@ -297,10 +426,10 @@ export default function StationsSetup({ recipesById }) {
           station={station}
           stations={stations}
           recipes={recipes}
-          onCancel={() => setView({ kind: "station", stationId: station.id })}
+          onCancel={() => setView(back)}
           onRemove={() => {
             updateStation({ ...station, items: station.items.filter((i) => i !== item) });
-            setView({ kind: "station", stationId: station.id });
+            setView(back);
           }}
           onSave={(next, toId) => {
             const dest = stations.find((s) => s.id === toId);
@@ -316,7 +445,7 @@ export default function StationsSetup({ recipesById }) {
               if (s.id === toId) return { ...s, items: [...s.items, saved] };
               return s;
             }));
-            setView({ kind: "station", stationId: station.id });
+            setView(back);
           }}
         />
       </section>
@@ -341,8 +470,27 @@ export default function StationsSetup({ recipesById }) {
 
   const dupNew = stations.some((s) => s.name.toLowerCase() === newName.trim().toLowerCase());
   const flags = setupFlags(stations);
+  const tabs = (
+    <div className="chef__servicetoggle" role="group" aria-label="Set up by">
+      <button type="button" className={tab === "stations" ? "is-on" : ""} aria-pressed={tab === "stations"} onClick={() => setTab("stations")}>BY STATION</button>
+      <button type="button" className={tab === "recipes" ? "is-on" : ""} aria-pressed={tab === "recipes"} onClick={() => setTab("recipes")}>BY RECIPE</button>
+    </div>
+  );
+  if (tab === "recipes") {
+    return (
+      <section className="chef__data">
+        {tabs}
+        <div className="pass__sectionhead">
+          <h2>Recipes</h2>
+          <span className="pass__countlabel">TAP ONE TO SWITCH STATIONS ON OR OFF</span>
+        </div>
+        <RecipeList recipes={recipes} stations={stations} onPick={(id) => setView({ kind: "recipe", recipeId: id })} />
+      </section>
+    );
+  }
   return (
     <section className="chef__data">
+      {tabs}
       <div className="pass__sectionhead">
         <h2>Stations</h2>
         <span className="pass__countlabel">{stations.length} STATIONS</span>
