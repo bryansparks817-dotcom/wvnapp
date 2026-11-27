@@ -4,6 +4,8 @@
 // when their recipes go in.
 import garde from "./lineItems.json";
 import fromSetup from "./stationItems.json";
+import library from "./recipeLibrary.json";
+import { addRecipeTo } from "../lib/stationRecipes";
 import { loadStationFixes, loadStationSetup, saveStationFixes, saveStationSetup } from "../lib/storage";
 
 const extra = (id) => fromSetup.stations[id] ?? [];
@@ -11,7 +13,7 @@ const extra = (id) => fromSetup.stations[id] ?? [];
 // The built-in setup. Once the chef edits stations or items in
 // Chef → Setup → Stations, items & pars, the saved copy (shared with every
 // phone) is used instead.
-export const DEFAULT_STATIONS = [
+const BASE_STATIONS = [
   { id: "garde-manger", name: "Garde manger", linePar: garde.linePar, items: [...garde.items, ...extra("garde-manger")] },
   { id: "grill", name: "Grill", linePar: 100, items: extra("grill") },
   { id: "saute", name: "Sauté", linePar: 100, items: extra("saute") },
@@ -19,6 +21,14 @@ export const DEFAULT_STATIONS = [
   // Prep holds the backup: no line pans, every item counted against its prep par.
   { id: "prep", name: "Prep", linePar: 0, holdsBackup: true, items: extra("prep") },
 ];
+
+// Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
+// Prep, with light-blue starting prep pars to confirm. Line stations keep
+// their items as they were (switch one to collect only under WHO MAKES IT).
+function everyRecipeOnPrep(stations) {
+  return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
+}
+export const DEFAULT_STATIONS = everyRecipeOnPrep(BASE_STATIONS);
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -59,6 +69,7 @@ const STATION_FIXES = [
       items: s.items.map((i) => (i.id === "clam-chowder-veloute" && i.unconfirmed?.includes("lowboyPar") && i.lowboyPar < 4 ? { ...i, lowboyPar: 4 } : i)),
     };
   })],
+  ["every-recipe-on-prep-2026-11-27", everyRecipeOnPrep],
 ];
 
 // The kitchen's stations: the chef's saved setup, or the built-in one.
