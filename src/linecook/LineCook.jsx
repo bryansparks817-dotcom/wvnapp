@@ -17,7 +17,7 @@ import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import LabelPrompt from "./LabelPrompt";
 import RecipePicker from "./RecipePicker";
-import { formatMinutes } from "../lib/format";
+import PrepTime from "./PrepTime";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
@@ -159,16 +159,6 @@ export function WhoScreen({
 
 // Prep's opening page: no count. Its list is what the line stations' closes
 // came up short on, plus what they've asked for today.
-function PrepTime({ time }) {
-  return (
-    <div className="pass__preptime" aria-live="polite">
-      <span className="pass__countlabel">TOTAL PREP TIME</span>
-      <span className="pass__preptimebig">{time.total ? formatMinutes(time.total) : "0 min"}</span>
-      <span className="pass__hint">{time.handsOn ? `${formatMinutes(time.handsOn)} hands-on · ${time.count} item${time.count === 1 ? "" : "s"}` : `${time.count} item${time.count === 1 ? "" : "s"}`}</span>
-    </div>
-  );
-}
-
 function PrepStart({ station, screen, setScreen, onOpenChef, initials, onChangeCook, needs, requests, lastNotes, items, onBuild, timeFor }) {
   const [picked, setPicked] = useState([]);
   const time = useMemo(() => timeFor(picked), [timeFor, picked]);
@@ -488,7 +478,21 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   function timeOf(rows) {
     const p = buildPrepSteps(rows.filter((r) => r.makeG > 0), pacedRecipes);
     const handsOn = p.steps.reduce((sum, st) => sum + (st.handsOn ?? 0), 0);
-    return { total: Math.round(p.totalMinutes), handsOn: Math.round(handsOn), count: rows.filter((r) => r.makeG > 0).length };
+    // The item that finishes last, and how long it takes from its first step.
+    const span = {};
+    for (const st of p.steps) {
+      if (!st.item) continue;
+      const end = st.at + (st.handsOn ?? 0) + (st.handsOff ?? []).reduce((m, h) => m + h.minutes, 0);
+      const cur = span[st.item.id] ?? { name: st.item.name, start: st.at, end };
+      span[st.item.id] = { ...cur, start: Math.min(cur.start, st.at), end: Math.max(cur.end, end) };
+    }
+    const last = Object.values(span).sort((a, b) => b.end - a.end)[0];
+    return {
+      total: Math.round(p.totalMinutes),
+      handsOn: Math.round(handsOn),
+      count: rows.filter((r) => r.makeG > 0).length,
+      longest: last ? { name: last.name, minutes: Math.round(last.end - last.start) } : null,
+    };
   }
   const previewTime = (picked) => {
     const byItem = { ...(needs?.byItem ?? {}) };
@@ -799,6 +803,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         onAddRecipe={addRecipes}
         timeWith={(picked) => timeOf(withAdded({ prep: prepRows }, picked).prep)}
         prepTime={isBackup ? timeOf(prepRows) : null}
+        prepStartAt={shiftIsToday ? shift.gatherDoneAt ?? null : null}
         isPrep={isBackup}
       />
       {labelSheet}
