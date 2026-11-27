@@ -12,6 +12,7 @@ import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/cre
 import { formatG } from "../lib/inventory";
 import Numbers from "./Numbers";
 import Freezer from "./Freezer";
+import { withTaskRecipes } from "../lib/prepTasks";
 import { addItem, bumpItem, skipItem } from "../lib/chefActions";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -178,7 +179,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
     let rows = [];
     if (open) {
       rows = applyShortages(shift.prep, shift.short);
-      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0 && !shift.skip?.[p.id]), withPace(recipesById, paceFor(shift.confirmedBy)), { first: shift.bump });
+      plan = buildPrepSteps(rows.filter((p) => p.makeG > 0 && !shift.skip?.[p.id]), withPace(withTaskRecipes(recipesById, getStations()), paceFor(shift.confirmedBy)), { first: shift.bump });
       status = crewStatus(shift, plan, now, settings.marginMin);
     }
     return { st, shift, inventory, open, unclosed, plan, status, rows };
