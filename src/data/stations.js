@@ -4,6 +4,7 @@
 // when their recipes go in.
 import garde from "./lineItems.json";
 import fromSetup from "./stationItems.json";
+import library from "./recipeLibrary.json";
 import { loadStationFixes, loadStationSetup, saveStationFixes, saveStationSetup } from "../lib/storage";
 
 const extra = (id) => fromSetup.stations[id] ?? [];
@@ -11,7 +12,7 @@ const extra = (id) => fromSetup.stations[id] ?? [];
 // The built-in setup. Once the chef edits stations or items in
 // Chef → Setup → Stations, items & pars, the saved copy (shared with every
 // phone) is used instead.
-export const DEFAULT_STATIONS = [
+const BASE_STATIONS = [
   { id: "garde-manger", name: "Garde manger", linePar: garde.linePar, items: [...garde.items, ...extra("garde-manger")] },
   { id: "grill", name: "Grill", linePar: 100, items: extra("grill") },
   { id: "saute", name: "Sauté", linePar: 100, items: extra("saute") },
@@ -19,6 +20,53 @@ export const DEFAULT_STATIONS = [
   // Prep holds the backup: no line pans, every item counted against its prep par.
   { id: "prep", name: "Prep", linePar: 0, holdsBackup: true, items: extra("prep") },
 ];
+
+// Prep cook trial (2026-11-27): the big batches Prep makes. Each sits on Prep
+// with a prep par (in quarts, about one batch: a light-blue draft for the chef
+// to confirm), and any line station that also lists it only collects it.
+// Keep in step with PREP_OWNS in scripts/setup-workbook/stations.py.
+export const PREP_OWNS = [
+  ["chicken-stock", 8],
+  ["d-o-p-san-marzano-tomato-sauce", 6],
+  ["farm-heirloom-tomato-sauce", 4],
+  ["albondigas-sauce", 3],
+  ["black-cherry-pepita-black-lime-mole", 3],
+  ["clam-chowder-veloute", 4],
+  ["12-hour-braised-wagyu-short-rib", 6],
+  ["wagyu-braising-reduction", 1],
+  ["venison-osso-bucco-traditional-braise", 2],
+  ["blackberry-demi-glace-scallop-sauce", 1],
+  ["house-potato-gnocchi", 1],
+  ["pasta-dough", 4],
+  ["albondigas-meatballs", 2],
+];
+const DRAFT = ["pan", "lowboySize", "qtGrams", "lowboyPar", "panGrams"];
+function prepItemFrom(id, par, stations) {
+  const onLine = stations.flatMap((s) => s.items).find((i) => i.id === id || i.recipeId === id);
+  if (onLine) {
+    const { madeAt: _m, ...rest } = onLine;
+    return { ...rest, id, recipeId: id, lowboySize: "qt", lowboyPar: par, unconfirmed: [...new Set([...(rest.unconfirmed ?? []), "lowboyPar"])] };
+  }
+  const r = library.find((x) => x.id === id);
+  if (!r) return null;
+  return { id, name: r.name, pan: "1/6", panGrams: 2500, lowboySize: "qt", qtGrams: 950, lowboyPar: par, shelfLifeDays: r.shelfLifeDays || 3, recipeId: id, unconfirmed: [...DRAFT, ...(r.shelfLifeDays ? [] : ["shelfLifeDays"])] };
+}
+function prepOwns(stations) {
+  const prep = stations.find((s) => s.id === "prep");
+  if (!prep) return stations;
+  const add = [];
+  for (const [id, par] of PREP_OWNS) {
+    if (prep.items.some((i) => i.id === id || i.recipeId === id) || add.some((i) => i.id === id)) continue;
+    const item = prepItemFrom(id, par, stations);
+    if (item) add.push(item);
+  }
+  const owned = new Set(PREP_OWNS.map(([id]) => id));
+  return stations.map((s) => {
+    if (s.id === "prep") return { ...s, items: [...s.items, ...add] };
+    return { ...s, items: s.items.map((i) => (owned.has(i.recipeId ?? i.id) || owned.has(i.id) ? { ...i, madeAt: "prep" } : i)) };
+  });
+}
+export const DEFAULT_STATIONS = prepOwns(BASE_STATIONS);
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -59,6 +107,8 @@ const STATION_FIXES = [
       items: s.items.map((i) => (i.id === "clam-chowder-veloute" && i.unconfirmed?.includes("lowboyPar") && i.lowboyPar < 4 ? { ...i, lowboyPar: 4 } : i)),
     };
   })],
+  // Prep cook trial, 2026-11-27: Prep makes the big batches (PREP_OWNS).
+  ["prep-owns-big-batches-2026-11-27", prepOwns],
 ];
 
 // The kitchen's stations: the chef's saved setup, or the built-in one.

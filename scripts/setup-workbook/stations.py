@@ -57,6 +57,9 @@ for i in res['prep']:
 for (sid, rid), home in MADE_AT.items():
     for i in res[sid]:
         if i['id'] == rid: i['madeAt'] = home
+# Prep cook trial (2026-11-27): the big batches Prep makes (PREP_OWNS) are added
+# to Prep, with line copies set to collect only, by prepOwns() in
+# src/data/stations.js when the app loads, so this file doesn't need to list them.
 json.dump({'_note': "Built from the kitchen setup workbook by scripts/setup-workbook/stations.py. Fields in an item's 'unconfirmed' are Claude's defaults for the chef to check.",
            'stations': {k: v for k, v in res.items() if v}}, open(out, 'w'), indent=1, ensure_ascii=False)
 print({k: len(v) for k, v in res.items()}, 'skipped:', skipped)
