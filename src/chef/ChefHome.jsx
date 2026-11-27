@@ -11,6 +11,7 @@ import { applyShortages } from "../lib/shortage";
 import { crewStatus, currentServiceShift, stepIsDone, todayAt } from "../lib/crew";
 import { formatG } from "../lib/inventory";
 import Numbers from "./Numbers";
+import Freezer from "./Freezer";
 import { addItem, bumpItem, skipItem } from "../lib/chefActions";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -388,6 +389,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
         <p className="pass__hint">Walk-in stock levels show here once the walk-in count is in.</p>
       </section>
       )}
+      {show.stock && <Freezer recipesById={recipesById} by={by} />}
       {show.close && (
       <section>
         <div className="pass__sectionhead"><h2>Last close</h2></div>
@@ -456,6 +458,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
         <p className="pass__hint">Next to build: the chef’s walk-in count at close, and the end-of-night par report for every station.</p>
       </section>
       )}
+
     </>
   );
 }

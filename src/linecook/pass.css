@@ -566,3 +566,25 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__preplate { margin: 6px 0 0; padding-left: 18px; color: #d2553f; font-size: 14px; line-height: 1.4; }
 .pass__preplate li + li { margin-top: 4px; }
 .pass__latebtn { align-self: flex-start; color: #d2553f !important; border-color: #d2553f !important; min-height: 36px; font-size: 13px; }
+/* Freezer pull list (chef › Stock) */
+.fz__start { max-width: 220px; margin-bottom: 8px; }
+.fz__pull { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; padding: 10px 12px; border-radius: 8px; background: var(--card); border-left: 4px solid var(--vine); }
+.fz__pull.is-late { border-left-color: #d2553f; }
+.fz__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.fz__item { padding: 10px 12px; border-radius: 8px; background: var(--card); display: flex; flex-direction: column; gap: 8px; }
+.fz__item.is-out { opacity: 0.55; }
+.fz__row { display: flex; gap: 6px; align-items: center; }
+.fz__name { flex: 1; min-width: 0; text-align: left; background: transparent; border: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; color: inherit; }
+.pass .fz__qty { width: 64px; min-height: 40px; padding: 4px 6px; text-align: center; }
+.pass .fz__unit { width: 64px; min-height: 40px; padding: 4px; }
+.fz__inout { width: 92px; flex-shrink: 0; }
+.fz__inout button { min-height: 40px; font-size: 12px !important; }
+.fz__draft { color: var(--draft) !important; }
+.fz__need { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.fz__chip { min-height: 32px; padding: 2px 10px; border-radius: 16px; border: 1.5px solid var(--edge); background: transparent; color: var(--steel); font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.04em; }
+.fz__chip.is-on { background: var(--amber); border-color: var(--amber); color: var(--char); }
+.fz__details { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--edge); padding-top: 8px; }
+.fz__add, .fz__done { width: 100%; margin-top: 10px; }
+.fz__sources { margin-top: 10px; }
+.fz__pull .pass__rowsub, .fz__item .pass__rowsub { font-family: "DM Sans", system-ui, sans-serif; letter-spacing: 0; }
+.fz__row .fz__inout { margin-left: auto; }
