@@ -134,6 +134,14 @@ export default function TodayScreen({
           <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
         </PassHeader>
         <main className="pass__main">
+          {isPrep && prepTime && (
+            <div className="pass__preptime">
+              <span className="pass__countlabel">TOTAL PREP TIME</span>
+              <span className="pass__preptimebig">{prepTime.total ? formatMinutes(prepTime.total) : "0 min"}</span>
+              <span className="pass__hint">{formatMinutes(prepTime.handsOn || 0)} hands-on · {prepTime.count} item{prepTime.count === 1 ? "" : "s"}</span>
+            </div>
+          )}
+          {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
           <ChefCard notes={chefNotes} onAck={onAckChef} />
           <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
           {lastNotes && <NoteCard notes={lastNotes} />}
@@ -176,6 +184,7 @@ export default function TodayScreen({
             <span className="pass__hint">{formatMinutes(prepTime.handsOn || 0)} hands-on · {prepTime.count} item{prepTime.count === 1 ? "" : "s"}</span>
           </div>
         )}
+        {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
         <ChefCard notes={chefNotes} onAck={onAckChef} />
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
         {lastNotes && !hasGather && <NoteCard notes={lastNotes} />}
@@ -273,7 +282,6 @@ export default function TodayScreen({
             onOpenPrep={onOpenPrep}
             onStartTimer={onStartTimer}
           />
-          {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
           {wasteG > 0 && (
             <p className="pass__waste">
               Tossed today: {formatG(wasteG)} ({wasteToday.map((w) => w.name).join(", ")}). Logged for food cost.
