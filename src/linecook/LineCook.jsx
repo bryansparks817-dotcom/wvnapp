@@ -23,7 +23,7 @@ import TodayScreen from "./TodayScreen";
 import CountScreen from "./CountScreen";
 import RecipeScreen from "./RecipeScreen";
 import { PassHeader, StationTabs, TabBar } from "./Chrome";
-import { backupFor, holdsBackup, lineRequests, linePar as stationLinePar, moveStock, shiftOptions } from "../lib/backupStock";
+import { backupFor, closeNeeds, holdsBackup, lineRequests, linePar as stationLinePar, moveStock, shiftOptions } from "../lib/backupStock";
 import "./pass.css";
 
 function localDateKey(d = new Date()) {
@@ -155,6 +155,68 @@ export function WhoScreen({
   );
 }
 
+// Prep's opening page: no count. Its list is what the line stations' closes
+// came up short on, plus what they've asked for today.
+function PrepStart({ station, screen, setScreen, onOpenChef, initials, onChangeCook, needs, requests, lastNotes, onBuild }) {
+  const rows = needs?.list ?? [];
+  const asks = requests.filter((q) => !rows.some((r) => r.stationId === q.stationId && r.itemId === q.itemId));
+  return (
+    <div className="pass">
+      <PassHeader station={station} initials={initials} onChangeCook={onChangeCook}>
+        <span className="pass__date">FROM THE LINE’S CLOSES</span>
+        <h1 className="pass__title">Prep list</h1>
+        <p className="pass__lede">No count for Prep. Your list is what the line stations closed short on. You can add any recipe once it’s built.</p>
+      </PassHeader>
+      <main className="pass__main">
+        {lastNotes?.text && <div className="pass__note"><span className="pass__countlabel">NOTES FROM LAST SHIFT</span><p>{lastNotes.text}</p></div>}
+        <section>
+          <div className="pass__sectionhead">
+            <h2>WHAT THE LINE NEEDS</h2>
+            <span className="pass__mono pass__amber">{rows.length + asks.length}</span>
+          </div>
+          {rows.length + asks.length === 0 && <p className="pass__empty">No line station has closed short on anything Prep makes. Build your list and add recipes by hand.</p>}
+          <ul className="pass__list">
+            {[...rows, ...asks].map((r, i) => (
+              <li key={i} className="pass__row">
+                <span className="pass__rowtext">
+                  <span className="pass__rowname">{r.name}</span>
+                  <span className="pass__rowsub">{r.station}{r.closedBy ? ` close · ${r.closedBy}` : " asked today"}</span>
+                </span>
+                <span className="pass__mono">{Math.round(r.grams).toLocaleString()} g</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main>
+      <div className="pass__footer">
+        <button type="button" className="pass__cta" onClick={onBuild}>BUILD MY LIST →</button>
+      </div>
+      <TabBar screen={screen} setScreen={setScreen} onOpenChef={onOpenChef} />
+    </div>
+  );
+}
+
+// Prep's end of shift: no count, just notes for the next shift.
+function PrepEnd({ station, screen, setScreen, onOpenChef, initials, onChangeCook, notes, onChangeNotes, onEnd }) {
+  return (
+    <div className="pass">
+      <PassHeader station={station} initials={initials} onChangeCook={onChangeCook}>
+        <span className="pass__date">END OF SHIFT</span>
+        <h1 className="pass__title">End shift</h1>
+        <p className="pass__lede">Prep doesn’t count. Leave a note for the next shift if there’s anything to know.</p>
+      </PassHeader>
+      <main className="pass__main">
+        <label className="pass__countlabel" htmlFor="prep-notes">NOTES FOR NEXT SHIFT</label>
+        <textarea id="prep-notes" className="pass__input pass__notes" rows={4} value={notes} onChange={(e) => onChangeNotes(e.target.value)} />
+      </main>
+      <div className="pass__footer">
+        <button type="button" className="pass__cta" onClick={onEnd}>END SHIFT</button>
+      </div>
+      <TabBar screen={screen} setScreen={setScreen} onOpenChef={onOpenChef} />
+    </div>
+  );
+}
+
 // Sign-in and station choice. Each station's counts and shift live in their
 // own StationLine, which remounts when the station changes.
 export default function LineCook(props) {
@@ -237,8 +299,10 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // Prep: what line stations still need from its stock today. Re-read when
   // any station's shift changes.
   const [reqVersion, setReqVersion] = useState(0);
-  useEffect(() => (isBackup ? onRemoteChange((keys) => { if (keys.some((k) => k.startsWith("thePass.shift.v1"))) setReqVersion((v) => v + 1); }) : undefined), [isBackup]);
+  useEffect(() => (isBackup ? onRemoteChange((keys) => { if (keys.some((k) => k.startsWith("thePass.shift.v1") || k.startsWith("thePass.inventory.v1"))) setReqVersion((v) => v + 1); }) : undefined), [isBackup]);
   const requests = useMemo(() => (isBackup && reqVersion >= 0 ? lineRequests(st, getStations(), today).list : []), [isBackup, st, today, reqVersion]);
+  // Prep doesn't count: its list comes from the line stations' closes.
+  const needs = useMemo(() => (isBackup && reqVersion >= 0 ? closeNeeds(st, getStations()) : null), [isBackup, st, reqVersion]);
   // How each item is counted: Prep counts backup only; a line station's
   // collect-only item is just its line pan (Prep counts the backup).
   const cardMode = (item) => (isBackup ? "backup" : item.madeAt && backupFor(getStations())(item) ? "line" : "full");
@@ -288,6 +352,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // the next shift (same day or not) starts by confirming that count.
   const shiftIsToday = Boolean(shift && !shift.closedAt && shift.date === today);
   const unclosedShift = Boolean(shift && !shift.closedAt && shift.date !== today);
+  useEffect(() => { if (isBackup && opening && shiftIsToday) onOpened(); }, [isBackup, opening, shiftIsToday, onOpened]);
   const meta = shiftIsToday ? shift.meta ?? {} : {};
 
   // Prep as planned from the count, and as scaled down by any short
@@ -375,7 +440,46 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     onChangeCook();
   }
 
+  // Prep: build the list from the line closes (no count), plus anything the
+  // line has already asked for today that the closes don't cover.
+  function buildFromCloses() {
+    const fresh = closeNeeds(st, getStations());
+    const asked = Object.fromEntries(fresh.list.map((q) => [`${q.stationId}:${q.itemId}`, q.grams]));
+    const byItem = { ...fresh.byItem };
+    for (const q of lineRequests(st, getStations(), today).list) {
+      const key = `${q.stationId}:${q.itemId}`;
+      const extra = Math.max(0, q.grams - (asked[key] ?? 0));
+      if (!extra) continue;
+      asked[key] = q.grams;
+      byItem[q.itemId] = (byItem[q.itemId] ?? 0) + extra;
+    }
+    const prep = items
+      .filter((i) => byItem[i.id] > 0)
+      .map((i) => {
+        const makeG = Math.ceil(byItem[i.id] / 50) * 50;
+        return { id: i.id, recipeId: i.recipeId, name: i.name, makeG, toss: [], askedG: makeG };
+      });
+    setShift({ date: today, collect: [], prep, done: {}, meta: {}, confirmedBy: by, confirmedAt: Date.now(), asked, fromCloses: fresh.list });
+    setReqVersion((v) => v + 1);
+    setScreen("today");
+    onOpened();
+  }
+
+  // Prep: the cook adds a recipe to today's list by hand, one batch at a time.
+  function addRecipe(item) {
+    const recipe = item.recipeId ? recipesById.get(item.recipeId) : null;
+    const batch = recipe ? Math.round(batchGrams(recipe, recipesById, ingredients).grams || recipe.yieldGrams || 1000) : 1000;
+    const has = shift.prep.find((p) => p.id === item.id);
+    const prep = has
+      ? shift.prep.map((p) => (p.id === item.id ? { ...p, makeG: p.makeG + batch, addedG: (p.addedG ?? 0) + batch } : p))
+      : [...shift.prep, { id: item.id, recipeId: item.recipeId, name: item.name, makeG: batch, toss: [], addedG: batch, addedBy: by }];
+    const skip = { ...(shift.skip ?? {}) };
+    delete skip[item.id];
+    setShift({ ...shift, prep, skip });
+  }
+
   function confirmCount() {
+    if (isBackup) { buildFromCloses(); return; }
     const { collect, prep } = buildShift(items, invItems, linePar, today, shiftOptions(st, getStations(), today));
     const strip = (rows) => rows.map(({ item: _item, ...rest }) => rest);
     // Prep: the line requests this list already covers.
@@ -553,7 +657,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
 
   // Opening shift page for a shift that's already underway: check the
   // count, then carry on (or rebuild the list from a fresh count).
-  if (opening && screen === "today" && shiftIsToday) {
+  if (opening && screen === "today" && shiftIsToday && !isBackup) {
     return (
       <CountScreen
         {...shared}
@@ -577,6 +681,13 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // Before a shift starts, Today is the count: the last close carried over,
   // or, for a station that has never been closed, every item at zero so the
   // cook can count what's there and build the first list.
+  if (isBackup && screen === "today" && !shiftIsToday) {
+    return <PrepStart {...shared} station={stationTabs} needs={needs} requests={requests} lastNotes={inventory?.notes} onBuild={buildFromCloses} />;
+  }
+  if (isBackup && screen === "close") {
+    return <PrepEnd {...shared} notes={inventory?.draftNotes ?? ""} onChangeNotes={changeNotes} onEnd={saveClose} />;
+  }
+
   if (screen === "close" || (screen === "today" && !shiftIsToday)) {
     const mode = screen === "close" ? "close" : "confirm";
     return (
@@ -642,6 +753,9 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         asked={shiftIsToday ? shift.asked ?? {} : {}}
         onAddRequest={(q) => addRequest(q)}
         madeToday={(id) => Boolean(shiftIsToday && shift.done[`p:${id}`])}
+        addable={isBackup && shiftIsToday ? items : null}
+        onAddRecipe={addRecipe}
+        isPrep={isBackup}
       />
       {labelSheet}
     </>

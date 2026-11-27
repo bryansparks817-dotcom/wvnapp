@@ -3,7 +3,7 @@
 // station's collect-only item (item.madeAt) is topped up from Prep's stock,
 // and whatever Prep's stock can't cover is asked of Prep.
 import { loadInventory, loadShift, saveInventory } from "./storage";
-import { takeFromStock } from "./inventory";
+import { buildShift, emptyInventory, takeFromStock } from "./inventory";
 
 const EMPTY = { line: 0, lowboy: [], walkIn: [] };
 const same = (a, b) => a.id === b.id || (a.recipeId && a.recipeId === b.recipeId) || a.id === b.recipeId || a.recipeId === b.id;
@@ -65,4 +65,31 @@ export function moveStock(row, putBack = false) {
   const inv = loadInventory(row.from) ?? { items: {} };
   const cur = inv.items?.[row.fromItemId] ?? EMPTY;
   saveInventory({ ...inv, items: { ...(inv.items ?? {}), [row.fromItemId]: takeFromStock(cur, row.toLine, putBack) } }, row.from);
+}
+
+// Bryan, 2026-11-27: Prep doesn't count. Its list comes from the line
+// stations' last close counts: whatever a line station is short of its pars
+// (line pan + lowboy) for an item Prep makes goes on Prep's list.
+const recipeKey = (i) => i.recipeId ?? i.id;
+export function closeNeeds(maker, stations) {
+  const list = [];
+  for (const st of stations) {
+    if (st.id === maker.id || holdsBackup(st)) continue;
+    const inv = loadInventory(st.id);
+    if (!inv?.closedAt) continue;
+    const day = inv.closedOn ?? new Date(inv.closedAt).toISOString().slice(0, 10);
+    // As if the line station made everything itself: what it's short is what Prep makes.
+    const { collect, prep } = buildShift(st.items, { ...emptyInventory(st.items), ...(inv.items ?? {}) }, st.linePar, day);
+    const short = new Map();
+    for (const r of prep) if (r.makeG > 0) short.set(r.id, r.makeG);
+    for (const r of collect) if (r.shortG > 0) short.set(r.id, r.shortG);
+    for (const [id, grams] of short) {
+      const lineItem = st.items.find((i) => i.id === id);
+      const item = lineItem && maker.items.find((m) => recipeKey(m) === recipeKey(lineItem) || m.id === lineItem.id);
+      if (item) list.push({ station: st.name, stationId: st.id, itemId: item.id, name: item.name, grams, closedOn: inv.closedOn, closedBy: inv.closedBy });
+    }
+  }
+  const byItem = {};
+  for (const r of list) byItem[r.itemId] = (byItem[r.itemId] ?? 0) + r.grams;
+  return { list, byItem };
 }

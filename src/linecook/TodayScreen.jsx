@@ -96,11 +96,41 @@ function TakeLine({ item, take, today }) {
   );
 }
 
+// Prep: tap any recipe Prep makes to put a batch of it on today's list.
+function AddRecipe({ items, onAdd }) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [added, setAdded] = useState(null);
+  if (!open) return <button type="button" className="pass__ghostbtn" onClick={() => setOpen(true)}>+ ADD A RECIPE TO MY LIST</button>;
+  const term = q.trim().toLowerCase();
+  const shown = (term ? items.filter((i) => i.name.toLowerCase().includes(term)) : items).slice().sort((a, b) => a.name.localeCompare(b.name));
+  return (
+    <div className="pass__note">
+      <span className="pass__countlabel">ADD A RECIPE · ONE BATCH EACH TAP</span>
+      <input className="pass__input" type="search" placeholder={`Find a recipe… (${items.length})`} aria-label="Find a recipe" value={q} onChange={(e) => setQ(e.target.value)} />
+      {added && <p className="pass__hint pass__vine">Added {added} to your list.</p>}
+      <ul className="pass__list">
+        {shown.slice(0, term ? 20 : 8).map((i) => (
+          <li key={i.id}>
+            <button type="button" className="pass__row" onClick={() => { onAdd(i); setAdded(i.name); setQ(""); }}>
+              <span className="pass__rowtext"><span className="pass__rowname">{i.name}</span></span>
+              <span className="pass__open">ADD +</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {!term && items.length > 8 && <p className="pass__hint">Type to find the other {items.length - 8}.</p>}
+      <button type="button" className="pass__ghost" onClick={() => { setOpen(false); setAdded(null); }}>Done adding</button>
+    </div>
+  );
+}
+
 export default function TodayScreen({
   station, screen, setScreen, onOpenChef, initials, onChangeCook,
   lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
   collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
   lineRequests = [], asked = {}, onAddRequest, madeToday = () => false,
+  addable = null, onAddRecipe, isPrep = false,
 }) {
   const header = { station, initials, onChangeCook };
   const hasGather = gather.items.length > 0 || gather.missing.length > 0;
@@ -109,7 +139,7 @@ export default function TodayScreen({
     return (
       <div className="pass">
         <PassHeader {...header}>
-          <span className="pass__date">{dateLine()} · COUNT CONFIRMED</span>
+          <span className="pass__date">{dateLine()} · {isPrep ? "FROM THE LINE’S CLOSES" : "COUNT CONFIRMED"}</span>
           <h1 className="pass__title">Gather</h1>
           <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
         </PassHeader>
@@ -145,7 +175,7 @@ export default function TodayScreen({
   return (
     <div className="pass">
       <PassHeader {...header}>
-        <span className="pass__date">{dateLine()} · COUNT CONFIRMED</span>
+        <span className="pass__date">{dateLine()} · {isPrep ? "FROM THE LINE’S CLOSES" : "COUNT CONFIRMED"}</span>
         <h1 className="pass__title">Today</h1>
       </PassHeader>
       <main className="pass__main">
@@ -174,7 +204,7 @@ export default function TodayScreen({
           </div>
         )}
 
-        <section>
+        {!isPrep && <section>
           <div className="pass__sectionhead">
             <h2><span className="pass__vine">1</span> · COLLECT</h2>
             <span className="pass__mono pass__vine">{collectDone} of {collect.length}</span>
@@ -215,12 +245,12 @@ export default function TodayScreen({
               );
             })}
           </ul>
-        </section>
+        </section>}
 
         <section>
           <div className="pass__sectionhead">
             <h2>
-              <span className="pass__amber">2</span> · PREP
+              {isPrep ? null : <span className="pass__amber">2</span>}{isPrep ? "" : " · "}PREP
               {plan.totalMinutes > 0 && <span className="pass__timetag">{formatMinutes(plan.totalMinutes)} TOTAL</span>}
             </h2>
             <span className="pass__mono pass__amber">{prepDone} of {prepTotal}</span>
@@ -246,6 +276,7 @@ export default function TodayScreen({
             onOpenPrep={onOpenPrep}
             onStartTimer={onStartTimer}
           />
+          {addable && <AddRecipe items={addable} onAdd={onAddRecipe} />}
           {wasteG > 0 && (
             <p className="pass__waste">
               Tossed today: {formatG(wasteG)} ({wasteToday.map((w) => w.name).join(", ")}). Logged for food cost.
