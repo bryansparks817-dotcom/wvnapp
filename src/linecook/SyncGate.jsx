@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PassHeader } from "./Chrome";
-import { hasKitchenSession, isLocalOnly, setLocalOnly, signInKitchen, startSync, syncConfigured, watchChanges } from "../lib/sync";
+import { hasKitchenSession, isLocalOnly, joinFromLink, setLocalOnly, signInKitchen, startSync, syncConfigured, watchChanges } from "../lib/sync";
 import "./pass.css";
 
 // Before anyone signs in, the phone itself joins the kitchen: one shared
@@ -37,7 +37,7 @@ function ConnectScreen({ onDone }) {
           {error && <p className="pass__hint chef__late" aria-live="polite">{error === "Invalid login credentials" ? "That email and password don’t match the kitchen account." : error}</p>}
           <button type="submit" className="pass__cta" disabled={busy || !email || !password}>{busy ? "CONNECTING…" : "CONNECT →"}</button>
         </form>
-        <p className="pass__hint">Ask the chef for the kitchen login. Each person still signs in with their own name and PIN after this.</p>
+        <p className="pass__hint">Easiest: ask the chef to text you the join link, then open it. Each person still signs in with their own name and PIN after this.</p>
         <button
           type="button"
           className="pass__ghost"
@@ -54,12 +54,21 @@ export default function SyncGate({ children }) {
   const [state, setState] = useState(() => (!syncConfigured || isLocalOnly() ? "ok" : "checking"));
   useEffect(() => {
     if (state !== "checking") return;
-    hasKitchenSession().then((yes) => {
+    hasKitchenSession().then(async (yes) => {
       if (yes) {
         watchChanges();
         startSync();
+        setState("ok");
+        return;
       }
-      setState(yes ? "ok" : "connect");
+      // Opened from the chef's join link: connect without asking.
+      const join = joinFromLink();
+      if (join && !(await signInKitchen(join.email, join.password))) {
+        watchChanges();
+        setState("ok");
+        return;
+      }
+      setState("connect");
     });
   }, [state]);
   if (state === "checking") return null;
