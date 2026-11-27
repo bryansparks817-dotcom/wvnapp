@@ -58,7 +58,7 @@ function StepRow({ s, done, isNow, running, onToggleStep, onStartTimer }) {
 // One row per prep item, in the optimized order (the long hands-off recipe
 // first). Each row shows only what's next; tap STEPS to open the item's
 // steps, or QUICK FINISH to check the whole item off at once.
-export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer }) {
+export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone, timers, onToggleStep, onToggleItem, onOpenPrep, onStartTimer, onAsk = null }) {
   const [open, setOpen] = useState(() => new Set());
   const running = new Set(timers.map((t) => t.label));
   const itemDone = (id) => Boolean(done[`p:${id}`]);
@@ -156,6 +156,9 @@ export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone
                   <button type="button" className="pass__timerbtn pass__quickfinish" onClick={() => onToggleItem(row)}>
                     QUICK FINISH ✓
                   </button>
+                  {onAsk?.(row) && steps.length - left.length === 0 && (
+                    <button type="button" className="pass__timerbtn" onClick={onAsk(row)}>ASK PREP</button>
+                  )}
                 </div>
               )}
               {!r.done && expanded && (

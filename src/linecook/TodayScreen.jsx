@@ -122,7 +122,10 @@ export default function TodayScreen({
   collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
   lineRequests = [], asked = {}, onAddRequest, madeToday = () => false,
   addable = null, onAddRecipe, isPrep = false, timeWith = null, prepTime = null, prepStartAt = null, onStartPrep = null,
+  canAsk = null, checkAsk, onSendAsk, onCancelAsk, asks = [], bumped = {},
 }) {
+  // Line: the item the cook is asking Prep to take, with Prep's answer.
+  const [askFor, setAskFor] = useState(null);
   const header = { station, initials, onChangeCook };
   const hasGather = gather.items.length > 0 || gather.missing.length > 0;
   if (hasGather && !gatherDone) {
@@ -183,12 +186,18 @@ export default function TodayScreen({
           </button>
         )}
 
+        {isPrep && Object.keys(bumped).length > 0 && (
+          <div className="pass__note">
+            <span className="pass__countlabel">BUMPED TO TOMORROW</span>
+            {Object.values(bumped).map((b, i) => <p key={i}>{b.name}, to make room for {b.for}’s {b.item}.</p>)}
+          </div>
+        )}
         {lineRequests.length > 0 && (
           <div className="pass__note">
             <span className="pass__countlabel">LINE STATIONS NEED FROM YOU</span>
             {lineRequests.map((q, i) => (
               <p key={i}>
-                {q.station}: {formatG(q.grams)} {q.name}
+                {q.ask ? `${q.station} asks you to make ` : `${q.station}: `}{formatG(q.grams)} {q.name}{q.ask && q.bump?.length ? ` (bumps ${q.bump.map((b) => b.name).join(", ")} to tomorrow)` : ""}
                 {(asked[`${q.stationId}:${q.itemId}`] ?? 0) >= q.grams
                   ? " · on your prep list"
                   : madeToday(q.itemId)
@@ -256,6 +265,32 @@ export default function TodayScreen({
           <p className="pass__hint">
             Top to bottom. The long hands-off recipe starts first and the rest fill its downtime. Tap STEPS to see them, or QUICK FINISH when it’s made.
           </p>
+          {askFor && (
+            <div className={`pass__note pass__asknote${askFor.check.ok ? "" : " is-no"}`}>
+              <span className="pass__countlabel">ASK PREP TO MAKE {askFor.row.name.toUpperCase()} · {formatG(askFor.row.makeG)}</span>
+              {askFor.check.ok ? (
+                <>
+                  <p>Prep can take it and still be done by about {new Date(askFor.check.doneAt ?? Date.now()).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}.{askFor.check.bump.length ? ` To make room, ${askFor.check.bump.map((b) => b.name).join(", ")} ${askFor.check.bump.length === 1 ? "moves" : "move"} to tomorrow (not needed tonight).` : ""}</p>
+                  <button type="button" className="pass__cta" onClick={() => { onSendAsk(askFor.row, askFor.check); setAskFor(null); }}>SEND TO PREP</button>
+                </>
+              ) : (
+                <p>No: {askFor.check.reason} Make it yourself.</p>
+              )}
+              <button type="button" className="pass__ghost" onClick={() => setAskFor(null)}>{askFor.check.ok ? "Cancel" : "OK"}</button>
+            </div>
+          )}
+          {asks.length > 0 && (
+            <div className="pass__note">
+              <span className="pass__countlabel">ASKED PREP</span>
+              {asks.map((a) => (
+                <p key={a.id}>
+                  {formatG(a.grams)} {a.name} · {a.got ? "✓ got it" : a.made ? "Prep made it: collect it." : a.taken ? "Prep took it." : "waiting for Prep to take it."}
+                  {!a.got && (a.made || a.taken) && <>{" "}<button type="button" className="pass__linkbtn" onClick={() => onToggle("p", a.row)}>GOT IT</button></>}
+                  {!a.got && !a.taken && <>{" "}<button type="button" className="pass__linkbtn" onClick={() => onCancelAsk(a.id)}>TAKE IT BACK</button></>}
+                </p>
+              ))}
+            </div>
+          )}
           {prepTotal === 0 && <p className="pass__empty">Nothing to prep from scratch.</p>}
           {cantMake.length > 0 && (
             <p className="pass__holdnote pass__cantmake">
@@ -271,6 +306,7 @@ export default function TodayScreen({
             timers={timers}
             onToggleStep={onToggleStep}
             onToggleItem={(row) => onToggle("p", row)}
+            onAsk={canAsk ? (row) => (canAsk(row) ? () => setAskFor({ row, check: checkAsk(row) }) : null) : null}
             onOpenPrep={onOpenPrep}
             onStartTimer={onStartTimer}
           />

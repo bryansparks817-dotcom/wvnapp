@@ -5,7 +5,7 @@ import { getStations, stationsFor } from "../data/stations";
 import {
   loadEightySix, saveEightySix, loadInventory, saveInventory, loadShift, saveShift,
   loadCook, saveCook, loadWaste, saveWaste, loadStaff, saveStaff, loadStation, saveStation, loadChefAlerts, saveChefAlerts, logFlag,
-  KEYS, shiftKeyFor, inventoryKeyFor,
+  KEYS, shiftKeyFor, inventoryKeyFor, loadChefSettings,
 } from "../lib/storage";
 import { onRemoteChange } from "../lib/sync";
 import { applyCollect, applyPrep, buildShift, emptyInventory, gramsIn, isLastDay } from "../lib/inventory";
@@ -19,6 +19,8 @@ import LabelPrompt from "./LabelPrompt";
 import RecipePicker from "./RecipePicker";
 import PrepTime from "./PrepTime";
 import { prepTime } from "../lib/prepTime";
+import { askCheck, prepItemFor, prepStation } from "../lib/prepAsk";
+import { todayAt } from "../lib/crew";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
@@ -308,7 +310,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // Prep: what line stations still need from its stock today. Re-read when
   // any station's shift changes.
   const [reqVersion, setReqVersion] = useState(0);
-  useEffect(() => (isBackup ? onRemoteChange((keys) => { if (keys.some((k) => k.startsWith("thePass.shift.v1") || k.startsWith("thePass.inventory.v1"))) setReqVersion((v) => v + 1); }) : undefined), [isBackup]);
+  // Line stations re-read too, for where their asks to Prep stand.
+  useEffect(() => onRemoteChange((keys) => { if (keys.some((k) => k.startsWith("thePass.shift.v1") || k.startsWith("thePass.inventory.v1"))) setReqVersion((v) => v + 1); }), []);
   const requests = useMemo(() => (isBackup && reqVersion >= 0 ? lineRequests(st, getStations(), today).list : []), [isBackup, st, today, reqVersion]);
   // Prep doesn't count: its list comes from the line stations' closes.
   const needs = useMemo(() => (isBackup && reqVersion >= 0 ? closeNeeds(st, getStations()) : null), [isBackup, st, reqVersion]);
@@ -367,7 +370,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // Prep as planned from the count, and as scaled down by any short
   // ingredient (see lib/shortage.js).
   // Items the chef took off today's list are left out (shift.skip).
-  const activePrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => !shift.skip?.[p.id]) : []), [shift, shiftIsToday]);
+  const activePrep = useMemo(() => (shiftIsToday ? shift.prep.filter((p) => !shift.skip?.[p.id] && !shift.askPrep?.[p.id]) : []), [shift, shiftIsToday]);
   const fullPrep = useMemo(() => activePrep.filter((p) => p.makeG > 0), [activePrep]);
   const prepRows = useMemo(() => (shiftIsToday ? applyShortages(activePrep, shift.short) : []), [activePrep, shift, shiftIsToday]);
   const prepForPlan = useMemo(() => prepRows.filter((p) => p.makeG > 0), [prepRows]);
@@ -601,8 +604,37 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     const prep = has
       ? shift.prep.map((p) => (p.id === q.itemId ? { ...p, makeG: p.makeG + extraG, askedG: (p.askedG ?? 0) + extraG } : p))
       : [...shift.prep, { id: item.id, recipeId: item.recipeId, name: item.name, makeG: extraG, toss: [], askedG: extraG }];
-    setShift({ ...shift, prep, asked: { ...(shift.asked ?? {}), [key]: q.grams } });
+    // A line cook's ask comes with what to bump to tomorrow to make room.
+    const skip = { ...(shift.skip ?? {}) };
+    const bumped = { ...(shift.bumped ?? {}) };
+    for (const b of q.bump ?? []) {
+      if (shift.done?.[`p:${b.id}`]) continue;
+      skip[b.id] = true;
+      bumped[b.id] = { name: b.name, for: q.station, item: q.name, at: Date.now() };
+    }
+    setShift({ ...shift, prep, skip, bumped, asked: { ...(shift.asked ?? {}), [key]: q.grams } });
   }
+
+  // Line station: ask Prep to take one of this list's prep items.
+  const canAsk = (row) => !isBackup && Boolean(prepItemFor(row, getStations()));
+  const checkAsk = (row) => askCheck({ row, stations: getStations(), recipesById, today, prepDueAt: todayAt(loadChefSettings().prepDueAt) });
+  function sendAsk(row, check) {
+    setShift({ ...shift, askPrep: { ...(shift.askPrep ?? {}), [row.id]: { prepItemId: check.prepItem.id, name: row.name, grams: row.makeG, bump: check.bump, by, at: Date.now() } } });
+  }
+  function cancelAsk(id) {
+    const askPrep = { ...(shift.askPrep ?? {}) };
+    delete askPrep[id];
+    setShift({ ...shift, askPrep });
+  }
+  // Where each ask stands, from Prep's shift.
+  const prepSh = !isBackup && shiftIsToday && Object.keys(shift.askPrep ?? {}).length ? loadShift(prepStation(getStations())?.id) : null;
+  const asks = shiftIsToday ? Object.entries(shift.askPrep ?? {}).map(([id, a]) => {
+    const row = shift.prep.find((p) => p.id === id);
+    const live = prepSh && !prepSh.closedAt && prepSh.date === today ? prepSh : null;
+    const taken = (live?.asked?.[`${st.id}:${a.prepItemId}`] ?? 0) >= a.grams;
+    const made = Boolean(live?.done?.[`p:${a.prepItemId}`]);
+    return { id, row, ...a, taken, made, got: Boolean(shift.done[`p:${id}`]) };
+  }).filter((a) => a.row) : [];
 
   function printPrepLabel(id) {
     const key = `p:${id}`;
@@ -792,6 +824,12 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         lineRequests={requests}
         asked={shiftIsToday ? shift.asked ?? {} : {}}
         onAddRequest={(q) => addRequest(q)}
+        canAsk={canAsk}
+        checkAsk={checkAsk}
+        onSendAsk={sendAsk}
+        onCancelAsk={cancelAsk}
+        asks={asks}
+        bumped={isBackup && shiftIsToday ? shift.bumped ?? {} : {}}
         madeToday={(id) => Boolean(shiftIsToday && shift.done[`p:${id}`])}
         addable={isBackup && shiftIsToday ? items : null}
         onAddRecipe={addRecipes}
