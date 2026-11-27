@@ -557,3 +557,6 @@ body:has(.pass) { background: #1b1e1c; }
 .ev__danger { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; border-top: 1px solid var(--line); padding-top: 8px; font-size: 14px; }
 .chef__mode { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .chef__mode .chef__servicetoggle button { min-height: 48px; }
+
+.pass__pickerlist { max-height: 50vh; overflow-y: auto; }
+.pass__row--picked { border-color: var(--amber); }

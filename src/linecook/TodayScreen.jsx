@@ -5,6 +5,7 @@ import { formatMinutes } from "../lib/format";
 import { containerLabel, formatG, shelfLabel } from "../lib/inventory";
 import PrepSteps from "./PrepSteps";
 import GatherList from "./GatherList";
+import RecipePicker from "./RecipePicker";
 import { madeAtName } from "../data/stations";
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -96,31 +97,18 @@ function TakeLine({ item, take, today }) {
   );
 }
 
-// Prep: tap any recipe Prep makes to put a batch of it on today's list.
-function AddRecipe({ items, onAdd }) {
+// Prep: pick recipes to add to today's list, then add them all at once.
+function AddMore({ items, onAdd }) {
   const [open, setOpen] = useState(false);
-  const [q, setQ] = useState("");
-  const [added, setAdded] = useState(null);
-  if (!open) return <button type="button" className="pass__ghostbtn" onClick={() => setOpen(true)}>+ ADD A RECIPE TO MY LIST</button>;
-  const term = q.trim().toLowerCase();
-  const shown = (term ? items.filter((i) => i.name.toLowerCase().includes(term)) : items).slice().sort((a, b) => a.name.localeCompare(b.name));
+  const [picked, setPicked] = useState([]);
+  if (!open) return <button type="button" className="pass__ghostbtn" onClick={() => setOpen(true)}>+ ADD RECIPES TO MY LIST</button>;
   return (
     <div className="pass__note">
-      <span className="pass__countlabel">ADD A RECIPE · ONE BATCH EACH TAP</span>
-      <input className="pass__input" type="search" placeholder={`Find a recipe… (${items.length})`} aria-label="Find a recipe" value={q} onChange={(e) => setQ(e.target.value)} />
-      {added && <p className="pass__hint pass__vine">Added {added} to your list.</p>}
-      <ul className="pass__list">
-        {shown.slice(0, term ? 20 : 8).map((i) => (
-          <li key={i.id}>
-            <button type="button" className="pass__row" onClick={() => { onAdd(i); setAdded(i.name); setQ(""); }}>
-              <span className="pass__rowtext"><span className="pass__rowname">{i.name}</span></span>
-              <span className="pass__open">ADD +</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      {!term && items.length > 8 && <p className="pass__hint">Type to find the other {items.length - 8}.</p>}
-      <button type="button" className="pass__ghost" onClick={() => { setOpen(false); setAdded(null); }}>Done adding</button>
+      <RecipePicker items={items} picked={picked} onChange={setPicked} />
+      <button type="button" className="pass__cta" disabled={!picked.length} onClick={() => { onAdd(picked); setPicked([]); setOpen(false); }}>
+        {picked.length ? `ADD ${picked.length} TO MY LIST` : "TAP RECIPES TO ADD"}
+      </button>
+      <button type="button" className="pass__ghost" onClick={() => { setOpen(false); setPicked([]); }}>Cancel</button>
     </div>
   );
 }
@@ -276,7 +264,7 @@ export default function TodayScreen({
             onOpenPrep={onOpenPrep}
             onStartTimer={onStartTimer}
           />
-          {addable && <AddRecipe items={addable} onAdd={onAddRecipe} />}
+          {addable && <AddMore items={addable} onAdd={onAddRecipe} />}
           {wasteG > 0 && (
             <p className="pass__waste">
               Tossed today: {formatG(wasteG)} ({wasteToday.map((w) => w.name).join(", ")}). Logged for food cost.
