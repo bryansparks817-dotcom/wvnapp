@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useBack } from "../lib/backNav";
 import { getStations, setupFlags } from "../data/stations";
 import { saveStationSetup } from "../lib/storage";
 import { isCateringRecipe } from "../lib/recipeLibrary";
@@ -349,6 +350,12 @@ export default function StationsSetup({ recipesById }) {
   const [stations, setStations] = useState(() => getStations());
   const [view, setView] = useState({ kind: "list" }); // list | station | item | recipe
   const [tab, setTab] = useState("stations"); // stations | recipes
+  // Phone back steps up one level here before leaving Stations & pars.
+  useBack(() => {
+    if (view.kind === "item") { setView(view.back ?? { kind: "station", stationId: view.stationId }); return true; }
+    if (view.kind !== "list") { setView({ kind: "list" }); return true; }
+    return false;
+  }, 2);
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
   const recipes = [...(recipesById?.values() ?? [])].filter((r) => r.kind !== "dish" && !isCateringRecipe(r)).sort((a, b) => a.name.localeCompare(b.name));
