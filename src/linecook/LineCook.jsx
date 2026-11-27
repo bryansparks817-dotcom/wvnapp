@@ -619,6 +619,17 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     />
   ) : null;
 
+  // Prep's shift start (Bryan, 2026-11-27): START PREP on the time box, or
+  // the cook's first tick if they skip it. The done-time math counts from it.
+  useEffect(() => {
+    if (!isBackup || !shiftIsToday || shift.startedAt) return;
+    const ticks = [
+      ...Object.values(shift.stepsDone ?? {}).filter((n) => typeof n === "number"),
+      ...Object.keys(shift.done ?? {}).map((k) => shift.meta?.[k]?.at).filter(Boolean),
+    ];
+    if (ticks.length) setShift({ ...shift, startedAt: Math.min(...ticks), startedBy: by });
+  }, [shift, isBackup, shiftIsToday, by]);
+
   // Ticks one step of the prep list. Ticking an item's last step checks the
   // item off (restock + labels); unticking it undoes that.
   function toggleStep(step, isDone) {
@@ -786,7 +797,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         onAddRecipe={addRecipes}
         timeWith={(picked) => timeOf(withAdded({ prep: prepRows }, picked).prep)}
         prepTime={isBackup ? timeOf(prepRows, shiftIsToday ? { done: shift.done ?? {}, stepsDone: shift.stepsDone ?? {} } : null) : null}
-        prepStartAt={shiftIsToday ? shift.gatherDoneAt ?? null : null}
+        prepStartAt={shiftIsToday ? shift.startedAt ?? null : null}
+        onStartPrep={isBackup && shiftIsToday && !shift.startedAt ? () => setShift({ ...shift, startedAt: Date.now(), startedBy: by }) : null}
         isPrep={isBackup}
       />
       {labelSheet}

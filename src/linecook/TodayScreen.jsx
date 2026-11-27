@@ -121,7 +121,7 @@ export default function TodayScreen({
   lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
   collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
   lineRequests = [], asked = {}, onAddRequest, madeToday = () => false,
-  addable = null, onAddRecipe, isPrep = false, timeWith = null, prepTime = null, prepStartAt = null,
+  addable = null, onAddRecipe, isPrep = false, timeWith = null, prepTime = null, prepStartAt = null, onStartPrep = null,
 }) {
   const header = { station, initials, onChangeCook };
   const hasGather = gather.items.length > 0 || gather.missing.length > 0;
@@ -135,7 +135,7 @@ export default function TodayScreen({
           <p className="pass__lede">Pull these from the walk-in and dry storage first. Amounts cover all of today’s prep.</p>
         </PassHeader>
         <main className="pass__main">
-          {isPrep && prepTime && <PrepTime time={prepTime} startAt={prepStartAt} />}
+          {isPrep && prepTime && <PrepTime time={prepTime} startAt={prepStartAt} onStart={onStartPrep} />}
           {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
           <ChefCard notes={chefNotes} onAck={onAckChef} />
           <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
@@ -172,7 +172,7 @@ export default function TodayScreen({
         <h1 className="pass__title">Today</h1>
       </PassHeader>
       <main className="pass__main">
-        {isPrep && prepTime && <PrepTime time={prepTime} startAt={prepStartAt} />}
+        {isPrep && prepTime && <PrepTime time={prepTime} startAt={prepStartAt} onStart={onStartPrep} />}
         {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
         <ChefCard notes={chefNotes} onAck={onAckChef} />
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />

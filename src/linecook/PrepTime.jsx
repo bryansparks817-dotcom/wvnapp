@@ -11,7 +11,7 @@ const hhmm = (s) => clock(todayAt(s));
 // time, with what's left under it. Then when the list will really be done,
 // checked against the chef's prep deadline (Chef Home: PREP DONE BY), and
 // anything that won't make it: start it next, or it holds over to tomorrow.
-export default function PrepTime({ time, startAt = null }) {
+export default function PrepTime({ time, startAt = null, onStart = null }) {
   const [now, setNow] = useState(() => Date.now());
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -36,6 +36,11 @@ export default function PrepTime({ time, startAt = null }) {
           {time.handsOnLeft > 0 ? `${formatMinutes(time.handsOnLeft)} hands-on left` : "All hands-on work done ✓"}
         </span>
       )}
+      {onStart ? (
+        <button type="button" className="pass__cta pass__startprep" onClick={onStart}>START PREP · CLOCK IN ▶</button>
+      ) : startAt ? (
+        <span className="pass__hint pass__mono">STARTED {clock(startAt).toUpperCase()}</span>
+      ) : null}
       <span className="pass__hint pass__mono">PREP DONE BY {hhmm(settings.prepDueAt)} · STATIONS READY {hhmm(settings.readyAt)} · SERVICE {hhmm(settings.serviceAt.dinner)}</span>
       {pastDue && time.count > 0 && (
         <span className="pass__hint">Today’s prep deadline ({hhmm(settings.prepDueAt)}) has passed. The finish time shows once you start.</span>
