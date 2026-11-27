@@ -22,13 +22,24 @@ const BASE_STATIONS = [
   { id: "prep", name: "Prep", linePar: 0, holdsBackup: true, items: extra("prep") },
 ];
 
+// Bryan, 2026-11-27: steaks and chops come in precut and frozen. Grill counts
+// them each and collects them thawed; the chef pulls them from the freezer.
+// No prep, never on Prep's list. Portion weight, par and thawed shelf life
+// are drafts (light blue) to confirm.
+const FROZEN_EACH = { frozenEach: true, freezerKind: "portions", pan: "1/6", panGrams: 2500, lowboySize: "qt", qtGrams: 950, lowboyPar: 0, shelfLifeDays: 3, unconfirmed: ["eachGrams", "parEach", "shelfLifeDays"] };
+const GRILL_FROZEN = [
+  { ...FROZEN_EACH, id: "kc-strip", name: "KC strip", eachGrams: 397, parEach: 12 },
+  { ...FROZEN_EACH, id: "dry-aged-pork-chop", name: "Dry-aged pork chop", eachGrams: 454, parEach: 10 },
+];
+const addGrillFrozen = (stations) => stations.map((s) => (s.id !== "grill" ? s : { ...s, items: [...s.items, ...GRILL_FROZEN.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
 // Prep, with light-blue starting prep pars to confirm. Line stations keep
 // their items as they were (switch one to collect only under WHO MAKES IT).
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = everyRecipeOnPrep(BASE_STATIONS);
+export const DEFAULT_STATIONS = addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -70,6 +81,7 @@ const STATION_FIXES = [
     };
   })],
   ["every-recipe-on-prep-2026-11-27", everyRecipeOnPrep],
+  ["grill-frozen-steaks-2026-11-27", addGrillFrozen],
 ];
 
 // The kitchen's stations: the chef's saved setup, or the built-in one.

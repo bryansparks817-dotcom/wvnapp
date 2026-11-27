@@ -229,6 +229,9 @@ export default function TodayScreen({
                           {row.toLowboy.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
                         </span>
                       )}
+                      {!isDone && row.pullEach > 0 && (
+                        <span className="pass__rowsub">Collect {row.pullEach} from the walk-in, thawed (the chef pulled {row.pullEach === 1 ? "it" : "them"} from the freezer). No prep.</span>
+                      )}
                       {!isDone && row.shortG > 0 && (
                         <span className="pass__rowsub pass__amber">
                           SHORT {formatG(row.shortG)} · {row.from ? `${madeAtName(row)} has been asked to make it.` : `${madeAtName(row)} makes this. Ask them for it.`}

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { getStations } from "../data/stations";
 import { closeNeeds, holdsBackup } from "../lib/backupStock";
-import { THAW_KINDS, UNITS, addDays, coldWaterHours, guessKind, kindOf, loadFreezer, packSize, packUnit, prepUses, pullList, saveFreezer, thawHours, thawing } from "../lib/freezer";
+import { THAW_KINDS, UNITS, addDays, coldWaterHours, guessKind, kindOf, linePullRows, loadFreezer, packSize, packUnit, prepUses, pullForLine, pullList, saveFreezer, thawHours, thawing, undoLinePull } from "../lib/freezer";
+import { buildShift, emptyInventory } from "../lib/inventory";
+import { loadInventory } from "../lib/storage";
 import { loadChefSettings, saveChefSettings, KEYS } from "../lib/storage";
 import { onRemoteChange } from "../lib/sync";
 import { formatMinutes } from "../lib/format";
@@ -52,8 +54,20 @@ export default function Freezer({ recipesById, by }) {
     const { byItem } = closeNeeds(prep, stations);
     return Object.keys(byItem).map((id) => prep.items.find((i) => i.id === id)).filter(Boolean).map((i) => ({ name: i.name, recipeId: i.recipeId ?? i.id }));
   }, [state.countedAt]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Precut frozen items the line stations closed under par (KC strip, chops).
+  const lineNeeds = useMemo(() => getStations().filter((st) => !holdsBackup(st)).flatMap((st) => {
+    const frozen = st.items.filter((i) => i.frozenEach);
+    const inv = loadInventory(st.id);
+    if (!frozen.length || !inv?.closedAt) return [];
+    const { collect } = buildShift(frozen, { ...emptyInventory(frozen), ...(inv.items ?? {}) }, st.linePar, today);
+    return collect.filter((r) => r.pullEach > 0).map((r) => ({ key: `${st.id}:${r.id}`, stationId: st.id, station: st.name, item: r.item, each: r.pullEach }));
+  }), [state.countedAt, today]); // eslint-disable-line react-hooks/exhaustive-deps
   const uses = useMemo(() => prepUses(state.items.filter((i) => i.inFreezer), needs, recipesById), [state.items, needs, recipesById]);
-  const pulls = pullList(state, { uses, nextDay, startAt, now });
+  const pulls = [...linePullRows(lineNeeds, state, { nextDay, startAt, now }), ...pullList(state, { uses, nextDay, startAt, now })].sort((a, b) => a.pullAt - b.pullAt);
+  const linePulled = Object.entries(state.linePulls ?? {})
+    .map(([key, p]) => ({ key, ...p, readyAt: p.at + p.hours * 3600000 }))
+    .filter((p) => now - p.readyAt < 2 * 86400000)
+    .sort((a, b) => a.readyAt - b.readyAt);
   const thaw = thawing(state, now);
   const inFreezer = state.items.filter((i) => i.inFreezer && !i.pulledAt);
   const names = useMemo(() => {
@@ -62,8 +76,8 @@ export default function Freezer({ recipesById, by }) {
     return [...set].sort();
   }, [recipesById]);
 
-  const pull = (row) => update(row.item.id, { pulledAt: Date.now(), pulledBy: by });
-  const notNeeded = (row) => setState({ ...state, notNeeded: { ...state.notNeeded, [`${row.item.id}@${row.day}`]: true } });
+  const pull = (row) => (row.line ? setState(pullForLine(state, row, by)) : update(row.item.id, { pulledAt: Date.now(), pulledBy: by }));
+  const notNeeded = (row) => setState({ ...state, notNeeded: { ...state.notNeeded, [row.line ? row.key : `${row.item.id}@${row.day}`]: true } });
 
   return (
     <>
@@ -81,7 +95,7 @@ export default function Freezer({ recipesById, by }) {
         )}
         <ul className="pass__list">
           {pulls.map((r) => (
-            <li key={r.item.id} className={`fz__pull${r.late ? " is-late" : ""}`}>
+            <li key={r.key ?? r.item.id} className={`fz__pull${r.late ? " is-late" : ""}`}>
               <span className="pass__rowtext">
                 <span className="pass__rowname">{r.item.name} <span className="pass__mono">· {r.item.qty} {r.item.unit}</span></span>
                 <span className={`pass__rowsub${r.late ? " chef__late" : ""}`}>
@@ -93,7 +107,13 @@ export default function Freezer({ recipesById, by }) {
                     {r.cold ? ` Cold water instead: sealed, changed every 30 min, about ${hrs(r.cold)}, then use right away.` : " Use it from frozen, or move the recipe to later."}
                   </span>
                 )}
-                <span className="pass__rowsub">{r.auto ? `${dayName(r.day, today)}'s prep uses it: ${[...new Set(r.forRecipes)].join(", ")}` : `Chef needs it ${dayName(r.day, today)}`}</span>
+                {r.line && (
+                  <span className="pass__rowsub">
+                    {r.need.station} closed {r.item.qty} under par. Precut: pull {r.item.qty}, the cook collects them thawed.
+                    {r.short != null ? ` Freezer count shows only ${r.short}.` : !r.match ? " Not in the freezer count yet." : ""}
+                  </span>
+                )}
+                {!r.line && <span className="pass__rowsub">{r.auto ? `${dayName(r.day, today)}'s prep uses it: ${[...new Set(r.forRecipes)].join(", ")}` : `Chef needs it ${dayName(r.day, today)}`}</span>}
               </span>
               <span className="fz__actions">
                 <button type="button" className="chef__ack" onClick={() => pull(r)}>PULLED</button>
@@ -102,7 +122,7 @@ export default function Freezer({ recipesById, by }) {
             </li>
           ))}
         </ul>
-        {thaw.length > 0 && (
+        {(thaw.length > 0 || linePulled.length > 0) && (
           <>
             <span className="pass__countlabel">THAWING IN THE WALK-IN</span>
             <ul className="pass__list">
@@ -115,6 +135,17 @@ export default function Freezer({ recipesById, by }) {
                   <span className="fz__actions">
                     <button type="button" className="pass__ghost" onClick={() => update(t.item.id, { pulledAt: null, inFreezer: false, needOn: null })}>Used · clear</button>
                     <button type="button" className="pass__ghost" onClick={() => update(t.item.id, { pulledAt: null })}>Undo</button>
+                  </span>
+                </li>
+              ))}
+              {linePulled.map((p) => (
+                <li key={p.key} className="fz__pull">
+                  <span className="pass__rowtext">
+                    <span className="pass__rowname">{p.name} <span className="pass__mono">· {p.each} ea for {p.station}</span></span>
+                    <span className={`pass__rowsub${p.readyAt <= now ? " pass__vine" : ""}`}>{p.readyAt <= now ? "Thawed" : `Ready about ${when(p.readyAt, today)}`} · pulled {when(p.at, today)}{p.by ? ` by ${p.by}` : ""}</span>
+                  </span>
+                  <span className="fz__actions">
+                    <button type="button" className="pass__ghost" onClick={() => setState(undoLinePull(state, p.key))}>Undo</button>
                   </span>
                 </li>
               ))}

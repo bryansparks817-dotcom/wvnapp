@@ -588,3 +588,5 @@ body:has(.pass) { background: #1b1e1c; }
 .fz__sources { margin-top: 10px; }
 .fz__pull .pass__rowsub, .fz__item .pass__rowsub { font-family: "DM Sans", system-ui, sans-serif; letter-spacing: 0; }
 .fz__row .fz__inout { margin-left: auto; }
+.pass__eachrow { display: flex; gap: 8px; align-items: center; }
+.pass .pass__eachnum { width: 84px; text-align: center; font-family: "DM Mono", monospace; font-size: 22px; }
