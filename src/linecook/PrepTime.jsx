@@ -16,6 +16,11 @@ export default function PrepTime({ time, startAt = null }) {
           All done by about {clock(doneAt)}{time.longest && time.total > time.handsOn ? ` (${time.longest.name} takes longest: ${formatMinutes(time.longest.minutes)} start to finish)` : ""}.
         </span>
       )}
+      {time.tomorrow?.length > 0 && (
+        <span className="pass__hint">
+          Overnight: {time.tomorrow.map((t) => `${t.name} rests overnight${t.handsOn ? `, about ${formatMinutes(t.handsOn)} to finish tomorrow` : ""}`).join("; ")}.
+        </span>
+      )}
     </div>
   );
 }

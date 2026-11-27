@@ -18,6 +18,7 @@ import { printLabel } from "../lib/label";
 import LabelPrompt from "./LabelPrompt";
 import RecipePicker from "./RecipePicker";
 import PrepTime from "./PrepTime";
+import { prepTime } from "../lib/prepTime";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
@@ -475,25 +476,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
 
   // Prep: the optimized prep time (start to finish, hands-off overlapping)
   // and the hands-on part, for a list.
-  function timeOf(rows) {
-    const p = buildPrepSteps(rows.filter((r) => r.makeG > 0), pacedRecipes);
-    const handsOn = p.steps.reduce((sum, st) => sum + (st.handsOn ?? 0), 0);
-    // The item that finishes last, and how long it takes from its first step.
-    const span = {};
-    for (const st of p.steps) {
-      if (!st.item) continue;
-      const end = st.at + (st.handsOn ?? 0) + (st.handsOff ?? []).reduce((m, h) => m + h.minutes, 0);
-      const cur = span[st.item.id] ?? { name: st.item.name, start: st.at, end };
-      span[st.item.id] = { ...cur, start: Math.min(cur.start, st.at), end: Math.max(cur.end, end) };
-    }
-    const last = Object.values(span).sort((a, b) => b.end - a.end)[0];
-    return {
-      total: Math.round(p.totalMinutes),
-      handsOn: Math.round(handsOn),
-      count: rows.filter((r) => r.makeG > 0).length,
-      longest: last ? { name: last.name, minutes: Math.round(last.end - last.start) } : null,
-    };
-  }
+  const timeOf = (rows) => prepTime(rows, pacedRecipes);
   const previewTime = (picked) => {
     const byItem = { ...(needs?.byItem ?? {}) };
     for (const q of requests) if (!(needs?.list ?? []).some((r) => r.stationId === q.stationId && r.itemId === q.itemId)) byItem[q.itemId] = (byItem[q.itemId] ?? 0) + q.grams;
