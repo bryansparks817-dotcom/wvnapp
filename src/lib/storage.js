@@ -34,6 +34,7 @@ const PAN_REQUESTS_KEY = "thePass.panRequests.v1";
 const STATION_FIXES_KEY = "thePass.stationFixes.v1";
 const KITCHEN_MODE_KEY = "thePass.kitchenMode.v1";
 const EVENTS_KEY = "thePass.events.v1";
+const FREEZER_KEY = "thePass.freezer.v1";
 
 // Kept on this phone only, never shared: who is signed in here, which
 // station this phone is on, its running timers.
@@ -41,7 +42,7 @@ const EVENTS_KEY = "thePass.events.v1";
 // phone doesn't switch the restaurant's line phones over.
 export const DEVICE_KEYS = new Set([KITCHEN_MODE_KEY, COOK_KEY, CHEF_KEY, STATION_KEY, TIMERS_KEY, SEEDED_KEY, SELECTED_RECIPE_IDS_KEY, "thePass.cleanup.v1", "thePass.installHint.v1"]);
 // Key names, for screens that reload when another phone changes them.
-export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY, KITCHEN_MODE: KITCHEN_MODE_KEY, EVENTS: EVENTS_KEY };
+export const KEYS = { RECIPES: RECIPES_KEY, INGREDIENTS: INGREDIENTS_KEY, STAFF: STAFF_KEY, WASTE: WASTE_KEY, EIGHTY_SIX: EIGHTY_SIX_KEY, LIBRARY: LIBRARY_KEY, STATIONS: STATIONS_KEY, PAN_REQUESTS: PAN_REQUESTS_KEY, KITCHEN_MODE: KITCHEN_MODE_KEY, EVENTS: EVENTS_KEY, FREEZER: FREEZER_KEY };
 
 // Count and shift data are kept per station. Garde manger keeps the original
 // keys so data saved before stations existed still loads.
@@ -109,6 +110,7 @@ const ALL_KEYS = [
   STATION_FIXES_KEY,
   KITCHEN_MODE_KEY,
   EVENTS_KEY,
+  FREEZER_KEY,
 ];
 
 // Wipes everything this app has stored locally (recipes, ingredients,
@@ -291,7 +293,7 @@ export function saveChef(chef) {
 // Chef settings: how far behind a cook can run before going red, and when
 // service starts for each shift ("HH:MM").
 // prepDueAt: every prep recipe done. readyAt: every station set for service.
-export const DEFAULT_CHEF_SETTINGS = { marginMin: 15, serviceAt: { lunch: "11:30", dinner: "17:00" }, prepDueAt: "16:30", readyAt: "16:45" };
+export const DEFAULT_CHEF_SETTINGS = { marginMin: 15, serviceAt: { lunch: "11:30", dinner: "17:00" }, prepDueAt: "16:30", readyAt: "16:45", prepStartAt: "09:00" };
 
 export function loadChefSettings() {
   const s = load(CHEF_SETTINGS_KEY, {});
@@ -430,4 +432,16 @@ export function loadEvents() {
 
 export function saveEvents(list) {
   save(EVENTS_KEY, list);
+}
+
+// The chef's freezer count and pull list (lib/freezer.js):
+// { items: [{ id, name, kind, qty, unit, eachLb?, thawHours?, confirmed?, inFreezer, needOn?, pulledAt? }],
+//   countedAt, countedBy, notNeeded: { "itemId@YYYY-MM-DD": true } }
+export function loadFreezer() {
+  const s = load(FREEZER_KEY, {});
+  return { items: [], notNeeded: {}, ...s };
+}
+
+export function saveFreezer(state) {
+  save(FREEZER_KEY, state);
 }
