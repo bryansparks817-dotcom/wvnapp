@@ -98,12 +98,14 @@ function TakeLine({ item, take, today }) {
 }
 
 // Prep: pick recipes to add to today's list, then add them all at once.
-function AddMore({ items, onAdd }) {
+function AddMore({ items, onAdd, timeWith }) {
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState([]);
+  const time = timeWith(picked);
   if (!open) return <button type="button" className="pass__ghostbtn" onClick={() => setOpen(true)}>+ ADD RECIPES TO MY LIST</button>;
   return (
     <div className="pass__note">
+      {picked.length > 0 && <p className="pass__hint pass__amber">With these: {formatMinutes(time.total)} total, {formatMinutes(time.handsOn)} hands-on.</p>}
       <RecipePicker items={items} picked={picked} onChange={setPicked} />
       <button type="button" className="pass__cta" disabled={!picked.length} onClick={() => { onAdd(picked); setPicked([]); setOpen(false); }}>
         {picked.length ? `ADD ${picked.length} TO MY LIST` : "TAP RECIPES TO ADD"}
@@ -118,7 +120,7 @@ export default function TodayScreen({
   lastNotes, flags, onAddFlag, onRemoveFlag, items, itemsById, today,
   collect, chefNotes = [], bump = null, onAckChef, gather, gathered, short, onShort, cantMake, gatherDone, onToggleGather, onFinishGather, onReopenGather, tossOnly, plan, done, stepsDone, meta, wasteToday, timers, onToggle, onToggleStep, onOpenPrep, onStartTimer,
   lineRequests = [], asked = {}, onAddRequest, madeToday = () => false,
-  addable = null, onAddRecipe, isPrep = false,
+  addable = null, onAddRecipe, isPrep = false, timeWith = null, prepTime = null,
 }) {
   const header = { station, initials, onChangeCook };
   const hasGather = gather.items.length > 0 || gather.missing.length > 0;
@@ -167,6 +169,13 @@ export default function TodayScreen({
         <h1 className="pass__title">Today</h1>
       </PassHeader>
       <main className="pass__main">
+        {isPrep && prepTime && (
+          <div className="pass__preptime">
+            <span className="pass__countlabel">TOTAL PREP TIME</span>
+            <span className="pass__preptimebig">{prepTime.total ? formatMinutes(prepTime.total) : "0 min"}</span>
+            <span className="pass__hint">{formatMinutes(prepTime.handsOn || 0)} hands-on · {prepTime.count} item{prepTime.count === 1 ? "" : "s"}</span>
+          </div>
+        )}
         <ChefCard notes={chefNotes} onAck={onAckChef} />
         <FlagBoard flags={flags} items={items} onAdd={onAddFlag} onRemove={onRemoveFlag} />
         {lastNotes && !hasGather && <NoteCard notes={lastNotes} />}
@@ -264,7 +273,7 @@ export default function TodayScreen({
             onOpenPrep={onOpenPrep}
             onStartTimer={onStartTimer}
           />
-          {addable && <AddMore items={addable} onAdd={onAddRecipe} />}
+          {addable && <AddMore items={addable} onAdd={onAddRecipe} timeWith={timeWith} />}
           {wasteG > 0 && (
             <p className="pass__waste">
               Tossed today: {formatG(wasteG)} ({wasteToday.map((w) => w.name).join(", ")}). Logged for food cost.

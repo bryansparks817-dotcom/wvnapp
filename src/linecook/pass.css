@@ -560,3 +560,5 @@ body:has(.pass) { background: #1b1e1c; }
 
 .pass__pickerlist { max-height: 50vh; overflow-y: auto; }
 .pass__row--picked { border-color: var(--amber); }
+.pass__preptime { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 10px 14px; margin-bottom: 12px; border: 1.5px solid var(--amber); border-radius: 10px; background: var(--bg, #1B1E1C); }
+.pass__preptimebig { font-size: 26px; font-weight: 700; color: var(--amber); }

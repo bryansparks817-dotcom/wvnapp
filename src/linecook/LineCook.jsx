@@ -17,6 +17,7 @@ import { applyShortages } from "../lib/shortage";
 import { printLabel } from "../lib/label";
 import LabelPrompt from "./LabelPrompt";
 import RecipePicker from "./RecipePicker";
+import { formatMinutes } from "../lib/format";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
@@ -158,8 +159,19 @@ export function WhoScreen({
 
 // Prep's opening page: no count. Its list is what the line stations' closes
 // came up short on, plus what they've asked for today.
-function PrepStart({ station, screen, setScreen, onOpenChef, initials, onChangeCook, needs, requests, lastNotes, items, onBuild }) {
+function PrepTime({ time }) {
+  return (
+    <div className="pass__preptime" aria-live="polite">
+      <span className="pass__countlabel">TOTAL PREP TIME</span>
+      <span className="pass__preptimebig">{time.total ? formatMinutes(time.total) : "0 min"}</span>
+      <span className="pass__hint">{time.handsOn ? `${formatMinutes(time.handsOn)} hands-on · ${time.count} item${time.count === 1 ? "" : "s"}` : `${time.count} item${time.count === 1 ? "" : "s"}`}</span>
+    </div>
+  );
+}
+
+function PrepStart({ station, screen, setScreen, onOpenChef, initials, onChangeCook, needs, requests, lastNotes, items, onBuild, timeFor }) {
   const [picked, setPicked] = useState([]);
+  const time = useMemo(() => timeFor(picked), [timeFor, picked]);
   const rows = needs?.list ?? [];
   const asks = requests.filter((q) => !rows.some((r) => r.stationId === q.stationId && r.itemId === q.itemId));
   return (
@@ -170,6 +182,7 @@ function PrepStart({ station, screen, setScreen, onOpenChef, initials, onChangeC
         <p className="pass__lede">No count for Prep. Your list is what the line stations closed short on. Tick any other recipes you want to make, then build your list.</p>
       </PassHeader>
       <main className="pass__main">
+        <PrepTime time={time} />
         {lastNotes?.text && <div className="pass__note"><span className="pass__countlabel">NOTES FROM LAST SHIFT</span><p>{lastNotes.text}</p></div>}
         <section>
           <div className="pass__sectionhead">
@@ -470,6 +483,20 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     onOpened();
   }
 
+  // Prep: the optimized prep time (start to finish, hands-off overlapping)
+  // and the hands-on part, for a list.
+  function timeOf(rows) {
+    const p = buildPrepSteps(rows.filter((r) => r.makeG > 0), pacedRecipes);
+    const handsOn = p.steps.reduce((sum, st) => sum + (st.handsOn ?? 0), 0);
+    return { total: Math.round(p.totalMinutes), handsOn: Math.round(handsOn), count: rows.filter((r) => r.makeG > 0).length };
+  }
+  const previewTime = (picked) => {
+    const byItem = { ...(needs?.byItem ?? {}) };
+    for (const q of requests) if (!(needs?.list ?? []).some((r) => r.stationId === q.stationId && r.itemId === q.itemId)) byItem[q.itemId] = (byItem[q.itemId] ?? 0) + q.grams;
+    const rows = items.filter((i) => byItem[i.id] > 0).map((i) => ({ id: i.id, recipeId: i.recipeId, name: i.name, makeG: Math.ceil(byItem[i.id] / 50) * 50, toss: [] }));
+    return timeOf(withAdded({ prep: rows }, picked).prep);
+  };
+
   // Prep: the cook adds recipes to the list by hand, one batch each.
   function batchFor(item) {
     const recipe = item.recipeId ? recipesById.get(item.recipeId) : null;
@@ -697,7 +724,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   // or, for a station that has never been closed, every item at zero so the
   // cook can count what's there and build the first list.
   if (isBackup && screen === "today" && !shiftIsToday) {
-    return <PrepStart {...shared} station={stationTabs} needs={needs} requests={requests} lastNotes={inventory?.notes} items={items} onBuild={buildFromCloses} />;
+    return <PrepStart {...shared} station={stationTabs} needs={needs} requests={requests} lastNotes={inventory?.notes} items={items} onBuild={buildFromCloses} timeFor={previewTime} />;
   }
   if (isBackup && screen === "close") {
     return <PrepEnd {...shared} notes={inventory?.draftNotes ?? ""} onChangeNotes={changeNotes} onEnd={saveClose} />;
@@ -770,6 +797,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         madeToday={(id) => Boolean(shiftIsToday && shift.done[`p:${id}`])}
         addable={isBackup && shiftIsToday ? items : null}
         onAddRecipe={addRecipes}
+        timeWith={(picked) => timeOf(withAdded({ prep: prepRows }, picked).prep)}
+        prepTime={isBackup ? timeOf(prepRows) : null}
         isPrep={isBackup}
       />
       {labelSheet}
