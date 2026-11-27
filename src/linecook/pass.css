@@ -591,3 +591,4 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__eachrow { display: flex; gap: 8px; align-items: center; }
 .pass .pass__eachnum { width: 84px; text-align: center; font-family: "DM Mono", monospace; font-size: 22px; }
 .pass__startprep { width: 100%; margin: 6px 0; }
+.pass__asknote.is-no { border-color: #d2553f; }

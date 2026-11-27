@@ -45,6 +45,11 @@ export function lineRequests(maker, stations, today) {
       const item = maker.items.find((i) => i.id === row.fromItemId);
       if (item) list.push({ station: st.name, stationId: st.id, itemId: item.id, name: item.name, grams });
     }
+    // A line cook asked Prep to take one of their prep items (lib/prepAsk.js).
+    for (const a of Object.values(shift.askPrep ?? {})) {
+      const item = maker.items.find((i) => i.id === a.prepItemId);
+      if (item && a.grams > 0) list.push({ station: st.name, stationId: st.id, itemId: item.id, name: item.name, grams: a.grams, ask: true, bump: a.bump ?? [], by: a.by });
+    }
   }
   const byItem = {};
   for (const r of list) byItem[r.itemId] = (byItem[r.itemId] ?? 0) + r.grams;
