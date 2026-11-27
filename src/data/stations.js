@@ -45,13 +45,21 @@ const SAUTE_TASKS = [
 ].map((t) => ({ ...t, recipeId: `task:${t.id}` }));
 const addSauteTasks = (stations) => stations.map((s) => (s.id !== "saute" ? s : { ...s, items: [...s.items, ...SAUTE_TASKS.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
+// Bryan, 2026-11-27: bought-in items (pulled from the walk-in, never prepped,
+// added up on the chef's order list). Blue cheese on Garde is the first; pan
+// weight and case size are drafts to confirm.
+const GARDE_BOUGHT = [
+  { id: "blue-cheese-crumbles", name: "Blue cheese crumbles", boughtIn: true, pan: "1/9", panGrams: 450, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, shelfLifeDays: 14, caseLabel: "5 lb bag", caseGrams: 2268, unconfirmed: ["panGrams", "shelfLifeDays", "caseGrams"] },
+];
+const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
 // Prep, with light-blue starting prep pars to confirm. Line stations keep
 // their items as they were (switch one to collect only under WHO MAKES IT).
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)));
+export const DEFAULT_STATIONS = addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -95,6 +103,7 @@ const STATION_FIXES = [
   ["every-recipe-on-prep-2026-11-27", everyRecipeOnPrep],
   ["grill-frozen-steaks-2026-11-27", addGrillFrozen],
   ["saute-prep-tasks-2026-11-27", addSauteTasks],
+  ["garde-blue-cheese-2026-11-27", addGardeBought],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({
     ...s,

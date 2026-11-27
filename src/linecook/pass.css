@@ -592,5 +592,5 @@ body:has(.pass) { background: #1b1e1c; }
 .pass .pass__eachnum { width: 84px; text-align: center; font-family: "DM Mono", monospace; font-size: 22px; }
 .pass__startprep { width: 100%; margin: 6px 0; }
 .pass__asknote.is-no { border-color: #d2553f; }
-.chef__servicetoggle.chef__toggle3 { grid-template-columns: 1fr 1fr 1fr; }
-.chef__toggle3 button { font-size: 12px !important; letter-spacing: 0.04em; }
+.chef__servicetoggle.chef__toggle4 { grid-template-columns: 1fr 1fr; }
+.chef__toggle4 button { font-size: 12px !important; letter-spacing: 0.04em; }

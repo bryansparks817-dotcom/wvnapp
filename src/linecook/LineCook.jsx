@@ -575,7 +575,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
         after = applyCollect(before, liveRow, linePar);
         moveStock(liveRow);
       } else {
-        after = applyCollect(before, row, linePar);
+        after = applyCollect(before, { ...row, item, today }, linePar);
       }
     } else {
       after = applyPrep(item, before, row, linePar, today);

@@ -100,6 +100,18 @@ export function buildShift(items, inventory, linePar, today, opts = {}) {
       if (pullEach > 0) collect.push({ id: item.id, item, toLine: [], toLowboy: [], pullEach });
       continue;
     }
+    // Bought in (blue cheese crumbles): never prepped. Whatever's under line
+    // par + lowboy par is pulled from the walk-in or dry storage, and rolls up
+    // to the chef's order list (Chef › Stock).
+    if (item.boughtIn) {
+      if (holdsBackup) continue;
+      const lowboyHave = inv.lowboy.filter((c) => c.fill > 0).reduce((sum, c) => sum + gramsIn(item, c), 0);
+      const lineHave = (inv.line / 100) * item.panGrams;
+      const want = (linePar / 100) * item.panGrams + (item.lowboyPar ?? 0) * containerGrams(item, item.lowboySize);
+      const pullG = Math.ceil(Math.max(0, want - lineHave - lowboyHave) / 50) * 50;
+      if (pullG > 0) collect.push({ id: item.id, item, toLine: [], toLowboy: [], pullG });
+      continue;
+    }
     const fromStock = item.madeAt && backupFor ? backupFor(item) : null;
     if (fromStock) {
       const src = fromStock.inv ?? { line: 0, lowboy: [], walkIn: [] };
@@ -190,6 +202,16 @@ export function takeFromStock(inv, takes, putBack = false) {
 // Applies a finished Collect row to inventory.
 export function applyCollect(inv, row, linePar) {
   if (row.pullEach) return { ...inv, count: (inv.count ?? 0) + row.pullEach };
+  // Bought in: the line pan to par, and full fresh containers up to lowboy par.
+  if (row.pullG) {
+    const item = row.item ?? {};
+    const lowboy = inv.lowboy.filter((c) => c.fill > 0);
+    const full = item.lowboySize && item.qtGrams ? containerGrams(item, item.lowboySize) : 0;
+    let have = lowboy.reduce((sum, c) => sum + (full ? (full * c.fill) / 100 : 0), 0);
+    const parG = (item.lowboyPar ?? 0) * full;
+    while (full && have < parG) { lowboy.push({ size: item.lowboySize, fill: 100, madeOn: row.today ?? lowboy[0]?.madeOn ?? new Date().toISOString().slice(0, 10) }); have += full; }
+    return { ...inv, line: linePar, lowboy };
+  }
   // Pulled from another station's stock: only the line pan changes here.
   if (row.from) return { ...inv, line: row.toLine.length ? linePar : inv.line };
   const next = { line: inv.line, lowboy: inv.lowboy.map((c) => ({ ...c })), walkIn: inv.walkIn.map((c) => ({ ...c })) };
