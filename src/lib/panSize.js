@@ -3,11 +3,11 @@
 import { getStations } from "../data/stations";
 import { loadPanRequests, savePanRequests, saveStationSetup } from "./storage";
 
-export const PANS = ["1/9", "1/6", "1/3", "1/2", "full", "bottle", "duster"];
+export const PANS = ["1/9", "1/6", "1/3", "1/2", "full", "bottle", "duster", "qt"];
 // "1/9 pan", or "squeeze bottle" for the bottle rail.
-export const panName = (p) => (p === "bottle" ? "squeeze bottle" : p === "duster" ? "duster" : `${p} pan`);
+export const panName = (p) => (p === "bottle" ? "squeeze bottle" : p === "duster" ? "duster" : p === "qt" ? "quart container" : `${p} pan`);
 // Typical full-pan weights, for a new item or to rescale one that changes size.
-export const PAN_GRAMS = { "1/9": 1000, "1/6": 2500, "1/3": 4000, "1/2": 6000, full: 12000, bottle: 375, duster: 250 };
+export const PAN_GRAMS = { "1/9": 1000, "1/6": 2500, "1/3": 4000, "1/2": 6000, full: 12000, bottle: 375, duster: 250, qt: 600 };
 
 // Same product, bigger or smaller pan: scale the item's own full-pan weight.
 export function gramsForPan(item, pan) {
