@@ -105,17 +105,19 @@ const addGardeSlot5 = (stations) => stations.map((s) => {
 });
 
 // Bryan, 2026-11-28: Garde's bottle rail sits between slots 2 and 3, squeeze
-// bottles in no set order, counted in quarters of a bottle like a pan. Bottle
-// weight (700 g) and the new items' numbers are drafts.
-const BOTTLE = { pan: "bottle", panGrams: 700, lowboySize: "qt", qtGrams: 950, lowboyPar: 1, slot: "bottles" };
+// bottles in no set order, counted in quarters of a bottle like a pan. A full
+// bottle of ranch is about 375 g (Bryan); the others are scaled from it by
+// density and stay drafts.
+const BOTTLE_GRAMS = { "ranch-dressing": 375, "red-wine-vinaigrette": 350, "balsamic-reduction": 490, "caesar-dressing": 375, "squash-puree-bottle": 385 };
+const BOTTLE = { pan: "bottle", panGrams: 375, lowboySize: "qt", qtGrams: 950, lowboyPar: 1, slot: "bottles" };
 const GARDE_BOTTLES_NEW = [
   { ...BOTTLE, id: "caesar-dressing", name: "Caesar dressing", recipeId: "caesar-dressing", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
-  { ...BOTTLE, id: "squash-puree-bottle", name: "Squash purée", recipeId: "butternut-squash-puree-tart-layer", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+  { ...BOTTLE, panGrams: 385, id: "squash-puree-bottle", name: "Squash purée", recipeId: "butternut-squash-puree-tart-layer", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
 ];
 const GARDE_BOTTLES_MOVE = ["ranch-dressing", "red-wine-vinaigrette", "balsamic-reduction"];
 const addGardeBottles = (stations) => stations.map((s) => {
   if (s.id !== "garde-manger") return s;
-  const items = s.items.map((i) => (GARDE_BOTTLES_MOVE.includes(i.id) && !i.slot ? { ...i, pan: "bottle", panGrams: 700, slot: "bottles", unconfirmed: [...new Set([...(i.unconfirmed ?? []), "panGrams"])] } : i));
+  const items = s.items.map((i) => (GARDE_BOTTLES_MOVE.includes(i.id) && !i.slot ? { ...i, pan: "bottle", panGrams: BOTTLE_GRAMS[i.id], slot: "bottles", unconfirmed: i.id === "ranch-dressing" ? (i.unconfirmed ?? []).filter((f) => f !== "pan" && f !== "panGrams") : [...new Set([...(i.unconfirmed ?? []), "panGrams"])] } : i));
   const fresh = GARDE_BOTTLES_NEW.filter((g) => !items.some((i) => i.id === g.id));
   return { ...s, bottleRailAfter: s.bottleRailAfter ?? 2, items: [...items, ...fresh] };
 });
@@ -126,7 +128,7 @@ const addGardeBottles = (stations) => stations.map((s) => {
 const GARDE_DRY = [
   { id: "powdered-sugar-duster", name: "Powdered sugar", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 500, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
   { id: "smoked-paprika-duster", name: "Smoked paprika", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
-  { ...TASK, id: "croutons", name: "Croutons", recipeId: "task:croutons", pan: "1/6", panGrams: 400, taskMinutes: 30, shelfLifeDays: 5, slot: "dry" },
+  { ...TASK, id: "croutons", name: "Croutons", recipeId: "task:croutons", pan: "1/6", panGrams: 400, taskMinutes: 30, shelfLifeDays: 5, slot: "dry", unconfirmed: TASK.unconfirmed.filter((f) => f !== "pan") },
 ];
 const addGardeDry = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, dryRail: true, items: [...s.items, ...GARDE_DRY.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
