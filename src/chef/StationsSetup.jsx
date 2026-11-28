@@ -6,7 +6,7 @@ import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
 import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
-import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel, slotSpots, spotLabel, validSpot } from "../lib/rail";
+import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel, slotSpots, spotGrid, spotLabel, validSpot } from "../lib/rail";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -171,9 +171,10 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
           <button type="button" className={`fz__chip${!f.slot ? " is-on" : ""}`} aria-pressed={!f.slot} onClick={() => set("slot", null)}>NOT ON THE RAIL</button>
         </div>
         {f.slot && slotSpots(target, f.slot) > 0 && <>
-          <span className="pass__countlabel">WHICH SPOT IN SLOT {f.slot} (1 = BACK LEFT, BACK ROW ON TOP)</span>
+          <span className="pass__countlabel">WHICH SPOT IN SLOT {f.slot} (1 = BACK LEFT, SNAKING, BACK ROW ON TOP)</span>
           <div className="rail__grid" role="group" aria-label="Which spot in the slot">
-            {Array.from({ length: slotSpots(target, f.slot) }, (_, k) => k + 1).map((n) => {
+            {spotGrid(slotSpots(target, f.slot)).map((n, k) => {
+              if (n == null) return <span key={`x${k}`} />;
               const taken = target.items.find((i) => i.id !== item?.id && i.slot === f.slot && i.spot === n);
               return <button key={n} type="button" className={`fz__chip${f.spot === n ? " is-on" : ""}`} aria-pressed={f.spot === n} title={taken ? `${taken.name} is here` : ""} onClick={() => set("spot", f.spot === n ? null : n)}>{n}{taken ? "•" : ""}</button>;
             })}
@@ -321,7 +322,8 @@ function RailMap({ station, onEditItem }) {
             <span className="rail__num">{s.slot}</span>
             {s.spots ? (
               <div className="rail__spots">
-                {Array.from({ length: s.spots }, (_, k) => k + 1).map((n) => {
+                {spotGrid(s.spots).map((n, k) => {
+                  if (n == null) return <span key={`x${k}`} />;
                   const here = s.items.filter((i) => i.spot === n);
                   return here.length
                     ? <button key={n} type="button" className={`rail__pan${here.length > 1 ? " is-over" : ""}`} onClick={() => onEditItem(here[0])}><span className="rail__pansize">{n}</span><span className="rail__panname">{here.map((i) => i.name).join(" + ")}</span></button>
@@ -342,6 +344,9 @@ function RailMap({ station, onEditItem }) {
           </div>
         ))}
       </div>
+      {slots.filter((s) => s.spots && s.items.length).map((s) => (
+        <p key={`k${s.slot}`} className="pass__hint">Slot {s.slot}: {s.items.filter((i) => typeof i.spot === "number").sort((a, b) => a.spot - b.spot).map((i) => `${i.spot} ${i.name}`).join(" · ")}</p>
+      ))}
       {slots.filter((s) => s.used > 1.001).map((s) => (
         <p key={s.slot} className="pass__hint chef__late">{s.spots ? `Slot ${s.slot} is over: ${s.items.length} items for ${s.spots} spots.` : `Slot ${s.slot} is over: ${s.items.map((i) => i.pan).join(" + ")} is more than one hotel pan.`}</p>
       ))}

@@ -7,8 +7,20 @@ export const PAN_SHARE = { "1/9": 1 / 9, "1/6": 1 / 6, "1/4": 1 / 4, "1/3": 1 / 
 export const SPOTS = ["back", "middle", "front"];
 // A slot can instead be set to a fixed number of pan spots (Bryan, 2026-11-28:
 // Garde slot 4 is six ninth pans and that's full). Spots are numbered from the
-// back left, across each row left to right, back row to front, 3 to a row.
+// back left and snake (Bryan, 2026-11-28): back row left to right, next row
+// right to left, next left to right, 3 to a row. Spot number = count order.
 export const slotSpots = (station, slot) => Number(station?.railLayout?.[slot]) || 0;
+// Spot numbers in on-screen grid order (row by row, back row on top).
+export function spotGrid(n) {
+  const out = [];
+  for (let r = 0; r * 3 < n; r++) {
+    const row = [];
+    for (let c = 0; c < 3 && r * 3 + c < n; c++) row.push(r * 3 + c + 1);
+    if (r % 2) { row.reverse(); while (row.length < 3) row.unshift(null); }
+    out.push(...row);
+  }
+  return out;
+}
 export const validSpot = (spot, station, slot) => (slotSpots(station, slot) ? Number.isInteger(spot) && spot >= 1 && spot <= slotSpots(station, slot) : SPOTS.includes(spot));
 export const spotLabel = (spot) => (typeof spot === "number" ? `#${spot}` : spot);
 const spotRank = (it) => (typeof it.spot === "number" ? it.spot / 100 : SPOTS.includes(it.spot) ? SPOTS.indexOf(it.spot) : 1.5);
