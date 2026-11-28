@@ -130,7 +130,7 @@ export default function PrepSteps({ plan, bump = null, tossOnly, done, stepsDone
                   </span>
                   <span className="pass__rowname">{row.name}</span>
                   <span className="pass__rowsub">
-                    <span className="pass__mono pass__amber">{formatG(row.makeG)}</span>
+                    <span className="pass__mono pass__amber">{row.makeEach ? `${row.makeEach} each` : formatG(row.makeG)}</span>
                     {minutes > 0 && ` · ${formatMinutes(minutes)}`}
                     {steps.length > 0 && !r.done && ` · ${steps.length - left.length} of ${steps.length} steps`}
                   </span>

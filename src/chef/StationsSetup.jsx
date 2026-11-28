@@ -73,6 +73,8 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     taskNote: item?.taskNote ?? "",
     eachGrams: String(item?.eachGrams ?? 397),
     parEach: String(item?.parEach ?? 10),
+    countEach: Boolean(item?.countEach),
+    parPctCovers: String(item?.parPctCovers ?? ""),
   }));
   const [askRemove, setAskRemove] = useState(false);
   const set = (k, v) => setF((x) => ({ ...x, [k]: v }));
@@ -81,8 +83,9 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
   const target = stations.find((s) => s.id === f.stationId);
   const backup = Boolean(target.holdsBackup);
   const dupName = target.items.some((i) => i !== item && i.name.toLowerCase() === f.name.trim().toLowerCase());
-  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1 && (!f.frozenEach || (num(f.eachGrams) > 0 && num(f.parEach) >= 0)) && (!f.task || num(f.taskMinutes) > 0) && (!f.boughtIn || !f.caseGrams || num(f.caseGrams) > 0);
+  const ok = f.name.trim() && !dupName && num(f.panGrams) > 0 && num(f.qtGrams) > 0 && num(f.lowboyPar) >= 0 && num(f.shelfLifeDays) >= 1 && (!(f.frozenEach || f.countEach) || (num(f.eachGrams) > 0 && num(f.parEach) >= 0)) && (!f.task || num(f.taskMinutes) > 0) && (!f.boughtIn || !f.caseGrams || num(f.caseGrams) > 0);
   const frozen = f.frozenEach && !backup;
+  const each = (f.frozenEach || (f.countEach && !f.boughtIn)) && !backup;
 
   function pickRecipe(id) {
     const r = recipes.find((x) => x.id === id);
@@ -105,7 +108,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, slot, spot, ...rest } = f;
+        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, slot, spot, countEach, parPctCovers, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -119,6 +122,10 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         if (!next.recipeId) delete next.recipeId;
         if (frozenEach) Object.assign(next, { frozenEach: true, freezerKind: next.freezerKind ?? "portions", eachGrams: num(eachGrams), parEach: num(parEach) });
         else delete next.frozenEach;
+        if (countEach && !frozenEach && !boughtIn) Object.assign(next, { countEach: true, eachGrams: num(eachGrams), parEach: num(parEach) });
+        else delete next.countEach;
+        if ((frozenEach || next.countEach) && num(parPctCovers) > 0) next.parPctCovers = num(parPctCovers);
+        else delete next.parPctCovers;
         if (task && !frozenEach) Object.assign(next, { task: true, taskMinutes: num(taskMinutes), taskNote: taskNote.trim() || undefined });
         else { delete next.task; delete next.taskMinutes; delete next.taskNote; if (isTaskRecipe(next.recipeId)) delete next.recipeId; }
         if (!next.taskNote) delete next.taskNote;
@@ -209,7 +216,14 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         </div>
         <p className="pass__hint">Bought from a vendor, never prepped. Under par, the cook pulls it from the walk-in or dry storage, and it adds up on the order list (Chef › Stock), rounded to whole cases.</p>
       </>}
-      {frozen && <>
+      {!backup && !f.frozenEach && !f.boughtIn && <>
+        <span className="pass__countlabel">COUNTED ON THE LINE</span>
+        <div className="chef__servicetoggle" role="group" aria-label="Counted on the line">
+          <button type="button" className={!f.countEach ? "is-on" : ""} aria-pressed={!f.countEach} onClick={() => set("countEach", false)}>BY PAN (25%)</button>
+          <button type="button" className={f.countEach ? "is-on" : ""} aria-pressed={f.countEach} onClick={() => set("countEach", true)}>EACH (PORTIONS)</button>
+        </div>
+      </>}
+      {each && <>
         <div className="chef__staffrow">
           <Field label="PAR (EACH)" draft={drafts.has("parEach")}>
             <input className="pass__input" type="number" inputMode="numeric" min="0" value={f.parEach} onChange={(e) => set("parEach", e.target.value)} />
@@ -218,6 +232,12 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
             <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.eachGrams} onChange={(e) => set("eachGrams", e.target.value)} />
           </Field>
         </div>
+        <Field label="OR PAR AS % OF TONIGHT'S RESERVATIONS (BLANK = FIXED PAR)" draft={drafts.has("parPctCovers")}>
+          <input className="pass__input" type="number" inputMode="numeric" min="0" max="100" value={f.parPctCovers} placeholder="e.g. 15" onChange={(e) => set("parPctCovers", e.target.value)} />
+        </Field>
+        {num(f.parPctCovers) > 0 && <p className="pass__hint">Par = {f.parPctCovers}% of the covers typed in on Chef Home, rounded up. With no covers in yet, it uses the fixed par above.</p>}
+      </>}
+      {frozen && <>
         <div className="chef__staffrow">
           <Field label="SHELF LIFE, THAWED (DAYS)" draft={drafts.has("shelfLifeDays")}>
             <input className="pass__input" type="number" inputMode="numeric" min="1" value={f.shelfLifeDays} onChange={(e) => set("shelfLifeDays", e.target.value)} />
@@ -463,7 +483,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${panName(item.pan)} · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${panName(item.pan)}${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${panName(item.pan)} · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot === BOTTLES && hasBottleRail(station) ? " · bottle rail" : ""}{item.slot === DRY && hasDryRail(station) ? " · dry rail" : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${spotLabel(item.spot)}` : ""}` : ""}
+                  {item.countEach ? `counted each · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach}${item.task ? " · prep task" : ""}` : item.frozenEach ? `precut, frozen · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach} each · from the freezer` : item.task ? `prep task · ${panName(item.pan)} · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${panName(item.pan)}${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${panName(item.pan)} · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot === BOTTLES && hasBottleRail(station) ? " · bottle rail" : ""}{item.slot === DRY && hasDryRail(station) ? " · dry rail" : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${spotLabel(item.spot)}` : ""}` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>
