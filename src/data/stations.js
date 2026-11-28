@@ -92,7 +92,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9 } } : s));
+export const DEFAULT_STATIONS = addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: 9 } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -144,6 +144,8 @@ const STATION_FIXES = [
   // Bryan, 2026-11-28: slot 4 is nine ninth pans after all (3 × 3).
   ["garde-slot-4-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && (s.railLayout?.[4] ?? 6) === 6 ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 9 } } : s))],
   ["garde-slot-4-items-2026-11-28", addGardeSlot4],
+  // Bryan, 2026-11-28: slot 5 is nine ninth pans too.
+  ["garde-slot-5-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: 9 } } : s))],
   ["garde-slot-4-six-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[4] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 6 } } : s))],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({
