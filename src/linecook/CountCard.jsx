@@ -1,5 +1,5 @@
 import { spotLabel } from "../lib/rail";
-import { LEVELS, containerLabel, shelfLabel, isLastDay } from "../lib/inventory";
+import { LEVELS, containerLabel, shelfLabel, isLastDay, parEachFor } from "../lib/inventory";
 import { PANS, panName } from "../lib/panSize";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -72,7 +72,7 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
     onChange({ ...inv, lowboy: [...inv.lowboy, { size, fill: 100, madeOn: today }] });
   const walkIn = inv.walkIn.filter((c) => c.fill > 0);
 
-  if (item.frozenEach) {
+  if (item.frozenEach || item.countEach) {
     const count = inv.count ?? 0;
     const setCount = (n) => onChange({ ...inv, count: Math.max(0, n) });
     return (
@@ -81,14 +81,14 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
           <span className="pass__rowname">{item.name}</span>
         </legend>
         <div className="pass__countrow">
-          <span className={`pass__countlabel${item.unconfirmed?.includes("parEach") ? " chef__draftfield" : ""}`}>ON HAND, THAWED · par {item.parEach} each</span>
+          <span className={`pass__countlabel${item.unconfirmed?.includes("parEach") ? " chef__draftfield" : ""}`}>{item.frozenEach ? "ON HAND, THAWED" : "ON HAND"} · par {parEachFor(item, today)} each{item.parPctCovers ? ` (${item.parPctCovers}% of tonight's covers)` : ""}</span>
           <div className="pass__eachrow">
             <button type="button" className="pass__add" aria-label={`One less ${item.name}`} onClick={() => setCount(count - 1)}>−</button>
             <input className="pass__input pass__eachnum" type="number" inputMode="numeric" min="0" aria-label={`${item.name} count`} value={count} onChange={(e) => setCount(Number(e.target.value) || 0)} />
             <button type="button" className="pass__add" aria-label={`One more ${item.name}`} onClick={() => setCount(count + 1)}>+</button>
           </div>
         </div>
-        <p className="pass__walkin">PRECUT, FROZEN · no prep. The chef pulls what’s short from the freezer; you collect it thawed from the walk-in.</p>
+        <p className="pass__walkin">{item.frozenEach ? "PRECUT, FROZEN · no prep. The chef pulls what’s short from the freezer; you collect it thawed from the walk-in." : "COUNTED EACH · whatever’s under par goes on your prep list."}</p>
       </fieldset>
     );
   }

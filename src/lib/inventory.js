@@ -8,7 +8,25 @@
 // All math is in grams: an item knows its full line pan and its quart weight
 // (a pint is half a quart), so the cook never converts anything.
 
+import { loadCovers } from "./storage";
+
 export const LEVELS = [0, 25, 50, 75, 100];
+
+// Par for an item counted each (filets, Wellingtons, KC strips). With
+// item.parPctCovers (Bryan, 2026-11-28: filets and Wellingtons are 15% of the
+// night's reservations), it's that share of tonight's covers on Chef Home,
+// rounded up; with no covers typed in yet it falls back to item.parEach.
+export function coversFor(today) {
+  const all = loadCovers();
+  const n = Object.entries(all).filter(([k, v]) => k.startsWith(`${today}:`) && Number(v) > 0).reduce((a, [, v]) => a + Number(v), 0);
+  return n || null;
+}
+export function parEachFor(item, today) {
+  const pct = Number(item.parPctCovers) || 0;
+  const covers = pct > 0 && today ? coversFor(today) : null;
+  if (covers) return Math.ceil((covers * pct) / 100);
+  return Number(item.parEach) || 0;
+}
 
 export function containerGrams(item, size) {
   return size === "pt" ? item.qtGrams / 2 : item.qtGrams;
@@ -96,8 +114,16 @@ export function buildShift(items, inventory, linePar, today, opts = {}) {
     // pulls it from the freezer the day before (Chef › Stock pull list).
     if (item.frozenEach) {
       if (holdsBackup) continue;
-      const pullEach = Math.max(0, Math.ceil((item.parEach ?? 0) - (inv.count ?? 0)));
+      const pullEach = Math.max(0, Math.ceil(parEachFor(item, today) - (inv.count ?? 0)));
       if (pullEach > 0) collect.push({ id: item.id, item, toLine: [], toLowboy: [], pullEach });
+      continue;
+    }
+    // Counted each and made here (8 oz filets cut from PSMO, salmon
+    // Wellingtons): whatever's under par goes on the prep list, in portions.
+    if (item.countEach) {
+      if (holdsBackup) continue;
+      const makeEach = Math.max(0, Math.ceil(parEachFor(item, today) - (inv.count ?? 0)));
+      if (makeEach > 0) prep.push({ id: item.id, item, recipeId: item.recipeId, name: item.name, makeG: makeEach * (Number(item.eachGrams) || 1), makeEach, toss: [] });
       continue;
     }
     // Bought in (blue cheese crumbles): never prepped. Whatever's under line
@@ -233,6 +259,7 @@ export function applyCollect(inv, row, linePar) {
 // Applies a finished Prep row: tosses expired batches, fills the line, and
 // puts the rest in the lowboy as new containers dated today.
 export function applyPrep(item, inv, row, linePar, today) {
+  if (item.countEach) return { ...inv, count: (inv.count ?? 0) + (row.makeEach ?? Math.round(row.makeG / (Number(item.eachGrams) || 1))) };
   const keep = (list) => list.filter((c) => c.fill > 0 && !isLastDay(item, c.madeOn, today));
   const next = { line: inv.line, lowboy: keep(inv.lowboy), walkIn: keep(inv.walkIn) };
   let grams = row.makeG;
