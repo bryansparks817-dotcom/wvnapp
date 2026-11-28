@@ -84,6 +84,26 @@ const addGardeSlot4 = (stations) => stations.map((s) => {
   return { ...s, items: [...items, ...fresh] };
 });
 
+// Bryan, 2026-11-28: Garde slot 5 (deviled eggs and salad toppings). Back row
+// of two: egg white shells, deviled egg filling. Middle row, left to right on
+// the rail: diced pepper, diced chives, lemon wedges (counted right to left,
+// snaking). Front row: bacon lardons, roasted tomatoes, blue cheese.
+const GARDE_SLOT5_NEW = [
+  { ...TASK, id: "egg-white-shells", name: "Egg white shells", pan: "1/6", panGrams: 800, taskMinutes: 30, shelfLifeDays: 3, slot: 5, spot: 1 },
+  { ...TASK, id: "lemon-wedges", name: "Lemon wedges", pan: "1/9", panGrams: 500, taskMinutes: 10, shelfLifeDays: 2, slot: 5, spot: 3 },
+  { ...TASK, id: "diced-chives", name: "Diced chives", pan: "1/9", panGrams: 150, taskMinutes: 10, shelfLifeDays: 2, slot: 5, spot: 4 },
+  { ...TASK, id: "diced-pepper", name: "Diced pepper", pan: "1/9", panGrams: 400, taskMinutes: 15, shelfLifeDays: 3, slot: 5, spot: 5 },
+  { ...TASK, id: "bacon-lardons", name: "Cooked bacon lardons", pan: "1/9", panGrams: 500, taskMinutes: 30, shelfLifeDays: 5, slot: 5, spot: 6 },
+].map((t) => ({ ...t, recipeId: `task:${t.id}` }));
+const GARDE_SLOT5_MOVE = { "black-garlic-deviled-egg-filling": 2, "slow-roasted-steakhouse-tomatoes": 7, "blue-cheese-crumbles": 8 };
+const addGardeSlot5 = (stations) => stations.map((s) => {
+  if (s.id !== "garde-manger") return s;
+  const taken = (n) => s.items.some((i) => i.slot === 5 && i.spot === n);
+  const items = s.items.map((i) => (GARDE_SLOT5_MOVE[i.id] && !i.slot && !taken(GARDE_SLOT5_MOVE[i.id]) ? { ...(i.id === "black-garlic-deviled-egg-filling" ? i : toNinth(i)), slot: 5, spot: GARDE_SLOT5_MOVE[i.id] } : i));
+  const fresh = GARDE_SLOT5_NEW.filter((g) => !items.some((i) => i.id === g.id)).map((g) => (taken(g.spot) ? (({ slot, spot, ...rest }) => rest)(g) : g));
+  return { ...s, items: [...items, ...fresh] };
+});
+
 const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
@@ -92,7 +112,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: 9 } } : s));
+export const DEFAULT_STATIONS = addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -144,8 +164,8 @@ const STATION_FIXES = [
   // Bryan, 2026-11-28: slot 4 is nine ninth pans after all (3 × 3).
   ["garde-slot-4-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && (s.railLayout?.[4] ?? 6) === 6 ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 9 } } : s))],
   ["garde-slot-4-items-2026-11-28", addGardeSlot4],
-  // Bryan, 2026-11-28: slot 5 is nine ninth pans too.
-  ["garde-slot-5-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: 9 } } : s))],
+  // Bryan, 2026-11-28: slot 5 is two pans on the back row, then three and three.
+  ["garde-slot-5-2026-11-28", (st) => addGardeSlot5(st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: [2, 3, 3] } } : s)))],
   ["garde-slot-4-six-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[4] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 6 } } : s))],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({

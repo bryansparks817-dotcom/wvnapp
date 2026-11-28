@@ -6,7 +6,7 @@ import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
 import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
-import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel, slotSpots, spotGrid, spotLabel, validSpot } from "../lib/rail";
+import { PAN_SHARE, SPOTS, layoutKey, railMap, railSlots, shareLabel, slotRows, slotSpots, spotGrid, spotLabel, validSpot } from "../lib/rail";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -173,10 +173,9 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         {f.slot && slotSpots(target, f.slot) > 0 && <>
           <span className="pass__countlabel">WHICH SPOT IN SLOT {f.slot} (1 = BACK LEFT, SNAKING, BACK ROW ON TOP)</span>
           <div className="rail__grid" role="group" aria-label="Which spot in the slot">
-            {spotGrid(slotSpots(target, f.slot)).map((n, k) => {
-              if (n == null) return <span key={`x${k}`} />;
+            {spotGrid(slotRows(target, f.slot)).map(({ n, span }) => {
               const taken = target.items.find((i) => i.id !== item?.id && i.slot === f.slot && i.spot === n);
-              return <button key={n} type="button" className={`fz__chip${f.spot === n ? " is-on" : ""}`} aria-pressed={f.spot === n} title={taken ? `${taken.name} is here` : ""} onClick={() => set("spot", f.spot === n ? null : n)}>{n}{taken ? "•" : ""}</button>;
+              return <button key={n} type="button" style={{ gridColumn: `span ${span}` }} className={`fz__chip${f.spot === n ? " is-on" : ""}`} aria-pressed={f.spot === n} title={taken ? `${taken.name} is here` : ""} onClick={() => set("spot", f.spot === n ? null : n)}>{n}{taken ? "•" : ""}</button>;
             })}
           </div>
         </>}
@@ -322,12 +321,11 @@ function RailMap({ station, onEditItem }) {
             <span className="rail__num">{s.slot}</span>
             {s.spots ? (
               <div className="rail__spots">
-                {spotGrid(s.spots).map((n, k) => {
-                  if (n == null) return <span key={`x${k}`} />;
+                {spotGrid(slotRows(station, s.slot)).map(({ n, span }) => {
                   const here = s.items.filter((i) => i.spot === n);
                   return here.length
-                    ? <button key={n} type="button" className={`rail__pan${here.length > 1 ? " is-over" : ""}`} onClick={() => onEditItem(here[0])}><span className="rail__pansize">{n}</span><span className="rail__panname">{here.map((i) => i.name).join(" + ")}</span></button>
-                    : <span key={n} className="rail__free"><span className="rail__pansize">{n}</span></span>;
+                    ? <button key={n} type="button" style={{ gridColumn: `span ${span}` }} className={`rail__pan${here.length > 1 ? " is-over" : ""}`} onClick={() => onEditItem(here[0])}><span className="rail__pansize">{n}</span><span className="rail__panname">{here.map((i) => i.name).join(" + ")}</span></button>
+                    : <span key={n} style={{ gridColumn: `span ${span}` }} className="rail__free"><span className="rail__pansize">{n}</span></span>;
                 })}
                 {s.items.filter((i) => typeof i.spot !== "number").map((i) => (
                   <button key={i.id} type="button" className="rail__pan rail__nospot" onClick={() => onEditItem(i)}><span className="rail__pansize">no spot</span><span className="rail__panname">{i.name}</span></button>
@@ -395,10 +393,13 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
           {railSlots(station).map((n) => (
             <div key={n} className="rail__layoutrow">
               <span className="pass__mono">SLOT {n}</span>
-              <select className="pass__input" aria-label={`Slot ${n} layout`} value={slotSpots(station, n)}
-                onChange={(e) => { const v = Number(e.target.value); const railLayout = { ...(station.railLayout ?? {}) }; if (v) railLayout[n] = v; else delete railLayout[n]; onSave({ ...station, railLayout }); }}>
-                <option value={0}>By pan size (one hotel pan)</option>
-                {[2, 3, 4, 5, 6, 8, 9].map((v) => <option key={v} value={v}>{v} pans = full</option>)}
+              <select className="pass__input" aria-label={`Slot ${n} layout`} value={layoutKey(station, n)}
+                onChange={(e) => { const v = e.target.value; const railLayout = { ...(station.railLayout ?? {}) }; if (!v) delete railLayout[n]; else if (v.includes(",")) railLayout[n] = v.split(",").map(Number); else railLayout[n] = Number(v); onSave({ ...station, railLayout }); }}>
+                <option value="">By pan size (one hotel pan)</option>
+                {[...new Set(["2", "3", "2,2", "2,3", "3,3", "2,2,2", "2,3,3", "3,3,3", "3,3,3,3", layoutKey(station, n)])].filter(Boolean).map((k) => {
+                  const rows = k.split(",").map(Number); const total = rows.reduce((a, b) => a + b, 0);
+                  return <option key={k} value={k}>{rows.length > 1 ? `${rows.join(" + ")} = ${total} pans` : `${total} pans`} = full</option>;
+                })}
               </select>
             </div>
           ))}
