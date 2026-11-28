@@ -132,7 +132,7 @@ const GARDE_DRY = [
 ];
 const addGardeDry = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, dryRail: true, items: [...s.items, ...GARDE_DRY.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
-const GARDE_ROCKS = "8 qt of rocks · for the small black bowl that props up 3 oysters Rockefeller (not counted)";
+const GARDE_ROCKS = "8 qt of rocks, across slots 1–2 · for the small black bowl that props up 3 oysters Rockefeller (not counted)";
 
 const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
@@ -142,7 +142,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -198,6 +198,8 @@ const STATION_FIXES = [
   ["garde-bottle-rail-2026-11-28", addGardeBottles],
   ["garde-dry-rail-2026-11-28", addGardeDry],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
+  // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
+  ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],
   ["garde-slot-2-rocks-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.slotNotes?.[2] ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 2: GARDE_ROCKS } } : s))],
   ["garde-slot-5-2026-11-28", (st) => addGardeSlot5(st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: [2, 3, 3] } } : s)))],
   ["garde-slot-4-six-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[4] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 6 } } : s))],
