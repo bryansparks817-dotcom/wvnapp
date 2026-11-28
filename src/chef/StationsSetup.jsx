@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useBack } from "../lib/backNav";
 import { getStations, setupFlags } from "../data/stations";
-import { saveStationSetup } from "../lib/storage";
+import { loadInventory, saveInventory, saveShift, saveStationSetup } from "../lib/storage";
 import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS, panName } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
@@ -398,6 +398,13 @@ function RailMap({ station, onEditItem }) {
 function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem, onAddItem, onMoveItem }) {
   const [name, setName] = useState(station.name);
   const [askRemove, setAskRemove] = useState(false);
+  const [askFresh, setAskFresh] = useState(false);
+  const [freshDone, setFreshDone] = useState(false);
+  const lastClose = loadInventory(station.id)?.closedOn ?? null;
+  // Bryan, 2026-11-28: wipe this station's counts and today's shift so the
+  // cook starts over with a fresh close (every item on the First count screen).
+  // Items, pars and the layout stay as they are.
+  const freshClose = () => { saveShift(null, station.id); saveInventory(null, station.id); setAskFresh(false); setFreshDone(true); };
   const dup = stations.some((s) => s.id !== station.id && s.name.toLowerCase() === name.trim().toLowerCase());
   const changed = name.trim() && name.trim() !== station.name && !dup;
   const drafts = station.items.filter((i) => i.unconfirmed?.length).length;
@@ -410,6 +417,19 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
         </Field>
         {dup && <p className="pass__hint chef__late">There’s already a station called that.</p>}
         {changed && <button type="button" className="pass__ghostbtn" onClick={() => onSave({ ...station, name: name.trim() })}>SAVE NAME</button>}
+
+        <span className="pass__countlabel">FRESH CLOSE</span>
+        {freshDone ? (
+          <p className="pass__hint">Done. {station.name}’s counts and today’s list are cleared. On the {station.name} phone, the cook reloads the app and gets a First count with every item. Items, pars and the layout are unchanged.</p>
+        ) : askFresh ? (
+          <div className="chef__staffrow">
+            <button type="button" className="pass__ghostbtn chef__late" onClick={freshClose}>YES, CLEAR {station.name.toUpperCase()}’S COUNTS</button>
+            <button type="button" className="pass__ghostbtn" onClick={() => setAskFresh(false)}>CANCEL</button>
+          </div>
+        ) : (
+          <button type="button" className="pass__ghostbtn" onClick={() => setAskFresh(true)}>START A FRESH CLOSE</button>
+        )}
+        {!freshDone && <p className="pass__hint">Clears {station.name}’s last count{lastClose ? ` (${lastClose})` : ""} and today’s collect and prep list, so the cook counts everything from scratch. Items, pars and the layout stay.</p>}
 
         <span className="pass__countlabel">WHAT THIS STATION DOES</span>
         <div className="chef__servicetoggle" role="group" aria-label="Station kind">
