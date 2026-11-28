@@ -5,6 +5,7 @@
 import garde from "./lineItems.json";
 import fromSetup from "./stationItems.json";
 import library from "./recipeLibrary.json";
+import coverPars from "./coverPars.json";
 import { addRecipeTo } from "../lib/stationRecipes";
 import { loadStationFixes, loadStationSetup, saveStationFixes, saveStationSetup } from "../lib/storage";
 
@@ -226,6 +227,16 @@ const pangrattatoTop = (stations) => stations.map((s) => (s.id !== "grill" ? s :
   items: s.items.map((i) => (i.id === "lobster-shell-pangrattato" && i.pan !== "qt" ? { ...i, pan: "qt", panGrams: 400, slot: "dry", spot: null, lowboySize: "qt", qtGrams: 400, unconfirmed: [...new Set([...(i.unconfirmed ?? []).filter((u) => u !== "pan" && u !== "lowboySize"), "panGrams", "qtGrams"])] } : i)),
 }));
 
+// Bryan, 2026-11-28: pmix pars. Each line item a pmix dish uses gets
+// item.coverPar = { g, v } (grams per cover and variance per cover); its par
+// is then average use + 1 SD for that night's guest count (lib/inventory.js
+// coverParG). Light blue until the chef saves the item.
+const addCoverPars = (stations) => stations.map((s) => {
+  const cp = coverPars.stations[s.id];
+  if (!cp) return s;
+  return { ...s, items: s.items.map((i) => (cp[i.id] && !i.coverPar ? { ...i, coverPar: { g: cp[i.id].g, v: cp[i.id].v }, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "coverPar"])] } : i)) };
+});
+
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
   const items = s.items.map((i) => (i.id === "individual-salmon-wellington-make-ahead-assembly" && !i.countEach ? { ...i, name: i.name.startsWith("Salmon") ? i.name : "Salmon Wellington", countEach: true, eachGrams: 215, parEach: 10, parPctCovers: 15, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "parEach"])] } : i));
@@ -240,7 +251,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = pangrattatoTop(breadPuddingEach(trimGrill(setGrillBackup(addGrillSlot2(addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = addCoverPars(pangrattatoTop(breadPuddingEach(trimGrill(setGrillBackup(addGrillSlot2(addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))))))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -305,6 +316,7 @@ const STATION_FIXES = [
   ["grill-trim-togarashi-2026-11-28", trimGrill],
   ["grill-bread-pudding-each-2026-11-28", breadPuddingEach],
   ["grill-pangrattato-top-2026-11-28", pangrattatoTop],
+  ["pmix-cover-pars-2026-11-28", addCoverPars],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],

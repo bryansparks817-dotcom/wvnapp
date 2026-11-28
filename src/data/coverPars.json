@@ -1,0 +1,244 @@
+{
+ "_about": "Bryan, 2026-11-28: pars from the Sep 23 to Nov 27, 2026 pmix (2,048 dinner guests, 38 nights; brunch and desserts left off). Per station item: g = grams used per cover, v = variance per cover (Poisson estimate). Tonight's par = g*covers + sqrt(v*covers), mean + 1 SD.",
+ "stations": {
+  "saute": {
+   "duck-breast-prosciutto-dry-cured": {
+    "g": 0.984,
+    "v": 11.81,
+    "dishes": [
+     "Duck Prosciutto Scallops"
+    ]
+   },
+   "blackberry-demi-glace-scallop-sauce": {
+    "g": 2.871,
+    "v": 100.49,
+    "dishes": [
+     "Duck Prosciutto Scallops"
+    ]
+   },
+   "silky-cauliflower-puree": {
+    "g": 2.457,
+    "v": 167.08,
+    "dishes": [
+     "Smoked Duck Breast"
+    ]
+   },
+   "brown-butter-roasted-cauliflower": {
+    "g": 3.613,
+    "v": 361.33,
+    "dishes": [
+     "Smoked Duck Breast"
+    ]
+   },
+   "cherry-smoked-grape-chutney": {
+    "g": 1.265,
+    "v": 44.26,
+    "dishes": [
+     "Smoked Duck Breast"
+    ]
+   },
+   "toasted-hazelnuts": {
+    "g": 0.325,
+    "v": 2.93,
+    "dishes": [
+     "Smoked Duck Breast"
+    ]
+   },
+   "sweet-potato-parsnip-gruyere-pave": {
+    "g": 2.864,
+    "v": 243.42,
+    "dishes": [
+     "Venison Osso Bucco"
+    ]
+   },
+   "wagyu-braising-reduction": {
+    "g": 6.149,
+    "v": 281.95,
+    "dishes": [
+     "Venison Osso Bucco",
+     "Wagyu Shortrib"
+    ]
+   },
+   "shaved-brussels-sprout-green-apple-garnish": {
+    "g": 0.337,
+    "v": 3.37,
+    "dishes": [
+     "Venison Osso Bucco"
+    ]
+   },
+   "12-hour-braised-wagyu-short-rib": {
+    "g": 11.421,
+    "v": 1290.62,
+    "dishes": [
+     "Wagyu Shortrib"
+    ]
+   },
+   "house-potato-gnocchi": {
+    "g": 14.353,
+    "v": 2038.06,
+    "dishes": [
+     "Wagyu Shortrib"
+    ]
+   },
+   "gigante-beans-expo-garnish": {
+    "g": 4.548,
+    "v": 204.68,
+    "dishes": [
+     "Wagyu Shortrib"
+    ]
+   },
+   "parsley-lemon-gremolata": {
+    "g": 0.556,
+    "v": 3.06,
+    "dishes": [
+     "Wagyu Shortrib"
+    ]
+   },
+   "butternut-squash-soup": {
+    "g": 6.724,
+    "v": 1143.02,
+    "dishes": [
+     "Butternut Squash Soup"
+    ]
+   },
+   "marcona-almond-praline-honey-caramel": {
+    "g": 0.316,
+    "v": 2.53,
+    "dishes": [
+     "Butternut Squash Soup"
+    ]
+   },
+   "crispy-sage-leaves-brown-butter-finish": {
+    "g": 0.198,
+    "v": 0.99,
+    "dishes": [
+     "Butternut Squash Soup"
+    ]
+   },
+   "balsamic-reduction": {
+    "g": 0.316,
+    "v": 2.53,
+    "dishes": [
+     "Butternut Squash Soup"
+    ]
+   }
+  },
+  "grill": {
+   "robuchon-style-yukon-gold-pommes-puree": {
+    "g": 13.518,
+    "v": 1527.54,
+    "dishes": [
+     "Salmon Wellington",
+     "Venison Osso Bucco"
+    ]
+   },
+   "caramelized-miso-aioli": {
+    "g": 1.802,
+    "v": 54.05,
+    "dishes": [
+     "Crispy Calamari"
+    ]
+   },
+   "lobster-shell-pangrattato": {
+    "g": 0.062,
+    "v": 0.55,
+    "dishes": [
+     "Oysters Rockefeller"
+    ]
+   },
+   "pumpkin-chestnut-oyster-mushroom-topping": {
+    "g": 1.23,
+    "v": 147.66,
+    "dishes": [
+     "Provoleta Completa"
+    ]
+   }
+  },
+  "garde-manger": {
+   "crispy-caper-preserved-lemon-crumb": {
+    "g": 0.516,
+    "v": 3.09,
+    "dishes": [
+     "Salmon Wellington"
+    ]
+   },
+   "albondigas-meatballs": {
+    "g": 15.259,
+    "v": 3814.7,
+    "dishes": [
+     "Albondigas"
+    ]
+   },
+   "albondigas-sauce": {
+    "g": 10.986,
+    "v": 1977.54,
+    "dishes": [
+     "Albondigas"
+    ]
+   },
+   "pickled-yellow-mustard-seeds": {
+    "g": 0.305,
+    "v": 1.53,
+    "dishes": [
+     "Albondigas"
+    ]
+   },
+   "winter-rockefeller-filling": {
+    "g": 0.513,
+    "v": 38.45,
+    "dishes": [
+     "Oysters Rockefeller"
+    ]
+   },
+   "roasted-pumpkin-small-dice": {
+    "g": 2.959,
+    "v": 177.54,
+    "dishes": [
+     "Fig Burrata Salad"
+    ]
+   },
+   "red-wine-vinaigrette": {
+    "g": 1.233,
+    "v": 30.82,
+    "dishes": [
+     "Fig Burrata Salad"
+    ]
+   },
+   "squash-puree-bottle": {
+    "g": 0.247,
+    "v": 1.23,
+    "dishes": [
+     "Fig Burrata Salad"
+    ]
+   },
+   "ranch-dressing": {
+    "g": 2.477,
+    "v": 141.19,
+    "dishes": [
+     "Steakhouse Wedge Salad"
+    ]
+   },
+   "balsamic-reduction": {
+    "g": 0.608,
+    "v": 8.52,
+    "dishes": [
+     "Steakhouse Wedge Salad"
+    ]
+   },
+   "slow-roasted-steakhouse-tomatoes": {
+    "g": 0.782,
+    "v": 14.08,
+    "dishes": [
+     "Steakhouse Wedge Salad"
+    ]
+   },
+   "bacon-crumbs": {
+    "g": 0.782,
+    "v": 14.08,
+    "dishes": [
+     "Steakhouse Wedge Salad"
+    ]
+   }
+  }
+ }
+}

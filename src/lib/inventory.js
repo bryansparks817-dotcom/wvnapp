@@ -21,6 +21,33 @@ export function coversFor(today) {
   const n = Object.entries(all).filter(([k, v]) => k.startsWith(`${today}:`) && Number(v) > 0).reduce((a, [, v]) => a + Number(v), 0);
   return n || null;
 }
+// Pmix par (Bryan, 2026-11-28): item.coverPar = { g, v }, grams used per cover
+// and its variance per cover, from the Sep–Nov 2026 product mix rolled down
+// through the dish builds. Tonight's total par (line pan + lowboy) = average
+// use + 1 standard deviation = g × covers + √(v × covers). Null with no covers
+// typed in for the day, or when the chef turned it off (item.coverParOff).
+export function coverParG(item, today) {
+  const cp = item.coverPar;
+  if (!cp?.g || item.coverParOff || !today) return null;
+  const covers = coversFor(today);
+  if (!covers) return null;
+  return cp.g * covers + Math.sqrt((cp.v || 0) * covers);
+}
+// With a pmix par the line pan is filled only as far as tonight needs, in 25%
+// steps (most nights a full pan is more than service uses), and the lowboy par
+// is whatever tonight calls for beyond that. Without one: the station's line
+// par and the fixed lowboy par.
+export function lineParFor(item, linePar, today) {
+  const cp = coverParG(item, today);
+  if (cp == null || !(item.panGrams > 0)) return linePar;
+  return Math.min(linePar, Math.max(25, Math.ceil((cp / item.panGrams) * 4) * 25));
+}
+export function lowboyParGFor(item, linePar, today) {
+  const cp = coverParG(item, today);
+  if (cp != null) return Math.max(0, cp - (lineParFor(item, linePar, today) / 100) * (item.panGrams || 0));
+  return (item.lowboyPar ?? 0) * containerGrams(item, item.lowboySize);
+}
+
 export function parEachFor(item, today) {
   const pct = Number(item.parPctCovers) || 0;
   const covers = pct > 0 && today ? coversFor(today) : null;
@@ -178,11 +205,11 @@ export function buildShift(items, inventory, linePar, today, opts = {}) {
     }
 
     // 1. Top up the line, from lowboy and walk-in together, oldest first.
-    const lineNeed = (Math.max(0, linePar - inv.line) / 100) * item.panGrams;
+    const lineNeed = (Math.max(0, lineParFor(item, linePar, today) - inv.line) / 100) * item.panGrams;
     const toLine = takeFrom(item, usable, lineNeed);
 
     // 2. Restock the lowboy to its par from what's left in the walk-in.
-    const lowboyParG = item.lowboyPar * containerGrams(item, item.lowboySize);
+    const lowboyParG = lowboyParGFor(item, linePar, today);
     const lowboyLeft = usable.filter((b) => b.where === "lowboy").reduce((s, b) => s + gramsIn(item, b), 0);
     const walkInLeft = usable.filter((b) => b.where === "walk-in");
     const toLowboy = takeFrom(item, walkInLeft, Math.max(0, lowboyParG - lowboyLeft));
@@ -268,9 +295,10 @@ export function applyPrep(item, inv, row, linePar, today) {
   const keep = (list) => list.filter((c) => c.fill > 0 && !isLastDay(item, c.madeOn, today));
   const next = { line: inv.line, lowboy: keep(inv.lowboy), walkIn: keep(inv.walkIn) };
   let grams = row.makeG;
-  const lineNeed = (Math.max(0, linePar - next.line) / 100) * item.panGrams;
+  const lineTo = lineParFor(item, linePar, today);
+  const lineNeed = (Math.max(0, lineTo - next.line) / 100) * item.panGrams;
   if (lineNeed > 0) {
-    next.line = linePar;
+    next.line = lineTo;
     grams -= lineNeed;
   }
   const full = containerGrams(item, item.lowboySize);
