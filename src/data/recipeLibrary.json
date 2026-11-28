@@ -7810,8 +7810,8 @@
   "yieldText": "Approx. 3.2 kg finished (development estimate)",
   "portion": "85 g / 3 oz",
   "storage": "Refrigerated, covered and pressed overnight",
-  "shelfLife": "3 days",
-  "shelfLifeDays": 3,
+  "shelfLife": "4 days",
+  "shelfLifeDays": 4,
   "allergens": [
    "Dairy",
    "Egg"
@@ -7819,7 +7819,6 @@
   "plating": "",
   "drafts": [
    "allergens",
-   "shelfLife",
    "station",
    "sub"
   ],

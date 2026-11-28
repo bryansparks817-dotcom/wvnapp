@@ -21,7 +21,7 @@ import builtInV1 from "../data/builtInRecipesV1.json";
 import libraryIngredients from "../data/libraryIngredients.json";
 
 // Bump when recipeLibrary.json is rebuilt and unedited copies should refresh.
-export const LIBRARY_REV = 6;
+export const LIBRARY_REV = 7;
 
 const library = [...restaurantLibrary, ...cateringLibrary];
 

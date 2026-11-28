@@ -317,6 +317,8 @@ const STATION_FIXES = [
   ["grill-bread-pudding-each-2026-11-28", breadPuddingEach],
   ["grill-pangrattato-top-2026-11-28", pangrattatoTop],
   ["pmix-cover-pars-2026-11-28", addCoverPars],
+  // Bryan, 2026-11-28: the pavé keeps 4 days.
+  ["pave-4-days-2026-11-28", (st) => st.map((s) => ({ ...s, items: s.items.map((i) => ((i.recipeId ?? i.id) === "sweet-potato-parsnip-gruyere-pave" ? { ...i, shelfLifeDays: 4, unconfirmed: (i.unconfirmed ?? []).filter((u) => u !== "shelfLifeDays") } : i)) }))],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],
