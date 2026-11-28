@@ -143,8 +143,9 @@ const GRILL_EACH_NEW = [
 ];
 // Bryan, 2026-11-28: flank steak on Grill's steak section, lower shelf. Comes
 // 4–5 pieces a pack (~32 oz each), 47 lb case, little to no trim; tenderize both
-// sides and cut into ~16 oz pieces, counted each. Par, pan and minutes are drafts.
-const GRILL_FLANK = { ...TASK, id: "flank-steak", name: "Flank steak (16 oz)", recipeId: "task:flank-steak", countEach: true, eachGrams: 454, parEach: 8, pan: "1/2", panGrams: 3632, taskMinutes: 20, taskNote: "Tenderize both sides, cut each ~32 oz piece into two ~16 oz pieces", shelfLifeDays: 3, caseLabel: "47 lb case, 4–5 pieces a pack", caseGrams: 21319, unconfirmed: ["pan", "panGrams", "taskMinutes", "shelfLifeDays", "parEach"] };
+// sides and cut into ~16 oz pieces, counted each, half pan, par 10% of the
+// night's reservations. Fallback par, minutes and shelf life are drafts.
+const GRILL_FLANK = { ...TASK, id: "flank-steak", name: "Flank steak (16 oz)", recipeId: "task:flank-steak", countEach: true, eachGrams: 454, parEach: 8, parPctCovers: 10, pan: "1/2", panGrams: 3632, taskMinutes: 20, taskNote: "Tenderize both sides, cut each ~32 oz piece into two ~16 oz pieces", shelfLifeDays: 3, caseLabel: "47 lb case, 4–5 pieces a pack", caseGrams: 21319, unconfirmed: ["panGrams", "taskMinutes", "shelfLifeDays", "parEach"] };
 const addGrillFlank = (stations) => stations.map((s) => (s.id !== "grill" || s.items.some((i) => i.id === GRILL_FLANK.id) ? s : { ...s, items: [...s.items, GRILL_FLANK] }));
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
