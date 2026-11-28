@@ -147,6 +147,26 @@ const GRILL_EACH_NEW = [
 // night's reservations. Fallback par, minutes and shelf life are drafts.
 const GRILL_FLANK = { ...TASK, id: "flank-steak", name: "Flank steak (16 oz)", recipeId: "task:flank-steak", countEach: true, eachGrams: 454, parEach: 8, parPctCovers: 10, pan: "1/2", panGrams: 3632, taskMinutes: 20, taskNote: "Tenderize both sides, cut each ~32 oz piece into two ~16 oz pieces", shelfLifeDays: 3, caseLabel: "47 lb case, 4–5 pieces a pack", caseGrams: 21319, unconfirmed: ["panGrams", "taskMinutes", "shelfLifeDays", "parEach"] };
 const addGrillFlank = (stations) => stations.map((s) => (s.id !== "grill" || s.items.some((i) => i.id === GRILL_FLANK.id) ? s : { ...s, items: [...s.items, GRILL_FLANK] }));
+// Bryan, 2026-11-28: Grill make table slot 1, six sixth pans, 2 across, counted
+// from the back left and snaking: 1 bread pudding portions, 2 cornbread mix,
+// 3 provolone portions (middle right), 4 cut calamari (middle left), 5 harissa
+// glazed carrots, 6 pumpkin-mushroom mix for the provoleta. New items are drafts.
+const SIXTH = { pan: "1/6", panGrams: 1500, lowboySize: "qt", qtGrams: 700, lowboyPar: 1, shelfLifeDays: 3 };
+const GRILL_SLOT1_NEW = [
+  { ...TASK, ...SIXTH, id: "cornbread-mix", name: "Cornbread mix", recipeId: "task:cornbread-mix", taskMinutes: 15, slot: 1, spot: 2, unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+  { ...TASK, ...SIXTH, id: "provolone-portions", name: "Provolone portions", recipeId: "task:provolone-portions", taskMinutes: 15, shelfLifeDays: 5, slot: 1, spot: 3, unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+  { ...TASK, ...SIXTH, id: "cut-calamari", name: "Cut calamari", recipeId: "task:cut-calamari", taskMinutes: 20, shelfLifeDays: 2, slot: 1, spot: 4, unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+  { ...TASK, ...SIXTH, id: "harissa-glazed-carrots", name: "Harissa-glazed carrots", recipeId: "task:harissa-glazed-carrots", taskMinutes: 30, slot: 1, spot: 5, unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+  { ...SIXTH, id: "pumpkin-chestnut-oyster-mushroom-topping", name: "Pumpkin-mushroom mix (provoleta)", recipeId: "pumpkin-chestnut-oyster-mushroom-topping", slot: 1, spot: 6, unconfirmed: ["pan", "panGrams", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+];
+const addGrillSlot1 = (stations) => stations.map((s) => {
+  if (s.id !== "grill") return s;
+  const taken = (n) => s.items.some((i) => i.slot === 1 && i.spot === n);
+  const items = s.items.map((i) => (i.id === "savory-bacon-challah-bread-pudding" && !i.slot && !taken(1) ? { ...i, name: i.name.includes("portion") ? i.name : `${i.name} portions`, slot: 1, spot: 1 } : i));
+  const fresh = GRILL_SLOT1_NEW.filter((g) => !items.some((i) => i.id === g.id)).map((g) => (taken(g.spot) ? (({ slot, spot, ...rest }) => rest)(g) : g));
+  return { ...s, railPans: s.railPans || 2, railLayout: { ...(s.railLayout ?? {}), 1: s.railLayout?.[1] ?? [2, 2, 2] }, items: [...items, ...fresh] };
+});
+
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
   const items = s.items.map((i) => (i.id === "individual-salmon-wellington-make-ahead-assembly" && !i.countEach ? { ...i, name: i.name.startsWith("Salmon") ? i.name : "Salmon Wellington", countEach: true, eachGrams: 215, parEach: 10, parPctCovers: 15, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "parEach"])] } : i));
@@ -161,7 +181,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -220,6 +240,7 @@ const STATION_FIXES = [
   ["grill-flank-2026-11-28", addGrillFlank],
   // Bryan, 2026-11-28: Grill's make table is two full hotel pans wide.
   ["grill-make-table-2-2026-11-28", (st) => st.map((s) => (s.id === "grill" && !s.railPans ? { ...s, railPans: 2 } : s))],
+  ["grill-slot-1-2026-11-28", addGrillSlot1],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],
