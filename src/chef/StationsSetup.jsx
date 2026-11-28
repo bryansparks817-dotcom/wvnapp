@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useBack } from "../lib/backNav";
 import { getStations, setupFlags } from "../data/stations";
-import { saveStationSetup } from "../lib/storage";
+import { loadInventory, saveInventory, saveShift, saveStationSetup } from "../lib/storage";
 import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS, panName } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
@@ -176,7 +176,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
             <button key={n} type="button" className={`fz__chip${f.slot === n ? " is-on" : ""}`} aria-pressed={f.slot === n} onClick={() => set("slot", f.slot === n ? null : n)}>{n}</button>
           ))}
           {hasBottleRail(target) && <button type="button" className={`fz__chip${f.slot === BOTTLES ? " is-on" : ""}`} aria-pressed={f.slot === BOTTLES} onClick={() => setF((x) => ({ ...x, slot: x.slot === BOTTLES ? null : BOTTLES, spot: null, ...(x.slot === BOTTLES ? {} : { pan: "bottle" }) }))}>BOTTLE RAIL</button>}
-          {hasDryRail(target) && <button type="button" className={`fz__chip${f.slot === DRY ? " is-on" : ""}`} aria-pressed={f.slot === DRY} onClick={() => setF((x) => ({ ...x, slot: x.slot === DRY ? null : DRY, spot: null }))}>DRY RAIL (BEHIND)</button>}
+          {hasDryRail(target) && <button type="button" className={`fz__chip${f.slot === DRY ? " is-on" : ""}`} aria-pressed={f.slot === DRY} onClick={() => setF((x) => ({ ...x, slot: x.slot === DRY ? null : DRY, spot: null }))}>{(target.dryRailLabel || "Dry rail (behind)").toUpperCase()}</button>}
           <button type="button" className={`fz__chip${!f.slot ? " is-on" : ""}`} aria-pressed={!f.slot} onClick={() => set("slot", null)}>NOT ON THE RAIL</button>
         </div>
         {f.slot && slotSpots(target, f.slot) > 0 && <>
@@ -342,7 +342,7 @@ function RailMap({ station, onEditItem }) {
       <span className="pass__countlabel">THE RAIL · SLOTS 1–{slots.length} · BACK AT THE TOP</span>
       {hasDryRail(station) && (
         <div className="rail__dry">
-          <span className="rail__drylabel">DRY RAIL · BEHIND</span>
+          <span className="rail__drylabel">{(station.dryRailLabel || "Dry rail · behind").toUpperCase()}</span>
           {dry.map((i) => <button key={i.id} type="button" className="rail__pan rail__dryitem" onClick={() => onEditItem(i)}><span className="rail__pansize">{i.pan}</span><span className="rail__panname">{i.name}</span></button>)}
           {!dry.length && <span className="pass__hint">Nothing on it yet.</span>}
         </div>
@@ -398,6 +398,13 @@ function RailMap({ station, onEditItem }) {
 function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem, onAddItem, onMoveItem }) {
   const [name, setName] = useState(station.name);
   const [askRemove, setAskRemove] = useState(false);
+  const [askFresh, setAskFresh] = useState(false);
+  const [freshDone, setFreshDone] = useState(false);
+  const lastClose = loadInventory(station.id)?.closedOn ?? null;
+  // Bryan, 2026-11-28: wipe this station's counts and today's shift so the
+  // cook starts over with a fresh close (every item on the First count screen).
+  // Items, pars and the layout stay as they are.
+  const freshClose = () => { saveShift(null, station.id); saveInventory(null, station.id); setAskFresh(false); setFreshDone(true); };
   const dup = stations.some((s) => s.id !== station.id && s.name.toLowerCase() === name.trim().toLowerCase());
   const changed = name.trim() && name.trim() !== station.name && !dup;
   const drafts = station.items.filter((i) => i.unconfirmed?.length).length;
@@ -410,6 +417,19 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
         </Field>
         {dup && <p className="pass__hint chef__late">There’s already a station called that.</p>}
         {changed && <button type="button" className="pass__ghostbtn" onClick={() => onSave({ ...station, name: name.trim() })}>SAVE NAME</button>}
+
+        <span className="pass__countlabel">FRESH CLOSE</span>
+        {freshDone ? (
+          <p className="pass__hint">Done. {station.name}’s counts and today’s list are cleared. On the {station.name} phone, the cook reloads the app and gets a First count with every item. Items, pars and the layout are unchanged.</p>
+        ) : askFresh ? (
+          <div className="chef__staffrow">
+            <button type="button" className="pass__ghostbtn chef__late" onClick={freshClose}>YES, CLEAR {station.name.toUpperCase()}’S COUNTS</button>
+            <button type="button" className="pass__ghostbtn" onClick={() => setAskFresh(false)}>CANCEL</button>
+          </div>
+        ) : (
+          <button type="button" className="pass__ghostbtn" onClick={() => setAskFresh(true)}>START A FRESH CLOSE</button>
+        )}
+        {!freshDone && <p className="pass__hint">Clears {station.name}’s last count{lastClose ? ` (${lastClose})` : ""} and today’s collect and prep list, so the cook counts everything from scratch. Items, pars and the layout stay.</p>}
 
         <span className="pass__countlabel">WHAT THIS STATION DOES</span>
         <div className="chef__servicetoggle" role="group" aria-label="Station kind">
