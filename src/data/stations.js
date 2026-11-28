@@ -141,6 +141,11 @@ const GARDE_ROCKS = "8 qt of rocks, across slots 1–2 · for the small black bo
 const GRILL_EACH_NEW = [
   { ...TASK, id: "filet-8oz", name: "8 oz filet", recipeId: "task:filet-8oz", countEach: true, eachGrams: 227, parEach: 12, parPctCovers: 15, pan: "1/2", panGrams: 2724, taskMinutes: 45, taskNote: "Clean the PSMO (pull the chain and silver skin), cut 8 oz filets", shelfLifeDays: 3, unconfirmed: ["panGrams", "taskMinutes", "shelfLifeDays", "parEach"] },
 ];
+// Bryan, 2026-11-28: flank steak on Grill's steak section, lower shelf. Comes
+// 4–5 pieces a pack (~32 oz each), 47 lb case, little to no trim; tenderize both
+// sides and cut into ~16 oz pieces, counted each. Par, pan and minutes are drafts.
+const GRILL_FLANK = { ...TASK, id: "flank-steak", name: "Flank steak (16 oz)", recipeId: "task:flank-steak", countEach: true, eachGrams: 454, parEach: 8, pan: "1/2", panGrams: 3632, taskMinutes: 20, taskNote: "Tenderize both sides, cut each ~32 oz piece into two ~16 oz pieces", shelfLifeDays: 3, caseLabel: "47 lb case, 4–5 pieces a pack", caseGrams: 21319, unconfirmed: ["pan", "panGrams", "taskMinutes", "shelfLifeDays", "parEach"] };
+const addGrillFlank = (stations) => stations.map((s) => (s.id !== "grill" || s.items.some((i) => i.id === GRILL_FLANK.id) ? s : { ...s, items: [...s.items, GRILL_FLANK] }));
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
   const items = s.items.map((i) => (i.id === "individual-salmon-wellington-make-ahead-assembly" && !i.countEach ? { ...i, name: i.name.startsWith("Salmon") ? i.name : "Salmon Wellington", countEach: true, eachGrams: 215, parEach: 10, parPctCovers: 15, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "parEach"])] } : i));
@@ -155,7 +160,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -211,6 +216,7 @@ const STATION_FIXES = [
   ["garde-bottle-rail-2026-11-28", addGardeBottles],
   ["garde-dry-rail-2026-11-28", addGardeDry],
   ["grill-count-each-2026-11-28", addGrillEach],
+  ["grill-flank-2026-11-28", addGrillFlank],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],
