@@ -176,7 +176,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
             <button key={n} type="button" className={`fz__chip${f.slot === n ? " is-on" : ""}`} aria-pressed={f.slot === n} onClick={() => set("slot", f.slot === n ? null : n)}>{n}</button>
           ))}
           {hasBottleRail(target) && <button type="button" className={`fz__chip${f.slot === BOTTLES ? " is-on" : ""}`} aria-pressed={f.slot === BOTTLES} onClick={() => setF((x) => ({ ...x, slot: x.slot === BOTTLES ? null : BOTTLES, spot: null, ...(x.slot === BOTTLES ? {} : { pan: "bottle" }) }))}>BOTTLE RAIL</button>}
-          {hasDryRail(target) && <button type="button" className={`fz__chip${f.slot === DRY ? " is-on" : ""}`} aria-pressed={f.slot === DRY} onClick={() => setF((x) => ({ ...x, slot: x.slot === DRY ? null : DRY, spot: null }))}>DRY RAIL (BEHIND)</button>}
+          {hasDryRail(target) && <button type="button" className={`fz__chip${f.slot === DRY ? " is-on" : ""}`} aria-pressed={f.slot === DRY} onClick={() => setF((x) => ({ ...x, slot: x.slot === DRY ? null : DRY, spot: null }))}>{(target.dryRailLabel || "Dry rail (behind)").toUpperCase()}</button>}
           <button type="button" className={`fz__chip${!f.slot ? " is-on" : ""}`} aria-pressed={!f.slot} onClick={() => set("slot", null)}>NOT ON THE RAIL</button>
         </div>
         {f.slot && slotSpots(target, f.slot) > 0 && <>
@@ -342,7 +342,7 @@ function RailMap({ station, onEditItem }) {
       <span className="pass__countlabel">THE RAIL · SLOTS 1–{slots.length} · BACK AT THE TOP</span>
       {hasDryRail(station) && (
         <div className="rail__dry">
-          <span className="rail__drylabel">DRY RAIL · BEHIND</span>
+          <span className="rail__drylabel">{(station.dryRailLabel || "Dry rail · behind").toUpperCase()}</span>
           {dry.map((i) => <button key={i.id} type="button" className="rail__pan rail__dryitem" onClick={() => onEditItem(i)}><span className="rail__pansize">{i.pan}</span><span className="rail__panname">{i.name}</span></button>)}
           {!dry.length && <span className="pass__hint">Nothing on it yet.</span>}
         </div>

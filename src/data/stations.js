@@ -167,6 +167,25 @@ const addGrillSlot1 = (stations) => stations.map((s) => {
   return { ...s, railPans: s.railPans || 2, railLayout: { ...(s.railLayout ?? {}), 1: s.railLayout?.[1] ?? [2, 2, 2] }, items: [...items, ...fresh] };
 });
 
+// Bryan, 2026-11-28: Grill make table slot 2, three third pans: back is a flex
+// pan (squeeze bottle of miso aioli, egg wash, station overflow), middle baby
+// Yukon potatoes, front blanched broccolini. Seaweed (rice paper & nori) crackers
+// sit on top of the cold make station. New items are drafts.
+const GRILL_SLOT2_NEW = [
+  { ...TASK, id: "egg-wash", name: "Egg wash", recipeId: "task:egg-wash", pan: "1/9", panGrams: 500, taskMinutes: 5, shelfLifeDays: 2, slot: 2, spot: "back" },
+  { ...TASK, ...SIXTH, id: "baby-yukon-potatoes", name: "Baby Yukon potatoes", recipeId: "task:baby-yukon-potatoes", pan: "1/3", panGrams: 3000, taskMinutes: 30, slot: 2, spot: "middle", unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+  { ...TASK, ...SIXTH, id: "blanched-broccolini", name: "Blanched broccolini", recipeId: "task:blanched-broccolini", pan: "1/3", panGrams: 1500, taskMinutes: 25, shelfLifeDays: 2, slot: 2, spot: "front", unconfirmed: [...TASK.unconfirmed, "qtGrams", "lowboyPar"] },
+];
+const addGrillSlot2 = (stations) => stations.map((s) => {
+  if (s.id !== "grill") return s;
+  const items = s.items.map((i) => {
+    if (i.id === "caramelized-miso-aioli" && !i.slot) return { ...i, pan: "bottle", panGrams: 375, slot: 2, spot: "back", unconfirmed: [...new Set([...(i.unconfirmed ?? []).filter((f) => f !== "pan"), "panGrams"])] };
+    if (i.id === "rice-paper-nori-chips" && !i.slot) return { ...i, slot: "dry" };
+    return i;
+  });
+  return { ...s, dryRail: true, dryRailLabel: s.dryRailLabel ?? "On top of the cold make station", slotNotes: { ...(s.slotNotes ?? {}), 2: s.slotNotes?.[2] ?? "Back third is the flex pan: miso bottle, egg wash, any station overflow (overflow not counted)" }, items: [...items, ...GRILL_SLOT2_NEW.filter((g) => !items.some((i) => i.id === g.id))] };
+});
+
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
   const items = s.items.map((i) => (i.id === "individual-salmon-wellington-make-ahead-assembly" && !i.countEach ? { ...i, name: i.name.startsWith("Salmon") ? i.name : "Salmon Wellington", countEach: true, eachGrams: 215, parEach: 10, parPctCovers: 15, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "parEach"])] } : i));
@@ -181,7 +200,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = addGrillSlot2(addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -241,6 +260,7 @@ const STATION_FIXES = [
   // Bryan, 2026-11-28: Grill's make table is two full hotel pans wide.
   ["grill-make-table-2-2026-11-28", (st) => st.map((s) => (s.id === "grill" && !s.railPans ? { ...s, railPans: 2 } : s))],
   ["grill-slot-1-2026-11-28", addGrillSlot1],
+  ["grill-slot-2-2026-11-28", addGrillSlot2],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],
