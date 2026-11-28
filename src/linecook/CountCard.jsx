@@ -1,6 +1,6 @@
 import { spotLabel } from "../lib/rail";
 import { LEVELS, containerLabel, shelfLabel, isLastDay } from "../lib/inventory";
-import { PANS } from "../lib/panSize";
+import { PANS, panName } from "../lib/panSize";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function madeLabel(iso) {
@@ -39,7 +39,7 @@ function PanPick({ item, pan }) {
         value={req && !pan.isChef ? req.to : item.pan}
         onChange={(e) => pan.onPick(e.target.value)}
       >
-        {PANS.map((p) => <option key={p} value={p}>{p.toUpperCase()} PAN</option>)}
+        {PANS.map((p) => <option key={p} value={p}>{panName(p).toUpperCase()}</option>)}
       </select>
       {req && !pan.isChef && (
         <span className="pass__panreq">
@@ -96,12 +96,12 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
   return (
     <fieldset className="pass__card">
       <legend className="pass__cardhead">
-        {item.slot ? <span className="pass__slottag">SLOT {item.slot}{item.spot ? ` ${spotLabel(item.spot).toUpperCase()}` : ""}</span> : null}
+        {item.slot === "bottles" ? <span className="pass__slottag">BOTTLE RAIL</span> : item.slot === "dry" ? <span className="pass__slottag">DRY RAIL</span> : item.slot ? <span className="pass__slottag">SLOT {item.slot}{item.spot ? ` ${spotLabel(item.spot).toUpperCase()}` : ""}</span> : null}
         <span className="pass__rowname">{item.name}</span>
       </legend>
 
       {mode !== "backup" && <div className="pass__countrow">
-        {pan ? <PanPick item={item} pan={pan} /> : <span className="pass__countlabel">LINE · {item.pan} PAN</span>}
+        {pan ? <PanPick item={item} pan={pan} /> : <span className="pass__countlabel">LINE · {panName(item.pan).toUpperCase()}</span>}
         <Levels value={inv.line} onPick={setLine} label={`${item.name} line pan`} />
       </div>}
 

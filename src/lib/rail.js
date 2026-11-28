@@ -36,20 +36,36 @@ export const validSpot = (spot, station, slot) => (slotSpots(station, slot) ? Nu
 export const spotLabel = (spot) => (typeof spot === "number" ? `#${spot}` : spot);
 const spotRank = (it) => (typeof it.spot === "number" ? it.spot / 100 : SPOTS.includes(it.spot) ? SPOTS.indexOf(it.spot) : 1.5);
 
+// The bottle rail (Bryan, 2026-11-28): Garde's squeeze bottles sit between
+// slots 2 and 3, in no set order. Items there have slot "bottles", and the
+// count takes them right after slot bottleRailAfter.
+export const BOTTLES = "bottles";
+export const hasBottleRail = (station) => station?.bottleRailAfter != null && station.bottleRailAfter !== "";
+// The dry rail (Bryan, 2026-11-28): directly behind Garde, dusters and dry
+// garnishes (powdered sugar, smoked paprika, croutons). Counted after slot N.
+export const DRY = "dry";
+export const hasDryRail = (station) => Boolean(station?.dryRail);
+const slotRank = (it, station) => (it.slot === BOTTLES ? (hasBottleRail(station) ? Number(station.bottleRailAfter) + 0.5 : 99) : it.slot === DRY ? (hasDryRail(station) ? 98 : 99) : it.slot ?? 99);
+export const isZone = (slot) => slot === BOTTLES || slot === DRY;
+
 export const railSlots = (station) => Array.from({ length: Number(station?.railPans) || 0 }, (_, i) => i + 1);
 
 // { slot: { items, used } } plus the items with no slot yet.
 export function railMap(station) {
   const slots = railSlots(station).map((n) => ({ slot: n, items: [], used: 0, spots: slotSpots(station, n) }));
   const unplaced = [];
+  const bottles = [];
+  const dry = [];
   for (const item of station.items ?? []) {
+    if (item.slot === BOTTLES && hasBottleRail(station)) { bottles.push(item); continue; }
+    if (item.slot === DRY && hasDryRail(station)) { dry.push(item); continue; }
     const s = slots.find((x) => x.slot === item.slot);
     if (!s) { unplaced.push(item); continue; }
     s.items.push(item);
     s.used += s.spots ? 1 / s.spots : PAN_SHARE[item.pan] ?? 0;
   }
   for (const s of slots) s.items.sort((a, b) => spotRank(a) - spotRank(b));
-  return { slots, unplaced };
+  return { slots, unplaced, bottles, dry };
 }
 
 // "1 ⅙" style for how much of a hotel pan a slot uses.
@@ -62,5 +78,5 @@ export function shareLabel(x) {
 // Count order on a railed station: slot 1 to the last, then anything unplaced.
 export function bySlot(items, station) {
   if (!railSlots(station).length) return items;
-  return items.map((it, i) => ({ it, i })).sort((a, b) => (a.it.slot ?? 99) - (b.it.slot ?? 99) || (a.it.slot ? spotRank(a.it) - spotRank(b.it) : 0) || a.i - b.i).map((x) => x.it);
+  return items.map((it, i) => ({ it, i })).sort((a, b) => slotRank(a.it, station) - slotRank(b.it, station) || (a.it.slot && !isZone(a.it.slot) ? spotRank(a.it) - spotRank(b.it) : 0) || a.i - b.i).map((x) => x.it);
 }

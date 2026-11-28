@@ -1,3 +1,4 @@
+import { panName } from "../lib/panSize";
 import { useState } from "react";
 import { CheckBox, PassHeader, TabBar } from "./Chrome";
 import { NoteCard } from "./CountScreen";
@@ -228,7 +229,7 @@ export default function TodayScreen({
                       {isDone && <span className="pass__rowsub">✓ {stamp(meta[`c:${row.id}`])}</span>}
                       {!isDone && row.toLine.length > 0 && (
                         <span className="pass__takes">
-                          <span className="pass__takehead">TO LINE ({item.pan} pan)</span>
+                          <span className="pass__takehead">TO LINE ({panName(item.pan)})</span>
                           {row.toLine.map((t, i) => <TakeLine key={i} item={item} take={t} today={today} />)}
                         </span>
                       )}

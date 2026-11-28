@@ -23,7 +23,7 @@ import { askCheck, prepItemFor, prepStation } from "../lib/prepAsk";
 import { withTaskRecipes } from "../lib/prepTasks";
 import { bySlot } from "../lib/rail";
 import { todayAt } from "../lib/crew";
-import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
+import { answerRequest, cancelRequest, openRequests, panName, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
 import { activeStaff, checkPin, hasChef, isChef, normalizeName, previewInitials, signIn, validPin } from "../lib/staff";
 import TodayScreen from "./TodayScreen";
@@ -584,7 +584,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
       const kept = before.lowboy.filter((c) => c.fill > 0 && !isLastDay(item, c.madeOn, today)).length;
       const added = after.lowboy.slice(kept).map((c) => ({ size: c.size, grams: gramsIn(item, c) }));
       const lineG = ((after.line - before.line) / 100) * item.panGrams;
-      labels = [...(lineG > 0 ? [{ size: `${item.pan} pan`, grams: lineG }] : []), ...added];
+      labels = [...(lineG > 0 ? [{ size: panName(item.pan), grams: lineG }] : []), ...added];
       if (row.toss.length) {
         const tossG = row.toss.reduce((s, t) => s + gramsIn(item, t), 0);
         setWaste((w) => [

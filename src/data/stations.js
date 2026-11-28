@@ -104,6 +104,32 @@ const addGardeSlot5 = (stations) => stations.map((s) => {
   return { ...s, items: [...items, ...fresh] };
 });
 
+// Bryan, 2026-11-28: Garde's bottle rail sits between slots 2 and 3, squeeze
+// bottles in no set order, counted in quarters of a bottle like a pan. Bottle
+// weight (700 g) and the new items' numbers are drafts.
+const BOTTLE = { pan: "bottle", panGrams: 700, lowboySize: "qt", qtGrams: 950, lowboyPar: 1, slot: "bottles" };
+const GARDE_BOTTLES_NEW = [
+  { ...BOTTLE, id: "caesar-dressing", name: "Caesar dressing", recipeId: "caesar-dressing", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+  { ...BOTTLE, id: "squash-puree-bottle", name: "Squash purée", recipeId: "butternut-squash-puree-tart-layer", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+];
+const GARDE_BOTTLES_MOVE = ["ranch-dressing", "red-wine-vinaigrette", "balsamic-reduction"];
+const addGardeBottles = (stations) => stations.map((s) => {
+  if (s.id !== "garde-manger") return s;
+  const items = s.items.map((i) => (GARDE_BOTTLES_MOVE.includes(i.id) && !i.slot ? { ...i, pan: "bottle", panGrams: 700, slot: "bottles", unconfirmed: [...new Set([...(i.unconfirmed ?? []), "panGrams"])] } : i));
+  const fresh = GARDE_BOTTLES_NEW.filter((g) => !items.some((i) => i.id === g.id));
+  return { ...s, bottleRailAfter: s.bottleRailAfter ?? 2, items: [...items, ...fresh] };
+});
+
+// Bryan, 2026-11-28: Garde's dry rail, directly behind the station: dusters of
+// powdered sugar and smoked paprika, and croutons. Containers, weights and the
+// croutons as a prep task are drafts.
+const GARDE_DRY = [
+  { id: "powdered-sugar-duster", name: "Powdered sugar", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 500, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
+  { id: "smoked-paprika-duster", name: "Smoked paprika", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
+  { ...TASK, id: "croutons", name: "Croutons", recipeId: "task:croutons", pan: "1/6", panGrams: 400, taskMinutes: 30, shelfLifeDays: 5, slot: "dry" },
+];
+const addGardeDry = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, dryRail: true, items: [...s.items, ...GARDE_DRY.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
@@ -112,7 +138,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] } } : s));
+export const DEFAULT_STATIONS = addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -165,6 +191,8 @@ const STATION_FIXES = [
   ["garde-slot-4-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && (s.railLayout?.[4] ?? 6) === 6 ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 9 } } : s))],
   ["garde-slot-4-items-2026-11-28", addGardeSlot4],
   // Bryan, 2026-11-28: slot 5 is two pans on the back row, then three and three.
+  ["garde-bottle-rail-2026-11-28", addGardeBottles],
+  ["garde-dry-rail-2026-11-28", addGardeDry],
   ["garde-slot-5-2026-11-28", (st) => addGardeSlot5(st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: [2, 3, 3] } } : s)))],
   ["garde-slot-4-six-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[4] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 6 } } : s))],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
