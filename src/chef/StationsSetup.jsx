@@ -7,6 +7,7 @@ import { PANS, PAN_GRAMS, panName } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
 import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
 import { BOTTLES, DRY, PAN_SHARE, SPOTS, hasBottleRail, hasDryRail, layoutKey, railMap, railSlots, shareLabel, slotRows, slotSpots, spotGrid, spotLabel, validSpot } from "../lib/rail";
+import { sizeName } from "../lib/inventory";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -269,12 +270,12 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
 
       <span className="pass__countlabel">{backup ? "BACKUP CONTAINERS" : "LOWBOY BACKUP"}{drafts.has("lowboySize") ? " · DRAFT" : ""}</span>
       <div className={`chef__servicetoggle${drafts.has("lowboySize") ? " chef__draftfield" : ""}`} role="group" aria-label="Lowboy container">
-        {[["qt", "QUARTS"], ["pt", "PINTS"]].map(([v, l]) => (
+        {[["qt", "QUARTS"], ["pt", "PINTS"], ["6qt", "6 QTS"]].map(([v, l]) => (
           <button key={v} type="button" className={f.lowboySize === v ? "is-on" : ""} aria-pressed={f.lowboySize === v} onClick={() => set("lowboySize", v)}>{l}</button>
         ))}
       </div>
       <div className="chef__staffrow">
-        <Field label={`${backup ? "PREP PAR" : "PAR"} (${f.lowboySize === "pt" ? "PINTS" : "QUARTS"})`} draft={drafts.has("lowboyPar")}>
+        <Field label={`${backup ? "PREP PAR" : "PAR"} (${f.lowboySize === "pt" ? "PINTS" : f.lowboySize === "6qt" ? "6 QTS" : "QUARTS"})`} draft={drafts.has("lowboyPar")}>
           <input className="pass__input" type="number" inputMode="decimal" min="0" step="0.5" value={f.lowboyPar} onChange={(e) => set("lowboyPar", e.target.value)} />
         </Field>
         <Field label="1 QUART WEIGHS (G)" draft={drafts.has("qtGrams")}>
@@ -503,7 +504,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.countEach ? `counted each · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach}${item.task ? " · prep task" : ""}` : item.frozenEach ? `precut, frozen · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach} each · from the freezer` : item.task ? `prep task · ${panName(item.pan)} · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${panName(item.pan)}${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${panName(item.pan)} · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot === BOTTLES && hasBottleRail(station) ? " · bottle rail" : ""}{item.slot === DRY && hasDryRail(station) ? " · dry rail" : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${spotLabel(item.spot)}` : ""}` : ""}
+                  {item.countEach ? `counted each · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach}${item.task ? " · prep task" : ""}` : item.frozenEach ? `precut, frozen · par ${item.parPctCovers ? `${item.parPctCovers}% of covers` : item.parEach} each · from the freezer` : item.task ? `prep task · ${panName(item.pan)} · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${panName(item.pan)}${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${sizeName(item.lowboySize)}` : `${panName(item.pan)} · par ${item.lowboyPar} ${sizeName(item.lowboySize)}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot === BOTTLES && hasBottleRail(station) ? " · bottle rail" : ""}{item.slot === DRY && hasDryRail(station) ? " · dry rail" : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${spotLabel(item.spot)}` : ""}` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>

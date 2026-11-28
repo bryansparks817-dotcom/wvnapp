@@ -186,6 +186,22 @@ const addGrillSlot2 = (stations) => stations.map((s) => {
   return { ...s, dryRail: true, dryRailLabel: s.dryRailLabel ?? "On top of the cold make station", slotNotes: { ...(s.slotNotes ?? {}), 2: s.slotNotes?.[2] ?? "Back third is the flex pan: miso bottle, egg wash, any station overflow (overflow not counted)" }, items: [...items, ...GRILL_SLOT2_NEW.filter((g) => !items.some((i) => i.id === g.id))] };
 });
 
+// Bryan, 2026-11-28: Grill backup containers. Egg wash lives in a pint;
+// baby Yukons, cornbread mix and broccolini are cooked off into 6 qt
+// containers (routinely three 6 qts of potatoes); calamari and bread pudding
+// back up in quarts. Pars other than the potatoes' 3 are drafts.
+const GRILL_BACKUP = { "egg-wash": { lowboySize: "pt", lowboyPar: 1 }, "baby-yukon-potatoes": { lowboySize: "6qt", lowboyPar: 3, confirmed: true }, "cornbread-mix": { lowboySize: "6qt", lowboyPar: 1 }, "blanched-broccolini": { lowboySize: "6qt", lowboyPar: 1 }, "cut-calamari": { lowboySize: "qt" }, "savory-bacon-challah-bread-pudding": { lowboySize: "qt" } };
+const setGrillBackup = (stations) => stations.map((s) => (s.id !== "grill" ? s : {
+  ...s,
+  items: s.items.map((i) => {
+    const b = GRILL_BACKUP[i.id];
+    if (!b) return i;
+    const { confirmed, ...fields } = b;
+    const unconfirmed = (i.unconfirmed ?? []).filter((u) => u !== "lowboySize" && !(confirmed && u === "lowboyPar"));
+    return { ...i, ...fields, unconfirmed: "lowboyPar" in fields && !confirmed ? [...new Set([...unconfirmed, "lowboyPar"])] : unconfirmed };
+  }),
+}));
+
 const addGrillEach = (stations) => stations.map((s) => {
   if (s.id !== "grill") return s;
   const items = s.items.map((i) => (i.id === "individual-salmon-wellington-make-ahead-assembly" && !i.countEach ? { ...i, name: i.name.startsWith("Salmon") ? i.name : "Salmon Wellington", countEach: true, eachGrams: 215, parEach: 10, parPctCovers: 15, unconfirmed: [...new Set([...(i.unconfirmed ?? []), "parEach"])] } : i));
@@ -200,7 +216,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGrillSlot2(addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
+export const DEFAULT_STATIONS = setGrillBackup(addGrillSlot2(addGrillSlot1(addGrillFlank(addGrillEach(addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS)))))))))))))).map((s) => (s.id === "grill" ? { ...s, railPans: 2 } : s)).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] }, slotNotes: { 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -261,6 +277,7 @@ const STATION_FIXES = [
   ["grill-make-table-2-2026-11-28", (st) => st.map((s) => (s.id === "grill" && !s.railPans ? { ...s, railPans: 2 } : s))],
   ["grill-slot-1-2026-11-28", addGrillSlot1],
   ["grill-slot-2-2026-11-28", addGrillSlot2],
+  ["grill-backup-containers-2026-11-28", setGrillBackup],
   // Bryan, 2026-11-28: slot 2 holds the rocks (serviceware, not counted).
   // Bryan, 2026-11-28: the rocks fill slots 1 and 2 together.
   ["garde-rocks-slots-1-2-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" ? { ...s, slotNotes: { ...(s.slotNotes ?? {}), 1: GARDE_ROCKS, 2: GARDE_ROCKS } } : s))],

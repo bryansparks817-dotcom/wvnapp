@@ -4,7 +4,7 @@
 //   line:    how full the line pan is, in 25% steps (0–100)
 //   lowboy:  containers (qt or pt) the line cook counts at close
 //   walkIn:  containers the chef counts at close (chef screens; sample for now)
-// A container is { size: "qt" | "pt", fill: 0–100, madeOn: "YYYY-MM-DD" }.
+// A container is { size: "qt" | "pt" | "6qt", fill: 0–100, madeOn: "YYYY-MM-DD" }.
 // All math is in grams: an item knows its full line pan and its quart weight
 // (a pint is half a quart), so the cook never converts anything.
 
@@ -29,7 +29,7 @@ export function parEachFor(item, today) {
 }
 
 export function containerGrams(item, size) {
-  return size === "pt" ? item.qtGrams / 2 : item.qtGrams;
+  return size === "pt" ? item.qtGrams / 2 : size === "6qt" ? item.qtGrams * 6 : item.qtGrams;
 }
 
 export function gramsIn(item, c) {
@@ -62,9 +62,14 @@ export function shelfLabel(item, madeOn, today) {
   return `${left}d left`;
 }
 
+// Lowboy container sizes (Bryan, 2026-11-28: 6 qt for cooked-off potatoes,
+// cornbread mix and broccolini).
+export const SIZES = ["qt", "pt", "6qt"];
+export const sizeName = (size) => (size === "6qt" ? "6 qt" : size);
+
 const FRACTIONS = { 25: "¼", 50: "½", 75: "¾", 100: "1" };
 export function containerLabel(c) {
-  return `${FRACTIONS[c.fill] ?? `${c.fill}%`} ${c.size}`;
+  return `${FRACTIONS[c.fill] ?? `${c.fill}%`} ${sizeName(c.size)}`;
 }
 
 export function formatG(grams) {
