@@ -61,6 +61,77 @@ const GARDE_GREENS = [
 ];
 const addGardeGreens = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_GREENS.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
+// Bryan, 2026-11-28: Garde slot 4 is nine ninth pans (3 × 3), counted from the
+// back left, snaking: back radish, carrot, figs; middle (right to left)
+// horseradish, parmesan, apple; front burrata, pumpkin, pickled red onion.
+// The new prep tasks are drafts (light blue). Figs, horseradish and roasted
+// pumpkin are existing recipe items moved into the slot as ninth pans.
+const GARDE_SLOT4_NEW = [
+  { ...TASK, id: "shaved-radish", name: "Shaved radish", pan: "1/9", panGrams: 300, taskMinutes: 15, shelfLifeDays: 2, slot: 4, spot: 1 },
+  { ...TASK, id: "shaved-carrot", name: "Shaved carrot", pan: "1/9", panGrams: 300, taskMinutes: 15, shelfLifeDays: 2, slot: 4, spot: 2 },
+  { ...TASK, id: "shaved-parmesan", name: "Shaved parmesan", pan: "1/9", panGrams: 400, taskMinutes: 15, shelfLifeDays: 14, slot: 4, spot: 5 },
+  { ...TASK, id: "shaved-apple", name: "Shaved apple", pan: "1/9", panGrams: 300, taskMinutes: 10, shelfLifeDays: 1, slot: 4, spot: 6 },
+  { ...TASK, id: "portioned-burrata", name: "Portioned burrata", pan: "1/9", panGrams: 600, taskMinutes: 10, shelfLifeDays: 3, slot: 4, spot: 7 },
+  { ...TASK, id: "pickled-red-onion", name: "Pickled red onion", pan: "1/9", panGrams: 500, taskMinutes: 20, shelfLifeDays: 14, slot: 4, spot: 9 },
+].map((t) => ({ ...t, recipeId: `task:${t.id}` }));
+const GARDE_SLOT4_MOVE = { "poached-figs": 3, "atomic-whipped-horseradish-cream": 4, "roasted-pumpkin-small-dice": 8 };
+const toNinth = (i) => (i.pan === "1/9" ? i : { ...i, pan: "1/9", panGrams: Math.round(((i.panGrams || 1000) * 1000) / ({ "1/6": 2500, "1/3": 4000, "1/2": 6000, full: 12000 }[i.pan] || 1000)) });
+const addGardeSlot4 = (stations) => stations.map((s) => {
+  if (s.id !== "garde-manger") return s;
+  const taken = (n) => s.items.some((i) => i.slot === 4 && i.spot === n);
+  const items = s.items.map((i) => (GARDE_SLOT4_MOVE[i.id] && !i.slot && !taken(GARDE_SLOT4_MOVE[i.id]) ? { ...toNinth(i), slot: 4, spot: GARDE_SLOT4_MOVE[i.id] } : i));
+  const fresh = GARDE_SLOT4_NEW.filter((g) => !items.some((i) => i.id === g.id)).map((g) => (g.slot && taken(g.spot) ? (({ slot, spot, ...rest }) => rest)(g) : g));
+  return { ...s, items: [...items, ...fresh] };
+});
+
+// Bryan, 2026-11-28: Garde slot 5 (deviled eggs and salad toppings). Back row
+// of two: egg white shells, deviled egg filling. Middle row, left to right on
+// the rail: diced pepper, diced chives, lemon wedges (counted right to left,
+// snaking). Front row: bacon lardons, roasted tomatoes, blue cheese.
+const GARDE_SLOT5_NEW = [
+  { ...TASK, id: "egg-white-shells", name: "Egg white shells", pan: "1/6", panGrams: 800, taskMinutes: 30, shelfLifeDays: 3, slot: 5, spot: 1 },
+  { ...TASK, id: "lemon-wedges", name: "Lemon wedges", pan: "1/9", panGrams: 500, taskMinutes: 10, shelfLifeDays: 2, slot: 5, spot: 3 },
+  { ...TASK, id: "diced-chives", name: "Diced chives", pan: "1/9", panGrams: 150, taskMinutes: 10, shelfLifeDays: 2, slot: 5, spot: 4 },
+  { ...TASK, id: "diced-pepper", name: "Diced pepper", pan: "1/9", panGrams: 400, taskMinutes: 15, shelfLifeDays: 3, slot: 5, spot: 5 },
+  { ...TASK, id: "bacon-lardons", name: "Cooked bacon lardons", pan: "1/9", panGrams: 500, taskMinutes: 30, shelfLifeDays: 5, slot: 5, spot: 6 },
+].map((t) => ({ ...t, recipeId: `task:${t.id}` }));
+const GARDE_SLOT5_MOVE = { "black-garlic-deviled-egg-filling": 2, "slow-roasted-steakhouse-tomatoes": 7, "blue-cheese-crumbles": 8 };
+const addGardeSlot5 = (stations) => stations.map((s) => {
+  if (s.id !== "garde-manger") return s;
+  const taken = (n) => s.items.some((i) => i.slot === 5 && i.spot === n);
+  const items = s.items.map((i) => (GARDE_SLOT5_MOVE[i.id] && !i.slot && !taken(GARDE_SLOT5_MOVE[i.id]) ? { ...(i.id === "black-garlic-deviled-egg-filling" ? i : toNinth(i)), slot: 5, spot: GARDE_SLOT5_MOVE[i.id] } : i));
+  const fresh = GARDE_SLOT5_NEW.filter((g) => !items.some((i) => i.id === g.id)).map((g) => (taken(g.spot) ? (({ slot, spot, ...rest }) => rest)(g) : g));
+  return { ...s, items: [...items, ...fresh] };
+});
+
+// Bryan, 2026-11-28: Garde's bottle rail sits between slots 2 and 3, squeeze
+// bottles in no set order, counted in quarters of a bottle like a pan. A full
+// bottle of ranch is about 375 g (Bryan); the others are scaled from it by
+// density and stay drafts.
+const BOTTLE_GRAMS = { "ranch-dressing": 375, "red-wine-vinaigrette": 350, "balsamic-reduction": 490, "caesar-dressing": 375, "squash-puree-bottle": 385 };
+const BOTTLE = { pan: "bottle", panGrams: 375, lowboySize: "qt", qtGrams: 950, lowboyPar: 1, slot: "bottles" };
+const GARDE_BOTTLES_NEW = [
+  { ...BOTTLE, id: "caesar-dressing", name: "Caesar dressing", recipeId: "caesar-dressing", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+  { ...BOTTLE, panGrams: 385, id: "squash-puree-bottle", name: "Squash purée", recipeId: "butternut-squash-puree-tart-layer", shelfLifeDays: 5, unconfirmed: ["pan", "panGrams", "lowboySize", "qtGrams", "lowboyPar", "shelfLifeDays"] },
+];
+const GARDE_BOTTLES_MOVE = ["ranch-dressing", "red-wine-vinaigrette", "balsamic-reduction"];
+const addGardeBottles = (stations) => stations.map((s) => {
+  if (s.id !== "garde-manger") return s;
+  const items = s.items.map((i) => (GARDE_BOTTLES_MOVE.includes(i.id) && !i.slot ? { ...i, pan: "bottle", panGrams: BOTTLE_GRAMS[i.id], slot: "bottles", unconfirmed: i.id === "ranch-dressing" ? (i.unconfirmed ?? []).filter((f) => f !== "pan" && f !== "panGrams") : [...new Set([...(i.unconfirmed ?? []), "panGrams"])] } : i));
+  const fresh = GARDE_BOTTLES_NEW.filter((g) => !items.some((i) => i.id === g.id));
+  return { ...s, bottleRailAfter: s.bottleRailAfter ?? 2, items: [...items, ...fresh] };
+});
+
+// Bryan, 2026-11-28: Garde's dry rail, directly behind the station: dusters of
+// powdered sugar and smoked paprika, and croutons. Containers, weights and the
+// croutons as a prep task are drafts.
+const GARDE_DRY = [
+  { id: "powdered-sugar-duster", name: "Powdered sugar", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 500, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
+  { id: "smoked-paprika-duster", name: "Smoked paprika", boughtIn: true, pan: "duster", panGrams: 250, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, shelfLifeDays: 180, slot: "dry", unconfirmed: ["panGrams", "shelfLifeDays"] },
+  { ...TASK, id: "croutons", name: "Croutons", recipeId: "task:croutons", pan: "1/6", panGrams: 400, taskMinutes: 30, shelfLifeDays: 5, slot: "dry", unconfirmed: TASK.unconfirmed.filter((f) => f !== "pan") },
+];
+const addGardeDry = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, dryRail: true, items: [...s.items, ...GARDE_DRY.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
@@ -69,7 +140,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 6 } } : s));
+export const DEFAULT_STATIONS = addGardeDry(addGardeBottles(addGardeSlot5(addGardeSlot4(addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5, railLayout: { 4: 9, 5: [2, 3, 3] } } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -118,6 +189,13 @@ const STATION_FIXES = [
   ["garde-slot-3-greens-2026-11-28", addGardeGreens],
   ["garde-rail-5-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railPans ? { ...s, railPans: 5 } : s))],
   // Bryan, 2026-11-28: Garde slot 4 is six ninth pans, and that fills it.
+  // Bryan, 2026-11-28: slot 4 is nine ninth pans after all (3 × 3).
+  ["garde-slot-4-nine-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && (s.railLayout?.[4] ?? 6) === 6 ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 9 } } : s))],
+  ["garde-slot-4-items-2026-11-28", addGardeSlot4],
+  // Bryan, 2026-11-28: slot 5 is two pans on the back row, then three and three.
+  ["garde-bottle-rail-2026-11-28", addGardeBottles],
+  ["garde-dry-rail-2026-11-28", addGardeDry],
+  ["garde-slot-5-2026-11-28", (st) => addGardeSlot5(st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[5] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 5: [2, 3, 3] } } : s)))],
   ["garde-slot-4-six-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railLayout?.[4] ? { ...s, railLayout: { ...(s.railLayout ?? {}), 4: 6 } } : s))],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({

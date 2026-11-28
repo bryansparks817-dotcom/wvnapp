@@ -9132,6 +9132,14 @@
     "qty": 25.0,
     "unit": "g",
     "note": "Existing house recipe; proposed light dressing quantity"
+   },
+   {
+    "name": "Squash purée",
+    "recipeRef": "butternut-squash-puree-tart-layer",
+    "qty": 5.0,
+    "unit": "g",
+    "note": "Single dot to hold the burrata in place (Bryan); amount to confirm",
+    "draft": true
    }
   ],
   "steps": [
@@ -9169,7 +9177,7 @@
   "allergens": [
    "Dairy"
   ],
-  "plating": "SERVICE BUILD — ONE ORDER: 35 g arugula, ½ ball burrata, 2 poached figs, 60 g roasted pumpkin, 35 g apple, 15 g house-made lonzino, 25 g red wine vinaigrette.\n\nPoached fig liquid: retain the champagne vinegar, white wine and agave base. Suggested balance: a small amount of kosher salt, a few black peppercorns and a little thyme; taste chilled before adjusting sweetness.\nPumpkin: small dice; toss with smoked paprika, kosher salt and black pepper, then roast until just tender with light color.\nProposed portions are development starting points only and should be confirmed during plating trials.\nAllergen note: burrata contains milk. Confirm the red wine vinaigrette and poached fig ingredients against current supplier labels and house formulas.",
+  "plating": "SERVICE BUILD — ONE ORDER: 35 g arugula, ½ ball burrata, 2 poached figs, 60 g roasted pumpkin, 35 g apple, 15 g house-made lonzino, 25 g red wine vinaigrette.\n\nSquash purée: one small dot on the plate first; set the burrata ball on it so it stays in place.\n\nPoached fig liquid: retain the champagne vinegar, white wine and agave base. Suggested balance: a small amount of kosher salt, a few black peppercorns and a little thyme; taste chilled before adjusting sweetness.\nPumpkin: small dice; toss with smoked paprika, kosher salt and black pepper, then roast until just tender with light color.\nProposed portions are development starting points only and should be confirmed during plating trials.\nAllergen note: burrata contains milk. Confirm the red wine vinaigrette and poached fig ingredients against current supplier labels and house formulas.",
   "platingDraft": true,
   "serviceware": {
    "plate": "",
