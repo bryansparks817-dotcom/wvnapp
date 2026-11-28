@@ -95,6 +95,7 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
   return (
     <fieldset className="pass__card">
       <legend className="pass__cardhead">
+        {item.slot ? <span className="pass__slottag">SLOT {item.slot}{item.spot ? ` ${item.spot.toUpperCase()}` : ""}</span> : null}
         <span className="pass__rowname">{item.name}</span>
       </legend>
 

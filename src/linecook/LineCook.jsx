@@ -21,6 +21,7 @@ import PrepTime from "./PrepTime";
 import { prepTime } from "../lib/prepTime";
 import { askCheck, prepItemFor, prepStation } from "../lib/prepAsk";
 import { withTaskRecipes } from "../lib/prepTasks";
+import { bySlot } from "../lib/rail";
 import { todayAt } from "../lib/crew";
 import { answerRequest, cancelRequest, openRequests, requestPan, setItemPan } from "../lib/panSize";
 import { recordShift, shiftRecord } from "../lib/history";
@@ -294,7 +295,8 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
   const today = localDateKey();
   // Prep tasks (shaved garlic…) get one-step stand-in recipes (lib/prepTasks.js).
   const recipesById = useMemo(() => withTaskRecipes(libraryById, getStations()), [libraryById, st]);
-  const { items } = st;
+  // A railed station (Garde: 5 hotel pans wide) counts slot 1 to 5.
+  const items = useMemo(() => bySlot(st.items, st), [st]);
   const linePar = stationLinePar(st);
   const isBackup = holdsBackup(st);
   const itemsById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
