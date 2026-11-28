@@ -339,6 +339,7 @@ function RailMap({ station, onEditItem }) {
         ) : (
           <div key={s.slot} className={`rail__slot${s.used > 1.001 ? " is-over" : ""}`}>
             <span className="rail__num">{s.slot}</span>
+            {station.slotNotes?.[s.slot] && <span className="rail__note" style={{ flexGrow: s.items.length ? 0 : 1 }}>{station.slotNotes[s.slot]}</span>}
             {s.spots ? (
               <div className="rail__spots">
                 {spotGrid(slotRows(station, s.slot)).map(({ n, span }) => {
@@ -357,8 +358,8 @@ function RailMap({ station, onEditItem }) {
                 <span className="rail__panname">{i.name}</span>
               </button>
             ))}
-            {s.used < 0.999 && !s.spots && <span className="rail__free" style={{ flexGrow: 1 - s.used }} />}
-            <span className="rail__used">{s.spots ? `${s.items.length} / ${s.spots}` : `${shareLabel(s.used)} / 1`}</span>
+            {s.used < 0.999 && !s.spots && !(station.slotNotes?.[s.slot] && !s.items.length) && <span className="rail__free" style={{ flexGrow: 1 - s.used }} />}
+            <span className="rail__used">{station.slotNotes?.[s.slot] && !s.items.length ? "not counted" : s.spots ? `${s.items.length} / ${s.spots}` : `${shareLabel(s.used)} / 1`}</span>
           </div>
         ))}
       </div>
@@ -437,6 +438,8 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   return <option key={k} value={k}>{rows.length > 1 ? `${rows.join(" + ")} = ${total} pans` : `${total} pans`} = full</option>;
                 })}
               </select>
+              <input className="pass__input rail__noteinput" aria-label={`Slot ${n} note`} placeholder="Not food? e.g. 8 qt of rocks (not counted)" value={station.slotNotes?.[n] ?? ""}
+                onChange={(e) => { const slotNotes = { ...(station.slotNotes ?? {}) }; if (e.target.value) slotNotes[n] = e.target.value; else delete slotNotes[n]; onSave({ ...station, slotNotes }); }} />
             </div>
           ))}
           <RailMap station={station} onEditItem={onEditItem} />
