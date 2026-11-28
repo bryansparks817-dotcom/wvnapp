@@ -6,7 +6,7 @@ import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
 import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
-import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel } from "../lib/rail";
+import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel, slotSpots, spotLabel, validSpot } from "../lib/rail";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -133,7 +133,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         else delete next.madeAt;
         if (slot && railSlots(target).includes(slot)) next.slot = slot;
         else delete next.slot;
-        if (next.slot && SPOTS.includes(spot)) next.spot = spot;
+        if (next.slot && validSpot(spot, target, next.slot)) next.spot = spot;
         else delete next.spot;
         // Saving means the chef has checked the numbers: no more drafts.
         delete next.unconfirmed;
@@ -170,7 +170,16 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
           ))}
           <button type="button" className={`fz__chip${!f.slot ? " is-on" : ""}`} aria-pressed={!f.slot} onClick={() => set("slot", null)}>NOT ON THE RAIL</button>
         </div>
-        {f.slot && <div className="fz__need" role="group" aria-label="Where in the slot">
+        {f.slot && slotSpots(target, f.slot) > 0 && <>
+          <span className="pass__countlabel">WHICH SPOT IN SLOT {f.slot} (1 = BACK LEFT, BACK ROW ON TOP)</span>
+          <div className="rail__grid" role="group" aria-label="Which spot in the slot">
+            {Array.from({ length: slotSpots(target, f.slot) }, (_, k) => k + 1).map((n) => {
+              const taken = target.items.find((i) => i.id !== item?.id && i.slot === f.slot && i.spot === n);
+              return <button key={n} type="button" className={`fz__chip${f.spot === n ? " is-on" : ""}`} aria-pressed={f.spot === n} title={taken ? `${taken.name} is here` : ""} onClick={() => set("spot", f.spot === n ? null : n)}>{n}{taken ? "•" : ""}</button>;
+            })}
+          </div>
+        </>}
+        {f.slot && !slotSpots(target, f.slot) && <div className="fz__need" role="group" aria-label="Where in the slot">
           {SPOTS.map((p) => (
             <button key={p} type="button" className={`fz__chip${f.spot === p ? " is-on" : ""}`} aria-pressed={f.spot === p} onClick={() => set("spot", f.spot === p ? null : p)}>{p.toUpperCase()}</button>
           ))}
@@ -310,19 +319,31 @@ function RailMap({ station, onEditItem }) {
         {slots.map((s) => (
           <div key={s.slot} className={`rail__slot${s.used > 1.001 ? " is-over" : ""}`}>
             <span className="rail__num">{s.slot}</span>
-            {s.items.map((i) => (
+            {s.spots ? (
+              <div className="rail__spots">
+                {Array.from({ length: s.spots }, (_, k) => k + 1).map((n) => {
+                  const here = s.items.filter((i) => i.spot === n);
+                  return here.length
+                    ? <button key={n} type="button" className={`rail__pan${here.length > 1 ? " is-over" : ""}`} onClick={() => onEditItem(here[0])}><span className="rail__pansize">{n}</span><span className="rail__panname">{here.map((i) => i.name).join(" + ")}</span></button>
+                    : <span key={n} className="rail__free"><span className="rail__pansize">{n}</span></span>;
+                })}
+                {s.items.filter((i) => typeof i.spot !== "number").map((i) => (
+                  <button key={i.id} type="button" className="rail__pan rail__nospot" onClick={() => onEditItem(i)}><span className="rail__pansize">no spot</span><span className="rail__panname">{i.name}</span></button>
+                ))}
+              </div>
+            ) : s.items.map((i) => (
               <button key={i.id} type="button" className="rail__pan" style={{ flexGrow: Math.max(PAN_SHARE[i.pan] ?? 0.1, 0.1) }} onClick={() => onEditItem(i)}>
-                <span className="rail__pansize">{i.pan}{i.spot ? ` · ${i.spot}` : ""}</span>
+                <span className="rail__pansize">{i.pan}{i.spot ? ` · ${spotLabel(i.spot)}` : ""}</span>
                 <span className="rail__panname">{i.name}</span>
               </button>
             ))}
-            {s.used < 0.999 && <span className="rail__free" style={{ flexGrow: 1 - s.used }} />}
-            <span className="rail__used">{shareLabel(s.used)} / 1</span>
+            {s.used < 0.999 && !s.spots && <span className="rail__free" style={{ flexGrow: 1 - s.used }} />}
+            <span className="rail__used">{s.spots ? `${s.items.length} / ${s.spots}` : `${shareLabel(s.used)} / 1`}</span>
           </div>
         ))}
       </div>
       {slots.filter((s) => s.used > 1.001).map((s) => (
-        <p key={s.slot} className="pass__hint chef__late">Slot {s.slot} is over: {s.items.map((i) => i.pan).join(" + ")} is more than one hotel pan.</p>
+        <p key={s.slot} className="pass__hint chef__late">{s.spots ? `Slot ${s.slot} is over: ${s.items.length} items for ${s.spots} spots.` : `Slot ${s.slot} is over: ${s.items.map((i) => i.pan).join(" + ")} is more than one hotel pan.`}</p>
       ))}
       <p className="pass__hint">{unplaced.length ? `Not on the rail yet: ${unplaced.map((i) => i.name).join(", ")}. Tap an item and pick its slot.` : "Every item has a slot."} The count goes slot 1 to {slots.length}.</p>
     </div>
@@ -364,7 +385,20 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
           <input className="pass__input" type="number" inputMode="numeric" min="0" max="12" value={station.railPans ?? 0}
             onChange={(e) => onSave({ ...station, railPans: Math.max(0, Math.min(12, Number(e.target.value) || 0)) })} />
         </Field>
-        {railSlots(station).length > 0 && <RailMap station={station} onEditItem={onEditItem} />}
+        {railSlots(station).length > 0 && <>
+          <span className="pass__countlabel">HOW EACH SLOT IS SET</span>
+          {railSlots(station).map((n) => (
+            <div key={n} className="rail__layoutrow">
+              <span className="pass__mono">SLOT {n}</span>
+              <select className="pass__input" aria-label={`Slot ${n} layout`} value={slotSpots(station, n)}
+                onChange={(e) => { const v = Number(e.target.value); const railLayout = { ...(station.railLayout ?? {}) }; if (v) railLayout[n] = v; else delete railLayout[n]; onSave({ ...station, railLayout }); }}>
+                <option value={0}>By pan size (one hotel pan)</option>
+                {[2, 3, 4, 5, 6, 8, 9].map((v) => <option key={v} value={v}>{v} pans = full</option>)}
+              </select>
+            </div>
+          ))}
+          <RailMap station={station} onEditItem={onEditItem} />
+        </>}
         </>}
       </div>
 
@@ -384,7 +418,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${item.pan} pan · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${item.pan} pan${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${item.spot}` : ""}` : ""}
+                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${item.pan} pan · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${item.pan} pan${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${spotLabel(item.spot)}` : ""}` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>

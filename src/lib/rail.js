@@ -5,19 +5,25 @@ export const PAN_SHARE = { "1/9": 1 / 9, "1/6": 1 / 6, "1/4": 1 / 4, "1/3": 1 / 
 
 // Where a pan sits in its slot, back (far from the cook) to front.
 export const SPOTS = ["back", "middle", "front"];
-const spotRank = (it) => (SPOTS.includes(it.spot) ? SPOTS.indexOf(it.spot) : 1.5);
+// A slot can instead be set to a fixed number of pan spots (Bryan, 2026-11-28:
+// Garde slot 4 is six ninth pans and that's full). Spots are numbered from the
+// back left, across each row left to right, back row to front, 3 to a row.
+export const slotSpots = (station, slot) => Number(station?.railLayout?.[slot]) || 0;
+export const validSpot = (spot, station, slot) => (slotSpots(station, slot) ? Number.isInteger(spot) && spot >= 1 && spot <= slotSpots(station, slot) : SPOTS.includes(spot));
+export const spotLabel = (spot) => (typeof spot === "number" ? `#${spot}` : spot);
+const spotRank = (it) => (typeof it.spot === "number" ? it.spot / 100 : SPOTS.includes(it.spot) ? SPOTS.indexOf(it.spot) : 1.5);
 
 export const railSlots = (station) => Array.from({ length: Number(station?.railPans) || 0 }, (_, i) => i + 1);
 
 // { slot: { items, used } } plus the items with no slot yet.
 export function railMap(station) {
-  const slots = railSlots(station).map((n) => ({ slot: n, items: [], used: 0 }));
+  const slots = railSlots(station).map((n) => ({ slot: n, items: [], used: 0, spots: slotSpots(station, n) }));
   const unplaced = [];
   for (const item of station.items ?? []) {
     const s = slots.find((x) => x.slot === item.slot);
     if (!s) { unplaced.push(item); continue; }
     s.items.push(item);
-    s.used += PAN_SHARE[item.pan] ?? 0;
+    s.used += s.spots ? 1 / s.spots : PAN_SHARE[item.pan] ?? 0;
   }
   for (const s of slots) s.items.sort((a, b) => spotRank(a) - spotRank(b));
   return { slots, unplaced };
