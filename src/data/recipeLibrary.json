@@ -4026,14 +4026,15 @@
   "yieldText": "998 g",
   "portion": "25 g quenelle",
   "storage": "Refrigerated ≤40°F; covered",
-  "shelfLife": "3 days refrigerated; freeze for longer storage",
+  "shelfLife": "4 days refrigerated; freeze for longer storage",
   "portions": 39.0,
-  "shelfLifeDays": 3,
+  "shelfLifeDays": 4,
   "allergens": [
    "Dairy"
   ],
   "plating": "",
   "drafts": [
+   "shelfLife",
    "station"
   ],
   "source": {
@@ -5867,9 +5868,9 @@
   "yieldText": "Approx. 891 g raw ingredients; weigh finished",
   "portion": "120 g per provoleta pan (proposed)",
   "storage": "Cool rapidly; refrigerate at or below 40°F",
-  "shelfLife": "3 days refrigerated (quality estimate)",
+  "shelfLife": "4 days refrigerated (quality estimate)",
   "portions": 7.0,
-  "shelfLifeDays": 3,
+  "shelfLifeDays": 4,
   "allergens": [
    "Dairy",
    "Tree nut"
@@ -5879,6 +5880,7 @@
    "allergens",
    "category",
    "portion",
+   "shelfLife",
    "station",
    "sub",
    "yieldText"
@@ -6608,9 +6610,9 @@
   "yieldText": "About 1,500 g roasted (2,000 g raw)",
   "portion": "60 g per salad",
   "storage": "Shallow container; refrigerate",
-  "shelfLife": "3 days refrigerated",
+  "shelfLife": "4 days refrigerated",
   "portions": 25.0,
-  "shelfLifeDays": 3,
+  "shelfLifeDays": 4,
   "allergens": [],
   "plating": "",
   "drafts": [
@@ -6913,9 +6915,9 @@
   "yieldText": "Approx. 2,200 g finished",
   "portion": "50 g",
   "storage": "Covered, refrigerated at or below 40°F / 4°C",
-  "shelfLife": "3 days refrigerated*",
+  "shelfLife": "4 days refrigerated*",
   "portions": 36.0,
-  "shelfLifeDays": 3,
+  "shelfLifeDays": 4,
   "allergens": [
    "Dairy",
    "Egg",
@@ -6923,6 +6925,7 @@
   ],
   "plating": "",
   "drafts": [
+   "shelfLife",
    "station"
   ],
   "source": {
@@ -7810,8 +7813,8 @@
   "yieldText": "Approx. 3.2 kg finished (development estimate)",
   "portion": "85 g / 3 oz",
   "storage": "Refrigerated, covered and pressed overnight",
-  "shelfLife": "3 days",
-  "shelfLifeDays": 3,
+  "shelfLife": "4 days",
+  "shelfLifeDays": 4,
   "allergens": [
    "Dairy",
    "Egg"
@@ -7819,7 +7822,6 @@
   "plating": "",
   "drafts": [
    "allergens",
-   "shelfLife",
    "station",
    "sub"
   ],
@@ -8275,13 +8277,14 @@
   "yieldText": "About 500 g from 1,000 g liquid; measure",
   "portion": "45–50 g / entrée",
   "storage": "Refrigerated, covered",
-  "shelfLife": "3 days proposed; follow approved procedures",
+  "shelfLife": "4 days proposed; follow approved procedures",
   "portions": 10.0,
-  "shelfLifeDays": 3,
+  "shelfLifeDays": 4,
   "allergens": [],
   "plating": "",
   "drafts": [
    "allergens",
+   "shelfLife",
    "station",
    "yieldText"
   ],

@@ -1,5 +1,5 @@
 import { spotLabel } from "../lib/rail";
-import { LEVELS, SIZES, containerLabel, sizeName, shelfLabel, isLastDay, parEachFor } from "../lib/inventory";
+import { LEVELS, SIZES, containerLabel, sizeName, shelfLabel, isLastDay, parEachFor, coverParG, lowboyParGFor, lineParFor, containerGrams, coversFor } from "../lib/inventory";
 import { PANS, panName } from "../lib/panSize";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -139,7 +139,7 @@ function PanPick({ item, pan }) {
 //   wherever it sits, against its prep par. No line pan.
 // mode "line": a collect-only item on a line station: just the line pan,
 //   since the backup is the making station's to count.
-export default function CountCard({ item, inv, today, onChange, pan = null, mode = "full" }) {
+export default function CountCard({ item, inv, today, onChange, pan = null, mode = "full", linePar = 100 }) {
   const setLine = (line) => onChange({ ...inv, line });
   const walkIn = inv.walkIn.filter((c) => c.fill > 0);
 
@@ -181,8 +181,8 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
         <p className="pass__walkin">BACKUP: Prep counts it. Collect pulls from Prep’s stock.</p>
       ) : <>
       <div className="pass__countrow">
-        <span className={`pass__countlabel${mode === "backup" && item.unconfirmed?.includes("lowboyPar") ? " chef__draftfield" : ""}`}>
-          {mode === "backup" ? `ALL BACKUP (walk-in + lowboys) · prep par ${item.lowboyPar} ${sizeName(item.lowboySize)}${item.unconfirmed?.includes("lowboyPar") ? " · DRAFT" : ""}` : `LOWBOY · par ${item.lowboyPar} ${sizeName(item.lowboySize)}`}
+        <span className={`pass__countlabel${(mode === "backup" && item.unconfirmed?.includes("lowboyPar")) || (mode !== "backup" && coverParG(item, today) != null && item.unconfirmed?.includes("coverPar")) ? " chef__draftfield" : ""}`}>
+          {mode === "backup" ? `ALL BACKUP (walk-in + lowboys) · prep par ${item.lowboyPar} ${sizeName(item.lowboySize)}${item.unconfirmed?.includes("lowboyPar") ? " · DRAFT" : ""}` : (coverParG(item, today) != null ? `LOWBOY · par ${Math.round((lowboyParGFor(item, linePar, today) / containerGrams(item, item.lowboySize)) * 10) / 10} ${sizeName(item.lowboySize)} · line to ${lineParFor(item, linePar, today)}% · for tonight’s ${coversFor(today)} covers (pmix)${item.unconfirmed?.includes("coverPar") ? " · DRAFT" : ""}` : `LOWBOY · par ${item.lowboyPar} ${sizeName(item.lowboySize)}`)}
         </span>
         <Backup item={item} inv={inv} today={today} onChange={onChange} />
       </div>

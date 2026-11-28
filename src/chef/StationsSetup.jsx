@@ -76,6 +76,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     parEach: String(item?.parEach ?? 10),
     countEach: Boolean(item?.countEach),
     parPctCovers: String(item?.parPctCovers ?? ""),
+    coverParOn: Boolean(item?.coverPar && !item?.coverParOff),
   }));
   const [askRemove, setAskRemove] = useState(false);
   const set = (k, v) => setF((x) => ({ ...x, [k]: v }));
@@ -109,7 +110,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, slot, spot, countEach, parPctCovers, ...rest } = f;
+        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, slot, spot, countEach, parPctCovers, coverParOn, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -121,6 +122,8 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
           shelfLifeDays: num(f.shelfLifeDays),
         };
         if (!next.recipeId) delete next.recipeId;
+        if (next.coverPar && !coverParOn) next.coverParOff = true;
+        else delete next.coverParOff;
         if (frozenEach) Object.assign(next, { frozenEach: true, freezerKind: next.freezerKind ?? "portions", eachGrams: num(eachGrams), parEach: num(parEach) });
         else delete next.frozenEach;
         if (countEach && !frozenEach && !boughtIn) Object.assign(next, { countEach: true, eachGrams: num(eachGrams), parEach: num(parEach) });
@@ -268,6 +271,14 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         </Field>
       </div>
 
+      {item?.coverPar && !backup && <>
+        <span className="pass__countlabel">PAR FROM TONIGHT’S COVERS (PMIX){drafts.has("coverPar") ? " · DRAFT" : ""}</span>
+        <div className={`chef__servicetoggle${drafts.has("coverPar") ? " chef__draftfield" : ""}`} role="group" aria-label="Par from covers">
+          <button type="button" className={f.coverParOn ? "is-on" : ""} aria-pressed={f.coverParOn} onClick={() => set("coverParOn", true)}>ON</button>
+          <button type="button" className={!f.coverParOn ? "is-on" : ""} aria-pressed={!f.coverParOn} onClick={() => set("coverParOn", false)}>OFF · FIXED PAR</button>
+        </div>
+        <p className="pass__hint">{f.coverParOn ? `Line pan + lowboy par = ${item.coverPar.g.toFixed(1)} g per cover plus one standard deviation, from the Sep–Nov pmix: about ${Math.round(item.coverPar.g * 54 + Math.sqrt(item.coverPar.v * 54)).toLocaleString()} g on a 54-cover night. With no covers typed in for the day it uses the lowboy par below.` : "Uses the fixed lowboy par below every night."}</p>
+      </>}
       <span className="pass__countlabel">{backup ? "BACKUP CONTAINERS" : "LOWBOY BACKUP"}{drafts.has("lowboySize") ? " · DRAFT" : ""}</span>
       <div className={`chef__servicetoggle${drafts.has("lowboySize") ? " chef__draftfield" : ""}`} role="group" aria-label="Lowboy container">
         {[["qt", "QUARTS"], ["pt", "PINTS"], ["6qt", "6 QTS"]].map(([v, l]) => (

@@ -699,7 +699,7 @@ function StationLine({ station: st, stationTabs, by, opening, onOpened, onChange
     logFlag({ date: today, name, kind, by, at: Date.now(), station: st.id });
   }
 
-  const shared = { station: stationTabs, onOpenChef, screen, setScreen, initials: by, onChangeCook };
+  const shared = { station: stationTabs, onOpenChef, screen, setScreen, initials: by, onChangeCook, linePar };
 
   if (items.length === 0) {
     return (
