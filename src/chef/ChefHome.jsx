@@ -140,6 +140,71 @@ function AddFlags({ onAdd }) {
   );
 }
 
+// The week's guest counts (Bryan, 2026-11-28): set on Tuesday for the week
+// (Tue–Mon), edited as reservations change. A week total and each night's
+// covers, side by side; SPREAD THE REST shares what the total has left over
+// across the nights still blank. Nights are saved as dinner covers
+// ("date:dinner"), the same number Chef Home's COVERS box and the
+// %-of-reservations pars use; the total is saved as "week:<Tuesday>".
+const isoOf = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+function weekOf(today, shift = 0) {
+  const [y, m, dd] = today.split("-").map(Number);
+  const t = new Date(y, m - 1, dd);
+  t.setDate(t.getDate() - ((t.getDay() + 5) % 7) + shift * 7);
+  return Array.from({ length: 7 }, (_, k) => { const x = new Date(t); x.setDate(t.getDate() + k); return x; });
+}
+function WeekCovers({ today, covers, setCovers }) {
+  const [shift, setShift] = useState(0);
+  const days = weekOf(today, shift);
+  const start = isoOf(days[0]);
+  const weekKey = `week:${start}`;
+  const total = covers[weekKey];
+  const nightOf = (dt) => covers[`${isoOf(dt)}:dinner`];
+  const sum = days.reduce((a, dt) => a + (Number(nightOf(dt)) || 0), 0);
+  const blank = days.filter((dt) => nightOf(dt) == null);
+  const left = total != null ? total - sum : null;
+  const num = (v) => (v === "" ? undefined : Math.max(0, Number(v) || 0));
+  const spread = () => {
+    if (!(left > 0) || !blank.length) return;
+    const next = { ...covers };
+    blank.forEach((dt, k) => { next[`${isoOf(dt)}:dinner`] = Math.floor(left / blank.length) + (k < left % blank.length ? 1 : 0); });
+    setCovers(next);
+  };
+  const end = days[6];
+  return (
+    <section className="chef__covers" aria-label="This week's guest counts">
+      <div className="pass__sectionhead">
+        <button type="button" className="pass__linkbtn" aria-label="Week before" onClick={() => setShift(shift - 1)}>‹</button>
+        <span className="pass__countlabel">{shift === 0 ? "THIS WEEK" : shift === 1 ? "NEXT WEEK" : "WEEK"} · {MONTHS[days[0].getMonth()]} {days[0].getDate()}–{MONTHS[end.getMonth()]} {end.getDate()}</span>
+        <button type="button" className="pass__linkbtn" aria-label="Week after" onClick={() => setShift(shift + 1)}>›</button>
+      </div>
+      <label className="chef__coverfield">
+        <span className="pass__countlabel">GUESTS THIS WEEK (TOTAL)</span>
+        <input className="pass__input chef__covernum" type="number" inputMode="numeric" min="0" placeholder="—" value={total ?? ""}
+          onChange={(e) => setCovers({ ...covers, [weekKey]: num(e.target.value) })} />
+      </label>
+      <div className="chef__weekgrid">
+        {days.map((dt) => {
+          const iso = isoOf(dt);
+          return (
+            <label key={iso} className={`chef__coverfield${iso === today ? " is-today" : ""}`}>
+              <span className="pass__countlabel">{DAY_NAMES[dt.getDay()].slice(0, 3).toUpperCase()} {dt.getDate()}</span>
+              <input className="pass__input chef__weeknum" type="number" inputMode="numeric" min="0" placeholder="—" aria-label={`${DAY_NAMES[dt.getDay()]} covers`}
+                value={nightOf(dt) ?? ""} onChange={(e) => setCovers({ ...covers, [`${iso}:dinner`]: num(e.target.value) })} />
+            </label>
+          );
+        })}
+      </div>
+      <p className={`pass__hint${left != null && left < 0 ? " chef__over" : ""}`}>
+        Nights add up to {sum.toLocaleString()}
+        {total != null && (left === 0 ? ` · matches the week total` : left > 0 ? ` · ${left.toLocaleString()} of ${total.toLocaleString()} not on a night yet` : ` · ${(-left).toLocaleString()} over the week total`)}
+        . Edit any night as reservations change; type 0 for a closed night. Pars set as a % of reservations use that night’s number.
+      </p>
+      {left > 0 && blank.length > 0 && <button type="button" className="pass__add" onClick={spread}>SPREAD {left.toLocaleString()} ACROSS {blank.length} BLANK NIGHT{blank.length === 1 ? "" : "S"}</button>}
+    </section>
+  );
+}
+
 export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrint, view = "home", by }) {
   const show = VIEWS[view];
   const [now, setNow] = useState(() => Date.now());
@@ -282,6 +347,7 @@ export default function ChefHome({ today, recipesById, onOpenRecipes, onOpenPrin
         <p className="pass__hint">{DAY_NAMES[d.getDay()]} · {MONTHS[d.getMonth()]} {d.getDate()}. Type covers in from OpenTable until it’s connected. Prep’s list warns anything that won’t be done by PREP DONE BY.</p>
       </section>
       )}
+      {show.covers && <WeekCovers today={today} covers={covers} setCovers={setCovers} />}
       {show.lists && onOpenPrint && (
         <button type="button" className="pass__cta chef__printlink" onClick={onOpenPrint}>PRINT PREP LISTS FOR COOKS ›</button>
       )}

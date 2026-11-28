@@ -628,3 +628,7 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__blabel { width: 44px; font-family: "DM Mono", monospace; font-size: 10px; color: #9a958c; }
 .pass__bnum { min-width: 32px; text-align: center; font-family: "DM Mono", monospace; font-size: 20px; }
 .pass__bpart { flex: 0 0 48px; font-size: 18px; }
+.chef__weekgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.pass--chef .chef__weeknum { font-family: "DM Mono", monospace; font-size: 20px; padding: 6px 8px; text-align: center; }
+.chef__weekgrid .is-today .pass__countlabel { color: var(--amber); }
+.chef__over { color: var(--amber); }
