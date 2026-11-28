@@ -51,6 +51,16 @@ const addSauteTasks = (stations) => stations.map((s) => (s.id !== "saute" ? s : 
 const GARDE_BOUGHT = [
   { id: "blue-cheese-crumbles", name: "Blue cheese crumbles", boughtIn: true, pan: "1/9", panGrams: 450, lowboySize: "qt", qtGrams: 450, lowboyPar: 0, shelfLifeDays: 14, caseLabel: "5 lb bag", caseGrams: 2268, unconfirmed: ["panGrams", "shelfLifeDays", "caseGrams"] },
 ];
+// Bryan, 2026-11-28: Garde slot 3 is three deep third pans, back to front:
+// trimmed iceberg, arugula, cut romaine. Weights, minutes, shelf life and
+// the arugula case are drafts (light blue) to confirm.
+const GARDE_GREENS = [
+  { ...TASK, recipeId: "task:trimmed-iceberg", id: "trimmed-iceberg", name: "Trimmed iceberg lettuce", pan: "1/3", panGrams: 900, taskMinutes: 15, shelfLifeDays: 3, slot: 3, spot: "back" },
+  { id: "arugula", name: "Arugula", boughtIn: true, pan: "1/3", panGrams: 300, lowboySize: "qt", qtGrams: 60, lowboyPar: 0, shelfLifeDays: 4, caseLabel: "2 × 2 lb", caseGrams: 1814, slot: 3, spot: "middle", unconfirmed: ["panGrams", "shelfLifeDays", "caseGrams"] },
+  { ...TASK, recipeId: "task:cut-romaine", id: "cut-romaine", name: "Cut romaine", pan: "1/3", panGrams: 600, taskMinutes: 15, shelfLifeDays: 3, slot: 3, spot: "front" },
+];
+const addGardeGreens = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_GREENS.filter((g) => !s.items.some((i) => i.id === g.id))] }));
+
 const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger" ? s : { ...s, items: [...s.items, ...GARDE_BOUGHT.filter((g) => !s.items.some((i) => i.id === g.id))] }));
 
 // Bryan, 2026-11-27: every restaurant recipe except the dish builds goes on
@@ -59,7 +69,7 @@ const addGardeBought = (stations) => stations.map((s) => (s.id !== "garde-manger
 function everyRecipeOnPrep(stations) {
   return library.filter((r) => r.kind !== "dish").reduce((st, r) => addRecipeTo(st, "prep", r, { lineCollects: false }), stations);
 }
-export const DEFAULT_STATIONS = addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))));
+export const DEFAULT_STATIONS = addGardeGreens(addGardeBought(addSauteTasks(addGrillFrozen(everyRecipeOnPrep(BASE_STATIONS))))).map((s) => (s.id === "garde-manger" ? { ...s, railPans: 5 } : s));
 // One-time changes to a setup the chef already saved, so a fix to the built-in
 // stations reaches kitchens that edited theirs. Each runs once per kitchen
 // (the ids done are shared with every phone); the chef can undo any of it in
@@ -104,6 +114,9 @@ const STATION_FIXES = [
   ["grill-frozen-steaks-2026-11-27", addGrillFrozen],
   ["saute-prep-tasks-2026-11-27", addSauteTasks],
   ["garde-blue-cheese-2026-11-27", addGardeBought],
+  // Bryan, 2026-11-28: Garde manger is 5 hotel pans wide, slots 1–5.
+  ["garde-slot-3-greens-2026-11-28", addGardeGreens],
+  ["garde-rail-5-2026-11-28", (st) => st.map((s) => (s.id === "garde-manger" && !s.railPans ? { ...s, railPans: 5 } : s))],
   // Bryan, 2026-11-27: 4 days once thawed, confirmed.
   ["frozen-steaks-4-days-2026-11-27", (st) => st.map((s) => ({
     ...s,

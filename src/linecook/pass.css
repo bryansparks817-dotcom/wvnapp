@@ -594,3 +594,16 @@ body:has(.pass) { background: #1b1e1c; }
 .pass__asknote.is-no { border-color: #d2553f; }
 .chef__servicetoggle.chef__toggle4 { grid-template-columns: 1fr 1fr; }
 .chef__toggle4 button { font-size: 12px !important; letter-spacing: 0.04em; }
+/* Station rail map (Setup) */
+.rail { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.rail__slots { display: grid; gap: 4px; }
+.rail__slot { position: relative; display: flex; flex-direction: column; gap: 2px; min-height: 180px; padding: 18px 2px 18px; border: 1.5px solid var(--edge); border-radius: 6px; background: var(--char, #1b1e1c); }
+.rail__slot.is-over { border-color: #d2553f; }
+.rail__num { position: absolute; top: 2px; left: 0; right: 0; text-align: center; font-family: "DM Mono", monospace; font-size: 11px; color: var(--amber); }
+.rail__used { position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font-family: "DM Mono", monospace; font-size: 9px; color: var(--steel); }
+.rail__slot.is-over .rail__used { color: #d2553f; }
+.rail__pan { flex-basis: 0; min-height: 18px; display: flex; flex-direction: column; justify-content: center; padding: 2px; border: 0; border-radius: 4px; background: var(--card); color: var(--ticket); text-align: center; overflow: hidden; }
+.rail__pansize { font-family: "DM Mono", monospace; font-size: 9px; color: var(--amber); }
+.rail__panname { font-size: 10px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.rail__free { flex-basis: 0; border: 1px dashed var(--edge); border-radius: 4px; }
+.pass__slottag { font-family: "DM Mono", monospace; font-size: 11px; color: var(--amber); margin-right: 8px; letter-spacing: 0.06em; }

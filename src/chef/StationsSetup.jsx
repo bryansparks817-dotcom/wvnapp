@@ -6,6 +6,7 @@ import { isCateringRecipe } from "../lib/recipeLibrary";
 import { PANS, PAN_GRAMS } from "../lib/panSize";
 import { addRecipeTo, hasRecipe, removeRecipeFrom } from "../lib/stationRecipes";
 import { isTaskRecipe, taskRecipeId } from "../lib/prepTasks";
+import { PAN_SHARE, SPOTS, railMap, railSlots, shareLabel } from "../lib/rail";
 
 // Setup → Stations, items & pars. The chef adds and renames stations, and
 // for each station sets its items: line pan size and weight, lowboy
@@ -64,6 +65,8 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
     frozenEach: Boolean(item?.frozenEach),
     task: Boolean(item?.task),
     boughtIn: Boolean(item?.boughtIn),
+    slot: item?.slot ?? null,
+    spot: item?.spot ?? null,
     caseLabel: item?.caseLabel ?? "",
     caseGrams: String(item?.caseGrams ?? ""),
     taskMinutes: String(item?.taskMinutes ?? 15),
@@ -102,7 +105,7 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, ...rest } = f;
+        const { stationId, madeAt, frozenEach, eachGrams, parEach, task, taskMinutes, taskNote, boughtIn, caseLabel, caseGrams, slot, spot, ...rest } = f;
         const next = {
           ...(item ?? {}),
           ...rest,
@@ -128,6 +131,10 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
         if (frozenEach || task || boughtIn) delete next.madeAt;
         else if (madeAt && madeAt !== stationId) next.madeAt = madeAt;
         else delete next.madeAt;
+        if (slot && railSlots(target).includes(slot)) next.slot = slot;
+        else delete next.slot;
+        if (next.slot && SPOTS.includes(spot)) next.spot = spot;
+        else delete next.spot;
         // Saving means the chef has checked the numbers: no more drafts.
         delete next.unconfirmed;
         onSave(next, stationId);
@@ -154,6 +161,20 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
             return <button key={k} type="button" className={on ? "is-on" : ""} aria-pressed={on} onClick={() => setF((x) => ({ ...x, frozenEach: k === "frozenEach", task: k === "task", boughtIn: k === "boughtIn" }))}>{label}</button>;
           })}
         </div>
+      </>}
+      {!backup && railSlots(target).length > 0 && <>
+        <span className="pass__countlabel">RAIL SLOT ({target.name.toUpperCase()} IS {target.railPans} HOTEL PANS WIDE)</span>
+        <div className="fz__need">
+          {railSlots(target).map((n) => (
+            <button key={n} type="button" className={`fz__chip${f.slot === n ? " is-on" : ""}`} aria-pressed={f.slot === n} onClick={() => set("slot", f.slot === n ? null : n)}>{n}</button>
+          ))}
+          <button type="button" className={`fz__chip${!f.slot ? " is-on" : ""}`} aria-pressed={!f.slot} onClick={() => set("slot", null)}>NOT ON THE RAIL</button>
+        </div>
+        {f.slot && <div className="fz__need" role="group" aria-label="Where in the slot">
+          {SPOTS.map((p) => (
+            <button key={p} type="button" className={`fz__chip${f.spot === p ? " is-on" : ""}`} aria-pressed={f.spot === p} onClick={() => set("spot", f.spot === p ? null : p)}>{p.toUpperCase()}</button>
+          ))}
+        </div>}
       </>}
       {f.task && !backup && <>
         <div className="chef__staffrow">
@@ -278,6 +299,36 @@ function ItemForm({ item, station, stations, recipes, onSave, onCancel, onRemove
   );
 }
 
+// The rail, slot by slot: what's in each and how full it is. A slot holds
+// one full hotel pan's worth of fractional pans.
+function RailMap({ station, onEditItem }) {
+  const { slots, unplaced } = railMap(station);
+  return (
+    <div className="rail">
+      <span className="pass__countlabel">THE RAIL · SLOTS 1–{slots.length} · BACK AT THE TOP</span>
+      <div className="rail__slots" style={{ gridTemplateColumns: `repeat(${slots.length}, minmax(0, 1fr))` }}>
+        {slots.map((s) => (
+          <div key={s.slot} className={`rail__slot${s.used > 1.001 ? " is-over" : ""}`}>
+            <span className="rail__num">{s.slot}</span>
+            {s.items.map((i) => (
+              <button key={i.id} type="button" className="rail__pan" style={{ flexGrow: Math.max(PAN_SHARE[i.pan] ?? 0.1, 0.1) }} onClick={() => onEditItem(i)}>
+                <span className="rail__pansize">{i.pan}{i.spot ? ` · ${i.spot}` : ""}</span>
+                <span className="rail__panname">{i.name}</span>
+              </button>
+            ))}
+            {s.used < 0.999 && <span className="rail__free" style={{ flexGrow: 1 - s.used }} />}
+            <span className="rail__used">{shareLabel(s.used)} / 1</span>
+          </div>
+        ))}
+      </div>
+      {slots.filter((s) => s.used > 1.001).map((s) => (
+        <p key={s.slot} className="pass__hint chef__late">Slot {s.slot} is over: {s.items.map((i) => i.pan).join(" + ")} is more than one hotel pan.</p>
+      ))}
+      <p className="pass__hint">{unplaced.length ? `Not on the rail yet: ${unplaced.map((i) => i.name).join(", ")}. Tap an item and pick its slot.` : "Every item has a slot."} The count goes slot 1 to {slots.length}.</p>
+    </div>
+  );
+}
+
 // One station: its name, line par and items.
 function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem, onAddItem, onMoveItem }) {
   const [name, setName] = useState(station.name);
@@ -309,6 +360,11 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
             <button key={p} type="button" className={station.linePar === p ? "is-on" : ""} aria-pressed={station.linePar === p} onClick={() => onSave({ ...station, linePar: p })}>{p}%</button>
           ))}
         </div>
+        <Field label="RAIL WIDTH (FULL HOTEL PANS, 0 = NONE)">
+          <input className="pass__input" type="number" inputMode="numeric" min="0" max="12" value={station.railPans ?? 0}
+            onChange={(e) => onSave({ ...station, railPans: Math.max(0, Math.min(12, Number(e.target.value) || 0)) })} />
+        </Field>
+        {railSlots(station).length > 0 && <RailMap station={station} onEditItem={onEditItem} />}
         </>}
       </div>
 
@@ -328,7 +384,7 @@ function StationEditor({ station, stations, onSave, onRemove, onBack, onEditItem
                   {item.unconfirmed?.length > 0 && <span className="chef__draftswatch chef__draftdot" title="Has draft numbers" />}
                 </span>
                 <span className="pass__rowsub">
-                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${item.pan} pan · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${item.pan} pan${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}
+                  {item.frozenEach ? `precut, frozen · par ${item.parEach} each · from the freezer` : item.task ? `prep task · ${item.pan} pan · ${item.taskMinutes} min hands-on` : item.boughtIn ? `bought in · ${item.pan} pan${item.caseLabel ? ` · ${item.caseLabel}` : ""}` : station.holdsBackup ? `prep par ${item.lowboyPar} ${item.lowboySize}` : `${item.pan} pan · par ${item.lowboyPar} ${item.lowboySize}`} · {item.shelfLifeDays} day{item.shelfLifeDays === 1 ? "" : "s"}{item.recipeId || item.frozenEach || item.task || item.boughtIn ? "" : " · no recipe"}{item.madeAt ? ` · collect only, ${stations.find((s) => s.id === item.madeAt)?.name ?? "another station"} makes it` : ""}{item.slot && railSlots(station).includes(item.slot) ? ` · slot ${item.slot}${item.spot ? ` ${item.spot}` : ""}` : ""}
                 </span>
               </span>
               <span className="pass__open">EDIT ›</span>
