@@ -1,3 +1,4 @@
+import { spotLabel } from "../lib/rail";
 import { LEVELS, containerLabel, shelfLabel, isLastDay } from "../lib/inventory";
 import { PANS } from "../lib/panSize";
 
@@ -95,7 +96,7 @@ export default function CountCard({ item, inv, today, onChange, pan = null, mode
   return (
     <fieldset className="pass__card">
       <legend className="pass__cardhead">
-        {item.slot ? <span className="pass__slottag">SLOT {item.slot}{item.spot ? ` ${item.spot.toUpperCase()}` : ""}</span> : null}
+        {item.slot ? <span className="pass__slottag">SLOT {item.slot}{item.spot ? ` ${spotLabel(item.spot).toUpperCase()}` : ""}</span> : null}
         <span className="pass__rowname">{item.name}</span>
       </legend>
 
